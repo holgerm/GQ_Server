@@ -1,0 +1,14 @@
+@(g:Game,sel:String)
+
+@import models.GameParts._
+
+             <option ></option>
+              		@for(pm <- g.getAllMissions()){
+              			
+              			@if(!pm.getType().getXMLType().equals("MetaData")){
+              			
+              			   <option  value = "@pm.getId()" @if(sel.equals(String.valueOf(pm.getId()))){ selected="selected" } >@pm.getName()</option>
+              			
+              			}
+              			
+              		} 

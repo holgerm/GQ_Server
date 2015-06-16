@@ -1,0 +1,16 @@
+@(g:Game,r:models.GameParts.Rule)
+
+	@if(!r.getActions().isEmpty()){
+              		
+              		
+              		
+              		
+							              		
+							              		
+							       @for(ac <- r.getActions){
+							       	 @editor_aactionintrigger(g,ac,r)
+									}
+									              				
+									              
+									              			
+	} 

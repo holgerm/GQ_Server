@@ -1,0 +1,250 @@
+@(g:Game,s:models.GameParts.MenuItem)
+@import util.Global
+
+
+<div id="actioninfocontainer_mi@s.getId()_onselect">
+
+
+
+
+              		
+              	@if(s.getOnSelect != null){
+						 @for(ac <- s.getOnSelect.getActions){
+		@editor_actionedit(g,ac,"menuitem",10000000)
+		
+              		}
+              		}
+              	
+
+
+
+</div>
+
+
+
+
+
+
+ 				<div class="missionedit" id="menuitemedit@s.getId()" name="menuitemedit@s.getId()">
+ 					<div class="options">
+ 					<i class="icon-resize-full" onClick="javascript:toggleFullscreen('menuitemedit@s.getId()','72%','75%','120px','5%','35px')"></i>
+ 					<i class="icon-remove" onClick="javascript:document.getElementById('menuitemedit@s.getId()').style.display = 'none';hideInnerMissions('menuitemedit@s.getId()');deactiveFullscreen('menuitemedit@s.getId()','72%','75%','120px','5%','35px');"></i></div>
+              			
+              			
+              <div class="scrollable-content" style="overflow-y:auto; overflow-x:hidden; height:100%; width:100%;">
+              			
+              			
+              				<input type="text" class="h2textfield" id="menuitemname@s.getId" value="@s.getTitle()"
+              				onchange="javascript:syncName('menuitem',@s.getId)" onkeydown="document.getElementById('status_menuitemname@s.getId').innerHTML = 'waiting...';">
+              				
+              				        <img id="status_menuitemname@s.getId()" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
+              				
+        	<br />
+              				
+              				
+              				
+              			
+									        				
+									        			
+									        				
+									        				 <div style="width:80%">
+      Anzeige
+        <div class="floatright">
+        
+        
+     
+        
+								        	
+											<select id = "menuitem@s.getId()_show" onchange="javascript:syncMenuItemAttr(@s.getId,'show')" >
+								             
+								            @if(s.getShow != null){
+								              			   <option @if(s.getShow.equals("always")){ selected="selected" }  value ="always" >Immer</option>
+								              			<option @if(s.getShow.equals("if_room")){ selected="selected" }  value ="if_room" >Falls Platz</option>
+								              			<option @if(s.getShow.equals("never")){ selected="selected" }  value ="never" >Niemals</option>
+								              			}
+								              			
+								              	   </select>
+								        	
+								        	
+								     
+        <img id="status_menuitem@s.getId()_show" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
+        
+        
+        </div>
+        </div>
+        
+        <br/><br/>
+        	
+									        				 <div style="width:80%">
+      Aktivität
+        <div class="floatright">
+        
+        
+     
+         
+									        <input type="checkbox"/ id="menuitem@s.getId()_activity" @if(s.getActivity){ checked = "checked" } onchange="javascript:syncMenuItemAttr(@s.getId,'activity')" >
+									        
+								        
+								        	
+								        	
+								     
+        <img id="status_menuitem@s.getId()_activity" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
+        
+        
+        </div>
+        </div>
+      
+			
+  
+        <br/><br/>
+        	
+									        				 <div style="width:80%">
+      Priorität
+        <div class="floatright">
+        
+        
+     
+         
+									<input type="number"/ value="@s.getPriority()" id="menuitem@s.getId()_priority" onchange="javascript:syncMenuItemAttr(@s.getId,'priority')" onkeydown="document.getElementById('status_menuitem@s.getId()_priority').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
+									        
+								        
+								        	
+								        	
+								     
+        <img id="status_menuitem@s.getId()_priority" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
+        
+        
+        </div>
+        </div>
+      
+			  <br/><br/>
+        	
+									        				 <div style="width:80%">
+      Text zeigen?
+        <div class="floatright">
+        
+        
+     
+         
+									        <input type="checkbox"/ id="menuitem@s.getId()_showText" @if(s.getShowText){ checked = "checked" } onchange="javascript:syncMenuItemAttr(@s.getId,'showText')" >
+									        
+								        
+								        	
+								        	
+								     
+        <img id="status_menuitem@s.getId()_showText" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
+        
+        
+        </div>
+        </div>
+        
+        
+        
+          <br/><br/>
+        	
+									        				 <div style="width:80%">
+      Icon (URL)
+        <div class="floatright">
+        
+        
+     
+         
+									        
+				        <input type="text"/ value="@s.getIcon" id="menuitem@s.getId()_icon" onchange="javascript:syncMenuItemAttr(@s.getId,'icon')" onkeydown="document.getElementById('status_menuitem@s.getId()_icon').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
+                     
+									        
+									      
+								        
+								        	
+								        	
+								     
+        <img id="status_menuitem@s.getId()_icon" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
+        
+        
+        </div>
+        </div>
+      
+  
+  <br/>
+  <br/>
+  				  
+  				        
+              				<div style="width:99%; height:170px; white-space: nowrap; overflow-x:scroll; overflow-y:hidden; ">
+								<div style="min-width:100%; white-space: nowrap;">
+              	<div  style=" padding:10px;  display:inline-block; width:100px; cursor:pointer;"><div><img src="@Global.SERVER_URL_2/assets/icons/trigger/ontap.png" style="height:70px; width:70px; position:relative; left:15px; " /><p style="width:100px; height:36px; font-size:10px; text-align:center; overflow:hidden; white-space:normal;">Bei Auswahl </p></div><p style="height:20px; overflow:hidden;">&nbsp;</p></div>
+              			
+              			
+              				<div id="actionarrow_onselected" style="display:inline-block; width:30px;  position:relative; top:-70px; "><img style="position:relative;" src="@Global.SERVER_URL_2/assets/icons/next.png"></div>
+              			
+              		
+              			
+              			
+              		              		<div style="display:inline-block;" id="menuitemactions_@s.getId">
+              		
+              		
+              		
+              		
+              		
+              		
+              		@if(s.getOnSelect != null){
+							              		
+							    
+              		              		<div style="display:inline-block;" id="triggeractions_@s.getOnSelect.getId()">
+              		          		
+							       @for(ac <- s.getOnSelect.getActions){
+									              		
+									              		
+									             @editor_aactioninmenuitem(g,ac,s)
+									              
+									              
+									              
+									              						        				
+																	}	        			
+									              			}
+							              	</div>
+              		
+              		</div>
+              		
+									              				
+									        
+             
+             	<div class="newactioninattribute" id="menuitem_add_action_@s.getId" style="display:inline-block; position:relative; top:-50px;">
+             	
+             
+              		   <select id = "actiontype_@s.getOnSelect.getId" >
+             
+             
+             
+              		@for(at <- g.getType.getPossibleMenuItemActionTypes){
+              			   <option value = "@at.getId()">@at.getName()</option>
+              			
+              			
+              		}   </select><br/>
+              		
+              		<div id="rule_add_action_button_@s.getOnSelect.getId" class="btn btn-success" style="position:relative; bottom:50%;" onClick="newActionInRule(@s.getOnSelect.getId,'menuitem')">Neue Aktion</div>
+              
+              </div>
+              		
+              		
+              		
+              			
+              			
+              			
+              			
+              			
+              			
+              			
+              			</div>
+              			</div>
+								
+  
+  
+  
+  </div>
+  
+  
+  
+</div>
+              				
+              		
+              	</div>

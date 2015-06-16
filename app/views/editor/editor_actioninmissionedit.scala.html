@@ -1,0 +1,603 @@
+@(g:Game,ac:models.GameParts.Action, rt:String,z:Integer,m:models.GameParts.Mission)
+
+@import util.Global;
+@import models.GameParts._;
+
+	@for(a <- ac.getAllAttributes){
+		   @if(a.getFileType == "actions"){
+<div id="actioninfocontainer_atr@a.getId()_action@ac.getId()">
+
+
+
+
+              		
+              		@if(ac.getAttribute(a) != null){
+              			@if(ac.getAttribute(a).getActions() != null){
+              	@if(!ac.getAttribute(a).getActions().isEmpty()){
+              		
+              		@for(act <- ac.getAttribute(a).getActions()){
+		@editor_actioninmissionedit(g,act,rt,z+1,m)
+              		}
+              		}
+              		}
+              		}
+
+
+
+
+</div>
+}
+	 		}
+             
+	<div class="inneredit" id="actionedit_@ac.getId()" style="z-index:@z; height:auto;" name="actionedit_@ac.getId()">
+			 				              				<div class="scrollable-content" style="overflow-y:auto; overflow-x:hidden; height:100%; width:100%;">
+	
+									        				<div class="options">
+									        				
+									        				<i class="icon-resize-full" onClick="javascript:toggleFullscreen('actionedit_@ac.getId()','72%','40%','200px','5%','25px')"></i>
+									        				<i class="icon-remove" onClick="javascript:document.getElementById('actionedit_@ac.getId()').style.display = 'none';deactiveFullscreen('actionedit_@ac.getId()','72%','60%','200px','5%','25px')"></i>
+									        				
+									        				</div>   	
+              	        		
+              				
+              		
+              		
+              		
+              		
+              		
+              
+           
+							              		
+							              		
+									              	
+									              		
+									              		
+									              	
+									              		
+									              				<div id="action_@ac.getId"><h1>@ac.getName()</h1></div>
+									              				<br/>
+									              				
+									              				<div id="actionattributes_@ac.getId()" >
+									              				
+																		              				@for(a <- ac.getAllAttributes){
+																		        				
+																		        				@if(a.isEditable){
+																		        				
+																		        				 <div style="width:99%">
+									    @if(a.getFileType != "actions"){
+									       @a.getName
+									       }
+									       <br/>
+									        <div>
+									        
+									        
+									        @if(a.getFileType == "String"){
+									        
+									        
+									        
+									        
+									        @if(a.hasPossibleValues()){
+								        	
+								        	
+											<select id = "actionat@ac.getId@a.getId" onchange="javascript:syncAttr('action',@ac.getId,@a.getId)" >
+								             
+								             <option ></option>
+								              		@for(pm <- a.getPossibleValues()){
+								              			   <option  value = "@pm" @if(ac.getAttributeValue(a).equals(pm)){ selected="selected" } >@pm</option>
+								              			
+								              			
+								              		}   </select>
+								        	
+								        	
+								        } else {
+        
+									        <input type="text"/ value="@ac.getAttributeValue(a)" id="actionat@ac.getId@a.getId" onchange="javascript:syncAttr('action',@ac.getId,@a.getId)" onkeydown="document.getElementById('status_actionat@ac.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
+									        
+									        
+									        }
+									        
+									        }
+									        
+									        
+									       @if(a.getFileType == "condition"){
+									       	<br/>
+									       	<textarea id="actionat@ac.getId@a.getId" style=" width:80%; " onchange="javascript:syncAttr('action',@ac.getId,@a.getId)" onkeydown="document.getElementById('status_actionat@ac.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">@ac.getAttributeValue(a)</textarea>
+									       <br/>	
+									       	
+									       	
+									       	
+									       	
+									       	
+									       	@if(!m.getContents().isEmpty()){
+					<div class="btn-group">
+					
+					
+					
+							
+					
+  <a class="btn dropdown-toggle" style=" cursor:pointer;" data-toggle="dropdown" >
+    
+    <span class="icon-plus"></span>
+    Inhalte
+  </a>
+  <ul class="dropdown-menu">
+  
+  
+                     @for(con <- m.getContents()){              			
+  
+  
+   
+  			                  	<li><a tabindex="-1" style="cursor:pointer;" onClick="addMissionResultToTextarea('action',@ac.getId,@a.getId,@m.getId(),'@con.getContent()');">@con.getContent()</a></li>
+
+   
+   }
+					
+					
+					</ul>
+					</div>
+					
+					
+					}
+					
+										<div class="btn-group">
+					
+					
+  <a class="btn dropdown-toggle" style=" cursor:pointer;" data-toggle="dropdown" >
+        <span class="icon-plus"></span>
+    
+   Erweitert
+  </a>
+  <ul class="dropdown-menu">
+   
+   
+   
+   
+    <li class="dropdown-submenu">
+                  <a tabindex="-1" >Missionen</a>
+                  <ul class="dropdown-menu">
+                   @for(pm <- g.getAllMissions()){              			
+			              			
+			    		<li class="dropdown-submenu">
+			                  <a tabindex="-1" >@pm.getName</a>
+			                  <ul class="dropdown-menu">
+			                  
+			                  	<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_mission_@pm.getId()@Html(".result")');">Resultat</a></li>
+			              		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_mission@Html("_")@pm.getId()@Html(".state")');">State</a></li>
+			              		@for(atr <- pm.getType.getAttributeTypes){
+			              			<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_mission_@pm.getId()@Html(".")@atr.getXMLType');">@atr.getName</a></li>
+			              		}
+			                  </ul>
+			            </li>
+   					}
+      				</ul>
+  </li>
+   
+   
+   
+   <li class="dropdown-submenu">
+                  <a tabindex="-1" >Hotspots</a>
+                  <ul class="dropdown-menu">
+                   @for(pm <- g.getHotspots()){              			
+			              			
+			    		<li class="dropdown-submenu">
+			                  <a tabindex="-1" >@pm.getName</a>
+			                  <ul class="dropdown-menu">
+			                  
+			                  	<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".visible")');">Sichtbarkeit</a></li>
+			              		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".active")');">Aktivität</a></li>			                  
+			                  	<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".long")');">Longitude</a></li>
+			              		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".lat")');">Latitude</a></li>
+
+			              		@for(atr <- pm.getType.getAttributeTypes){
+			              			<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".")@atr.getXMLType');">@atr.getName</a></li>
+			              		}
+			                  </ul>
+			            </li>
+   					}
+      				</ul>
+  </li>
+   
+   
+   
+   
+    <li class="dropdown-submenu">
+                  <a tabindex="-1" >Operatoren</a>
+                  <ul class="dropdown-menu">
+                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','=');">= (Gleich)</a></li>
+                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','!=');">!= (Ungleich)</a></li>
+                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','<');">&lt; (Kleiner als)</a></li>
+                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','>');">&gt; (Größer als)</a></li>
+                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','<=');">&lt;= (Kleiner oder Gleich)</a></li>
+                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','>=');">&gt; (Größer oder Gleich)</a></li>
+                  		
+                  </ul>
+   </li>
+   
+   
+    <li class="dropdown-submenu">
+                  <a tabindex="-1" >logische Verknüpfungen</a>
+                  <ul class="dropdown-menu">
+                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId',' AND ');">AND (Alle Bedingungen müssen eintreten)</a></li>
+                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId',' OR ');">OR (Eine Bedingung muss eintreten)</a></li>
+                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId',' !( )');">NICHT (Alle Bedingungen in der Klammer negieren)</a></li>
+
+                  </ul>
+   </li>
+   
+   
+   
+    <li class="dropdown-submenu">
+                  <a tabindex="-1" >Systemvariablen</a>
+                  <ul class="dropdown-menu">
+                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$location.lat');">Aktuelle Position: Latitude</a></li>
+                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$location.long');">Aktuelle Position: Longitude</a></li>
+                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$score');">Score-Variable</a></li>
+              
+
+                  </ul>
+   </li>
+   
+   
+   
+   
+   
+   
+   
+   
+  </ul>
+</div>
+              		
+									       	
+									       	
+									       	}
+									        
+									        
+									        
+									          @if(a.getFileType == "var"){
+									        
+									        <input type="text"/ value="@ac.getAttributeValue(a)" id="actionat@ac.getId@a.getId" onchange="javascript:syncAttr('action',@ac.getId,@a.getId)" onkeydown="document.getElementById('status_actionat@ac.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
+									        
+									        }
+									        
+									          @if(a.getFileType == "expression"){
+        
+											<input type="text"/ value="@ac.getAttributeValue(a)" id="actionat@ac.getId@a.getId" onchange="javascript:syncAttr('action',@ac.getId,@a.getId)" onkeydown="javascript:document.getElementById('status_contentat@ac.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
+														
+														<div class="btn-group">
+					
+					
+					
+  <a class="btn dropdown-toggle" style=" cursor:pointer;" data-toggle="dropdown" >
+    
+    <span class="icon-plus"></span>
+  </a>
+  <ul class="dropdown-menu">
+   
+   
+   
+   
+    <li class="dropdown-submenu">
+                  <a tabindex="-1" >Missionen</a>
+                  <ul class="dropdown-menu">
+                   @for(pm <- g.getAllMissions()){              			
+			              			
+			    		<li class="dropdown-submenu">
+			                  <a tabindex="-1" >@pm.getName</a>
+			                  <ul class="dropdown-menu">
+			                  
+			                  	<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_mission_@pm.getId()@Html(".result")');">Resultat</a></li>
+			              		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_mission@Html("_")@pm.getId()@Html(".state")');">State</a></li>
+			              		@for(atr <- pm.getType.getAttributeTypes){
+			              			<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_mission_@pm.getId()@Html(".")@atr.getXMLType');">@atr.getName</a></li>
+			              		}
+			                  </ul>
+			            </li>
+   					}
+      				</ul>
+  </li>
+   
+   
+   
+   <li class="dropdown-submenu">
+                  <a tabindex="-1" >Hotspots</a>
+                  <ul class="dropdown-menu">
+                   @for(pm <- g.getHotspots()){              			
+			              			
+			    		<li class="dropdown-submenu">
+			                  <a tabindex="-1" >@pm.getName</a>
+			                  <ul class="dropdown-menu">
+			                  
+			                  	<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".visible")');">Sichtbarkeit</a></li>
+			              		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".active")');">Aktivität</a></li>			                  
+			                  	<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".long")');">Longitude</a></li>
+			              		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".lat")');">Latitude</a></li>
+
+			              		@for(atr <- pm.getType.getAttributeTypes){
+			              			<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".")@atr.getXMLType');">@atr.getName</a></li>
+			              		}
+			                  </ul>
+			            </li>
+   					}
+      				</ul>
+  </li>
+   
+   
+   
+ 
+   
+   
+   
+    <li class="dropdown-submenu">
+                  <a tabindex="-1" >Systemvariablen</a>
+                  <ul class="dropdown-menu">
+                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$location.lat');">Aktuelle Position: Latitude</a></li>
+                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$location.long');">Aktuelle Position: Longitude</a></li>
+                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$score');">Score-Variable</a></li>
+                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$eeg.deviceState');">EEG-Gerätestatus</a></li>
+                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$eeg.emotion');">EEG-Gefühl</a></li>
+
+                  </ul>
+   </li>
+   
+   
+   
+   
+   
+   
+   
+   
+  </ul>
+</div>						        
+											}
+									         
+									        @if(a.getFileType == "int"){
+									        
+									        <input type="number"/ value="@ac.getAttributeValue(a)" id="actionat@ac.getId@a.getId" onchange="javascript:syncAttr('action',@ac.getId,@a.getId)" onkeydown="document.getElementById('status_actionat@ac.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
+									        
+									        }
+									        
+									        @if(a.getFileType == "boolean"){
+									        
+									        <input type="checkbox"/ id="actionat@ac.getId@a.getId" @if(ac.getAttributeValue(a) == "true"){ checked = "checked" } onchange="javascript:syncAttr('action',@ac.getId,@a.getId)" >
+									        
+									        }
+									        
+									         @if(a.getFileType == "mission"){
+									        
+									        
+									          <select id = "actionat@ac.getId@a.getId" class="missionselector" onchange="javascript:syncAttr('action',@ac.getId,@a.getId)" >
+             
+             <option ></option>
+              		@for(pm <- g.getAllMissions()){
+              			   <option  value = "@pm.getId()" @if(ac.getAttributeValue(a).equals(String.valueOf(pm.getId()))){ selected="selected" } >@pm.getName()</option>
+              			
+              			
+              		}   </select>
+									        
+									        
+									        }
+									        
+									        
+									         @if(a.getFileType == "hotspot" || a.getFileType == "hotspotstring"){
+									        
+									        
+									          <select id = "actionat@ac.getId@a.getId" class="hotspotselector" onchange="javascript:syncAttr('action',@ac.getId,@a.getId)" >
+             
+             <option ></option>
+              		@for(pm <- g.getAllHotspots()){
+              			   <option  value = "@pm.getId()" @if(ac.getAttributeValue(a).equals(String.valueOf(pm.getId()))){ selected="selected" } >@pm.getName()</option>
+              			
+              			
+              		}   </select>
+									        
+									        
+									        }
+									        
+									        
+									         @if(a.getFileType == "file"){
+									         	
+									         		<div id="action@ac.getId()fileattr@a.getId()" name="action@ac.getId()fileattr@a.getId()" class="fileattr">
+        	         	@if(ac.getAttributeValue(a) != ""){
+        	         	
+        	
+									         	<a href="@ac.getAttributeValue(a)" target="_blank">
+@editor_athumbnail(ac.getAttributeValue(a))
+</a>
+									        }
+									        </div> 	
+									        
+									        
+									        
+         	<div id="actionfile_file_at@ac.getId@a.getId">
+				<input type="file"/ id="actionfileat@ac.getId@a.getId" onchange="javascript:uploadFile('action',@ac.getId,@a.getId)" >
+        
+        <a  onClick="javascript:document.getElementById('actionfile_file_at@ac.getId@a.getId').style.display='none';document.getElementById('actionfile_text_at@ac.getId@a.getId').style.display='block';">Variabel</a>
+        </div>
+                <div id="actionfile_text_at@ac.getId@a.getId" style="display:none;">
+									        <input type="text"/ value="@ac.getAttributeValue(a)" id="actionat@ac.getId@a.getId" onchange="javascript:syncAttr('action',@ac.getId,@a.getId)" onkeydown="document.getElementById('status_actionat@ac.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
+                      <a onClick="javascript:document.getElementById('actionfile_text_at@ac.getId@a.getId').style.display='none';document.getElementById('actionfile_file_at@ac.getId@a.getId').style.display='block';">Datei</a>
+              
+               </div>
+									        
+									        
+
+									        
+									        }
+									        
+									        
+									        
+								@if(a.getFileType == "actions"){
+									       
+									        
+									        
+									        
+              				<div style="width:99%; height:170px; white-space: nowrap; overflow-x:scroll; overflow-y:hidden; ">
+								<div style="min-width:100%; white-space: nowrap;">
+              	<div  style=" padding:10px;  display:inline-block; width:100px; cursor:pointer;"><div><img src="@Global.SERVER_URL_2/assets/icons/actions/default.png" style="height:70px; width:70px; position:relative; left:15px; " /><p style="width:100px; height:36px; font-size:10px; text-align:center; overflow:hidden; white-space:normal;">  @a.getName</p></div><p style="height:20px; overflow:hidden;">&nbsp;</p></div>
+              			
+              			
+              				<div id="actionarrow_@ac.getId" style="display:inline-block; width:30px;  position:relative; top:-70px; "><img style="position:relative;" src="@Global.SERVER_URL_2/assets/icons/next.png"></div>
+              			
+              		
+              			
+              			
+              		              		<div style="display:inline-block;" id="attributeactions_action@ac.getId()_atr@a.getId">
+              		
+              		
+              		
+              		
+              		
+              		@if(ac.getAttribute(a) != null){
+              			@if(ac.getAttribute(a).getActions() != null){
+              	@if(!ac.getAttribute(a).getActions().isEmpty()){
+              		
+              		
+              		
+              		
+							              		
+							              		
+							       @for(atrac <- ac.getAttribute(a).getActions){
+									              		
+									              		
+									              
+									              	
+									             @editor_aactioninattribute(g,atrac,ac.getAttribute(a))
+																		        				
+																		        				
+																	}	        				}
+									              				}
+									            }  
+									              			
+							              	
+              		
+              		</div>
+              		
+									              				
+							 <a class="btn" id="addaction_@rt.toString()_a@a.getId()_ac@ac.getId()btn" style=" position:relative; top:-70px; display:inline-block; cursor:pointer;" onClick="document.getElementById('addaction_@rt.toString()_a@a.getId()_ac@ac.getId()div').style.display='inline-block'; document.getElementById('addaction_@rt.toString()_a@a.getId()_ac@ac.getId()btn').style.display='none';">
+    <span class="icon-plus"></span>
+  </a>
+					             		
+              		<div style=" position:relative;  display:none;" id="addaction_@rt.toString()_a@a.getId()_ac@ac.getId()div">		        
+             
+             	<div class="newactioninattribute" id="attribute_add_action_ac@ac.getId()_atr@a.getId" style="display:inline-block; position:relative; top:-50px;">
+             	
+             
+              		   <select id = "actiontype_action@ac.getId()_atr@a.getId" >
+             
+             
+             @if(rt != "menuitem"){
+             	@defining(RuleType.find.byId(Long.valueOf(rt))){ rtv => 
+              		@for(at <- rtv.getPossibleActionTypes){
+              			   <option value = "@at.getId()">@at.getName()</option>
+              			
+              			
+              		} 
+              		}
+              		} else {
+              		
+              		
+              		@for(at <- g.getType.getPossibleMenuItemActionTypes){
+              			
+              			 <option value = "@at.getId()">@at.getName()</option>
+              			}
+              		
+              		
+              		}  </select><br/>
+              		
+              		<div id="attribute_add_action_button_ac@ac.getId()_atr@a.getId" class="btn btn-success" style="position:relative; bottom:50%;" onClick="newActionInAttribute('action',@ac.getId,@a.getId,@z+1,@if(rt != "menuitem"){@rt} else {'@rt'}); document.getElementById('addaction_@rt.toString()_a@ac.getId()btn').style.display='inline-block'; document.getElementById('addaction_@rt.toString()_a@ac.getId()div').style.display='none';">Hinzufügen</div>
+              
+              
+              </div>
+              		</div>
+              		
+              		
+              			
+              			
+              			
+              			
+              			
+              			
+              			
+              			</div>
+              			</div>
+									        
+									        
+									        
+									        
+									        
+									        
+									        } else {
+									        
+									        
+									        
+									        
+									      
+									         <img id="status_actionat@ac.getId@a.getId" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
+        
+									       }
+									        
+									        </div>
+									        </div>
+									        <br/>
+																		        				
+															}}			        	
+																		        				
+									              				
+									              				
+									              				
+									              				
+									              				
+									              				
+									              				
+									              				
+									              				
+									              				
+									              				
+									              				
+									              				
+									              				
+									              				</div>
+									              				
+									              				
+									              				
+									              				
+									              				
+									              				
+									              				
+									              				
+									              				
+									              				
+									              				
+									              		
+              		
+              	
+              		
+              		
+              		
+              	
+              		
+              		
+              		</div>
+              		
+              		
+              		</div>
+              		
+              		
+              		
+              		
+              	
+              				
+              			</div>	
+              				
+              				
+              				
+              			
+	 	
+	 		
+	 		
+	 		
+	 		
+	 		
+	 		
+	 		
+	 		

@@ -1,0 +1,73 @@
+@(uploadForm: Form[_],errormessage: String)
+
+@import helper._
+@import helpers._
+@import helper.twitterBootstrap._
+
+@main(Application.getLocalPortal.getLanguageParameter("Neues_Spiel_erstellen"),"upload_game") {
+
+
+
+
+		
+
+        @* Display proprietary login form *@
+    	@helpers.form(routes.Portal.doUploadGame(Application.getLocalPortal().getId()),'class -> "form-horizontal", 'enctype -> "multipart/form-data") {
+    	
+    	
+    	
+    		@if(errormessage != ""){
+    			<p class="error">
+		            <span class="label label-important">@errormessage</span>
+		        </p>
+            }
+    			
+    		
+    		
+            @if(uploadForm.hasGlobalErrors) {
+                <p class="error">
+		            <span class="label label-important">@uploadForm.globalError.message</span>
+		        </p>
+            } 
+            
+             @inputText(
+                uploadForm("name"),
+                '_label -> Application.getLocalPortal.getLanguageParameter("Spielname")
+             )
+
+                 <br/>
+
+            @checkbox(
+                uploadForm("publ"),
+                '_label -> "Öffentlich?"
+
+            )
+            <br/>
+            
+            @if(!Application.getLocalPortal().gameTypesIsEmpty()){
+            	@if(!Application.getLocalPortal().getContentHtmlParameter("general.games.onlyonegametype")){
+       @Application.getLocalPortal.getLanguageParameter("Spieltyp")
+       <br/>
+       }
+           <select name="gametype"    @if(Application.getLocalPortal().getContentHtmlParameter("general.games.onlyonegametype")){ style="display:none" }>
+           
+           
+    @for(gType <- Application.getLocalPortal().getGameTypes()){
+        <option @if(gType.getName().equals("beliebiges Spiel")){ selected="selected" } value="@gType.getId()">@gType.getName()</option>
+    }
+</select>
+
+
+                         
+                         } else {
+            @inputFile(uploadForm("zip"), '_display -> "Attachment", '_label -> "Zip-Datei" )
+ } 
+                               <br/>
+            <input type="submit" value="Erstellen" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes") !=""))>
+  	
+}
+
+
+
+
+}

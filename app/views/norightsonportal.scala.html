@@ -1,0 +1,25 @@
+@(reason: String)
+
+
+@import helper._
+@import helpers._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+@main("Error") {
+
+      <!-- Main hero unit for a primary marketing message or call to action -->
+      <div class="hero-unit">
+        <p>Anscheinend bist du nicht bei diesem Portal registriert.</p>
+          <p><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doAddMeToPortal(Application.getLocalPortal().getId())">Anmelden mit Geoquest Account</a></p>
+          <p><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@com.feth.play.module.pa.controllers.routes.Authenticate.logout()">Logout Geoquest Account und Logge mit anderem Account ein</a></p>
+
+      </div>
+
+
+
+
+
+
+
+    }

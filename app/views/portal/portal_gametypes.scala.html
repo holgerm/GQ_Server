@@ -1,0 +1,89 @@
+@(provider: ProviderPortal)
+
+    @import helper._
+    @import helpers._
+@import util.Global;
+
+@main("Spieltypen") {
+
+
+    @defining(Application.getLocalUser(session())) { user =>
+
+
+
+            @if(provider.getGameTypes().isEmpty() == true){
+                Keine Spieltypen
+            } else {
+
+                <div class="gq_container" style="margin-top: 10px">
+                    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th class="no-sort">Optionen</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+
+                    @for(a_gametype <- provider.getGameTypes()){
+                            <tr>
+
+                                <td>@a_gametype.getId()</td>
+
+
+                                            <td>@a_gametype.getName()</td>
+                                            <td>
+                                            
+                                            	<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doDeleteGameTypeFromPortal(Application.getLocalPortal().getId(),provider.getId(),a_gametype.getId())">
+                                            
+Von diesem Portal entfernen              </a>                          
+ </td>
+
+                                      
+
+
+
+
+                                </tr>
+
+                    }
+
+                        </tbody>
+                    </table>
+
+
+                </div>
+                    }
+
+
+
+	@if(!provider.getId().equals(Global.defaultportal.getId())){
+
+
+<h2>Aktuelle Spieltypen</h2>
+
+
+
+@for(a_gametype <- Global.defaultportal.getGameTypes()){
+	
+	
+	@a_gametype.getName() [ @a_gametype.getId() ] -> 
+	
+	<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doAddGameTypeToPortal(Application.getLocalPortal().getId(),provider.getId(),a_gametype.getId())">
+	Hinzufügen</a><br/><br/>
+	
+	
+	
+}
+
+
+
+
+    }
+
+}
+
+}

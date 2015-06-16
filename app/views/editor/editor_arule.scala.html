@@ -1,0 +1,74 @@
+@(g:Game,r:models.GameParts.Rule,rt:models.GameParts.RuleType)
+
+@import util.Global;
+
+
+
+
+
+@if(g.getType.getId < 981){  
+
+
+
+@editor_oldconditions(g,r)
+
+
+<div style="background-color:#CCC; display:inline-block;">
+
+
+
+
+
+  }
+              		
+              		
+              		
+              		              		<div style="display:inline-block;" id="triggeractions_@r.getId">
+        @editor_actionsintrigger(g,r)
+              		</div>
+              		
+									              				
+									              				
+									              				
+              		
+              		<div style="display:inline-block;">
+              		
+             
+             	<div>
+               <a class="btn" id="addaction_@rt.getId()_r@r.getId()btn" style=" position:relative; top:-70px; display:inline-block; cursor:pointer;" onClick="document.getElementById('addaction_@rt.getId()_r@r.getId()div').style.display='inline-block'; document.getElementById('addaction_@rt.getId()_r@r.getId()btn').style.display='none';">
+    <span class="icon-plus"></span>
+  </a>
+					             		
+              		<div class="actionaddselect" style=" position:relative; top:-70px; display:none;" id="addaction_@rt.getId()_r@r.getId()div">
+             
+              		   <select id = "actiontype_@r.getId()" >
+             
+             
+             
+              		@for(at <- rt.getPossibleActionTypes()){
+              			   <option value = "@at.getId()">@at.getName()</option>
+              			
+              			
+              		}   </select><br/>
+              		
+              		<div id="rule_add_action_button_@r.getId()" class="btn btn-success" style="position:relative; bottom:50%;" onClick="newActionInRule(@r.getId,@rt.getId);  document.getElementById('addaction_@rt.getId()_r@r.getId()btn').style.display='inline-block'; document.getElementById('addaction_@rt.getId()_r@r.getId()div').style.display='none';">Hinzufügen</div>
+              <p style="height:20px; overflow:hidden;">&nbsp;</p>
+              </div>
+              </div>
+              		</div>
+              		
+              		
+              		
+              		
+              		
+              		
+              		
+@if(g.getType.getId < 981){  
+
+
+</div>
+
+
+  }
+              		
+              		

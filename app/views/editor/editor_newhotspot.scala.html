@@ -1,0 +1,56 @@
+@* editor_newhotspot Template File *@
+@(g: Game)
+
+
+   	<div class="missionedit" id="hotspotnew" name="hotspotnew" style="display:none">
+<div class="options">
+ 					<i class="icon-resize-full" onClick="javascript:toggleFullscreen('hotspotnew','72%','75%','120px','5%','35px')"></i>
+ 					<i class="icon-remove" onClick="javascript:document.getElementById('hotspotnew').style.display = 'none';deactiveFullscreen('hotspotnew','72%','75%','120px','5%','35px');"></i></div>
+              				              				<input type="text" id="hotspotnew_name" class="h2textfield" value="Neuer Hotspot">
+              				<br/><em>in Spiel</em><br/>
+              					  <fieldset>
+      
+             @if(g.getType.getPossibleHotspotTypes.size() > 1){
+          <p>
+             <label>Hotspottyp</label>
+             
+             
+             
+             <select id = "hotspottype_new">
+             @for(a_htype <- g.getType.getPossibleHotspotTypes){
+             
+               
+               <option value = "@a_htype.getId()">@a_htype.getName()</option>
+             
+               }
+             </select>
+          
+          </p>
+          
+          } else {
+          @for(a_htype <- g.getType.getPossibleHotspotTypes){
+          <input type="hidden" id="hotspottype_new" value="@a_htype.getId">
+          }
+          }
+          
+            <p>
+             <label>Longitude</label>
+            <input type="text" id="hotspotnew_long" />
+            
+          </p>
+          
+          
+            <p>
+             <label>Latitude</label>
+            <input type="text" id="hotspotnew_lat" />
+            
+          </p>
+          
+          
+          
+          
+       </fieldset>
+       <br/>
+       <div class="btn btn-success" onClick="newHotspotInGame()">Hinzufügen</div>
+              	</div>
+              	

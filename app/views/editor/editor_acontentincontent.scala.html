@@ -1,0 +1,34 @@
+@(g:Game, sc:models.GameParts.Content,c:models.GameParts.Content)
+
+@import models.GameParts._
+@import util.Global
+
+        	
+        	<div id="content@sc.getId()_incontent@c.getId()listitem">
+        	
+        <span id="listcontentname@sc.getId" class="onclicklink" onClick="document.getElementById('contentedit@sc.getId').style.display = 'block';">@sc.getType.getName</span>
+        <div class="floatright"><i onClick="javascript:deleteContentFromContent(@c.getId,@sc.getId)" class="icon-minus-sign"></i> </div>
+   		
+   		<input type="text" id="contentvaluename2_@sc.getId"
+              				onchange="javascript:syncName('contentvalue',@sc.getId,2)" onkeydown="document.getElementById('status2_contentvaluename@sc.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';"
+              				 value="@sc.getContent">
+        		 	
+        		 	   		        <img id="status2_contentvaluename@sc.getId" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
+        		 	
+        		 	
+        		 	
+        		 	
+   		   @for(a <- sc.getAllAttributes){
+									        				
+									        				@if(a.isEditable){
+									        				
+									        				@if(a.isVisibleInParent()){
+									        
+									        @editor_acontentsettingfield(g,sc,a)				
+									        				
+									        			}	}}
+        		 	
+        		 	
+        		 	<br/>
+        		 	
+        		 	</div>

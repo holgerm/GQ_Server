@@ -1,0 +1,50 @@
+@(uploadForm: Form[_], game: Game,errormessage: String)
+
+@import helper._
+    @import helpers._
+@import helper.twitterBootstrap._
+
+@main("Editieren ("+game.getName+"//"+game.getId+")","upload_game") {
+
+    <div class="hero-unit center">
+
+
+    @* Display proprietary login form *@
+    	@helpers.form(routes.Portal.doEditGame(Application.getLocalPortal().getId(),game.getId),'class -> "form-horizontal", 'enctype -> "multipart/form-data") {
+    	
+    		@if(errormessage != ""){
+    			<p class="error">
+		            <span class="label label-important">@errormessage</span>
+		        </p>
+            }
+    	
+    	
+            @if(uploadForm.hasGlobalErrors) {
+                <p class="error">
+		            <span class="label label-important">@uploadForm.globalError.message</span>
+		        </p>
+            }
+            
+             @inputText(
+                uploadForm("name"),
+                '_label -> "Spielname"
+             )
+
+              <br/>
+
+            @checkbox(
+            uploadForm("publ"),
+            '_label -> "Öffenlich?"
+
+            )
+
+
+                         <br/>
+            @inputFile(uploadForm("zip"), '_display -> "Attachment", '_label -> "Zip-Datei" )
+
+                               <br/>
+            <input type="submit" value="Editieren" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes") !=""))>
+    	}
+
+    </div>
+}

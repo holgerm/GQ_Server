@@ -1,0 +1,26 @@
+@(g:Game, mi:models.GameParts.MenuItem)
+
+@import models.GameParts._
+    
+   
+<div class="missioninview" id="listmenuitem@mi.getId" >
+
+
+<div style=" display:inline-block; cursor:pointer; overflow:hidden; white-space: nowrap; max-width:100%;">
+              
+              <div style=" display:inline-block;  max-width:85%;  white-space: nowrap;  overflow: hidden; ">
+               <i class="icon-tag" style="display:inline-block;"></i>
+
+ <div id="listmenuitemname@mi.getId" style="display:inline-block;" onClick="javascript:document.getElementById('menuitemedit@mi.getId()').style.display='block';" >
+
+
+ @mi.getTitle
+ 
+ </div>
+ </div>
+ <div style="display:inline-block; position:relative; top:-5px;">
+              <i class="icon-minus-sign" onClick="javascript:deleteItem('menuitem',@mi.getId)"></i> 
+            </div>
+ 
+ </div>
+</div>

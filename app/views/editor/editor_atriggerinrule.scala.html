@@ -1,0 +1,96 @@
+@(g:Game,m:models.GameParts.Mission,rt:models.GameParts.RuleType)
+
+@import util.Global;
+
+
+
+
+
+
+              		@if(m.hasRule(rt)){
+              		
+              		
+              		
+              		
+              		@for(r <- m.getRule(rt).getSubRules()){
+              		
+              		
+              		
+              		              		<div style="display:inline-block;" id="triggeractions_@r.getId">
+              		
+              	@if(!r.getActions().isEmpty()){
+              		
+              		
+              		
+              		
+							              		
+							              		
+							       @for(ac <- r.getActions){
+									              		
+									              		
+									              
+									              	
+									             @editor_aactionintrigger(g,ac,r)
+																		        				
+																		        				
+																		        				}
+									              				
+									              
+									              			
+							              	} 
+              		
+              		</div>
+              		
+									              				
+									              				
+									              				
+              		
+              		<div style="display:inline-block; width:130px;">
+              		
+             
+             	<div style=" position:relative; top:-70px;">
+             
+              		   <select id = "actiontype_@r.getId()" >
+             
+             
+             
+              		@for(at <- rt.getPossibleActionTypes()){
+              			   <option value = "@at.getId()">@at.getName()</option>
+              			
+              			
+              		}   </select><br/>
+              		
+              		<div id="rule_add_action_button_@r.getId()" class="btn btn-success" style="position:relative; bottom:50%;" onClick="newActionInRule(@r.getId)">Neue Aktion</div>
+              
+              </div>
+              		</div>
+              		
+              		
+              		
+              		}
+              		
+              		
+              		} else {
+              		
+              		
+              		<div style="display:inline-block; width:130px;">
+              		
+              		<div style=" position:relative; top:-70px;">
+             
+              		   <select id = "actiontypert_@rt.getId()" style="position:relative;">
+             
+              		@for(at <- rt.getPossibleActionTypes()){
+              			   <option value = "@at.getId()">@at.getName()</option>
+              			
+              			
+              		}   </select><br/>
+              		
+              		<div id="rulet_add_action_button_@rt.getId()"  class="btn btn-success" onClick="newActionInRuleType('mission',@m.getId,@rt.getId)">Neue Aktion</span>
+              
+              </div>
+              		</div>
+              		
+              		
+              		
+              		}
+              	

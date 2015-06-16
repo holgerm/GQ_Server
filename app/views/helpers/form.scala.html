@@ -1,0 +1,10 @@
+
+@(action: play.api.mvc.Call, args: (Symbol,String)*)(body: => Html)
+
+
+@import util.Global
+
+
+<form action="@Global.SERVER_URL_2@action" method="@action.method" @toHtmlArgs(args.toMap)>
+    @body
+</form>

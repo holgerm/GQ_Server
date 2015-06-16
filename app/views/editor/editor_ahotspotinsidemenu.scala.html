@@ -1,0 +1,26 @@
+@(g:Game, hs:models.GameParts.Hotspot)
+
+@import models.GameParts._
+    
+   
+<div class="missioninview" id="listhotspot@hs.getId" >
+
+
+<div style=" display:inline-block; cursor:pointer; overflow:hidden; white-space: nowrap;">
+              
+              <div style=" display:inline-block;    white-space: nowrap;   " onClick="javascript:panTo(marker[@hs.getId()]);popups[@hs.getId].openOn(map);hideAddEditMissions();">
+               <i class="icon-map-marker" style="display:inline-block;"></i>
+
+ <div id="listhotspotname@hs.getId" style="display:inline-block;  "  ">
+
+ @hs.getName 
+ 
+               <i class="icon-minus-sign" onClick="javascript:deleteItem('hotspot',@hs.getId)"></i> 
+ 
+ 
+ </div>
+ </div>
+
+ 
+ </div>
+</div>

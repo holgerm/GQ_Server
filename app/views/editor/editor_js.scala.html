@@ -1,0 +1,4838 @@
+@(g: Game)
+@import util.Global
+
+<script languge="javascript">
+
+var positionmarker;
+var goterror = 0;
+var startup = 0;
+var index = 0;
+var showstatus = 0;
+var inmapview = 0;
+var missionstillopen=0;
+var rulesstillopen = 0;
+
+var config = {
+		width: document.getElementById('unityPlayer').innerWidth,
+		height: document.getElementById('unityPlayer').innerHeight,
+		params: { enableDebugging:"0", logoimage: "@Global.SERVER_URL_2@routes.Assets.at("img/geoquestlogo.png")" }
+		
+	};
+
+var u = new UnityObject2(config);
+	
+	jQuery(function() {
+
+		var $missingScreen = jQuery("#unityPlayer").find(".missing");
+		var $brokenScreen = jQuery("#unityPlayer").find(".broken");
+		$missingScreen.hide();
+		$brokenScreen.hide();
+
+		u.observeProgress(function (progress) {
+			switch(progress.pluginStatus) {
+				case "broken":
+					$brokenScreen.find("a").click(function (e) {
+						e.stopPropagation();
+						e.preventDefault();
+						u.installPlugin();
+						return false;
+					});
+					$brokenScreen.show();
+				break;
+				case "missing":
+					$missingScreen.find("a").click(function (e) {
+						e.stopPropagation();
+						e.preventDefault();
+						u.installPlugin();
+						return false;
+					});
+					$missingScreen.show();
+				break;
+				case "installed":
+					$missingScreen.remove();
+				break;
+				case "first":
+				break;
+			}
+		});
+		u.initPlugin(jQuery("#unityPlayer")[0], "@Global.SERVER_URL_2/uploadedassets/player/html.unity3d");
+	});
+	
+	
+function showLinkDescription(text){
+
+var field = document.getElementById('xmlstatus');
+
+if(showstatus == 0){
+field.innerHTML = text;
+}
+
+}
+
+
+
+function showPlayer(){
+	
+	if(inmapview != 1){
+	document.getElementById('unityPlayer').style.top = '100px';
+	document.getElementById('unityPlayer').style.left = '200px';
+	}
+	
+}
+
+function hidePlayer(){
+	
+	document.getElementById('unityPlayer').style.top = '-100000px';
+	document.getElementById('unityPlayer').style.left = '-100000px';
+
+	
+}
+
+
+
+function showMapView(){
+	
+	document.getElementById('background').style.display='none';
+	inmapview = 1;
+	hidePlayer();
+	
+}
+
+
+function hideMapView(){
+	
+	document.getElementById('background').style.display='block';
+	inmapview = 0;
+	showPlayer();
+	
+}
+
+
+function deleteActionFromRule(r,a){
+
+if (confirm('Wirklich löschen?')) {
+
+
+
+
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  	{
+  		
+  		
+  		
+  		
+  		
+  		var el = document.getElementById('action_'+a);
+  		el.parentNode.removeChild( el );
+  		var el = document.getElementById('action_'+a);
+  		el.parentNode.removeChild( el );
+  		var el = document.getElementById('actionarrow_'+a);
+  		el.parentNode.removeChild( el );
+  		var el = document.getElementById('actionarrow_'+a);
+  		el.parentNode.removeChild( el );
+  
+ 
+
+
+@for(hs <- g.getAllHotspots){
+
+updatePopupContent(@hs.getId());
+
+}
+
+
+
+
+
+
+
+       
+  		
+  		
+		}
+	}
+    
+    
+ 
+  
+xmlhttp.open("GET",'@Global.SERVER_URL_2/editor/@g.getId/rule/'+r+'/remove/action/'+a,true);
+xmlhttp.send();
+
+
+var el = document.getElementById('action_'+a);
+  		el.parentNode.removeChild( el );
+  		var el = document.getElementById('action_'+a);
+  		el.parentNode.removeChild( el );
+  		var el = document.getElementById('actionarrow_'+a);
+  		el.parentNode.removeChild( el );
+  		var el = document.getElementById('actionarrow_'+a);
+  		el.parentNode.removeChild( el );
+
+
+
+}
+}
+
+
+
+function startUnityPreview(url){
+	
+	
+	if(u){
+		if(u.getUnity()){
+			document.getElementById("showvars").innerHtml = "";
+			u.getUnity().SendMessage("QuestDatabase","startWebXml",""+url);
+
+			hideAddEditMissions();
+			
+		} else {
+			
+		console.log("unity not found");
+		}
+	} else {
+		console.log("object u not found");
+
+		
+	}
+	
+	
+}
+
+
+
+
+
+
+function updateVariables(vars){
+	console.log(vars);
+	document.getElementById("showvars").innerHTML = ""+vars;
+	
+	
+}
+
+function unitydebug(vars){
+	console.log(vars);
+	var objDiv = document.getElementById("showlog");
+	objDiv.innerHTML += ""+vars;
+	objDiv.scrollTop = objDiv.scrollHeight;
+	
+}
+
+function resetUnityPreview(url){
+	
+	
+	if(u){
+		if(u.getUnity()){
+			
+			u.getUnity().SendMessage("QuestDatabase","startWebXml",""+url);
+
+			hideAddEditMissions();
+			
+		} else {
+			
+		console.log("unity not found");
+		}
+	} else {
+		console.log("object u not found");
+
+		
+	}
+	
+	
+}
+
+
+
+
+function openMission(id){
+
+	
+hideAddEditMissions();
+
+if(document.getElementById('missionedit'+id)){
+
+
+
+	hidePlayer();
+
+document.getElementById('missionedit'+id).style.display = 'block';
+
+} else {
+
+
+document.getElementById('loadingpic').style.display='block';
+
+	var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Mission/"+id+"/allinfo";
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById('missioninfocontainer').innerHTML += data;
+           
+    document.getElementById('loadingpic').style.display='none';
+    
+    
+
+    
+    /*
+	 * OPEN NEW DIV
+	 */
+  		 
+  
+  hideAddEditMissions();
+  hidePlayer();
+
+  document.getElementById('missionedit'+id).style.display='block';
+  
+  
+  		 
+    
+
+    
+    
+    
+    
+    
+           }
+
+});
+  	
+  		
+
+}
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+function openHotspotRule(id){
+
+hideAddEditMissions();
+
+if(document.getElementById('ruleedit_h'+id)){
+
+
+
+
+document.getElementById('ruleedit_h'+id).style.display = 'block';
+
+} else {
+
+
+document.getElementById('loadingpic').style.display='block';
+
+	var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Hotspot/"+id+"/ruleedit";
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById('hotspotrulecontainer').innerHTML += data;
+           
+    document.getElementById('loadingpic').style.display='none';
+    
+    
+    
+    
+    /*
+	 * OPEN NEW DIV
+	 */
+  		 
+  
+  hideAddEditMissions();
+  document.getElementById('ruleedit_h'+id).style.display='block';
+  
+  
+  		 
+    
+
+    
+    
+    
+    
+    
+           }
+
+});
+  	
+  		
+
+}
+
+
+
+
+
+}
+
+
+
+function openMissionRule(id){
+
+
+if(document.getElementById('ruleedit_m'+id)){
+
+
+
+	hidePlayer();
+document.getElementById('ruleedit_m'+id).style.display = 'block';
+
+} else {
+
+
+document.getElementById('loadingpic').style.display='block';
+
+	var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Mission/"+id+"/ruleedit";
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById('rulesinmissioncontainer'+id).innerHTML += data;
+           
+    document.getElementById('loadingpic').style.display='none';
+    
+    
+    
+    
+    /*
+	 * OPEN NEW DIV
+	 */
+  		 
+  
+  hideAddEditMissions();
+	hidePlayer();
+
+  document.getElementById('ruleedit_m'+id).style.display='block';
+  
+  
+  		 
+    
+
+    
+    
+    
+    
+    
+           }
+
+});
+  	
+  		
+
+}
+
+
+
+
+
+}
+
+
+function browserTester(){
+
+
+
+
+if (bowser.msie){
+document.getElementById("iewarning").style.display ='block';
+}
+
+
+
+}
+
+
+function connectionTester(){
+
+if(document.getElementById('connection_half').style.display=='block'){
+document.getElementById('connection_half').style.display='none';
+document.getElementById('connection_yellow_trying').style.display = 'block';
+             
+} else if(document.getElementById('connection_full').style.display=='block'){
+document.getElementById('connection_full').style.display='none';
+document.getElementById('connection_green_trying').style.display = 'block';
+} else if(document.getElementById('connection_no').style.display=='block'){
+document.getElementById('connection_no').style.display='none';
+document.getElementById('connection_red_trying').style.display = 'block';
+}
+
+var ajaxTime= new Date().getTime();
+var url ="@Global.SERVER_URL_2/testConnection";
+$.ajax({
+  url: url,
+  dataType: 'html',
+  timeout: 10000,
+    error: function(jqXHR, textStatus, errorThrown) {
+       
+       
+       document.getElementById('connection_yellow_trying').style.display='none';
+       document.getElementById('connection_green_trying').style.display='none';
+       document.getElementById('connection_red_trying').style.display='none';
+       
+       
+          		document.getElementById('connection_no').style.display='block';
+          		
+      
+        
+    },
+  success: function(data){
+   document.getElementById('connection_yellow_trying').style.display='none';
+       document.getElementById('connection_green_trying').style.display='none';
+       document.getElementById('connection_red_trying').style.display='none';
+  var totalTime = new Date().getTime()-ajaxTime;
+  if(totalTime< 2000){
+		document.getElementById('connection_full').style.display='block';
+
+		  } else {
+		document.getElementById('connection_half').style.display='block';
+		  
+		  }
+           }
+
+});
+
+
+
+
+setTimeout(function(){connectionTester()}, 10000);
+
+
+}
+
+
+function deleteActionFromAttribute(atr,a){
+
+if (confirm('Wirklich löschen?')) {
+
+
+
+
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  	{
+  		
+  		
+  		
+  		
+  		
+  		var el = document.getElementById('action_'+a);
+  		el.parentNode.removeChild( el );
+  		var el = document.getElementById('action_'+a);
+  		el.parentNode.removeChild( el );
+  		var el = document.getElementById('actionarrow_'+a);
+  	el.parentNode.removeChild( el );
+  	var el = document.getElementById('actionarrow_'+a);
+  	el.parentNode.removeChild( el );
+
+@for(hs <- g.getAllHotspots){
+
+updatePopupContent(@hs.getId());
+
+}
+
+
+
+
+
+
+
+       
+  		
+  		
+		}
+	}
+    
+    
+ 
+  
+xmlhttp.open("GET",'@Global.SERVER_URL_2/editor/@g.getId/attribute/'+atr+'/remove/action/'+a,true);
+xmlhttp.send();
+
+
+
+}
+}
+
+
+function deleteActionFromMenuItem(mi,a){
+
+if (confirm('Wirklich löschen?')) {
+
+
+
+
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  	{
+  		
+  		
+  		
+  		
+  		
+  		
+  		var el = document.getElementById('action_'+a);
+  		el.parentNode.removeChild( el );
+  		
+  	var el = document.getElementById('actionarrow_'+a);
+  	el.parentNode.removeChild( el );
+
+
+
+
+
+
+
+
+       
+  		
+  		
+		}
+	}
+    
+    
+ 
+  
+xmlhttp.open("GET",'@Global.SERVER_URL_2/editor/@g.getId/menuitem/'+mi+'/remove/action/'+a,true);
+xmlhttp.send();
+
+var el = document.getElementById('action_'+a);
+  		el.parentNode.removeChild( el );
+  		var el = document.getElementById('actionarrow_'+a);
+  	el.parentNode.removeChild( el );
+var el = document.getElementById('action_'+a);
+  		el.parentNode.removeChild( el );
+  		var el = document.getElementById('actionarrow_'+a);
+  	el.parentNode.removeChild( el );
+
+
+
+}
+}
+
+
+
+
+function deleteSubRuleFromRule(r,sr){
+
+
+if (confirm('Wirklich löschen?')) {
+
+
+
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  	{
+  		
+  	
+
+  		if(xmlhttp.responseText =='synced'){
+
+
+	
+				var el = document.getElementById('subruleview'+sr);
+					el.parentNode.removeChild( el );
+	
+				 	updateElementsByClass('ruleinlist');
+				 	
+
+@for(hs <- g.getAllHotspots){
+
+updatePopupContent(@hs.getId());
+
+}
+				
+
+			} else {
+			
+			alert(xmlhttp.responseText);
+			
+			}
+
+
+       
+  		
+  		
+		}
+	}
+    
+    
+ 
+  
+xmlhttp.open("GET",'@Global.SERVER_URL_2/editor/@g.getId/rule/'+r+'/remove/subrule/'+sr	,true);
+xmlhttp.send();
+
+
+
+}
+}
+
+
+function switchNewObjectView(type){
+
+var encselect = document.getElementById(type+'_newobject_type');
+
+
+var id =  encselect.options[encselect.selectedIndex].value;
+
+
+eleCategory = document.getElementById('whichnewobjectfor'+type);
+
+var eleChild = eleCategory.childNodes;
+for( i = 0 , j = eleChild.length; i < j ; i++ ){
+    if( eleChild[ i ].className == "switchedview" ){
+        
+        
+        eleChild[ i ].style.display = "none";
+        
+        
+    }
+}
+
+
+
+document.getElementById('newobject_'+id).style.display = 'block';
+
+
+
+
+}
+
+
+
+
+function newActionInRule(r,rt,at,m){
+
+
+if(at == null){
+at =  document.getElementById('actiontype_'+r).value;
+}
+
+
+
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  	{
+  		
+  		
+  		
+  		
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Action/"+xmlhttp.responseText+"/inrule/"+r;
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById('triggeractions_'+r).innerHTML += data;
+           }
+
+});
+  		
+  		if(!m){
+  		console.log("no m");
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Action/"+xmlhttp.responseText+"/allinfo/"+rt+"/10000001";
+  		
+  		} else {
+  		
+  		
+  		  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Mission/"+m+"/Action/"+xmlhttp.responseText+"/allinfo/"+rt+"/10000001";
+  		
+  		}
+  		
+  		
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+  
+		
+            document.getElementById('missioninfocontainer').innerHTML += data;
+           }
+
+});
+  		
+
+
+
+
+
+       
+  		
+  		
+		}
+	}
+    
+    
+ 
+  
+xmlhttp.open("GET",'@Global.SERVER_URL_2/editor/@g.getId/rule/'+r+'/add/action/'+at,true);
+xmlhttp.send();
+
+
+
+
+
+
+}
+
+
+
+
+
+function moveActionInRule(r,ac,direction){
+
+
+
+    document.getElementById('loadingpic').style.display='block';
+
+	var xmlhttp;
+	if (window.XMLHttpRequest)
+	  {// code for IE7+, Firefox, Chrome, Opera, Safari
+	  xmlhttp=new XMLHttpRequest();
+	  }
+	else
+	  {// code for IE6, IE5
+	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	  }
+
+
+
+	xmlhttp.onreadystatechange=function()
+	  {
+	  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+	  	{
+	  		
+	  		
+	  		
+	  		
+	  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Rule/"+r+"/allactions";
+	$.ajax({
+	  url: url,
+	  dataType: 'html',
+	  success: function(data){
+	            document.getElementById('triggeractions_'+r).innerHTML = data;
+	            document.getElementById('loadingpic').style.display='none';
+
+	           }
+
+	});
+	  	
+	  		
+
+
+
+
+
+	       
+	  		
+	  		
+			}
+		}
+	    
+	    
+	 
+	  
+	xmlhttp.open("GET",'@Global.SERVER_URL_2/editor/@g.getId/rule/'+r+'/move/'+direction+'/action/'+ac,true);
+	xmlhttp.send();
+
+
+
+
+
+
+	}
+
+
+function addConditionToTextarea(r,which){
+
+
+
+
+var field = document.getElementById('conitionadder_mission_rule'+r);
+
+
+
+var value = field.options[field.selectedIndex].value;
+
+var text = '';
+
+if(which == 'missionstate'){
+
+
+
+text = '<if><missionState id="'+value+'" state="new" /></if>';
+
+
+
+
+
+
+} else if(which == 'missionresult'){
+
+text = "<if><eq><var>$_"+value+".result</var><string>Room_A</string></eq></if>";
+
+
+
+
+}
+
+
+if(document.getElementById('condition_area_'+r).value == 'Insert rules here...'){
+document.getElementById('condition_area_'+r).value = text;
+} else {
+document.getElementById('condition_area_'+r).value += text;
+}
+
+editConditionInRule(r);
+
+
+
+
+
+
+}
+
+
+
+
+
+
+function addToTextarea(a,b){
+
+
+
+
+
+var area = document.getElementById(a);
+
+
+console.log(b);
+area.value += b;
+
+
+
+
+area.onchange();
+
+
+}
+
+
+
+
+function addMissionResultToTextarea(a,a1,a2,b,c){
+var area = document.getElementById(a+'at'+a1+''+a2);
+
+var text = '$_mission_'+b+'.result == "'+c+'"';
+
+area.value += text;
+
+syncAttr(a,a1,a2);
+
+}
+
+
+
+
+function newConditionInRule(r){
+
+
+
+
+var opt =  document.getElementById('condition_area_'+r).value;
+
+
+
+
+
+
+
+                if(document.getElementById('status_condition_area_'+r).tagName == "IMG"){ 
+                document.getElementById('status_condition_area_'+r).src = '@Global.SERVER_URL_2@routes.Assets.at("img/syncing.gif")';
+                
+                } else {
+document.getElementById('status_condition_area_'+r).innerHTML = 'waiting...';
+
+}
+
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  	{
+  		
+  		
+  		
+  		
+    updateElementsByName('conditionsinrule'+r+'container');
+  
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+       
+  		
+  		
+		}
+	}
+    
+    
+ 
+  
+xmlhttp.open("GET",'@Global.SERVER_URL_2/editor/@g.getId/rule/'+r+'/add/condition/'+encodeURIComponent(opt),true);
+xmlhttp.send();
+
+
+
+
+
+
+
+}
+
+function newActionInAttribute(type,ob,atr,z,rt,m){
+
+
+
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  	{
+  		
+  		
+  		
+  		
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Action/"+xmlhttp.responseText+"/inatr/"+type+"/"+ob+"/"+atr;
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById('attributeactions_'+type+''+ob+'_atr'+atr).innerHTML += data;
+           }
+
+});
+  		
+  		
+
+if(!m){
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Action/"+xmlhttp.responseText+"/allinfo/"+rt+"/"+z;
+  		
+  		} else {
+  		  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Mission/"+m+"/Action/"+xmlhttp.responseText+"/allinfo/"+rt+"/"+z;
+  		
+  		
+  		}
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById('actioninfocontainer_atr'+atr+'_'+type+''+ob).innerHTML += data;
+           }
+
+});
+  		
+
+
+
+
+
+
+       
+  		
+  		
+		}
+	}
+    
+    
+ var at = document.getElementById('actiontype_'+type+''+ob+'_atr'+atr).value;
+  
+xmlhttp.open("GET",'@Global.SERVER_URL_2/editor/@g.getId/'+type+'/'+ob+'/attribute/'+atr+'/add/action/'+at,true);
+xmlhttp.send();
+
+
+
+
+
+
+
+}
+
+
+
+
+function newRuleInMission(m,rt){
+
+
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  
+  
+var xmlhttp2;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp2=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp2=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  	{
+  		
+		
+		
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Rule/"+xmlhttp.responseText+"/oftype/"+rt;
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+           
+            
+            
+            
+            
+            var a = document.getElementById('actiontypert_'+rt+'_m'+m).value;
+            
+            
+             document.getElementById('trigger_m'+m+'_'+rt).innerHTML = data;
+            
+             
+             
+newActionInRule(xmlhttp.responseText,rt,a,m);
+            
+           }
+
+});
+  		
+
+
+
+
+
+
+
+
+
+
+       
+  		
+  		
+		}
+	}
+    
+    
+ 
+  
+xmlhttp.open("GET",'@Global.SERVER_URL_2/editor/@g.getId/mission/'+m+'/add/rule/'+rt,true);
+xmlhttp.send();
+
+
+  
+
+
+
+
+}
+
+function newRuleInHotspot(h,rt){
+
+
+
+
+
+
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  	{
+  		
+  		
+  		
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Rule/"+xmlhttp.responseText+"/oftype/"+rt;
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+           
+            
+            
+            
+            
+            var a = document.getElementById('actiontypert_'+rt+'_h'+h).value;
+            
+            
+             document.getElementById('trigger_h'+h+'_'+rt).innerHTML = data;
+            
+             
+             
+newActionInRule(xmlhttp.responseText,rt,a);
+            
+           }
+
+});
+  		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       
+  		
+  		
+		}
+	}
+    
+    
+ 
+  
+xmlhttp.open("GET",'@Global.SERVER_URL_2/editor/@g.getId/hotspot/'+h+'/add/rule/'+rt,true);
+xmlhttp.send();
+
+
+
+
+
+
+
+
+
+}
+
+
+
+function newSubRuleInRule(r){
+
+
+
+
+
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  	{
+  		
+  		
+  		
+  		
+    updateElementsByName('subrules_'+r);
+  
+  
+
+
+ 	updateElementsByClass('ruleinlist');
+
+
+
+
+
+@for(hs <- g.getAllHotspots){
+
+updatePopupContent(@hs.getId());
+
+}
+
+
+
+
+
+       
+  		
+  		
+		}
+	}
+    
+    
+ 
+  
+xmlhttp.open("GET",'@Global.SERVER_URL_2/editor/@g.getId/rule/'+r+'/add/subrule',true);
+xmlhttp.send();
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
+
+function deleteItem(type,id,type2,id2){
+
+
+
+if (confirm('Wirklich löschen?')) {
+
+
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  	{
+  		if(xmlhttp.responseText =='synced'){
+			if(id2){
+			
+					if(document.getElementById('list'+type2+''+id2)){
+					var el = document.getElementById('list'+type2+''+id2);
+					el.parentNode.removeChild( el );
+					}
+			
+					if(document.getElementById(type2+'edit'+id2)){
+					var el = document.getElementById(type2+'edit'+id2);
+					el.parentNode.removeChild( el );
+					}
+					
+					if(document.getElementById('list'+type2+'submissions'+id2)){
+					var el = document.getElementById('list'+type2+'submissions'+id2);
+					el.parentNode.removeChild( el );
+					}
+					
+					
+					
+					
+			} else {
+					if(document.getElementById('list'+type+''+id)){
+					var el = document.getElementById('list'+type+''+id);
+					el.parentNode.removeChild( el );
+					}
+			
+					if(document.getElementById(type+'edit'+id)){
+					var el = document.getElementById(type+'edit'+id);
+					el.parentNode.removeChild( el );
+					}
+			
+			
+			
+			
+			}
+			
+			
+			
+			if(type == 'hotspot'){
+			
+			
+			
+@for(hs <- g.getAllHotspots){
+	
+	if(id == @hs.getId){
+map.removeLayer(marker[@hs.getId]);
+map.removeLayer(circle[@hs.getId]);
+map.closePopup();
+group.removeLayer(marker[@hs.getId]);
+updatePopupContent(@hs.getId());
+}
+}
+
+			
+			map.removeLayer(marker);
+			
+			}
+			
+			
+			if(type2 == 'scene'){
+			
+			
+			
+			var url2 ="@Global.SERVER_URL_2/editor/@g.getId()/id/Scene/"+id2+"/hotspot";
+$.ajax({
+  url: url2,
+  dataType: 'html',
+  success: function(data3){
+
+
+console.log(data3);
+  		
+  		if(data3 != "NO"){
+  	map.removeLayer(marker[data3]);
+  	map.removeLayer(circle[data3]);
+  	map.removeLayer(popups[data3]);
+    	group.removeLayer(marker[data3]);
+  }
+  }
+  		 
+  		}); 
+    
+  
+			
+			
+			
+			}
+			
+			
+			  updateElementsByClass("missionselector");
+			
+			
+			
+		} else {
+		alert(xmlhttp.responseText);
+		}
+	}
+    
+    
+ }
+  
+xmlhttp.open("GET","@Global.SERVER_URL_2/editor/@g.getId/"+type+"/"+id+"/delete",true);
+xmlhttp.send();
+
+
+}
+}
+
+
+
+function uploadFile(type,hid,attr){
+
+
+var statusdiv = "status_"+type+"at"+hid+""+attr;
+
+           if(document.getElementById(statusdiv).tagName == "IMG"){ 
+
+document.getElementById(statusdiv).src = '@Global.SERVER_URL_2@routes.Assets.at("img/syncing.gif")';
+console.log("status div found");
+
+} else {
+
+console.log("status div not found");
+
+}
+
+
+var field = document.getElementById(type+'at'+hid+''+attr);
+
+
+if(document.getElementById(type+'fileat'+hid+''+attr)){
+
+field = document.getElementById(type+'fileat'+hid+''+attr);
+
+}
+
+var file = field.files[0]; // Files[0] = 1st file
+
+if(file == null){
+
+alert("No file selected!");
+} else {
+
+    var xhr = new XMLHttpRequest();
+    xhr.file = file; // not necessary if you create scopes like this
+    xhr.addEventListener('progress', function(e) {
+        var done = e.position || e.loaded, total = e.totalSize || e.total;
+        console.log('xhr progress: ' + (Math.floor(done/total*1000)/10) + '%');
+    }, false);
+    if ( xhr.upload ) {
+        xhr.upload.onprogress = function(e) {
+            var done = e.position || e.loaded, total = e.totalSize || e.total;
+            console.log('xhr.upload progress: ' + done + ' / ' + total + ' = ' + (Math.floor(done/total*1000)/10) + '%');
+            
+            
+            
+           if(document.getElementById(statusdiv).tagName != "IMG"){ 
+            
+           
+           
+           
+            document.getElementById(statusdiv).innerHTML = 'uploading...' + (Math.floor(done/total*1000)/10) + '%';
+            
+            }
+        };
+    }
+    xhr.onreadystatechange = function(e) {
+        if ( 4 == this.readyState ) {
+        
+        
+        if(type == 'hotspot'){
+        
+        
+
+       window.location.href = '@Global.SERVER_URL_2/editor/@g.getId';
+
+
+        
+        
+        }
+        
+            console.log(['xhr upload complete', e]);
+            
+            
+             updateElementsByName(type+''+hid+'fileattr'+attr);
+             
+             
+            setTimeout(function(){
+            
+                if(document.getElementById(statusdiv).tagName == "IMG"){ 
+
+document.getElementById(statusdiv).src = '@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")';
+
+} else {
+            
+            document.getElementById(statusdiv).innerHTML = "uploaded";
+            
+            }
+            
+             updateElementsByName(type+''+hid+'fileattr'+attr); },10);
+             
+			
+			
+			
+			
+
+          
+        }
+    };
+    
+    
+    var url = '@Global.SERVER_URL_2/editor/@g.getId/file/'+type+'/'+hid+'/'+attr;
+     xhr.open('post', url, true);
+    var formData = new FormData();
+formData.append("thefile", file);
+xhr.send(formData);
+    
+
+
+
+
+
+
+} 
+
+
+
+}
+
+function xmlify(){
+
+showstatus = 1;
+
+ document.getElementById('xmlstatus').innerHTML="syncing...";
+ 
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.responseText == "synced")
+    {
+
+var currentdate = new Date();
+
+ document.getElementById('xmlstatus').innerHTML="&nbsp;";
+ showstatus =0;
+
+ 
+
+    } else {
+    
+    if(xmlhttp.responseText.indexOf("Error") != -1){
+document.getElementById('xmlstatus').innerHTML="&nbsp;"; if(goterror == 0){alert("Es ist ein Fehler beim Speichern aufgetreten."); goterror = 1;}
+ showstatus =0;
+ } else {
+ document.getElementById('xmlstatus').innerHTML="Speichere...";
+ 
+ }
+   
+    }
+  }
+  goterror = 0;
+xmlhttp.open("GET","@Global.SERVER_URL_2/editor/@g.getId/xmlify",true);
+xmlhttp.send();
+
+
+
+
+
+
+
+}
+
+function syncName(type,cid,intv){
+intv = (typeof intv === "undefined") ? 0 : intv;
+
+
+
+var statusdiv = "status_"+type+"name"+cid;
+
+
+                if(document.getElementById(statusdiv).tagName == "IMG"){ 
+                document.getElementById(statusdiv).src = '@Global.SERVER_URL_2@routes.Assets.at("img/syncing.gif")';
+                
+                } else {
+
+    document.getElementById(statusdiv).innerHTML="syncing...";
+    
+    }
+
+if(intv != 0){
+    var i = 2;
+while(document.getElementById("status"+i+"_"+type+"name"+cid)){
+
+
+
+
+  if(document.getElementById("status"+i+"_"+type+"name"+cid).tagName == "IMG"){ 
+                document.getElementById("status"+i+"_"+type+"name"+cid).src = '@Global.SERVER_URL_2@routes.Assets.at("img/syncing.gif")';
+                
+                } else {
+document.getElementById("status"+i+"_"+type+"name"+cid).innerHTML="syncing...";
+}
+i++;
+
+
+ 
+}}
+
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+
+if(intv == 0){
+var field = document.getElementById(type+'name'+cid);
+
+value = field.value;
+} else {
+var field = document.getElementById(type+'name'+intv+'_'+cid);
+value = field.value;
+
+}
+
+field.innerHTML = field.value;
+field.setAttribute("placeholder",field.value);
+field.setAttribute("value",field.value);
+
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    
+   
+    
+    
+      if(document.getElementById(statusdiv).tagName == "IMG"){ 
+      
+      
+      if(xmlhttp.responseText == "synced"){
+      
+               
+    
+                document.getElementById(statusdiv).src = '@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")';
+                } else {
+                
+                alert(xmlhttp.responseText);
+                
+                }
+                } else {
+    
+    
+    
+    document.getElementById(statusdiv).innerHTML=xmlhttp.responseText;
+  
+  }
+    
+    var i = 2;
+    while(document.getElementById("status"+i+"_"+type+"name"+cid)){
+    
+    
+    
+    
+    
+    
+      if(document.getElementById("status"+i+"_"+type+"name"+cid).tagName == "IMG"){ 
+      
+      
+      if(xmlhttp.responseText == "synced"){
+      
+      
+      
+      
+                document.getElementById("status"+i+"_"+type+"name"+cid).src = '@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")';
+                } else {
+                
+                alert(xmlhttp.responseText);
+                
+                }
+                } else {
+                
+                
+    
+document.getElementById("status"+i+"_"+type+"name"+cid).innerHTML=xmlhttp.responseText;
+
+}
+i++;
+
+
+}
+    
+    
+    }
+  }
+xmlhttp.open("GET","@Global.SERVER_URL_2/editor/@g.getId/"+type+"/"+cid+"/setname/"+encodeURIComponent(value),true);
+xmlhttp.send();
+
+
+if(type == 'mission' || type == 'content' || type == 'hotspot' || type == 'scene'){
+
+document.getElementById('list'+type+'name'+cid).innerHTML=value;
+
+
+if(type == 'mission'){
+  updateElementsByClass("missionselector");
+
+}
+
+}
+
+document.getElementById(type+'name'+cid).value = value;
+
+var i = 2;
+  while(document.getElementById(type+'name'+i+'_'+cid)){
+document.getElementById(type+'name'+i+'_'+cid).value = value;
+i++;
+
+}  
+
+
+
+
+}
+
+
+
+
+
+
+function syncGameName(){
+
+
+
+var statusdiv = "status_gamename";
+
+
+                if(document.getElementById(statusdiv).tagName == "IMG"){ 
+                document.getElementById(statusdiv).src = '@Global.SERVER_URL_2@routes.Assets.at("img/syncing.gif")';
+                
+                } else {
+
+    document.getElementById(statusdiv).innerHTML="syncing...";
+    
+    }
+
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+
+var field = document.getElementById('gamename');
+value = field.value;
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    
+    
+    
+      if(document.getElementById(statusdiv).tagName == "IMG"){ 
+      
+      
+      if(xmlhttp.responseText == "synced"){
+                document.getElementById(statusdiv).src = '@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")';
+                } else {
+                
+                alert(xmlhttp.responseText);
+                
+                }
+                } else {
+    
+    
+    document.getElementById(statusdiv).innerHTML=xmlhttp.responseText;
+  
+  }
+    
+  
+    
+    }
+  }
+xmlhttp.open("GET","@Global.SERVER_URL_2/editor/@g.getId/setname/"+encodeURIComponent(value),true);
+xmlhttp.send();
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+function syncGameVisibility(){
+
+
+
+var statusdiv = "status_gamevisi";
+
+
+                if(document.getElementById(statusdiv).tagName == "IMG"){ 
+                document.getElementById(statusdiv).src = '@Global.SERVER_URL_2@routes.Assets.at("img/syncing.gif")';
+                
+                } else {
+
+    document.getElementById(statusdiv).innerHTML="syncing...";
+    
+    }
+
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+
+var field = document.getElementById('gamevisi');
+value = 'false';
+if(field.checked){ value='true'; } else { value='false'; }
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    
+    
+    
+      if(document.getElementById(statusdiv).tagName == "IMG"){ 
+      
+      
+      if(xmlhttp.responseText == "synced"){
+                document.getElementById(statusdiv).src = '@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")';
+                } else {
+                
+                alert(xmlhttp.responseText);
+                
+                }
+                } else {
+    
+    
+    document.getElementById(statusdiv).innerHTML=xmlhttp.responseText;
+  
+  }
+    
+  
+    
+    }
+  }
+  
+  
+xmlhttp.open("GET","@Global.SERVER_URL_2/editor/@g.getId/setvisiblity/"+encodeURIComponent(value),true);
+xmlhttp.send();
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+function editConditionInRule(r){
+
+
+
+var statusdiv = "status_condition_area_"+r;
+
+
+
+   if(document.getElementById(statusdiv).tagName == "IMG"){ 
+                document.getElementById(statusdiv).src = '@Global.SERVER_URL_2@routes.Assets.at("img/syncing.gif")';
+                
+                } else {
+    document.getElementById(statusdiv).innerHTML="syncing...";
+}
+
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+var field = document.getElementById('condition_area_'+r);
+
+var value = field.value;
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    
+    
+    
+     if(document.getElementById(statusdiv).tagName == "IMG"){ 
+                document.getElementById(statusdiv).src = '@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")';
+                
+                } else {
+    document.getElementById(statusdiv).innerHTML=xmlhttp.responseText;
+  }
+    
+    
+    
+    }
+  }
+  
+  if(value == ""){ value = " "; }
+xmlhttp.open("GET","@Global.SERVER_URL_2/editor/@g.getId/rule/"+r+"/edit/condition/"+encodeURIComponent(value),true);
+xmlhttp.send();
+
+
+
+
+
+
+}
+
+var sizebefore = $(window).width();
+
+$(window).resize(function() {
+  var windowsize = $(window).width();
+  if (windowsize > 979) {
+  if(sizebefore < 979){
+  document.getElementById('missionview').style.display='block';
+    document.getElementById('navbar').style.display='block';
+      document.getElementById('navbarbutton').style.display='none';
+        document.getElementById('missionviewbutton').style.display='none';
+     document.getElementById('background').style.display='block';
+  
+  
+  }
+  } else {
+  if(sizebefore > 979){
+  
+    document.getElementById('missionview').style.display='none';
+      document.getElementById('missionviewbutton').style.display='block';
+       document.getElementById('navbar').style.display='none';
+      document.getElementById('navbarbutton').style.display='block';
+   document.getElementById('background').style.display='none';
+  }
+   
+  
+  }
+  sizebefore = windowsize;
+});
+
+
+
+
+function syncAttr(type,cid,aid,quotes){
+
+quotes = typeof quotes !== 'undefined' ? quotes : false;
+
+var statusdiv = "status_"+type+"at"+cid+""+aid;
+if(document.getElementById(statusdiv).tagName == "IMG"){ 
+document.getElementById(statusdiv).src = '@Global.SERVER_URL_2@routes.Assets.at("img/syncing.gif")';
+
+} else {
+    document.getElementById(statusdiv).innerHTML="syncing...";
+    
+    }
+    
+    
+    
+
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+var field = document.getElementById(type+'at'+cid+''+aid);
+var value=" ";
+
+
+if(field.tagName && field.tagName.toLowerCase() == "textarea") {
+
+if(field.value != ""){value = field.value; field.innerHTML = field.value; }
+
+
+if(document.getElementById(type+'at'+cid+''+aid+'_parent')){
+var fieldparent = document.getElementById(type+'at'+cid+''+aid+'_parent');
+if(fieldparent.value != ""){
+fieldparent.value = field.value;
+}
+}
+
+} else if(field.type == 'text' || field.type == 'color'){
+
+
+if(field.value != ""){value = field.value; field.setAttribute("placeholder",field.value); field.setAttribute("value",field.value); }
+
+if(document.getElementById(type+'at'+cid+''+aid+'_parent')){
+var fieldparent = document.getElementById(type+'at'+cid+''+aid+'_parent');
+fieldparent.value = field.value;
+}
+
+
+} else if(field.type == 'number'){
+value = 0;
+if(field.value != ""){value = field.value; field.setAttribute("placeholder",field.value); field.setAttribute("value",field.value); }
+
+if(document.getElementById(type+'at'+cid+''+aid+'_parent')){
+var fieldparent = document.getElementById(type+'at'+cid+''+aid+'_parent');
+fieldparent.value = field.value;
+}
+
+
+} else if(field.type == 'checkbox'){
+
+if(field.checked){ value='true'; field.setAttribute("checked",true); } else { value='false'; field.setAttribute("checked",false); }
+
+
+if(document.getElementById(type+'at'+cid+''+aid+'_parent')){
+var fieldparent = document.getElementById(type+'at'+cid+''+aid+'_parent');
+fieldparent.checked = field.checked;
+}
+
+} else if(field.options[field.selectedIndex]){
+
+
+value = field.options[field.selectedIndex].value;
+
+field.setAttribute("placeholder",value); field.setAttribute("value",value);
+
+if(document.getElementById(type+'at'+cid+''+aid+'_parent')){
+var fieldparent = document.getElementById(type+'at'+cid+''+aid+'_parent');
+fieldparent.selectedIndex = field.selectedIndex;
+}
+
+
+}
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    
+    
+    
+if(document.getElementById(statusdiv).tagName == "IMG"){ 
+
+
+if(xmlhttp.responseText == "synced"){
+document.getElementById(statusdiv).src = '@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")';
+
+
+} else {
+
+
+
+
+alert(xmlhttp.responseText);
+
+
+}
+
+} else {
+    
+    
+    document.getElementById(statusdiv).innerHTML=xmlhttp.responseText;
+    
+    
+    }
+    
+    
+    }
+  }
+  
+  
+  
+  
+  
+  if(quotes == true){value = "\""+value+"\""; }
+  if(type != 'game'){
+xmlhttp.open("GET","@Global.SERVER_URL_2/editor/@g.getId/"+type+"/"+cid+"/setattr/"+aid+"/"+encodeURIComponent(value),true);
+
+} else {
+xmlhttp.open("GET","@Global.SERVER_URL_2/editor/@g.getId/setattr/"+aid+"/"+encodeURIComponent(value),true);
+
+
+}
+xmlhttp.send();
+
+
+
+
+}
+
+
+
+
+function syncMenuItemAttr(cid,a){
+
+type="menuitem";
+
+var statusdiv = "status_"+type+""+cid+"_"+a;
+if(document.getElementById(statusdiv).tagName == "IMG"){ 
+document.getElementById(statusdiv).src = '@Global.SERVER_URL_2@routes.Assets.at("img/syncing.gif")';
+
+} else {
+    document.getElementById(statusdiv).innerHTML="syncing...";
+    
+    }
+    
+    
+    
+    
+
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+var field = document.getElementById('menuitem'+cid+'_'+a);
+var value=" ";
+
+
+if(field.tagName && field.tagName.toLowerCase() == "textarea") {
+
+if(field.value != ""){value = field.value; } else { value = " "; }
+
+
+
+} else if(field.type == 'text'){
+
+
+if(field.value != ""){value = field.value; } else { value = " "; }
+
+
+
+
+} else if(field.type == 'number'){
+value = 0;
+if(field.value != ""){value = field.value; } else { value=" "; }
+
+
+
+
+} else if(field.type == 'checkbox'){
+
+if(field.checked){ value='true'; } else { value='false'; }
+
+
+}
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    
+    
+    
+if(document.getElementById(statusdiv).tagName == "IMG"){ 
+
+
+if(xmlhttp.responseText == "synced"){
+document.getElementById(statusdiv).src = '@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")';
+
+
+} else {
+
+
+
+
+alert(xmlhttp.responseText);
+
+
+}
+
+} else {
+    
+    
+    document.getElementById(statusdiv).innerHTML=xmlhttp.responseText;
+    
+    
+    }
+    
+    
+    }
+  }
+  
+  
+ 
+xmlhttp.open("GET","@Global.SERVER_URL_2/editor/@g.getId/menuitem/"+cid+"/setattr/"+a+"/"+encodeURIComponent(value),true);
+
+
+xmlhttp.send();
+
+
+
+
+}
+
+
+function arr_diff(a1, a2)
+{
+  var a=[], diff=[];
+  for(var i=0;i<a1.length;i++)
+    a[a1[i]]=true;
+  for(var i=0;i<a2.length;i++)
+    if(a[a2[i]]) delete a[a2[i]];
+    else a[a2[i]]=true;
+  for(var k in a)
+    diff.push(k);
+  return diff;
+}
+
+
+
+
+
+
+
+
+function syncAttrInParent(type,cid,aid){
+
+
+
+var statusdiv = "status_"+type+"at"+cid+""+aid+"_parent";
+if(document.getElementById(statusdiv).tagName == "IMG"){ 
+document.getElementById(statusdiv).src = '@Global.SERVER_URL_2@routes.Assets.at("img/syncing.gif")';
+
+} else {
+    document.getElementById(statusdiv).innerHTML="syncing...";
+    
+    }
+    
+    
+    
+    
+    
+
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+var field = document.getElementById(type+'at'+cid+''+aid+"_parent");
+
+var fieldchild = document.getElementById(type+'at'+cid+''+aid);
+
+
+
+var value=" ";
+
+if(field.type == 'text'){
+value = field.value;
+fieldchild.value = value;
+} else if(field.type == 'number'){
+value = field.value;
+fieldchild = value;
+} else if(field.type == 'checkbox'){
+
+if(field.checked){ value='true'; } else { value='false'; }
+
+if(fieldchild){
+fieldchild.checked = field.checked;
+}
+
+} else if(field.options[field.selectedIndex]){
+
+
+value = field.options[field.selectedIndex].value;
+
+
+fieldchild.selectedIndex = field.selectedIndex;
+
+
+}
+
+field.innerHTML = value;
+field.setAttribute("placeholder",value);
+field.setAttribute("value",value);
+fieldchild.innerHTML = value;
+fieldchild.setAttribute("placeholder",value);
+fieldchild.setAttribute("value",value);
+
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    
+if(document.getElementById(statusdiv).tagName == "IMG"){ 
+
+
+if(xmlhttp.responseText == "synced"){
+document.getElementById(statusdiv).src = '@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")';
+} else {
+alert(xmlhttp.responseText);
+}
+
+} else {
+    
+    
+    document.getElementById(statusdiv).innerHTML=xmlhttp.responseText;
+    
+    
+    }
+    
+    
+    }
+  }
+  
+  
+  if(type != 'game'){
+  
+xmlhttp.open("GET","@Global.SERVER_URL_2/editor/@g.getId/"+type+"/"+cid+"/setattr/"+aid+"/"+encodeURIComponent(value),true);
+} else {
+xmlhttp.open("GET","@Global.SERVER_URL_2/editor/@g.getId/setattr/"+aid+"/"+encodeURIComponent(value),true);
+
+
+}
+xmlhttp.send();
+
+
+
+
+}
+
+
+function arr_diff(a1, a2)
+{
+  var a=[], diff=[];
+  for(var i=0;i<a1.length;i++)
+    a[a1[i]]=true;
+  for(var i=0;i<a2.length;i++)
+    if(a[a2[i]]) delete a[a2[i]];
+    else a[a2[i]]=true;
+  for(var k in a)
+    diff.push(k);
+  return diff;
+}
+
+
+
+
+function newMissionInGame(mid){
+
+
+var c = document.getElementById('missiontype_namenew').value;
+var b = mid;
+
+c = encodeURIComponent(c);
+b = encodeURIComponent(b);
+
+
+
+		
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  	{
+  		
+  		
+  		
+  		
+  		
+  		
+  		/*
+		 * SIDEMENU
+		 */ 
+  		
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Part/"+xmlhttp.responseText+"/insidemenu";
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById('allsidemenuparts').innerHTML += data;
+           }
+
+});
+  		
+  		
+  		
+  		
+  		
+  		/*
+		 * PARTINFO
+		 */ 
+  		
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Part/"+xmlhttp.responseText+"/allinfo";
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById('missioninfocontainer').innerHTML += data;
+           
+    
+    
+    
+    
+    
+    
+  		 var url ="@Global.SERVER_URL_2/editor/@g.getId()/id/Part/"+xmlhttp.responseText;
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data2){
+
+  
+  
+ 		 /*
+			 * OPEN NEW DIV
+			 */
+  		 
+  
+  hideAddEditMissions();
+  document.getElementById('missionedit'+data2).style.display='block';
+  
+  
+  		 
+  		 
+  		 }
+  		 
+  		 
+  		}); 
+  		 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+           }
+
+});
+  	
+  		
+  
+  
+  		/*
+		 * MISSIONSELECTORS
+		 */
+  
+  
+  
+ 
+  
+  
+  updateElementsByClass("missionselector");
+  
+  
+  
+  
+  
+  	 
+  		 
+  		 
+  		   document.getElementById('missiontype_namenew').value = 'Hier Namen eingeben';
+  		 
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+		} 
+	}
+    
+    
+ 
+  
+xmlhttp.open("GET",'@Global.SERVER_URL_2/editor/@g.getId/add/mission/'+b+'/'+c,true);
+xmlhttp.send();
+
+
+
+
+
+
+
+}
+
+
+
+
+
+function newMenuItemInGame(){
+
+
+var c = document.getElementById('menuitem_namenew').value;
+
+
+
+
+		
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  	{
+  		
+  		
+  		
+  		
+  		
+  		
+  		/*
+		 * SIDEMENU
+		 */ 
+  		
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/MenuItem/"+xmlhttp.responseText+"/insidemenu";
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById('menuitemlist').innerHTML += data;
+           }
+
+});
+  		
+  		
+  		
+  		
+  	
+  	 
+  		 
+  		 
+  		   document.getElementById('menuitem_namenew').value = 'Hier Titel eingeben';
+  		 
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+		} 
+	}
+    
+    
+ 
+  
+xmlhttp.open("GET",'@Global.SERVER_URL_2/editor/@g.getId/add/menuitem/'+c,true);
+xmlhttp.send();
+
+
+
+
+
+
+
+}
+
+
+
+
+
+function duplicateMissionInGame(mid){
+
+
+
+
+
+
+		
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  	{
+  		
+  		
+  		
+  		
+  		
+  		
+  		/*
+		 * SIDEMENU
+		 */ 
+  		
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Part/"+xmlhttp.responseText+"/insidemenu";
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById('allsidemenuparts').innerHTML += data;
+           }
+
+});
+  		
+  		
+  		
+  		
+  		
+  		/*
+		 * PARTINFO
+		 */ 
+  		
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Part/"+xmlhttp.responseText+"/allinfo";
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById('missioninfocontainer').innerHTML += data;
+           
+    
+    
+    
+    
+    
+    
+  		 var url ="@Global.SERVER_URL_2/editor/@g.getId()/id/Part/"+xmlhttp.responseText;
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data2){
+
+  
+  
+ 		 /*
+			 * OPEN NEW DIV
+			 */
+  		 
+  
+  hideAddEditMissions();
+  document.getElementById('missionedit'+data2).style.display='block';
+  
+  
+  		 
+  		 
+  		 }
+  		 
+  		 
+  		}); 
+  		 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+           }
+
+});
+  	
+  		
+  
+  
+  		/*
+		 * MISSIONSELECTORS
+		 */
+  
+  
+  
+ 
+  
+  
+  updateElementsByClass("missionselector");
+  
+  
+  
+  
+  
+  	 
+  		 
+  		 
+  		 
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+		} 
+	}
+    
+    
+ 
+  
+xmlhttp.open("GET","@Global.SERVER_URL_2/editor/@g.getId()/duplicate/mission/"+mid,true);
+xmlhttp.send();
+
+
+
+
+
+
+
+}
+
+
+
+
+
+function updateElementsByClass(which,callback){
+var noop = function(){}; // do nothing.
+   callback = callback || noop;
+  
+   
+   
+   if(which == "missionselector"){
+	   
+	    var c = getElementsByClassName(which);
+	    c.forEach(function(entry) {
+	    	
+	    	
+	    	var value = entry.options[entry.selectedIndex].value
+	    	
+		 var url ="@Global.SERVER_URL_2/editor/@g.getId()/fragments/missionselector/"+value;
+		   console.log("updating missionselectors: "+url);
+
+		  $.ajax({
+			  url: url,
+			  dataType: 'html',
+			  success: function(data3){
+			  				    	   
+				    	entry.innerHTML = data3;
+
+			}
+			   
+			});
+	   
+	    });
+	   
+   } else {
+  
+    		 var url ="@Global.SERVER_URL_2/editor/@g.getId()";
+  
+  $.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data3){
+    
+    	var div = document.createElement('div');
+  		div.style.display='none';
+		div.innerHTML = data3;
+		document.body.appendChild(div);
+
+
+
+	var b = getElementsByClassName(which);
+    
+    var c = getElementsByClassName(which, "select",div);
+    
+    var d = arr_diff(c,b);
+    
+     b.forEach(function(entry) {
+   
+   
+
+entry.innerHTML="";
+
+var shell = div.querySelector('#'+entry.id);
+  
+  if(shell){
+
+entry.innerHTML = shell.innerHTML;
+
+ }
+ 
+   
+   
+});
+    
+
+div.parentNode.removeChild(div);
+
+callback();
+
+}
+   
+});
+
+
+   }
+
+}
+
+
+
+
+
+
+function addNewObject(){
+
+var object = document.getElementById('game_newobject_type').value;
+
+if(object != 'none'){
+var b = object.split("_");
+
+var type = b[0];
+var id = b[1];
+
+if(type == "scene"){
+
+addSceneInGame(id);
+
+} else if(type == "mission"){
+
+newMissionInGame(id);
+
+}
+
+
+
+}
+
+}
+
+function updateElementsByName(which){
+
+
+  		/*
+		 * MISSIONSELECTORS
+		 */
+  
+  
+  
+  
+  
+    		 var url ="@Global.SERVER_URL_2/editor/@g.getId()";
+  
+  $.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data3){
+    
+    	var div = document.createElement('div');
+  		div.style.display='none';
+		div.innerHTML = data3;
+		document.body.appendChild(div);
+
+
+
+	var b = document.getElementsByName(which)[0];
+    
+    var c = document.getElementsByName(which,null,div);
+    
+    var d = arr_diff(c,b);
+
+	var shell = div.querySelector('#'+b.id);
+  
+  
+  		if(shell){
+
+				if (shell.innerHTML.match(/[a-zA-Z]/g)) {
+   
+
+				
+				b.innerHTML = shell.innerHTML;
+				
+				} else {
+				
+				updateElementsByName(which);
+				
+				}
+				
+
+
+ 
+		 }
+   
+    
+
+
+	div.parentNode.removeChild(div);
+
+
+ }
+ 
+   
+   
+});
+
+
+
+
+}
+
+
+
+
+
+function newHotspotInGame(){
+
+
+
+startup = 0;
+
+
+
+var c = encodeURIComponent(document.getElementById('hotspotnew_long').value);
+var b = encodeURIComponent(document.getElementById('hotspotnew_lat').value);
+var a = document.getElementById('hotspottype_new').value;
+var d = encodeURIComponent(document.getElementById('hotspotnew_name').value);
+
+
+
+
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+		
+
+xmlhttp.onreadystatechange=function(){
+  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  	{
+  		
+  		
+  		
+  		var newhid = xmlhttp.responseText;
+  		
+  		/*
+		 * SIDEMENU
+		 */ 
+  		
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Hotspot/"+xmlhttp.responseText+"/insidemenu";
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById('allsidemenuhotspots').innerHTML += data;
+           }
+
+});
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		/*
+		 * ACTIONS
+		 */ 
+  		
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Hotspot/"+xmlhttp.responseText+"/ruleedit";
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+    		console.log("got hotspot rules response");
+  
+            document.getElementById('hotspotrulecontainer').innerHTML += data;
+           }
+
+});
+  		
+  		
+  		
+  		
+  		
+  		
+  		addMarker(newhid);
+  		
+  		
+  }
+  	
+  		
+  
+		
+	}
+    
+    
+ 
+  
+xmlhttp.open("GET",'@Global.SERVER_URL_2/editor/@g.getId/add/hotspot/'+a+'/'+b+'/'+c+'/'+d,true);
+xmlhttp.send();
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+function setHotspotFromSearch(){
+
+startup = 0;
+var a = encodeURIComponent(document.getElementById('game_newhotspot_type').value);
+
+var b = a.split("_");
+
+var c = document.getElementById('hotspotsnew_lat').value;
+
+var d = document.getElementById('hotspotsnew_long').value;
+
+
+var e = document.getElementById('leaflet-control-geosearch-qry').value;
+
+e = encodeURI(e);
+
+map.removeLayer(positionmarker);
+
+if(b[0] == 'hotspot'){
+
+
+
+
+
+
+		
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+		
+
+xmlhttp.onreadystatechange=function(){
+  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  	{
+  		
+  		console.log("got hotspot response");
+  		
+  		
+  		var newhid = xmlhttp.responseText;
+  		
+  		/*
+		 * SIDEMENU
+		 */ 
+  		
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Hotspot/"+xmlhttp.responseText+"/insidemenu";
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById('hotspotlist').innerHTML += data;
+           }
+
+});
+  		
+  		
+  		/*
+		 * ACTIONS
+		 */ 
+  		
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Hotspot/"+xmlhttp.responseText+"/ruleedit";
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+    		console.log("got hotspot rules response");
+  
+            document.getElementById('hotspotrulecontainer').innerHTML += data;
+           }
+
+});
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		addMarker(newhid,0);
+  		
+  		
+  }
+  	
+  		
+  
+		
+	}
+    
+    
+ 
+  
+xmlhttp.open("GET",'@Global.SERVER_URL_2/editor/@g.getId/add/hotspot/'+b[1]+'/'+c+'/'+d+'/'+e,true);
+xmlhttp.send();
+
+
+
+
+
+
+
+
+
+} else if(b[0] == 'scene'){
+
+
+
+
+
+
+
+
+
+
+		
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  	{
+  		
+  		
+  		
+  		
+  		
+  		
+  		/*
+		 * SIDEMENU
+		 */ 
+  		
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Part/"+xmlhttp.responseText+"/insidemenu";
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById('allsidemenuparts').innerHTML += data;
+           }
+
+});
+  		
+  		
+  		
+  		
+  		
+  		/*
+		 * PARTINFO
+		 */ 
+  		
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Scene/"+xmlhttp.responseText+"/allinfo";
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById('sceneinfocontainer').innerHTML += data;
+           
+    
+    
+    
+    
+    
+    
+  		 var url ="@Global.SERVER_URL_2/editor/@g.getId()/id/Part/"+xmlhttp.responseText;
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data2){
+
+  
+  
+ 		 /*
+			 * OPEN NEW DIV
+			 */
+  		 
+  
+  hideAddEditMissions();
+  
+  
+  
+  
+  
+  
+  		 var url2 ="@Global.SERVER_URL_2/editor/@g.getId()/id/Scene/"+data2+"/hotspot";
+$.ajax({
+  url: url2,
+  dataType: 'html',
+  success: function(data3){
+
+
+console.log(data3);
+  		
+  		addMarker(data3);
+  
+  }
+  		 
+  		}); 
+    
+  
+  }
+  
+  }); 
+  
+  
+  
+  
+  
+  		 
+  		 
+  		 }
+  		 
+  		 
+  		}); 
+  		 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  		
+  
+  
+  		/*
+		 * MISSIONSELECTORS
+		 */
+  
+  
+  
+ 
+  
+  
+  updateElementsByClass("missionselector");
+  
+  
+  
+  
+  
+  	 
+  		 
+  		 
+  		   document.getElementById('missiontype_namenew').value = 'Neue Mission';
+  		 
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+		} 
+	}
+    
+    
+ 
+  
+xmlhttp.open("GET",'@Global.SERVER_URL_2/editor/@g.getId/add/scene/'+b[1]+'/'+e+'/withPoint/'+d+'/'+c,true);
+xmlhttp.send();
+
+       
+       
+
+
+}
+
+
+}
+
+
+
+
+
+
+function duplicateHotspotInGame(hsid){
+
+
+
+startup = 0;
+
+
+
+
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+		
+
+xmlhttp.onreadystatechange=function(){
+  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  	{
+  		
+  		console.log("got hotspot response");
+  		
+  		
+  		var newhid = xmlhttp.responseText;
+  		
+  		/*
+		 * SIDEMENU
+		 */ 
+  		
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Hotspot/"+xmlhttp.responseText+"/insidemenu";
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById('hotspotlist').innerHTML += data;
+           }
+
+});
+  		
+  		
+  		/*
+		 * ACTIONS
+		 */ 
+  		
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Hotspot/"+xmlhttp.responseText+"/ruleedit";
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+    		console.log("got hotspot rules response");
+  
+            document.getElementById('hotspotrulecontainer').innerHTML += data;
+           }
+
+});
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		addMarker(newhid);
+  		
+  		
+  }
+  	
+  		
+  
+		
+	}
+    
+    
+ 
+  
+xmlhttp.open("GET",'@Global.SERVER_URL_2/editor/@g.getId/duplicate/hotspot/'+hsid,true);
+xmlhttp.send();
+
+
+
+
+
+
+
+}
+
+
+
+
+function deleteContentFromMission(mid,cid){
+
+
+
+if (confirm('Wirklich löschen?')) {
+
+
+
+		
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  	{
+  		
+  		
+  		
+  		
+  		
+  		
+  		/*
+		 * MISSIONWINDOWS: CONTENTLIST
+		 */ 
+  	if(document.getElementById('acontentinmissioneditlist'+cid+'_'+mid)){
+					var el = document.getElementById('acontentinmissioneditlist'+cid+'_'+mid);
+					el.parentNode.removeChild( el );
+					}
+  		
+  		
+  		
+  		
+  		/*
+		 * CONTENTINFO
+		 */ 
+  	if(document.getElementById('contentedit'+cid)){
+					var el = document.getElementById('contentedit'+cid);
+					el.parentNode.removeChild( el );
+					}
+  		
+    
+  		
+  
+  
+  
+  
+ 
+  
+  		 
+  		 
+  		 
+  		}
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+		} 
+	
+    
+    
+ 
+  
+xmlhttp.open("GET",'@Global.SERVER_URL_2/editor/@g.getId/mission/'+mid+'/remove/content/'+cid,true);
+xmlhttp.send();
+
+      
+}
+
+}
+
+
+
+
+
+function deleteContentFromContent(ccid,cid){
+
+
+
+if (confirm('Wirklich löschen?')) {
+
+
+		
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  	{
+  		
+  		
+  		
+  		
+  		
+  		
+  		/*
+		 * MISSIONWINDOWS: CONTENTLIST
+		 */ 
+  	if(document.getElementById('content'+cid+'_incontent'+ccid+'listitem')){
+					var el = document.getElementById('content'+cid+'_incontent'+ccid+'listitem');
+					el.parentNode.removeChild( el );
+					}
+  		
+  		
+  		
+  		
+  		/*
+		 * CONTENTINFO
+		 */ 
+  	if(document.getElementById('contentedit'+cid)){
+					var el = document.getElementById('contentedit'+cid);
+					el.parentNode.removeChild( el );
+					} else {
+					
+					alert('contentedit'+cid+' not found');
+					}
+  		
+    
+  		
+  
+  
+  
+  
+ 
+  
+  		 
+  		 
+  		 
+  		}
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+		} 
+	
+    
+    
+ 
+  
+xmlhttp.open("GET",'@Global.SERVER_URL_2/editor/@g.getId/content/'+ccid+'/remove/content/'+cid,true);
+xmlhttp.send();
+
+
+}
+}
+
+
+
+
+
+function newContentInMission(mid){
+
+
+
+var c = document.getElementById('contentnew_name'+mid).value;
+var b = document.getElementById('contenttype_'+mid).value;
+
+
+
+
+
+
+
+
+
+
+		
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  	{
+  		
+  		
+  		
+  		
+  		
+  		
+  		/*
+		 * MISSIONWINDOWS: CONTENTLIST
+		 */ 
+  		
+  	// updateElementsByName('missioncontentcontainer'+mid);
+           
+      
+console.log("content added");  		
+  		
+
+  			var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Mission/"+mid+"/Content/alllist";
+  			
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById('missioncontentcontainer'+mid).innerHTML = data;
+           
+    console.log("innerhtml added:"+ data);  		
+    
+    
+    
+           }
+
+});
+  		
+  		
+  		
+  		/*
+		 * CONTENTINFO
+		 */ 
+  		
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Content/"+xmlhttp.responseText+"/allinfo";
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById('contentviewcontainer').innerHTML += data;
+           
+    
+    
+    
+    	 /*
+			 * OPEN NEW DIV
+			 */
+  		 
+  
+  
+  hideAddEditMissions();
+  if(document.getElementById('missionedit'+mid)){
+document.getElementById('missionedit'+mid).style.display = 'block';  }
+       
+  		   if(document.getElementById('contentedit'+xmlhttp.responseTex)){
+document.getElementById('contentedit'+xmlhttp.responseTex).style.display = 'block';  }
+    
+    
+           }
+
+});
+  	
+  		
+  
+  
+  
+  
+ 
+  
+  		 
+  		 
+  		 
+  		}
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+		} 
+	
+    
+    
+ 
+  
+xmlhttp.open("GET",'@Global.SERVER_URL_2/editor/@g.getId/mission/'+mid+'/add/content/'+b+'/'+c,true);
+xmlhttp.send();
+
+
+
+
+}
+
+
+function newContentInContent(cid){
+
+
+
+var c = document.getElementById('contentnew_namec'+cid).value;
+var b = document.getElementById('contenttype_c'+cid).value;
+     
+     
+     
+     
+
+		
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  	{
+  		
+  		
+  		
+  		
+  		
+  		
+  		/*
+		 * CONTENTLIST: SUBCONTENT
+		 */ 
+  		
+    updateElementsByName('contentincontentcontainer'+cid);
+           
+           
+  		
+  		
+  		/*
+		 * CONTENTVIEW
+		 */ 
+  		
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Content/"+xmlhttp.responseText+"/allinfo";
+  		
+  		
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById('contentviewcontainer').innerHTML += data;
+           
+    
+        // updateElementsByName('contentviewcontainer');
+    
+    
+    	 /*
+			 * OPEN NEW DIV
+			 */
+  		 
+  
+  document.getElementById('contentnew_namec'+cid).value = "Neuer Inhalt";
+  
+  
+  
+  
+  		   if(document.getElementById('contentnew_c'+cid)){
+document.getElementById('contentnew_c'+cid).style.display = 'none';  
+    
+    
+           }
+  
+       
+  		   if(document.getElementById('contentedit'+xmlhttp.responseTex)){
+document.getElementById('contentedit'+xmlhttp.responseTex).style.display = 'block';  }
+    
+    
+           }
+
+});
+  	
+  		
+  
+  
+  
+  
+ 
+  
+  		 
+  		 
+  		 
+  		}
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+		} 
+	
+    
+    
+ 
+  
+xmlhttp.open("GET",'@Global.SERVER_URL_2/editor/@g.getId/content/'+cid+'/add/content/'+b+'/'+c,true);
+xmlhttp.send();
+     
+     
+     
+
+}
+
+
+
+
+
+
+function addSceneInGame(sid){
+
+var c = document.getElementById('missiontype_namenew').value;
+
+
+
+
+
+		
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  	{
+  		
+  		
+  		
+  		
+  		
+  		
+  		/*
+		 * SIDEMENU
+		 */ 
+  		
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Part/"+xmlhttp.responseText+"/insidemenu";
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById('allsidemenuparts').innerHTML += data;
+           }
+
+});
+  		
+  		
+  		
+  		
+  		
+  		/*
+		 * PARTINFO
+		 */ 
+  		
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Scene/"+xmlhttp.responseText+"/allinfo";
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById('sceneinfocontainer').innerHTML += data;
+           
+    
+    
+    
+    
+    
+    
+  		 var url ="@Global.SERVER_URL_2/editor/@g.getId()/id/Part/"+xmlhttp.responseText;
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data2){
+
+  
+  
+ 		 /*
+			 * OPEN NEW DIV
+			 */
+  		 
+  
+  hideAddEditMissions();
+  document.getElementById('sceneedit'+data2).style.display='block';
+  
+  
+  		 
+  		 
+  		 }
+  		 
+  		 
+  		}); 
+  		 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+           }
+
+});
+  	
+  		
+  
+  
+  		/*
+		 * MISSIONSELECTORS
+		 */
+  
+  
+  
+ 
+  
+  
+  updateElementsByClass("missionselector");
+  
+  
+  
+  
+  
+  	 
+  		 
+  		 
+  		   document.getElementById('missiontype_namenew').value = 'Hier Namen eingeben';
+  		 
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+		} 
+	}
+    
+    
+ 
+  
+xmlhttp.open("GET",'@Global.SERVER_URL_2/editor/@g.getId/add/scene/'+sid+'/'+c,true);
+xmlhttp.send();
+
+
+
+
+
+
+
+
+       
+      
+
+
+
+}
+
+
+
+
+function savePositionOfMission(x){
+
+
+
+
+var offsets = document.getElementById('window'+x);
+var top = offsets.top;
+var left = offsets.left;
+
+
+console.log("trying to save position: "+top+" "+left);
+
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/Mission/"+x+"/savepos/"+top+"/"+left;
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+         console.log("saved positon: "+top+" "+left);
+           }
+
+});
+
+
+
+
+
+
+}
+
+
+function addSceneWithHotspotInGame(sid){
+
+
+
+var a = encodeURIComponent(document.getElementById('hotspotnew_long').value);
+var b = encodeURIComponent(document.getElementById('hotspotnew_lat').value);
+var c = document.getElementById('newobject_scene_'+sid+'_name').value;
+
+
+
+
+
+
+
+
+
+
+
+
+		
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  	{
+  		
+  		
+  		
+  		
+  		
+  		
+  		/*
+		 * SIDEMENU
+		 */ 
+  		
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Part/"+xmlhttp.responseText+"/insidemenu";
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById('allsidemenuparts').innerHTML += data;
+           }
+
+});
+  		
+  		
+  		
+  		
+  		
+  		/*
+		 * PARTINFO
+		 */ 
+  		
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Scene/"+xmlhttp.responseText+"/allinfo";
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById('sceneinfocontainer').innerHTML += data;
+           
+    
+    
+    
+    
+    
+    
+  		 var url ="@Global.SERVER_URL_2/editor/@g.getId()/id/Part/"+xmlhttp.responseText;
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data2){
+
+  
+  
+ 		 /*
+			 * OPEN NEW DIV
+			 */
+  		 
+  
+  hideAddEditMissions();
+  
+  
+  
+  
+  
+  		 var url2 ="@Global.SERVER_URL_2/editor/@g.getId()/id/Scene/"+data2+"/hotspot";
+$.ajax({
+  url: url2,
+  dataType: 'html',
+  success: function(data3){
+
+
+console.log(data3);
+  		
+  		addMarker(data3);
+  
+  }
+  		 
+  		}); 
+    
+  
+  }
+  
+  }); 
+  
+  
+  
+  
+  
+  		 
+  		 
+  		 }
+  		 
+  		 
+  		}); 
+  		 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  		
+  
+  
+  		/*
+		 * MISSIONSELECTORS
+		 */
+  
+  
+  
+ 
+  
+  
+  updateElementsByClass("missionselector");
+  
+  
+  
+  
+  
+  	 
+  		 
+  		 
+  		   document.getElementById('missiontype_namenew').value = 'Hier Namen eingeben';
+  		 
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+		} 
+	}
+    
+    
+ 
+  
+xmlhttp.open("GET",'@Global.SERVER_URL_2/editor/@g.getId/add/scene/'+sid+'/'+c+'/withPoint/'+a+'/'+b,true);
+xmlhttp.send();
+
+
+
+
+
+
+       
+}
+
+
+
+
+
+
+
+
+
+function newMissionInScene(sid){
+
+var c = document.getElementById('missiontype_name'+sid).value;
+var b = document.getElementById('missiontype_scene'+sid).value;
+
+document.getElementById('newmissionbutton_scene'+sid).innerHTML = 'Bitte warten...';
+
+
+		
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  	{
+  		
+  		
+  		
+  		
+  		
+  		
+  		/*
+		 * SIDEMENU
+		 */ 
+  		
+  		  updateElementsByName("allsidemenuparts");
+
+  		
+  		
+  		
+  		
+  		
+  		/*
+		 * PARTINFO
+		 */ 
+  		
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Part/"+xmlhttp.responseText+"/allinfo";
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById('missioninfocontainer').innerHTML += data;
+           
+    
+    
+    
+    
+    
+    
+  	 
+  		 var url ="@Global.SERVER_URL_2/editor/@g.getId()/id/Part/"+xmlhttp.responseText;
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data2){
+
+  
+  
+ 		 /*
+			 * OPEN NEW DIV
+			 */
+  		 
+  
+  
+  hideAddEditMissions();
+  if(document.getElementById('missionedit'+data2)){
+document.getElementById('missionedit'+data2).style.display = 'block';  }
+       
+  		 
+  		 
+  		 }
+  		 
+  		 
+  		}); 
+  		 
+    
+    
+           }
+
+});
+  	
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  
+  
+  		/*
+		 * MISSIONSELECTORS
+		 */
+  
+  
+  
+ 
+  
+  
+  updateElementsByClass("missionselector");
+  
+  
+  
+  
+  
+  		 
+  		 
+  		 
+  		
+  		
+  		
+  		
+  		updateElementsByName('sceneedit'+sid);
+  		
+  		document.getElementById('newmissionbutton_scene'+sid).innerHTML = 'Hinzufügen';
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+		} 
+	}
+    
+    
+ 
+  
+xmlhttp.open("GET",'@Global.SERVER_URL_2/editor/@g.getId/'+sid+'/add/'+b+'/'+c,true);
+xmlhttp.send();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+    function toggleDivVisibility(div,block){
+	var the_div = document.getElementById(div);
+
+	if(the_div.style.display=='none'){
+		the_div.style.display=block;
+	} else {
+		the_div.style.display='none';
+	}
+
+
+
+    }
+    function showconnection(div, color) {
+
+			var the_div = document.getElementById(div);
+
+			the_div.style.backgroundColor=color;
+
+
+        }
+
+
+    function hideInnerMissions(missionedit){
+    	showPlayer();
+    	var j = 1;
+		while(document.getElementById(missionedit+'content'+j)){
+
+			document.getElementById(missionedit+'content'+j).style.display = "none";
+			j++;
+	}
+
+    }
+
+    function hideAddEditMissions(){
+
+    	showPlayer();
+
+var a = getElementsByClassName("missionedit");
+a.forEach(function(entry) {
+   
+   
+   entry.style.display='none';
+   
+   
+});
+
+
+
+
+
+var a = getElementsByClassName("inneredit");
+a.forEach(function(entry) {
+   
+   
+   entry.style.display='none';
+   
+   
+});
+
+
+
+
+  if(sizebefore < 979){
+
+document.getElementById('missionview').style.display='none';
+document.getElementById('navbar').style.display='none';
+document.getElementById('missionviewbutton').style.display='block';
+document.getElementById('navbarbutton').style.display='block';
+
+}
+    	
+
+    }
+
+
+    function deactiveFullscreen(divid){
+    
+    
+ if(sizebefore > 979){
+    
+    	var div = document.getElementById(divid);
+		 div.style.width="72%";
+		 div.style.height="75%";
+		 div.style.top="120px";
+		 div.style.left="5%";
+   	    div.style.paddingTop = "35px";
+   	    $(div).css({'background-color': 'rgba(256, 256, 256, .9)'}); 
+   	    }
+   	    
+
+    }
+
+
+
+    function deactiveFullscreen(divid,width,height,top,left,paddingTop){
+    
+ if(sizebefore > 979){
+    	var div = document.getElementById(divid);
+		 div.style.width=width;
+		 div.style.height=height;
+		 div.style.top=top;
+		 div.style.left=left;
+   	    div.style.paddingTop = paddingTop;
+   	    $(div).css({'background-color': 'rgba(256, 256, 256, .9)'}); 
+   	    }
+
+    }
+
+
+    function toggleFullscreen(divid) {
+    
+    
+ if(sizebefore > 979){
+
+    	var div = document.getElementById(divid);
+    	if(div.style.top == "0px"){
+
+    	
+		 div.style.width="72%";
+		 div.style.height="75%";
+		 div.style.top="120px";
+		 div.style.left="5%";
+    	    div.style.paddingTop = "35px";
+    	    $(div).css({'background-color': 'rgba(256, 256, 256, .9)'}); 
+    		
+       
+    	} else {
+    		div.style.width ="100%";
+    		div.style.height="100%";
+    		div.style.top="0px";
+    		div.style.left="0px";
+    		
+    	
+    	
+    		
+    		$(div).css({'background-color': 'rgba(256, 256, 256, 1)'}); 
+    		 div.style.paddingTop = "100px";
+		
+    	}
+    	}
+    }
+
+
+    function toggleFullscreen(divid,width,height,top,left,paddingTop) {
+
+    	var div = document.getElementById(divid);
+    	if(div.style.top == "0px"){
+
+        	
+		 	div.style.width=width;
+		 	div.style.height=height;
+		 	div.style.top=top;
+		 	div.style.left=left;
+    	    div.style.paddingTop = paddingTop;
+    	    $(div).css({'background-color': 'rgba(256, 256, 256, .9)'}); 
+    		
+       
+    	} else {
+        	
+    		div.style.width ="100%";
+    		div.style.height="100%";
+    		div.style.top="0px";
+    		div.style.left="0px";
+    		$(div).css({'background-color': 'rgba(256, 256, 256, 1)'}); 
+    		div.style.paddingTop = "100px";
+		
+    	}
+    }
+ 
+ 
+ function showTutorial(i){
+ 
+ var arrowright = document.getElementById('arrowright');
+ if(i == 1){
+ 
+ var element = document.getElementById('newmissionplussign');
+ 
+ var rect = element.getBoundingClientRect();
+console.log(rect.top, rect.right, rect.bottom, rect.left);
+arrowright.style.position = "absolute";
+ arrowright.style.top =rect.top-75;
+  arrowright.style.right =rect.right-200;
+  arrowright.style.bottom = rect.bottom-75;
+  arrowright.style.left =rect.left-200;
+ 
+ 
+ 
+ }
+ 
+ 
+ }
+ 
+    
+  </script>
+   

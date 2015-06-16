@@ -1,0 +1,25 @@
+@(reason: String)
+
+
+@import helper._
+@import helpers._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+@main("Error") {
+
+      <!-- Main hero unit for a primary marketing message or call to action -->
+    <div class="hero-unit center">
+        <h1>Seite nicht gefunden <small><font face="Tahoma" color="red">Error 404</font></small></h1>
+        <br />
+        <p>Sie Seite "@reason" konnte nicht gefunden werden. Kontaktieren Sie den Webmaster oder versuchen Sie es erneut. Benutzen Sie den <b>Zurück</b>-Button Ihres Browsers um zu der Seite, von der sie ursprünglich kommen, zurückzugelangen.</p>
+        <p><b>Oder Sie könnten diesen Button verwenden:</b></p>
+        <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Application.portalindex(Application.getLocalPortal().getId())" class="btn btn-large btn-primary"><i class="icon-home icon-white"></i> Zur Startseite</a>
+    </div>
+
+
+
+
+
+
+    }

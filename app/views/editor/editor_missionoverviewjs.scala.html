@@ -1,0 +1,128 @@
+@(g:Game)
+
+@import util.Global;
+
+jsPlumb.ready(function() {
+
+var trigger = new Array("onStart","onEnd");
+
+	var sourceAnchors = [[0.2, 0, 0, -1, 0, 0, "foo"], [1, 0.2, 1, 0, 0, 0, "bar"], [0.8, 1, 0, 1, 0, 0, "baz"], [0, 0.8, -1, 0, 0, 0, "qux"] ],
+		targetAnchors = [[0.6, 0, 0, -1], [1, 0.6, 1, 0], [0.4, 1, 0, 1], [0, 0.4, -1, 0] ],
+
+		exampleColor = '#fff',
+		exampleDropOptions = {
+				
+		}, 
+		connector = [ "Bezier", { cssClass:"conn", hoverClass:"connectorHoverClass" } ],
+		connectorStyle = {
+			gradient:{stops:[[0, exampleColor], [0.5, '#09098e'], [1, exampleColor]]},
+			lineWidth:10,
+			strokeStyle:exampleColor
+		},
+		hoverStyle = {
+			
+		};
+		var overlays = new Array();
+	trigger.forEach(function(entry) {
+		overlays[entry] = [ ["Label", {													   					
+						cssClass:"l1 component label",
+						label : entry, 
+						location:0.2,
+						id:"label",
+						events:{
+							"click":function(label, evt) {
+							}
+						}
+					}],
+					["Arrow", {
+						cssClass:"l1arrow",
+						location:1, width:20,length:20,
+						events:{
+							"click":function(arrow, evt) {
+							}
+						}
+					}] ];
+					});
+		var endpoint = ["Blank", {  } ];
+		var endpointStyle = { fillStyle:exampleColor };
+		
+		
+		var anEndpoint = new Array();
+		trigger.forEach(function(entry) {
+		anEndpoint[entry] = {
+			endpoint:endpoint,
+			paintStyle:endpointStyle,
+			hoverPaintStyle:{ },
+			isSource:true, 
+			isTarget:true, 
+			maxConnections:-1, 
+			connector:connector,
+			connectorStyle:connectorStyle,
+			connectorHoverStyle:hoverStyle,
+			connectorOverlays:overlays[entry]
+		};
+		});
+	
+	var instance = jsPlumb.getInstance({
+		DragOptions : {  },
+		Container:"missionoverviewjs"
+	});
+
+	// suspend drawing and initialise.
+	instance.doWhileSuspended(function() {
+
+		var connections = new Array();
+		 connections["onStart"] = {
+		
+		
+	        
+		};
+		
+			var endpoints = {};	
+		// ask jsPlumb for a selector for the window class
+		divsWithWindowClass = jsPlumb.getSelector(".missionoverviewjs .window");
+		
+		// add endpoints to all of these - one for source, and one for target, configured so they don't sit
+		// on top of each other.
+		for (var i = 0 ; i < divsWithWindowClass.length; i++) {
+			var id = instance.getId(divsWithWindowClass[i]);
+			
+			endpoints[id] = [
+				// note the three-arg version of addEndpoint; lets you re-use some common settings easily.
+				instance.addEndpoint(id, anEndpoint["onEnd"], {anchor:sourceAnchors}),
+				instance.addEndpoint(id, anEndpoint["onEnd"], {anchor:targetAnchors}),
+				instance.addEndpoint(id, anEndpoint["onStart"], {anchor:sourceAnchors}),
+				instance.addEndpoint(id, anEndpoint["onStart"], {anchor:targetAnchors})
+			];
+			
+		}
+		// then connect everything using the connections map declared above.
+		for (var e in endpoints) {
+			trigger.forEach(function(entry) {
+			var x = 0;
+			if(entry == "onStart"){x = 2; }
+				if (connections[entry][e]) {
+				console.log(e+"->"+connections[entry][e]);
+					for (var j = 0; j < connections[entry][e].length; j++) {					
+						instance.connect({
+							source:endpoints[e][x],
+							target:endpoints[connections[entry][e][j]][x+1]
+						});						
+					}
+				}	
+			});
+		}
+		
+		
+		
+		
+	
+	instance.draggable($(".window"));
+		
+		
+		
+		
+		
+	});
+});
+

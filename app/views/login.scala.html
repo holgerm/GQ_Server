@@ -1,0 +1,43 @@
+@(loginForm: Form[_])
+
+@import helper._
+@import helpers._
+
+@import helper.twitterBootstrap._
+
+@main(Messages("playauthenticate.login.title"),"login") {
+
+
+      @* Display proprietary login form *@
+    	@helpers.form(routes.Application.doLogin(Application.getLocalPortal().getId())) {
+    	
+        @if(loginForm.hasGlobalErrors) { 
+          <p class="error">
+            <span class="label label-important">@loginForm.globalError.message</span>
+          </p>
+        }
+        
+        @_emailPartial(loginForm)
+          
+        @inputPassword(
+          loginForm("password"),
+          '_showConstraints -> false,
+          '_label -> Messages("playauthenticate.login.password.placeholder")
+        )
+          
+        <input type="submit" value="@Messages("playauthenticate.login.now")" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes") !=""))><br/>
+        <br/>
+        <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Signup.forgotPassword(Application.getLocalPortal().getId())">@Messages("playauthenticate.login.forgot.password")</a>
+
+    	}
+
+
+    <div class="span3">
+      @Messages("playauthenticate.login.oauth")
+      @* Display list of available providers *@
+      @_providerPartial(skipCurrent=false)
+    </div>
+
+
+
+}

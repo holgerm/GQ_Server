@@ -1,0 +1,44 @@
+@(g:Game,c:models.GameParts.Content, a:models.GameParts.AttributeType)
+
+@import models.GameParts._
+@import util.Global
+
+  @if(a.getFileType != "file"){
+ 
+									        				 <div style="width:80%">
+      -> @a.getName
+       &nbsp;
+        
+        
+        @if(a.getFileType == "String"){
+        
+        <input type="text"/ value="@c.getAttributeValue(a)" id="contentat@c.getId@a.getId()_parent" onchange="javascript:syncAttrInParent('content',@c.getId,@a.getId)" onkeydown="javascript:document.getElementById('status_contentat@c.getId@a.getId()_parent').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
+        
+        }
+        
+         @if(a.getFileType == "expression"){
+        
+        <input type="text"/ value="@c.getAttributeValue(a)" id="contentat@c.getId@a.getId()_parent" onchange="javascript:syncAttrInParent('content',@c.getId,@a.getId)" onkeydown="javascript:document.getElementById('status_contentat@c.getId@a.getId()_parent').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
+        
+        }
+        
+        @if(a.getFileType == "int"){
+        
+        <input type="number"/ value="@c.getAttributeValue(a)" id="contentat@c.getId@a.getId()_parent" onchange="javascript:syncAttrInParent('content',@c.getId,@a.getId)" onkeydown="javascript:document.getElementById('status_contentat@c.getId@a.getId()_parent').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
+        
+        }
+        
+        @if(a.getFileType == "boolean"){
+        
+        <input type="checkbox"/ id="contentat@c.getId@a.getId()_parent" @if(c.getAttributeValue(a) == "true"){ checked = "checked" }  onchange="javascript:syncAttrInParent('content',@c.getId,@a.getId)" >
+        
+        }
+        
+               <img id="status_contentat@c.getId@a.getId()_parent" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
+        
+        
+        </div>
+        <br >
+        
+        }
+									        			

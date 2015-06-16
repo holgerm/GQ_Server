@@ -1,0 +1,36 @@
+@(title: String, nav: String = "")(content: Html)
+
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import util.Global
+
+
+
+
+
+    @defining(Application.getLocalPortal()) { portal =>
+        @for(a_html <- portal.getHtml()){@a_html.getWort() match {
+
+
+
+
+                    case "%%_GEOQUEST_NAV_LI_%%" => {@geoquestcodes.mainnavigation(a_html,nav)}
+                    case "%%_GEOQUEST_CONTENT_CODE_START_%%" => {@geoquestcodes.contentcode(a_html,content)}
+                    case "%%_GEOQUEST_PORTAL_NAME_%%" => {@portal.getName}
+                    case "%%_GEOQUEST_PORTAL_ID_%%" => {@portal.getId}
+                    case "%%_GEOQUEST_SERVER_VERSION_%%" =>   {@Global.GEOQUEST_VERSION}
+                    case "%%_GEOQUEST_CONTENT_TITLE_%%" => {@title}
+                    case "%%_GEOQUEST_DEFAULT_COLOR_%%" => {@Application.getLocalPortal.getDefaultcolor}
+                    case "%%_GEOQUEST_SERVER_URL_%%" => {@Application.getLocalPortal.getPortalURL()}
+                    case "%%_GEOQUEST_HEADER_FUNCTIONS_%%" => {@geoquestcodes.headercode()}
+                    case "%%_GEOQUEST_USER_INFO_%%" => {@geoquestcodes.userinfo(a_html,nav)}
+                    case "%%_GEOQUEST_SCRIPT_DIV_%%" => {@geoquestcodes.scriptdiv(a_html)}
+                    case "%%_GEOQUEST_YOUR_LOGO_%%" => {@geoquestcodes.logo()}
+                    case "%%_GEOQUEST_CONTENT_CODE_END_%%" => {<!-- END OF CONTENT -->}
+                    case default => {@Html(a_html.getWort())}
+
+
+
+
+                }}
+    }

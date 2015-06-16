@@ -1,0 +1,79 @@
+@(g:Game, c:models.GameParts.Content,m:models.GameParts.Mission)
+
+@import models.GameParts._
+@import util.Global
+
+        			<div id="acontentinmissioneditlist@c.getId()_@m.getId()">
+        	
+        		@if(c.getType().canHaveSubContent()){
+   	
+        		<hr/>
+        	<span id="listcontentname@c.getId" class="onclicklink" onClick="document.getElementById('contentedit@c.getId').style.display = 'block';">
+        	@c.getType.getName()
+        	</span>
+        	    <i onClick="javascript:deleteContentFromMission(@m.getId,@c.getId)" class="icon-minus-sign"></i>
+        	
+        		<br/>
+        		
+        		<div id="contentincontentcontainer@c.getId" name="contentincontentcontainer@c.getId">
+        		 @for(sc <- c.getSubContents()){
+        		 
+        		 	@editor_acontentincontent(g,sc,c)
+        		 	}
+        		</div>
+        		       <br/><div class="floatright"><i class="icon-plus-sign" onClick="javascript:document.getElementById('contentnew_c@c.getId()').style.display='block';"></i>    </div>
+        		<hr/>
+        		
+        		
+        		
+        	} else {
+       
+        <span id="listcontentname@c.getId" class="onclicklink" onClick="document.getElementById('contentedit@c.getId').style.display = 'block';">@c.getType.getName()</span>
+        <div class="floatright"><i onClick="javascript:deleteContentFromMission(@m.getId,@c.getId)" class="icon-minus-sign"></i> </div>
+   		
+   		
+   
+   
+   
+   @if(!m.getType().getXMLType().equals("MetaData")){
+              				 
+              				 <textarea id="contentvaluename2_@c.getId"
+              				onchange="javascript:syncName('contentvalue',@c.getId,2)" onkeydown="document.getElementById('status2_contentvaluename@c.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';"
+              				 rows = "3" cols = "80">@c.getContent</textarea>
+   		        <img id="status2_contentvaluename@c.getId" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
+   		
+   		
+   		}
+   		
+   		
+   		   @for(a <- c.getAllAttributes){
+									     				
+									        				@if(a.isEditable){
+									        				
+									        				@if(a.isVisibleInParent()){
+									       
+									        @editor_acontentsettingfield(g,c,a)				
+									        				
+									        			}	}
+									        			
+									        			}
+   		
+   		
+   		
+   		
+   		
+   		
+   		
+   		
+   		
+   		
+   		
+   		
+   		
+   		
+   		
+   		
+   		
+   		<br/>
+   		}
+   		</div>

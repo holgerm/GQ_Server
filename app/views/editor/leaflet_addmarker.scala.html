@@ -1,0 +1,137 @@
+@(g: Game,hs:GameParts.Hotspot,last:Boolean)
+
+@import util.Global;
+
+    
+    
+
+var Icon@hs.getId() = L.icon({
+    iconUrl: '@hs.getAttributeValue(hs.getAttributeType("img"))',
+    
+	detectRetina: true,
+    iconSize:     [@hs.getMarkerWidth(g),@hs.getMarkerHeight(g)], // size of the icon
+    iconAnchor:   [@hs.getMarkerAnchorWidth(g),@hs.getMarkerAnchorHeight(g)], // point of the icon which will correspond to marker's location
+    popupAnchor:  [0,-@hs.getMarkerHeight(g)/2] // point from which the popup should open relative to the iconAnchor
+});
+
+
+ circle[@hs.getId] = L.circle([@hs.getLatitude(),@hs.getLongitude()], @hs.getRadius, {
+ weight: 2,
+    color: '#44443b',
+    fillColor: '#44443b',
+    fillOpacity: 0.2
+}).addTo(map);
+
+
+ popups[@hs.getId()] = L.popup();
+
+    popups[@hs.getId()].setLatLng([@hs.getLatitude(),@hs.getLongitude()]);
+popups[@hs.getId()].offset = new L.Point(@hs.getMarkerAnchorHeight(g),@hs.getMarkerAnchorWidth(g));
+updatePopupContent(@hs.getId());
+
+// add a marker in the given location, attach some popup content to it and open the popup
+	marker[@hs.getId] =  L.marker([@hs.getLatitude,@hs.getLongitude], {draggable: true,icon: Icon@hs.getId}).addTo(map)
+   .on('dragend', function(event){
+    var marker = event.target;
+    var longi = marker.getLatLng().lng;
+    var lati = marker.getLatLng().lat;
+    
+       popups[@hs.getId()].setLatLng([lati,longi]);
+       
+       circle[@hs.getId()].setLatLng([lati,longi]);
+   
+   	
+													var xmlhttp;
+													if (window.XMLHttpRequest)
+													  {// code for IE7+, Firefox, Chrome, Opera, Safari
+													  xmlhttp=new XMLHttpRequest();
+													  }
+													else
+													  {// code for IE6, IE5
+													  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+													  }
+													
+												
+													
+													xmlhttp.onreadystatechange=function(){ }
+												    xmlhttp.open("GET","@Global.SERVER_URL_2/editor/@g.getId/hotspot/@hs.getId/lonlat/"+encodeURIComponent(longi)+"/"+encodeURIComponent(lati),true);
+												xmlhttp.send();
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+})
+.on('click', function(event){
+    var marker = event.target;
+    
+    
+    
+   popups['@hs.getId()'].openOn(map);
+  
+    var targetLatLng = marker.getLatLng();
+   
+map.panTo(targetLatLng);
+
+
+
+map.panBy([0,-300]);
+
+
+    
+    }
+    );
+    
+ 
+    
+    
+  group.addLayer(marker[@hs.getId()]);
+  
+  
+  
+ 
+  
+  
+    
+    
+    if(startup == 1){
+    var counter = 0;
+group.eachLayer( function(){ counter++;  });
+   
+   if(counter == @g.getAllHotspots().size()){
+    
+ map.fitBounds(group.getBounds());
+ var zoom = map.getZoom()-1;
+    
+    if(zoom > 18){ zoom = 18; }
+    console.log(zoom);
+    map.setZoom(zoom);
+    
+    
+   
+  @if(g.getType.hasOnlyOneScene()){
+
+ 
+    
+         @for(hs <- g.getAllHotspots){
+         map.panTo([@hs.getLatitude,@hs.getLongitude]);
+         map.panBy([0,-1000]);
+   
+console.log("PanBy");    }
+    
+  
+  }
+  }
+  } else {
+  
+  
+  popups[@hs.getId()].openOn(map);
+  
+  
+  }
+    

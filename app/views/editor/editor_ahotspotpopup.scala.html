@@ -1,0 +1,134 @@
+@(g:Game, hs:models.GameParts.Hotspot)
+
+@import models.GameParts._
+@import util.Global
+@if(g.getType.hasOnlyOneScene()){
+	
+	@defining(g.getSceneForHotspot(hs)){ s => 
+	@for(a <- s.getAllAttributes){
+									        				
+									        				@if(a.isEditable){
+									        				
+									        				
+       <div style="display:inline-block; font-weight:bold; font-size:14px;">@a.getName() </div>
+     <br/>
+      
+        
+        @if(a.getFileType == "String"){
+        
+        
+        
+            @if(a.hasPossibleValues()){
+								        	
+								        	
+											<select id = "sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)" >
+								             
+								             <option ></option>
+								              		@for(pm <- a.getPossibleValues()){
+								              			   <option  value = "@pm" @if(s.getAttributeValue(a).equals(pm)){ selected="selected" } >@pm</option>
+								              			
+								              			
+								              		}   </select>
+								        	
+								        	
+								        } else {
+        
+        
+        @if(a.getMimeType().equals("area")){
+        	        <textarea rows="8" cols="100" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)" onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').innerHTML = 'waiting...';">@s.getAttributeValue(a)</textarea>
+        	
+        } else {
+        
+        
+        
+        @if(a.getName() == "Text"){
+        	        	        <textarea rows="8" cols="100" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)" onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').innerHTML = 'waiting...';">@s.getAttributeValue(a)</textarea>
+        	
+        	
+        	} else {
+                <input style="display:inline-block" type="text"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)" onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').innerHTML = 'waiting...';">
+        	}
+        
+        }
+        
+        }
+        
+        }
+        
+        
+        
+        
+        
+         @if(a.getFileType == "QuoteString"){
+        
+        
+        
+        
+                <input type="text"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId,true)" onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').innerHTML = 'waiting...';">
+        
+        
+        
+        
+        }
+        
+         
+        @if(a.getFileType == "int"){
+        
+        <input type="number"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)" onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').innerHTML = 'waiting...';">
+        
+        }
+        
+        @if(a.getFileType == "boolean"){
+        
+        <input type="checkbox"/ id="sceneat@s.getId@a.getId" @if(s.getAttributeValue(a) == "true"){ checked = "checked" } onchange="javascript:syncAttr('scene',@s.getId,@a.getId)" >
+        
+        }
+        
+        
+         @if(a.getFileType == "file"){
+         	
+         	
+         	
+         
+         	
+         	
+         	
+        	<div id="scene@s.getId()fileattr@a.getId()" name="scene@s.getId()fileattr@a.getId()" class="fileattr">
+        	         	@if(s.getAttributeValue(a) != ""){
+         		<a href="@s.getAttributeValue(a)" target="_blank">@editor_athumbnail(s.getAttributeValue(a))</a>
+         		
+         		        	         	
+         		
+         		
+         	}
+         	</div>
+         	
+         	
+         	
+         	
+         	<div id="scenefile_file_at@s.getId@a.getId">
+        <input type="file"/ id="scenefileat@s.getId@a.getId" onchange="javascript:uploadFile('scene',@s.getId,@a.getId)" >
+        
+        <a  onClick="javascript:document.getElementById('scenefile_file_at@s.getId@a.getId').style.display='none';document.getElementById('scenefile_text_at@s.getId@a.getId').style.display='block';">Variabel</a>
+        </div>
+                <div id="scenefile_text_at@s.getId@a.getId" style="display:none;">
+                       <input type="text" value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)" onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').innerHTML = 'waiting...';">
+                      <a onClick="javascript:document.getElementById('scenefile_text_at@s.getId@a.getId').style.display='none';document.getElementById('scenefile_file_at@s.getId@a.getId').style.display='block';">Datei</a>
+              
+               </div>
+        
+        }
+        
+        <span style="display:inline-block" id="status_sceneat@s.getId@a.getId">synced</span>
+        <br/>
+        
+      
+									        				
+									        				}}
+									        				}
+} else {
+<input type='text' class='h2textfieldsmall' id='hotspotname@hs.getId' value='@hs.getName()' onchange="javascript:syncName('hotspot',@hs.getId)" onkeydown="document.getElementById('status_hotspotname@hs.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';"><img id='status_hotspotname@hs.getId' src='@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")'/>  
+              		<br/>		 Optionen:<span style="cursor:pointer;" onClick="javascript:openHotspotRule(@hs.getId());"> <icon style="height:20px; width:20px; background-image:url('@Global.SERVER_URL_2/assets/icons/actions/default.png'); background-size:20px 20px; background-position:0px 24px; display:inline-block;"></icon> Ereignisse</a></span><span style="cursor:pointer;" onClick="javascript:duplicateHotspotInGame(@hs.getId());"> <icon class="icon-share" style="display:inline-block;"></icon> Duplizieren</a></p></span>
+
+              		 
+<h4>Einstellungen</h4> @for(a <- hs.getAllAttributes){@if(a.isEditable){<div style='width:80%'>@a.getName<div> @if(a.getFileType == "String"){     @if(a.hasPossibleValues()){<select id = "hotspotat@hs.getId@a.getId" onchange="javascript:syncAttr('hotspot',@hs.getId,@a.getId)" ><option ></option>@for(pm <- a.getPossibleValues()){<option  value = "@pm" @if(hs.getAttributeValue(a).equals(pm)){ selected="selected" } >@pm</option>}   </select>} else {<input type='text' value='@hs.getAttributeValue(a)' id='hotspotat@hs.getId@a.getId' onchange="javascript:syncAttr('hotspot',@hs.getId,@a.getId)" onkeydown="javascript:document.getElementById('status_hotspotat@hs.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';"> } } @if(a.getFileType == "int"){<input type='number' value='@hs.getAttributeValue(a)' id='hotspotat@hs.getId@a.getId' onchange="javascript:syncAttr('hotspot',@hs.getId,@a.getId)" onkeydown="javascript:document.getElementById('status_hotspotat@hs.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';"> } @if(a.getFileType == "boolean"){<input type='checkbox' id='hotspotat@hs.getId@a.getId'  @if(hs.getAttributeValue(a) == "true"){ checked = 'checked' }  onchange="javascript:syncAttr('hotspot',@hs.getId,@a.getId)" >} @if(a.getFileType == "file"){	<div id="hotspot@hs.getId()fileattr@a.getId()" name="hotspot@hs.getId()fileattr@a.getId()" class="fileattr"> @if(hs.getAttributeValue(a) != ""){        	<a href="@hs.getAttributeValue(a)" target="_blank">Aktuelle Datei anzeigen</a> }</div><input type='file' id='hotspotat@hs.getId@a.getId' onchange="javascript:uploadFile('hotspot',@hs.getId,@a.getId)"> }  <img id='status_hotspotat@hs.getId@a.getId' src='@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")' /></div></div><br/>}}}

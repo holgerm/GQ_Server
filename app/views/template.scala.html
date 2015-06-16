@@ -1,0 +1,111 @@
+    @import util.Global
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Qeevee Geoquest Network</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+<base href="@Global.SERVER_URL">
+
+      <link rel="icon" type="image/png" href="@Global.SERVER_URL_2@routes.Assets.at("img/qeevee_favicon.png")" />
+      <link href='http://fonts.googleapis.com/css?family=Merriweather+Sans:300,400' rel='stylesheet' type='text/css'>
+
+      <!-- Le styles -->
+    <link href="@Global.SERVER_URL_2@routes.Assets.at("css/bootstrap.css")" rel="stylesheet">
+      <link href="@Global.SERVER_URL_2@routes.Assets.at("css/bootstrap-responsive.css")" rel="stylesheet">
+<link href="@Global.SERVER_URL_2@routes.Assets.at("css/geoquest-bootstrap.css")" id="bsCss" rel="stylesheet">
+<link href="@Global.SERVER_URL_2@routes.Application.getDataTableCSS()" id="dtCss" rel="stylesheet">
+<meta name='%%_GEOQUEST_HEADER_FUNCTIONS_%%'>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+    <body onLoad="init()">
+
+        <div id="wrapper">
+    
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          
+          
+          
+          
+          <a class="brand" href="@Global.SERVER_URL_2">
+          
+                    <div style="  cursor:pointer;  z-index:10000000; width:200px;  height:50px; position:absolute; top:10px; height:50px;" onClick="javascript:window.location.href = '%%_GEOQUEST_SERVER_URL_%%/%%_GEOQUEST_PORTAL_ID_%%';" > </div>	
+          
+									<object style="display:inline-block; position:relative; top:5px; height:50px; width:300px; " data="@routes.Assets.at("img/qeeveelogo.svg")" type="image/svg+xml">
+									<img src="@Global.SERVER_URL_2@routes.Assets.at("img/qeeveelogo.png")" alt="">
+</object>
+									
+          
+          <div class="bottomcontent"> <div class="pull-right">%%_GEOQUEST_USER_INFO_%%{%template:=bootstrap-buttongroups%}</div>
+           </div>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li>%%_GEOQUEST_NAV_LI_%%{%authlinks:=hide%}</li>
+              
+             
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    <div class="container">
+
+	<div class="row-fluid">
+      <h1>%%_GEOQUEST_CONTENT_TITLE_%%  </h1>
+	</div>	
+
+<div class="row-fluid">
+
+%%_GEOQUEST_CONTENT_CODE_START_%%{ %general.button.attributes:=!!" class="btn btn-success" "!!;; %general.speciallinks.attributes:=!!" class="btn btn-success" "!!;; %general.navtabs.attributes:=!!" class="btn btn-success" !!";; %general.tabs.type:=button-group% }
+</div>
+
+</div>
+
+        
+    
+    
+    
+    
+    
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="@Global.SERVER_URL_2@routes.Assets.at("js/jquery.js")"></script>
+	    <script src="@Global.SERVER_URL_2@routes.Assets.at("js/jquery.dataTables.js")"></script>
+	<script src="@Global.SERVER_URL_2@routes.Assets.at("js/DT_bootstrap.js")"></script>
+    <script src="@Global.SERVER_URL_2@routes.Assets.at("js/bootstrap.js")"></script>
+      
+    
+    
+    
+        <script type='text/javascript' id="bsJs">
+        
+        $(document).ready(function() {
+        
+            $('.carousel').carousel();
+        });
+
+        </script>
+
+
+        <script type="text/javascript">
+        $('.dropdown-toggle').dropdown();
+        </script>
+
+
+    </div>
+  </body>
+</html>

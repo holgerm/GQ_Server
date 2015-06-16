@@ -1,0 +1,148 @@
+@(g:Game, c:models.GameParts.Content)
+
+@import models.GameParts._
+@import util.Global
+
+
+		<div class="inneredit" id="contentedit@c.getId" name="contentedit@c.getId">
+		
+		 				              				<div class="scrollable-content" style="overflow:auto; height:100%; width:100%;">
+		
+									        				<div class="options">
+									        				
+									        				<i class="icon-resize-full" onClick="javascript:toggleFullscreen('contentedit@c.getId','72%','60%','200px','5%','25px')"></i>
+									        				<i class="icon-remove" onClick="javascript:document.getElementById('contentedit@c.getId').style.display = 'none';deactiveFullscreen('contentedit@c.getId','72%','60%','200px','5%','25px')"></i>
+									        				
+									        				</div>
+									        				
+									        				
+									        				<input type="text" class="h2textfield" id="contentname@c.getId" value="@c.getName()"
+              				onchange="javascript:syncName('content',@c.getId)" onkeydown="document.getElementById('status_contentname@c.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");">
+                      		<img id="status_contentname@c.getId" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
+        
+									        				
+									        				
+									        				
+									        				
+									        				<br/>
+									        				
+									        				
+									        				
+									        				
+									        				
+							<textarea id="contentvaluename@c.getId"
+              				onchange="javascript:syncName('contentvalue',@c.getId)" onkeydown="document.getElementById('status_contentvaluename@c.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");"
+              				 rows = "3" cols = "80">@c.getContent</textarea>
+                      		<img id="status_contentvaluename@c.getId" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
+        
+									        				
+									        				
+									        				
+									        				
+									        				<br/>
+									        				
+									        				<h4>Einstellungen</h4>
+									        				
+									        				@for(a <- c.getAllAttributes){
+									        				
+									        				@if(a.isEditable){
+									        				
+									        				 <div style="width:80%">
+       @a.getName
+        <div class="floatright">
+        
+        
+        @if(a.getFileType == "String"){
+        
+        
+            @if(a.hasPossibleValues()){
+								        	
+								        	
+											<select id = "contentat@c.getId@a.getId" onchange="javascript:syncAttr('content',@c.getId,@a.getId)" >
+								             
+								             <option ></option>
+								              		@for(pm <- a.getPossibleValues()){
+								              			   <option  value = "@pm" @if(c.getAttributeValue(a).equals(pm)){ selected="selected" } >@pm</option>
+								              			
+								              			
+								              		}   </select>
+								        	
+								        	
+								        } else {
+        
+        <input type="text"/ value="@c.getAttributeValue(a)" id="contentat@c.getId@a.getId" onchange="javascript:syncAttr('content',@c.getId,@a.getId)" onkeydown="javascript:document.getElementById('status_contentat@c.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
+        }
+        }
+        
+         @if(a.getFileType == "expression"){
+        
+        <input type="text"/ value="@c.getAttributeValue(a)" id="contentat@c.getId@a.getId" onchange="javascript:syncAttr('content',@c.getId,@a.getId)" onkeydown="javascript:document.getElementById('status_contentat@c.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
+        
+        }
+        
+        @if(a.getFileType == "Color"){
+        
+        <input type="color"/ value="@c.getAttributeValue(a)" id="contentat@c.getId@a.getId" onchange="javascript:syncAttr('content',@c.getId,@a.getId)"onkeydown="javascript:document.getElementById('status_contentat@c.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
+            }
+        
+        @if(a.getFileType == "int"){
+        
+        <input type="number"/ value="@c.getAttributeValue(a)" id="contentat@c.getId@a.getId" onchange="javascript:syncAttr('content',@c.getId,@a.getId)" onkeydown="javascript:document.getElementById('status_contentat@c.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
+        
+        }
+        
+        @if(a.getFileType == "boolean"){
+        
+        <input type="checkbox"/ id="contentat@c.getId@a.getId" @if(c.getAttributeValue(a) == "true"){ checked = "checked" }  onchange="javascript:syncAttr('content',@c.getId,@a.getId)" >
+        
+        }
+        
+        
+         @if(a.getFileType == "file"){
+        
+        
+        
+        
+        
+        
+									         		<div id="content@c.getId()fileattr@a.getId()" name="content@c.getId()fileattr@a.getId()" class="fileattr">
+        	         	@if(c.getAttributeValue(a) != ""){
+        	
+									         	<a href="@c.getAttributeValue(a)" target="_blank">@editor_athumbnail(c.getAttributeValue(a))</a>
+									        }
+									        </div> 	
+									        
+									        
+									        
+         	<div id="contentfile_file_at@c.getId@a.getId">
+				<input type="file"/ id="contentfileat@c.getId@a.getId" onchange="javascript:uploadFile('content',@c.getId,@a.getId)" >
+        
+        <a  onClick="javascript:document.getElementById('contentfile_file_at@c.getId@a.getId').style.display='none';document.getElementById('contentfile_text_at@c.getId@a.getId').style.display='block';">Variabel</a>
+        </div>
+                <div id="contentfile_text_at@c.getId@a.getId" style="display:none;">
+									        <input type="text"/ value="@c.getAttributeValue(a)" id="contentat@c.getId@a.getId" onchange="javascript:syncAttr('content',@c.getId,@a.getId)" onkeydown="document.getElementById('status_contentat@c.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
+                      <a onClick="javascript:document.getElementById('contentfile_text_at@c.getId@a.getId').style.display='none';document.getElementById('contentfile_file_at@c.getId@a.getId').style.display='block';">Datei</a>
+              
+               </div>
+        
+        
+        
+        
+        
+        
+        
+        }
+        
+       <img id="status_contentat@c.getId@a.getId" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
+        
+        </div>
+        </div>
+        <br/>
+        	<br/>
+        		<br/>
+									        				
+									        				}
+									        				}
+									        				
+									        				</div>
+									       					</div> 

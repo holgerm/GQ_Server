@@ -1,0 +1,14 @@
+@(g:Game)
+
+@import util.Global;
+
+            <div class="missionoverviewjs" id="missionoverviewjs_noview" style="display:none;">
+          
+           	@for((m, index) <- g.getAllMissions().zipWithIndex){
+           	
+                <div class="window" style="top:@if(m.getTop == 0){@if(index%3 == 2){@{((index/3)*300)+100}}else{@{((index/3)*300)+170}}}else{@m.getTop()}px; left:@if(m.getLeft == 0){@{(index%3)*300}}else{@m.getLeft()}px;" id="window@m.getId">@m.getName()<br/><a style="cursor:pointer; z-index:9100;" onClick="savePositionOfMission(@m.getId());" >Position speichern</a></div>
+                
+                }
+                
+              
+            </div>

@@ -1,0 +1,39 @@
+@(a_html: SortedHtml, nav: String = "")
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import util.Global
+
+@if(Application.getLocalPortal.getParameter(a_html.getId(),"template") == "bootstrap-dropdown"){
+  
+
+@templates.userinfo_bootstrap_dropdown(a_html, nav)
+
+
+} else {
+
+
+
+	@if(Application.getLocalPortal.getParameter(a_html.getId(),"template") == "bootstrap-buttongroups"){
+	
+	@templates.userinfo_bootstrap_buttongroups(a_html,nav)
+
+	
+	} else {
+				
+				    @subjectPresent() {
+				        @defining(Application.getLocalUser(session())) { user =>
+				
+				
+				
+				            @if(Global.securityGuard.hasAnyRightsOnPortal(user)==true){
+				                Eingeloggt als: <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.profile(Application.getLocalPortal().getId()))">@user.getName()</a> (<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.dologout(Application.getLocalPortal.getId()))">Ausloggen</a>)
+				                @if(Global.securityGuard.hasMinVerifiedRightsOnPortal(user)==false){
+				                    <i> Für dieses Portal unbestätigt </i>
+				                }
+				
+				            }
+				        }
+				    }
+
+	}
+}

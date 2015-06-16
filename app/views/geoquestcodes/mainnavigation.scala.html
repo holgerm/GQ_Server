@@ -1,0 +1,70 @@
+@(a_html: SortedHtml, nav: String = "")
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import util.Global
+@defining(Application.getLocalPortal.getParameter(a_html.getId(),"li.attributes")) { liattributes =>
+
+
+
+<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.portalNewsstream(Application.getLocalPortal().getId()))">
+@Application.getLocalPortal.getLanguageParameter("Newsstream")
+</a></li>
+<li @Html(liattributes.when(liattributes !=""))> <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.publicGamesList(Application.getLocalPortal().getId()))">
+@Application.getLocalPortal.getLanguageParameter("Oeffentliche_Spiele")
+</a></li>
+
+
+@subjectNotPresent() {
+
+@if(!(Application.getLocalPortal.getParameter(a_html.getId(),"authlinks") == "hide")){
+
+<li @Html(liattributes.when(liattributes !=""))><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.signup(Application.getLocalPortal().getId()))">Registrieren</a></li>
+<li @Html(liattributes.when(liattributes !=""))><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.login(Application.getLocalPortal().getId()))">Einloggen</a>
+}
+}
+
+
+
+@subjectPresent() {
+@defining(Application.getLocalUser(session())) { user =>
+
+
+
+@if(Global.securityGuard.hasMinVerifiedRightsOnPortal(user)==true){
+</li>
+<li @Html(liattributes.when(liattributes !=""))"><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.myGamesList(Application.getLocalPortal().getId()))">
+@Application.getLocalPortal.getLanguageParameter("Meine_Spiele")
+</a></li>
+
+@if(Global.securityGuard.hasAdminRightsOnPortal(user)==true){
+
+</li><li @Html(liattributes.when(liattributes !=""))><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.userRightsonPortal(Application.getLocalPortal().getId(),Application.getLocalPortal().getId()))">User-Rechte</a></li>
+
+}
+@if(Global.securityGuard.isDefaultPortal == true ){
+
+</li><li @Html(liattributes.when(liattributes !=""))><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.myPortalsList(Application.getLocalPortal().getId()))">Meine Portale</a></li>
+
+
+
+}
+} else {
+
+
+
+@if(Global.securityGuard.hasAnyRightsOnPortal(user)==false){
+
+
+</li><li @Html(liattributes.when(liattributes !=""))><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.doAddMeToPortal(Application.getLocalPortal().getId()))">Registrierung mit GQ-Account</a></li>
+
+}
+}
+
+}
+}
+}
+
+
+
+
+

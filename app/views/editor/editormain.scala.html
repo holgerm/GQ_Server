@@ -1,0 +1,381 @@
+@(g: Game)
+
+    @import util.Global
+            
+            
+            
+            
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Qeevee Geoquest Network</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no"">
+    
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+<base href="@Global.SERVER_URL">
+
+      <link rel="icon" type="image/png" href="@Global.SERVER_URL_2@routes.Assets.at("img/qeevee_favicon.png")" />
+      <link href='http://fonts.googleapis.com/css?family=Merriweather+Sans:300,400' rel='stylesheet' type='text/css'>
+
+      <!-- Le styles -->
+    <link href="@Global.SERVER_URL_2@routes.Assets.at("css/bootstrap.css")" rel="stylesheet">
+      <link href="@Global.SERVER_URL_2@routes.Assets.at("css/bootstrap-responsive.css")" rel="stylesheet">
+<link href="@Global.SERVER_URL_2@routes.Assets.at("css/geoquest-bootstrap.css")" id="bsCss" rel="stylesheet">
+<link href="@Global.SERVER_URL_2@routes.Application.getDataTableCSS()" id="dtCss" rel="stylesheet">
+<link href="@Global.SERVER_URL_2/assets/js/leaflet/leaflet.css" id="dtCss" rel="stylesheet">
+		<link rel="stylesheet" href="@Global.SERVER_URL_2/assets/css/l.geosearch.css" />
+		<link href="@Global.SERVER_URL_2/assets/css/XMLDisplay.css" id="dtCss" rel="stylesheet">
+        		<link rel="prefetch" href="@Global.SERVER_URL_2@routes.Assets.at("img/connection/no-connection.gif")">
+                		<link rel="prefetch" href="@Global.SERVER_URL_2@routes.Assets.at("img/connection/green-trying.gif")">
+        
+        
+		
+
+
+
+
+@editor_css(g)
+
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+    <body onLoad="connectionTester(); browserTester(); initmap(); @if(g.getType.hasOnlyOneScene()){ document.getElementById('background').style.display='none'; document.getElementById('tutorial').style.display='none'; document.getElementById('missionoverviewjs').style.display='none'; } @if(g.getHotspots != null){ @if(g.getHotspots.size() > 0){  document.getElementById('background').style.display='none'; document.getElementById('tutorial').style.display='none'; document.getElementById('missionoverviewjs').style.display='none';}}">
+
+
+
+
+<!--[if IE]>
+
+    <div class="iewarning_older" id="iewarning2" style="display:block" >
+   <br/><br/>
+   
+  <p id="h1iewarning">Achtung!</p>
+  <p>Die Benutzung von Internet Explorer wird von GeoQuest nicht unterstützt. </p>
+  <p>Bitte öffnen Sie diese Seite erneut in einem der unterstützten Browser:</p>
+  <table width="50%" border="0" align="center" cellpadding="0" cellspacing="0">
+    <tr>
+      <td> <a href="https://www.google.com/chrome" target="_blank"> 
+             <img src="@Global.SERVER_URL_2@routes.Assets.at("img/browsercompability/chrome.png")" />
+       
+       <br/>
+       Google Chrome</a></td>
+      <td><a href="https://www.mozilla.org/firefox" target="_blank">
+                <img src="@Global.SERVER_URL_2@routes.Assets.at("img/browsercompability/firefox.png")" />
+   <br/>
+   
+    Mozilla Firefox</a></td>
+    </tr>
+  </table>
+   
+    
+   
+   
+   
+   
+   
+    
+    </div>
+<![endif]-->
+
+
+
+<div style="position:fixed; top:0px; height:80px; background-color:#FFFFFF; width:100%; z-index:10000;">
+
+
+<div class="options">
+ 					<i class="icon-remove" id="navbarclose" onClick="javascript:document.getElementById('navbar').style.display = 'none';document.getElementById('navbarbutton').style.display='block'; "></i></div>
+              				
+          
+      @defining(Application.getLocalPortal()) { portal =>
+
+
+
+
+@if(portal.getId().equals(61L) || portal.getId().equals(Global.defaultportal.getId())){
+	
+	
+	                    <div style="  cursor:pointer; left:100px; z-index:10000000; width:200px;  height:80px; position:absolute; top:5px; height:50px;" onClick="javascript:window.location.href = '@portal.getTemplateServerURLDropSlash@portal.getPathTo(routes.Portal.portalNewsstream(portal.getId()))';" > </div>	
+	
+				<object style="display:inline-block; position:relative; left:100px; top:15px; height:50px; width:200px; padding-right:10px;  " data="@Global.SERVER_URL_2@routes.Assets.at("img/geoquestlogo.svg")" type="image/svg+xml">
+									<img src="@Global.SERVER_URL_2@routes.Assets.at("img/geoquestlogo.png")" alt="">
+</object>
+	
+	
+	
+	
+	 } else {
+
+
+				@if(portal.logoExists()){
+					
+					
+					
+					<a style="position:relative; height:80px; left:100px;" href="@portal.getTemplateServerURLDropSlash@portal.getPathTo(routes.Portal.portalNewsstream(portal.getId()))">
+					
+						<img style="max-height:80px;"src="@Global.SERVER_URL_2/assets/@portal.getLogoURL()">
+					
+					</a>
+
+					
+					
+					
+					
+				} else {
+				
+			<a  style="position:relative; left:100px;" href="@portal.getTemplateServerURLDropSlash@portal.getPathTo(routes.Portal.portalNewsstream(portal.getId()))">@portal.getName()</a>
+				
+				
+				
+				}
+
+
+}
+
+
+
+
+}
+
+          
+          
+          
+          <input @if(!Application.getLocalPortal().getId().equals(61L) && !Application.getLocalPortal().getId().equals(Global.defaultportal.getId())){ style="position:relative; top:15px; left:100px;" } else {  style="position:relative; left:100px;" } type="text" class="h2textfield" id="gamename" value="@g.getName()"
+              				onchange="javascript:syncGameName()" onkeydown="document.getElementById('status_gamename').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
+                <img @if(!Application.getLocalPortal().getId().equals(61L) && !Application.getLocalPortal().getId().equals(Global.defaultportal.getId())){ style="position:relative; top:15px;  left:100px;" } else {  style="position:relative; left:100px;" } id="status_gamename" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
+        
+        
+        
+         <div class="pull-right" style="height:50px; " id="xmlifylink"">
+        
+     
+     
+                  
+                  
+                  
+                       <div style="display:inline-block; padding-right:1px;"> <img alt="Speichern" style="cursor:pointer;" onClick="javascript:xmlify();" onMouseOver="javascript:showLinkDescription('Speichern');" onMouseOut="javascript:showLinkDescription('');" src="@Global.SERVER_URL_2@routes.Assets.at("icons/disk.png")"></div> 
+                         <div style="display:inline-block; cursor:pointer; padding-right:30px;"><a id="xmlshow"  onClick="javascript:@if(g.hasFile()){LoadXML('xmlcontainer','@Global.SERVER_URL_2@routes.Portal.at(Application.getLocalPortal().getId()+"/editor/"+g.getId()+"/game.xml")');} hideAddEditMissions(); hidePlayer(); document.getElementById('xmlview').style.display = 'block';"onMouseOver="javascript:showLinkDescription('Erzeugtes XML anzeigen');" onMouseOut="javascript:showLinkDescription('');" ><img alt="Erzeugtes XML anzeigen" src="@Global.SERVER_URL_2@routes.Assets.at("icons/xml.png")"></a></div> 
+                         
+                                 <div style="display:inline-block;"> <a id="mapboundsbutton" target="_blank" onClick="javascript:document.getElementById('background').style.display='none'; zoomToMapBounds();" style="cursor:pointer;"><img onMouseOver="javascript:showLinkDescription('Karte auf Hotspots zentrieren');" onMouseOut="javascript:showLinkDescription('');" alt="Karte auf Hotspots zentrieren" src="@Global.SERVER_URL_2@routes.Assets.at("icons/home.png")"></a></div> 
+                                 <div style="display:inline-block;"> <a id="hideallbutton" target="_blank" onClick="javascript:hideAddEditMissions();" style="cursor:pointer;"><img onMouseOver="javascript:showLinkDescription('Alle Fenster schließen');" onMouseOut="javascript:showLinkDescription('');" alt="Alle Fenster schließen" src="@Global.SERVER_URL_2@routes.Assets.at("icons/desktop.png")"></a></div> 
+     
+     
+     <span style="position:absolute; bottom:0px; right:0%; white-space:nowrap;" id="xmlstatus">&nbsp;</span>
+     
+          
+     
+    
+    </div>
+    
+    <div style="position:absolute; right:0px; top:0px;">
+    
+    	<img id="connection_yellow_trying" width="74" height="75" src="@Global.SERVER_URL_2@routes.Assets.at("img/connection/yellow-trying.gif")"/>
+    	<img id="connection_red_trying" style="display:none;" width="74" height="75" src="@Global.SERVER_URL_2@routes.Assets.at("img/connection/red-trying.gif")"/>
+    	<img id="connection_green_trying" style="display:none;" width="74" height="75" src="@Global.SERVER_URL_2@routes.Assets.at("img/connection/green-trying.gif")"/>
+    	<img id="connection_full" style="display:none;" width="74" height="75" src="@Global.SERVER_URL_2@routes.Assets.at("img/connection/fullconnection.gif")"/>
+    	<img id="connection_half" style="display:none;" width="74" height="75" src="@Global.SERVER_URL_2@routes.Assets.at("img/connection/halfconnection.gif")"/>
+    	<img id="connection_no" style="display:none;" width="74" height="75" src="@Global.SERVER_URL_2@routes.Assets.at("img/connection/no-connection.gif")"/>
+    
+    
+    </div>
+    
+
+
+
+</div>
+
+    <div class="iewarning" id="iewarning" style="display:none" >
+   <br/><br/>
+   
+  <p id="h1iewarning">Achtung!</p>
+  <p>Die Benutzung von Internet Explorer wird von GeoQuest nicht unterstützt. </p>
+  <p>Bitte öffnen Sie diese Seite erneut in einem der unterstützten Browser:</p>
+  <table width="50%" border="0" align="center" cellpadding="0" cellspacing="0">
+    <tr>
+      <td> <a href="https://www.google.com/chrome" target="_blank"> 
+             <img src="@Global.SERVER_URL_2@routes.Assets.at("img/browsercompability/chrome.png")" />
+       
+       <br/>
+       Google Chrome</a></td>
+      <td><a href="https://www.mozilla.org/firefox" target="_blank">
+                <img src="@Global.SERVER_URL_2@routes.Assets.at("img/browsercompability/firefox.png")" />
+   <br/>
+   
+    Mozilla Firefox</a></td>
+    </tr>
+  </table>
+   
+    
+   
+   
+   
+   
+   
+    
+    </div>
+
+
+
+<!-- div element containing the map -->
+@if(!g.getType.hasOnlyOneScene()){
+<div id='background' class="background" >
+
+
+<div id="playersettings" style="position:absolute; top:100px; left:40px; height:480px; width: 140px; padding:10px; background-color:#cccccc;  ">
+
+<h4>Display-Größe</h4>
+
+<p style="cursor:pointer;" onClick="document.getElementById('unityPlayer').style.width='281px'; document.getElementById('vardebug').style.left='481px'; document.getElementById('consoledebug').style.left='641px';">iPhone 5/6</p>
+<p style="cursor:pointer;" onClick="document.getElementById('unityPlayer').style.width='333px'; document.getElementById('vardebug').style.left='533px'; document.getElementById('consoledebug').style.left='693px';">iPhone 4</p>
+<p style="cursor:pointer;" onClick="document.getElementById('unityPlayer').style.width='375px'; document.getElementById('vardebug').style.left='575px'; document.getElementById('consoledebug').style.left='735px'; ">iPad</p>
+
+
+<br/>
+
+<h4>Hilfe</h4>
+<p> Durch Klicken in den Player und ein darauf folgendes gleichzeitiges Drücken der Tasten "G","E","O" und "Q" kann der Player zurückgesetzt werden.</p>
+
+</div>
+	<div id="unityPlayerBG" style="position:absolute; top:100px; left: 200px; width: 375px; height: 500px; background-color:#FFF; margin: 0px auto;">&nbsp;
+</div>
+	<div id="unityPlayer" style="position:absolute; top:100px; left: 200px; width: 375px; height: 500px; background-color:#FFF; margin: 0px auto; z-index:1000000;">
+				<div class="missing" style="position:relative; left:50px; top:200px;">
+					<a href="http://unity3d.com/webplayer/" title="Unity Web Player. Install now!">
+						<img alt="Unity Web Player. Install now!" src="http://webplayer.unity3d.com/installation/getunity.png" width="193" height="63" />
+					</a>
+				</div>
+			</div>
+<div id="vardebug" style=" overflow-y:scroll; position:absolute; top:100px; left:575px; height:480px; width: 140px; padding:10px; background-color:#cccccc;  ">
+<h4>Variablen</h4>
+<div id="showvars"></div>
+
+</div>
+	<div id="consoledebug" style="overflow-y:scroll; position:absolute; top:100px; left:735px; height:480px; width: 250px; padding:10px; background-color:#c3c3c3;  ">
+<h4>Log</h4>
+<div id="showlog"></div>
+
+</div>
+</div>
+
+
+
+<img src="@Global.SERVER_URL_2/assets/img/arrow2.png" id="arrowright" style="position:absolute; display:none;" class="arrow animated bounce-right" ></img>
+
+<div id="tutorial" style="color:#FFFFFF; z-index:4; width:100%; height:100%; position:absolute; display:none;" class="background">
+<div style="padding-top:200px;"><h1>Schritt 1</h1>
+Wilkommen bei dieser kurzen Einführung zum GeoQuest Editor für mobile Android-Applikationen und Spiele.
+</div>
+</div>
+
+@editor_missionoverview(g)
+
+<div id="background-chooser">
+<div style="padding:5px; display:inline-block; cursor:pointer;" onClick="javascript:showMapView();">
+<i class="icon-map-marker"></i>&nbsp; Kartenansicht </div> 
+
+<div style="padding:5px; display:inline-block; cursor:pointer;" onClick="javascript:hideMapView();">
+<i class="icon-remove-sign"></i>&nbsp; Standardansicht
+</div>
+</div>
+}
+<div id='map' class="map" ></div>
+
+
+
+    @editor_xmlview(g)
+		@editor_newmission(g)
+		@editor_newmenuitem(g)
+		<div id="sceneinfocontainer">
+		@for(s <- g.getAllScenes()){ 	
+				@editor_allsceneinfo(g,s)
+		}
+		</div>
+				<div id="menuiteminfocontainer">
+		
+		@for(mi <- g.getMenuItems){
+			@editor_menuitemedit(g,mi)
+		}
+		</div>
+		@editor_newhotspot(g)
+			<div id="contentviewcontainer" name="contentviewcontainer">
+			 </div>
+			 
+			<div id="hotspotrulecontainer" name="hotspotrulecontainer">
+	
+			 </div>
+		
+		<div id="missioninfocontainer">
+			
+        </div>      	
+        
+        
+        
+        <div id="loadingpic" style="z-index:9999999999999; position:absolute; top: 50%;
+    left: 50%;
+    margin-top: -150px;
+    margin-left: -150px;
+    width: 300px;
+    height: 300px; background-image:url('@Global.SERVER_URL_2@routes.Assets.at("img/loading.gif")'); display:none;"></div>
+        
+        
+					  
+					  <div id="actioninfocontainer_hotspots">
+					  
+		@for(m <- g.getAllHotspots()){ 
+			@for(r <- m.getAllSubRules){ 
+				@for(ac <- r.getActions){  } 
+			}
+				
+		}
+        
+        </div>			
+              				
+              				
+              				
+              </div></div></div>
+
+
+		@editor_sidemenu(g)
+    
+    
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    	<script src="@Global.SERVER_URL_2@routes.Assets.at("js/getElementsByClassName-1.0.1.js")"></script>
+   
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+  <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+	<script src="@Global.SERVER_URL_2@routes.Assets.at("js/jquery.dataTables.js")"></script>
+	<script src="@Global.SERVER_URL_2@routes.Assets.at("js/DT_bootstrap.js")"></script>
+    <script src="@Global.SERVER_URL_2@routes.Assets.at("js/bootstrap.js")"></script>
+
+<!-- Javascript code for building the map -->
+	
+<script type='text/javascript' src='@Global.SERVER_URL_2/editor/mapscript/@g.getId'></script> 
+<script type='text/javascript' src='@Global.SERVER_URL_2/assets/js/leaflet/leaflet.js'></script> 
+    	<script src="@Global.SERVER_URL_2@routes.Editor.getMapSearchScript(g.getId)"></script>
+<script type='text/javascript' src='@Global.SERVER_URL_2/assets/js/XMLDisplay.js'></script> 
+<script type='text/javascript' src='@Global.SERVER_URL_2/assets/js/bowser/bowser.min.js'></script> 
+<script type='text/javascript' src='https://ssl-webplayer.unity3d.com/download_webplayer-3.x/3.0/uo/jquery.min.js'></script>
+        <script type="text/javascript">
+		<!--
+		var unityObjectUrl = "http://webplayer.unity3d.com/download_webplayer-3.x/3.0/uo/UnityObject2.js";
+		if (document.location.protocol == 'https:')
+			unityObjectUrl = unityObjectUrl.replace("http://", "https://ssl-");
+		document.write('<script type="text\/javascript" src="' + unityObjectUrl + '"><\/script>');
+		-->
+		</script>
+		
+<script src="@Global.SERVER_URL_2/assets/js/leaflet/l.geosearch.provider.google.js"></script>
+    @editor_js(g)   
+   
+    
+	
+    
+
+
+  </body>
+</html>

@@ -1,0 +1,10 @@
+@(g:Game, m:models.GameParts.Mission)
+
+@import models.GameParts._
+@import util.Global
+
+
+
+ @for(c <- m.getContents()){
+        	@editor_acontentinmissionedit(g,c,m)
+        }

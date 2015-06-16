@@ -1,0 +1,234 @@
+@(g: Game)
+
+@import util.Global;
+
+var lasthotspot = 0;
+var map;
+ var group;
+ var popups = new Array();
+  var circle = new Array();
+   var marker = new Array();
+
+ 
+
+function onLocationFound(e) {
+    var radius = e.accuracy / 2;
+
+    L.marker(e.latlng).addTo(map)
+        .bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+    L.circle(e.latlng, radius).addTo(map);
+}
+
+function initmap(){
+
+startup = 1;
+// create a map in the "map" div, set the view to a given place and zoom
+map = L.map('map');
+
+map.on('dragend', function(event){updateMapCenter();} );
+map.setView([48, 7], 8);
+
+@if(g.getAllHotspots.size == 0){
+	
+map.locate({setView: true, maxZoom: 16});
+} 
+
+
+
+
+map.on('popupclose', function(e){
+
+
+
+
+counter = 0;
+@for(hs <- g.getAllHotspots){
+
+
+updatePopupContent(@hs.getId());
+
+}
+
+
+});
+
+
+
+    
+    document.getElementById('hotspotnew_lat').value = map.getCenter().lat;
+    document.getElementById('hotspotnew_long').value = map.getCenter().lng;
+    
+    
+   
+
+
+// add an OpenStreetMap tile layer
+L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+    detectRetina: true,
+     
+    maxZoom: 22,
+    maxNativeZoom: 18}).addTo(map);
+
+// add search field
+
+
+ @if(g.getType.hasOnlyOneScene() && g.getAllScenes().size()>0){
+
+} else {
+ new L.Control.GeoSearch({
+            provider: new L.GeoSearch.Provider.Google(),
+                position: 'topcenter'
+            
+        }).addTo(map);
+}
+
+
+// icons
+    group = new L.featureGroup();
+
+ 
+ 
+ counter = 0;
+ 
+@for(hs <- g.getAllHotspots){
+	
+	counter++;
+	
+	
+ 
+  addMarker(@hs.getId());
+ 
+ 
+ 
+    }
+    
+    
+    zoomToMapBounds();
+    }
+    
+    
+    
+    
+    function panTo(marker){
+    
+    
+    
+    
+    
+    var targetLatLng = marker.getLatLng();
+   
+map.panTo(targetLatLng);
+
+map.panBy([0,-300]);
+    
+    
+    
+    
+    }
+    
+    
+    function updateMapCenter(){
+    
+    
+    document.getElementById('hotspotnew_lat').value = map.getCenter().lat;
+    document.getElementById('hotspotnew_long').value = map.getCenter().lng;
+    
+    
+    
+    
+    }
+    
+    
+    function zoomToMapBounds(){
+    
+   
+
+ map.fitBounds(group.getBounds());
+ 
+ var zoom = map.getZoom()-1;
+ 
+    if(zoom > 18){ zoom = 18; }
+    console.log(zoom);
+    map.setZoom(zoom);
+    
+   
+    
+    
+    }
+    
+    
+    function updatePopupContent(hs){
+    
+    
+    
+  
+  
+  
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+
+
+
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    
+    popups[hs].setContent(xmlhttp.responseText);
+    
+	}
+  }
+xmlhttp.open("GET","@Global.SERVER_URL_2/editor/@g.getId/fragments/Hotspot/"+hs+"/popupcontent",true);
+xmlhttp.send();
+
+  
+    
+    
+    
+    }
+    
+    
+    
+    
+    
+    
+    
+    function addMarker(id){
+    
+    if(id != undefined){
+    
+    var scriptUrl = "/editor/@g.getId()/fragments/leaflet/"+id+"/addmarker/true";
+    
+  var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("GET", scriptUrl);
+    xmlhttp.onreadystatechange = function()
+    {
+        if ((xmlhttp.status == 200) && (xmlhttp.readyState == 4))
+        {
+            eval(xmlhttp.responseText);
+            
+                zoomToMapBounds();
+            
+        }
+    };
+    xmlhttp.send();
+    } else {
+    
+    console.log("tried to add an undefined marker");
+    
+    }
+    
+    
+    
+    }
+    

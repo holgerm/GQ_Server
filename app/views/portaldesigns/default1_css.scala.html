@@ -1,0 +1,252 @@
+@import controllers.Application;
+
+/* CSS Document */
+
+     /* override bootstrap styles */
+
+body {
+
+
+	color:@Application.getFontColor(Application.getLocalPortal.getGradientColor());
+	
+	
+    font-family: ("Merriweather Sans", sans-serif);
+   	padding-top: @Application.getLocalPortal().getLogoHeight(50)px;
+   		 
+}
+
+@@media (max-width: 979px) {
+
+    body {
+
+        padding-top:0px;
+    }
+}
+
+html,body {
+    background: #ffffff; /* Old browsers */
+  	background: -moz-linear-gradient(top, @Application.getInverseColor(Application.getFontColor(Application.getLocalPortal().getGradientColor())) 0%, @Application.getLocalPortal().getGradientColor() 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@Application.getInverseColor(Application.getFontColor(Application.getLocalPortal().getGradientColor()))), color-stop(100%,@Application.getLocalPortal().getGradientColor())); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, @Application.getInverseColor(Application.getFontColor(Application.getLocalPortal().getGradientColor())) 0%,@Application.getLocalPortal().getGradientColor() 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, @Application.getInverseColor(Application.getFontColor(Application.getLocalPortal().getGradientColor())) 0%,@Application.getLocalPortal().getGradientColor() 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, @Application.getInverseColor(Application.getFontColor(Application.getLocalPortal().getGradientColor())) 0%,@Application.getLocalPortal().getGradientColor() 100%); /* IE10+ */
+    background: linear-gradient(to bottom, @Application.getInverseColor(Application.getFontColor(Application.getLocalPortal().getGradientColor())) 0%,@Application.getLocalPortal().getGradientColor() 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@Application.getInverseColor(Application.getFontColor(Application.getLocalPortal().getGradientColor()))', endColorstr='@Application.getLocalPortal().getGradientColor()',GradientType=0 ); /* IE6-8 */
+    background-attachment:fixed  !important;
+    min-height: 100%;
+    height: 100%;
+}
+
+
+.row{
+
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width:100%;
+
+
+}
+
+
+.heading_no_break{
+
+font-size:20px;
+
+}
+
+ul > li        {
+
+list-style-type: none;
+
+    }
+
+.hero-unit {
+
+	border:1px solid @Application.getLocalPortal().getDefaultcolor();
+
+   background-color: rgba(255, 255, 255, 0.3);
+  background: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.3)), to(gba(119, 144, 140, 0)));
+  background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.3), gba(119, 144, 140, 0));
+  background: -moz-linear-gradient(top, rgba(255, 255, 255, 0.3), gba(119, 144, 140, 0));
+  background: -ms-linear-gradient(top, rgba(255, 255, 255, 0.3), gba(119, 144, 140, 0));
+  background: -o-linear-gradient(top, rgba(255, 255, 255, 0.3), gba(119, 144, 140, 0));
+
+    width:auto;
+
+}
+
+
+
+
+
+
+ 
+
+ .btn-primary {
+     font-family: 'Merriweather Sans', sans-serif;
+
+
+
+
+
+     background-color: @Application.getLocalPortal().getDefaultcolor(); !important;
+     background-repeat: repeat-x;
+     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="@Application.getLocalPortal().getDefaultcolor()", endColorstr="@Application.getDarkerColor(Application.getLocalPortal().getDefaultcolor())");
+     background-image: -khtml-gradient(linear, left top, left bottom, from(@Application.getLocalPortal().getDefaultcolor()), to(@Application.getDarkerColor(Application.getLocalPortal().getDefaultcolor())));
+     background-image: -moz-linear-gradient(top, @Application.getLocalPortal().getDefaultcolor(), @Application.getDarkerColor(Application.getLocalPortal().getDefaultcolor()));
+     background-image: -ms-linear-gradient(top, @Application.getLocalPortal().getDefaultcolor(), @Application.getDarkerColor(Application.getLocalPortal().getDefaultcolor()));
+     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, @Application.getLocalPortal().getDefaultcolor()), color-stop(100%, @Application.getDarkerColor(Application.getLocalPortal().getDefaultcolor())));
+     background-image: -webkit-linear-gradient(top, @Application.getLocalPortal().getDefaultcolor(), @Application.getDarkerColor(Application.getLocalPortal().getDefaultcolor()));
+     background-image: -o-linear-gradient(top, @Application.getLocalPortal().getDefaultcolor(), @Application.getDarkerColor(Application.getLocalPortal().getDefaultcolor()));
+     background-image: linear-gradient(@Application.getLocalPortal().getDefaultcolor(), @Application.getDarkerColor(Application.getLocalPortal().getDefaultcolor()));
+     border-color: @Application.getFontColor(Application.getLocalPortal().getDefaultcolor());
+     color: @Application.getFontColor(Application.getLocalPortal().getDefaultcolor()) !important;
+     text-shadow: 0 1px 1px rgba(255, 255, 255, 0.46);
+     -webkit-font-smoothing: antialiased;
+
+
+
+}
+
+.btn-primary:hover,
+.btn-primary.hover,
+.btn-primary:active,
+.btn-primary.active,
+.btn-primary.disabled,
+.btn-primary[disabled] {
+    color: #2E2E2E;
+    background-color: @Application.getDarkerColor(Application.getLocalPortal().getDefaultcolor());
+    *background-color: @Application.getDarkerColor(Application.getLocalPortal().getDefaultcolor());
+
+
+}
+
+
+
+
+
+
+.btn-success:hover,
+.btn-success.hover,
+.btn-success:active,
+.btn-success.active,
+.btn-success.disabled,
+.btn-success[disabled]{
+
+    background-color:@Application.getDarkerColor(Application.getLocalPortal().getComplementColor()) !important;
+
+}
+
+
+
+
+
+.btn-success {
+    font-family: 'Merriweather Sans', sans-serif;
+
+
+  background-color: @Application.getLocalPortal().getNavbarColor(); /* fallback color, place your own */
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="@Application.getLocalPortal().getComplementColor()", endColorstr="@Application.getDarkerColor(Application.getLocalPortal().getComplementColor())");
+    background-image: -khtml-gradient(linear, left top, left bottom, from(@Application.getLocalPortal().getComplementColor()), to(@Application.getDarkerColor(Application.getLocalPortal().getComplementColor())));
+    background-image: -moz-linear-gradient(top, @Application.getLocalPortal().getComplementColor(), @Application.getDarkerColor(Application.getLocalPortal().getComplementColor()));
+    background-image: -ms-linear-gradient(top, @Application.getLocalPortal().getComplementColor(), @Application.getDarkerColor(Application.getLocalPortal().getComplementColor()));
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, @Application.getLocalPortal().getComplementColor()), color-stop(100%, @Application.getDarkerColor(Application.getLocalPortal().getComplementColor())));
+    background-image: -webkit-linear-gradient(top, @Application.getLocalPortal().getComplementColor(), @Application.getDarkerColor(Application.getLocalPortal().getComplementColor()));
+    background-image: -o-linear-gradient(top, @Application.getLocalPortal().getComplementColor(), @Application.getDarkerColor(Application.getLocalPortal().getComplementColor()));
+    background-image: linear-gradient(@Application.getLocalPortal().getComplementColor(), @Application.getDarkerColor(Application.getLocalPortal().getComplementColor()));
+    border-color: @Application.getFontColor(Application.getLocalPortal().getComplementColor());
+    color: @Application.getFontColor(Application.getLocalPortal().getComplementColor()) !important;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.46);
+    -webkit-font-smoothing: antialiased;
+
+
+
+
+}
+
+
+.navbar-inner {
+	background-image:none;
+  background-color: @Application.getLocalPortal().getNavbarColor(); /* fallback color, place your own */
+color: @Application.getFontColor(Application.getLocalPortal().getNavbarColor());
+}
+
+ .navbar .brand {
+ 
+ @if(Application.getFontColor(Application.getLocalPortal().getNavbarColor()) != "#FFFFFF"){
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    }
+    color:  @Application.getFontColor(Application.getLocalPortal().getNavbarColor()) !important;
+ }
+
+.navbar .nav > li > a {
+
+ @if(Application.getFontColor(Application.getLocalPortal().getNavbarColor()) != "#FFFFFF"){
+
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+	}
+color: @Application.getFontColor(Application.getLocalPortal().getNavbarColor()) !important;
+
+
+}
+
+
+@if(Application.getLocalPortal().getLogoHeight(0)>0){
+.navbar .nav > li > a {
+
+    padding:@{Application.getLocalPortal().getLogoHeight(0)/2}px 15px @{Application.getLocalPortal().getLogoHeight(0)/2}px;
+}
+
+.navbar .btn-group {
+
+    padding-top:20px !important;
+}
+
+
+
+
+
+
+
+@@media (max-width: 979px) {
+
+
+
+
+    .navbar .nav > li > a {
+
+        padding:10px 5px 10px;
+    }
+
+    .navbar .btn-group {
+
+        padding-top:0px !important;
+    }
+
+
+
+}
+
+
+
+}
+
+
+a:link {
+	color: @Application.getLocalPortal().getLinkColor();
+}
+a:visited {
+	color: @Application.getLocalPortal().getLinkColor();
+}
+a:hover {
+	color: @Application.getFontColor(Application.getLocalPortal().getGradientColor());
+
+}
+a:active {
+	color: @Application.getFontColor(Application.getLocalPortal().getGradientColor());
+
+}
+
+

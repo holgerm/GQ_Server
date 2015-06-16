@@ -1,0 +1,10 @@
+@(st:models.GameParts.SceneType,gt:models.GameParts.GameType,log:String)
+
+@import util.Global
+
+
+New SceneType @st.getId() added to GameType @gt.getId()
+
+@Html(log)
+
+<a href="@Global.SERVER_URL_2/gteditor/@gt.getId()/deletescenetype/@st.getId()">Undo</a>

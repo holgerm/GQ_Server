@@ -1,0 +1,108 @@
+@import util.Global
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Geoquest Webservice</title>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="%%_GEOQUEST_SERVER_URL_%%/assets/js/bootstrap.min.js"></script>
+    <link href="%%_GEOQUEST_SERVER_URL_%%/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="%%_GEOQUEST_SERVER_URL_%%/assets/stylesheets/defaulttemplate.css" rel="stylesheet">
+
+    <link href="@Global.SERVER_URL_2@routes.Application.getDataTableCSS()" id="dtCss" rel="stylesheet">
+
+
+
+
+
+    <style type="text/css">
+body,td,th {
+	color: #000;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	font-size: small;
+}
+
+a:link {
+	color: #006;
+}
+a:visited {
+	color: #006;
+}
+
+
+.re {
+	text-align: right;
+
+}
+    .defaultli a{
+    color: #FFFFFF;
+    display: block;
+    text-decoration: none;
+    padding: 2px;
+    text-align: center;
+    font-size: large;
+        margin-bottom: 10px;
+        padding: 10px;
+    }
+    .defaultli a:link{
+    background-color: #C6c6c6;
+    }
+    .defaultli a:hover{
+    background-color: %%_GEOQUEST_DEFAULT_COLOR_%%;
+
+    }
+
+.naviul {
+	margin:0;
+	padding:0;
+	width: 200px;
+	}
+
+
+
+</style>
+</head>
+
+<body>
+
+  <table border="0" width="100%">
+    <tr>
+      <td colspan="2" valign="top" bgcolor="%%_GEOQUEST_DEFAULT_COLOR_%%" style="padding:20px"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><strong>
+              <h1>%%_GEOQUEST_PORTAL_NAME_%%</h1></strong></td>
+            <td valign="bottom" class="re">%%_GEOQUEST_USER_INFO_%%</td>
+          </tr>
+      </table></td>
+    </tr>
+    <tr>
+      <td width="200" valign="top" bgcolor="#999999">
+          <br/><br/>
+      <ul class="naviul">
+        <li class="defaultli">%%_GEOQUEST_NAV_LI_%%{li.attributes:=!!" class="defaultli" "!!}</li></ul>
+      </td>
+      <td height="400" valign="top" style="padding:20px"><h1><strong>%%_GEOQUEST_CONTENT_TITLE_%%</strong></h1>
+      <p>%%_GEOQUEST_CONTENT_CODE_START_%%{
+           %general.button.attributes:=!!" class="btn btn-custom" "!!;;
+           %general.speciallinks.attributes:=!!" class="btn btn-custom"  "!!;;
+           %general.navtabs.attributes:=!!" class="nav nav-tabs" !!";;
+          }
+       </p></td>
+    </tr>
+  </table>
+Version <strong>%%_GEOQUEST_SERVER_VERSION_%%</strong> by Kevin Glaap
+
+
+
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="@Global.SERVER_URL_2@routes.Assets.at("js/jquery.js")"></script>
+    <script src="@Global.SERVER_URL_2@routes.Assets.at("js/jquery.dataTables.js")"></script>
+    <script src="@Global.SERVER_URL_2@routes.Assets.at("js/DT_bootstrap.js")"></script>
+
+</body>
+</html>

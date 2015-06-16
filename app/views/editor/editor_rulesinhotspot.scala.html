@@ -1,0 +1,210 @@
+@(g:Game,m:models.GameParts.Hotspot)
+
+
+@import util.Global;
+
+@if(m.getType != null){
+
+@for(rt <- m.getType.getPossibleRuleTypes){
+	
+	@if(m.hasRule(rt)){
+		
+		@if(!m.getRule(rt).getSubRules().isEmpty()){
+		@for(r <- m.getRule(rt).getSubRules()){
+		
+		<div id="actioninfocontainer_r@r.getId">
+		
+		
+		              	@if(r.getActions() != null){
+		
+              	@if(!r.getActions().isEmpty()){
+              		
+              		
+              		
+              		
+							              		
+							              		
+							       @for(ac <- r.getActions){
+		
+		
+		@editor_actionedit(g,ac,String.valueOf(rt.getId()),10000000)
+	
+	
+		}
+		
+		}
+		
+		}
+		
+		</div>
+		
+		
+		}
+		}
+		}
+		}
+		
+	}
+	
+	
+	
+
+	 		
+             
+	<div class="inneredit" id="ruleedit_h@m.getId()" name="ruleedit_h@m.getId()">
+			 				              				<div class="scrollable-content" style="overflow-y:auto; overflow-x:hidden; height:100%; width:100%;">
+	
+									        				<div class="options">
+									        				
+									        				<i class="icon-resize-full" onClick="javascript:toggleFullscreen('ruleedit_h@m.getId()','72%','60%','200px','5%','25px')"></i>
+									        				<i class="icon-remove" onClick="javascript:document.getElementById('ruleedit_h@m.getId()').style.display = 'none';showPlayer();deactiveFullscreen('ruleedit_h@m.getId()','72%','60%','200px','5%','25px')"></i>
+									        				
+									        				</div>   	
+              	        		
+              				
+              			              	<h2>Ereignisse in Hotspot @m.getName()</h2>
+           
+              	
+              		
+              		
+              		
+              		
+              		
+              		
+              		
+              		
+              		@for(rt <- m.getType.getPossibleRuleTypes){
+              			
+              				<div style="width:99%; white-space: nowrap; overflow-x:scroll; overflow-y:hidden; ">
+								<div style="min-width:101% white-space: nowrap;">
+              			
+              			
+              				<div id="trigger_@rt.getId" style=" padding:10px; overflow:wrap; display:inline-block; width:100px; cursor:pointer;"><div><img src="@if(rt.getSymbol != null){ @rt.getSymbol} else { @Global.SERVER_URL_2/assets/icons/trigger/onstart.png }" style="height:70px; width:70px; position:relative; left:15px; " /><p style="width:100px; height:35px; font-size:10px; text-align:center;">@rt.getName()</p></div><p style="height:20px; overflow:hidden;">&nbsp;</p></div>
+							<div id="triggerarrow_@rt.getId" style="overflow:wrap; display:inline-block; width:30px;"><img style="position:relative; top:-70px;" src="@Global.SERVER_URL_2/assets/icons/next.png"></div>
+									              				
+              			
+              		<div id="trigger_h@m.getId()_@rt.getId" name="trigger_h@m.getId()_@rt.getId" style="display:inline-block;">
+              		
+              		
+              			
+              		
+              		@if(m.hasRule(rt)){
+              		
+              		
+              		 <div id="subrules_@m.getRule(rt)" name="subrules_@m.getRule(rt)" style="display:inline-block;">
+              		
+              		
+              		@for(r <- m.getRule(rt).getSubRules()){
+              		
+              		
+              		
+              		
+              		
+@if(g.getType.getId < 981){  
+              		<a onClick="deleteSubRuleFromRule(@m.getRule(rt).getId,@r.getId())" style="cursor:pointer;">Löschen</a>
+              		<a onClick="javascript:document.getElementById('oldconditions@r.getId').style.display='block';" style="cursor:pointer;">Konditionen</a>
+              		
+              		}
+              		
+              		
+              		
+              		
+              		@editor_arule(g,r,rt)
+              		
+              		
+              		
+              		
+              		
+              		
+              		
+              		
+              		
+              		}
+              		
+              		</div>
+              		
+              		} else {
+              		
+              		
+              		
+              									
+              		
+              		<div style="display:inline-block; width:130px;">
+              		
+              				
+  <a class="btn" id="addaction_@rt.getId()_h@m.getId()btn" style=" display:inline-block; cursor:pointer; position:relative; top:-70px;" onClick="document.getElementById('addaction_@rt.getId()_h@m.getId()div').style.display='inline-block'; document.getElementById('addaction_@rt.getId()_h@m.getId()btn').style.display='none';">
+    <span class="icon-plus"></span>
+  </a>
+					             		
+              		<div style=" position:relative; top:-70px; display:none;" id="addaction_@rt.getId()_h@m.getId()div">
+             
+             
+              		   <select id = "actiontypert_@rt.getId()_h@m.getId" style="position:relative;">
+             
+              		@for(at <- rt.getPossibleActionTypes()){
+              			   <option value = "@at.getId()">@at.getName()</option>
+              			
+              			
+              		}   </select><br/>
+              		
+              		<div id="rulet_add_action_button_@rt.getId()_h@m.getId"  class="btn btn-success" onClick="newRuleInHotspot(@m.getId,@rt.getId);  document.getElementById('addaction_@rt.getId()_h@m.getId()div').style.display='none'; document.getElementById('addaction_@rt.getId()_h@m.getId()btn').style.display='inline-block'; document.getElementById('addaction_@rt.getId()_h@m.getId()div').style.display='none';">Neue Aktion</span>
+              
+              </div>
+              
+                                          <p style="height:20px; overflow:hidden;">&nbsp;</p>
+              
+              		</div>
+              		
+              		
+              		
+              		</div>
+              		
+              		
+              		}
+              	
+              	
+              	
+              @if(g.getType.getId < 981 && m.hasRule(rt)){
+              	
+              	<div id="triggerarrowx_@rt.getId" style="overflow:wrap; display:inline-block; width:30px;"><img style="position:relative; top:-70px;" src="@Global.SERVER_URL_2/assets/icons/next.png"></div>
+              		
+              	<div style="display:inline-block; width:130px;">
+              		
+              		<div style=" position:relative; top:-70px;">
+             
+              		
+              		<div id="rulet_add_action_button_@rt.getId()_h@m.getId"  class="btn btn-success" onClick="newSubRuleInRule(@m.getRule(rt).getId);">Neue Regel</span>
+              
+              </div>
+              		</div>
+              		
+              		
+              		
+              		</div>
+              	
+              	
+              	}
+              	
+              	
+              		
+              		
+              		</div>
+									              			</div>
+              	</div>
+              				
+              				
+              				}
+              				
+              				
+              				
+              				
+              				
+              					</div>
+									              			</div>
+              		
+              		
+	 		
+	 		
+	 		
+	 		
+	 			

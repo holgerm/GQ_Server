@@ -1,0 +1,25 @@
+@(a_html: SortedHtml, nav: String = "")
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import util.Global
+
+    @subjectPresentOr() {
+        @defining(Application.getLocalUser(session())) { user =>
+            <div class="btn-group">
+
+                <a class="btn btn-primary" href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.profile(Application.getLocalPortal.getId()))">
+                    <i class="icon-user"></i>
+                </a>
+            <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.dologout(Application.getLocalPortal.getId()))" class="btn btn-success" ><i class="icon-off"></i> @Messages("playauthenticate.navigation.logout")</a>
+                
+            </div>
+        }
+    }{
+        <div class="btn-group">
+            <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.login(Application.getLocalPortal.getId()))" class="btn btn-primary  @("disabled".when(nav == "login"))">Einloggen</a>
+            <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.signup(Application.getLocalPortal().getId()))" class="btn btn-success  @("disabled".when(nav == "signup"))">Registrieren</a>
+
+        </div>
+    }
+
+

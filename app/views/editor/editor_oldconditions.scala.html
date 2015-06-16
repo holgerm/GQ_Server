@@ -1,0 +1,63 @@
+@(g:Game,r:models.GameParts.Rule)
+
+@import util.Global;
+	<div class="inneredit" id="oldconditions@r.getId" name="oldconditions@r.getId">
+		
+		 				              				<div class="scrollable-content" style="overflow:auto; height:100%; width:100%;">
+		
+									        				<div style="text-align:right;">
+									        				
+									        				<i class="icon-resize-full" onClick="javascript:toggleFullscreen('oldconditions@r.getId','72%','60%','200px','5%','25px')"></i>
+									        				<i class="icon-remove" onClick="javascript:document.getElementById('oldconditions@r.getId').style.display = 'none';deactiveFullscreen('oldconditions@r.getId','72%','60%','200px','5%','25px')"></i>
+									        				
+									        				</div>
+									        				
+
+              		<h4>Konditionen</h4>
+              		
+              		<div id="conditionsinrule@r.getId()container" name="conditionsinrule@r.getId()container">
+              		@if(r.getConditions.isEmpty){
+              			
+              			
+              		<textarea onChange="newConditionInRule(@r.getId)" id="condition_area_@r.getId">Insert rules here...</textarea>
+              		
+              			  <img id="status_condition_area_@r.getId" src="@Global.SERVER_URL_2@routes.Assets.at("img/notimplemented.png")" />
+        
+              			
+              		} else {
+              		
+              		@for(c <- r.getConditions){
+              			
+              		
+              				
+              		<textarea onChange="editConditionInRule(@r.getId)" id="condition_area_@r.getId">@c.getFull()</textarea>
+              		  <img id="status_condition_area_@r.getId" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
+        
+              											       
+              			
+              			
+              			
+              			
+              		}
+              		}
+              		
+              		</div>
+              		
+              		
+              			<br/>Add Predefined Conditions:
+			<select id = "conitionadder_mission_rule@r.getId" class="missionselector" >
+             
+             <option ></option>
+              		@for(pm <- g.getAllMissions()){
+              			   <option  value = "@pm.getId()"  >@pm.getName()</option>
+              			
+              			
+              		}   </select>
+              		
+       <span id="rule_add_condition_button_@r.getId()" class="btn btn-success" onClick="addConditionToTextarea(@r.getId,'missionstate')">Missions-State</span>
+        <span id="rule_add_condition_button_@r.getId()" class="btn btn-success" onClick="addConditionToTextarea(@r.getId,'missionresult')">Mission-Result</span>      		
+              
+              
+              </div>
+              </div>		
+              		

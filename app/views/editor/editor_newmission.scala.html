@@ -1,0 +1,54 @@
+@(g: Game)
+
+
+
+
+    
+	<div class="missionedit" id="missionnew_new" name="missionnew_new" style="display:none">
+			 				              				<div class="scrollable-content" style="overflow:auto; height:100%; width:100%;">
+	
+<div class="options">
+ 					<i class="icon-resize-full" onClick="javascript:toggleFullscreen('missionnew_new','72%','75%','120px','5%','35px')"></i>
+ 					<i class="icon-remove" onClick="javascript:document.getElementById('missionnew_new').style.display = 'none';deactiveFullscreen('missionnew_new','72%','75%','120px','5%','35px');hideAddEditMissions();"></i></div>
+              				              				
+              				              				
+              				              				<input type="text" id="missiontype_namenew" class="h2textfield" value="Hier Namen eingeben">
+              				<br/>
+              				              			
+              				              			
+              				              			<label>Seitentyp:</label>	<select id = "game_newobject_type" onChange="switchNewObjectView('game');">
+              			           			
+              			           			<option value="none">----------------------</option>
+              			           			@for(a_ptype <- g.getType.getPossiblePartTypes){
+             	@if(!a_ptype.isSceneType){
+             		
+             			@defining(a_ptype.getMissionType) { a_mtype =>
+               
+               <option value = "mission_@a_mtype.getId()"> <i class="icon-file"></i>@a_mtype.getName()</option>
+               }
+               }
+               }
+              			           			
+              				@if(g.getType.getPossibleMissionTypes.size() > 0 && g.getType.getPossibleSceneTypes.size() > 0){  <option value="none">----------------------</option>   }    
+              				
+              @for(a_stype <- g.getType.getPossibleSceneTypes){
+               
+               @if(a_stype.getDefaultHotspots().isEmpty()){
+               <option value="scene_@a_stype.getId()">
+               <i class="@a_stype.getIcon()"></i>
+               @a_stype.getName()</option>
+               }
+               
+               }
+             </select>
+              				      <input type="hidden" id="hotspotsnew_lat" value="0"/>
+              				      <input type="hidden" id="hotspotsnew_long" value="0"/>
+              				         				
+
+
+             	              <div class="btn btn-success" onClick="addNewObject()">Hinzufügen</div>
+
+              	</div>
+              	
+              	</div>
+              	</div></div></div>

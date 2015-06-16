@@ -1,0 +1,277 @@
+@(uploadForm: Form[_], portal: ProviderPortal,errormessage:String)
+
+@import helper._
+    @import helpers._
+@import helper.twitterBootstrap._
+
+@main("Editieren ("+portal.getName+"//"+portal.getId+")","edit_portal") {
+
+
+
+
+<script language="JavaScript" type="text/javascript">
+        <!--
+                                                                function showDiv(element){
+                                                                  document.getElementById(element).style.display = 'block';
+                                                                 }
+
+                                                                function hideDiv(element){
+
+                                                                       document.getElementById(element).style.display = 'none';
+                                                                }
+                                                                //-->
+</script>
+
+
+
+@helpers.form(routes.Portal.doEditPortal(Application.getLocalPortal().getId(),portal.getId),'class -> "form-horizontal", 'enctype -> "multipart/form-data") {
+
+  @if(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.tabs.type") =="button-group"){
+
+    <div class="btn-group inline">
+    <li onclick="javascript:showDiv('generalinfo'); hideDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('layout');" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes") !=""))>Allgemein    </li>
+    <li onclick="javascript:showDiv('verschluesselung'); hideDiv('erweitert'); hideDiv('generalinfo'); hideDiv('layout');" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes") !=""))>Verschlüsselung </li>
+    <li onclick="javascript:showDiv('layout'); hideDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('generalinfo');" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes") !=""))>Layout </li>
+    <li onclick="javascript:showDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('generalinfo'); hideDiv('layout');" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes") !=""))>Erweitert</li>
+
+   </div>
+    <span>
+        <input type="submit" value="Abspeichern" class="btn btn-primary")>
+
+    </span>
+
+               <br/>
+
+  } else {
+
+      <ul @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes") !=""))>
+      <li><a href="javascript:showDiv('generalinfo'); hideDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('layout');">Allgemein</a>    </li>
+      <li><a href="javascript:showDiv('verschluesselung'); hideDiv('erweitert'); hideDiv('generalinfo'); hideDiv('layout');">Verschlüsselung</a>   </li>
+      <li><a href="javascript:showDiv('layout'); hideDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('generalinfo');">Layout</a>   </li>
+      <li><a href="javascript:showDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('generalinfo'); hideDiv('layout');">Erweitert</a>   </li>
+      <li></li><div style="display:inline-block; padding-left:50px;">    <input type="submit" value="Abspeichern" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes") !=""))>
+
+      </div>   </li>        </ul>
+
+
+
+  }
+
+
+    <div class="hero-unit center">
+    
+    @if(errormessage != ""){
+    			<p class="error">
+		            <span class="label label-important">@errormessage</span>
+		        </p>
+            }
+    	
+
+    @if(uploadForm.hasGlobalErrors) {
+        <p class="error">
+            <span class="label label-important">@uploadForm.globalError.message</span>
+        </p>
+    }
+
+
+    <div id="generalinfo" name="generalinfo"  style="display:block;">
+        @inputText(
+            uploadForm("name"),
+            '_label -> "Portalname"
+        )
+
+        <br/>
+
+        @checkbox(
+            uploadForm("autoverify"),
+            '_label -> "User automatisch zulassen"
+
+        )
+
+        <br/>
+        @textarea(
+            uploadForm("htmlurl"),
+            '_label -> "Template URL"
+        )
+        <br/>
+
+
+
+
+    </div>
+
+
+    <div id="verschluesselung" style="display:none;">
+
+
+
+
+        @inputText(
+            uploadForm("formname"),
+            '_label -> "HTML-Formular-Name mit Login-Feldern"
+        )
+        <br/>
+
+        @inputText(
+            uploadForm("userfield"),
+            '_label -> "HTML-Usernamefeld-Name"
+        )
+        <br/>
+        @inputText(
+            uploadForm("user"),
+            '_showConstraints -> false,
+            '_label -> "Username"
+        )
+        <br/>
+        @inputText(
+            uploadForm("pwfield"),
+            '_label -> "HTML-Passwortfeld-Name"
+        )
+        <br/>
+
+       @inputPassword(
+                                    uploadForm("password"),
+                                    '_showConstraints -> false,
+                                    '_label -> "Passwort (wird nur neu gesetzt, wenn neue Eingabe gemacht wird)"
+                                )
+
+        <br/>
+
+        @inputText(
+            uploadForm("submitbutton"),
+            '_label -> "HTML-Submitbutton-Name"
+        )
+
+
+        <br/>
+
+        @textarea(
+            uploadForm("afterloginurl"),
+            '_label -> "Nach erfolgreichem Einloggen URL aufrufen:"
+        )
+
+
+
+
+    </div>
+
+
+    <div id="erweitert" style="display:none;">
+
+
+        @textarea(
+            uploadForm("mappingurl"),
+            '_label -> "Mapping-Datei-URL:"
+        )
+        <br/>
+
+        @textarea(
+            uploadForm("customserverurl"),
+            '_label -> "Eigene Server-URL (Redirecter-URL):"
+        )
+        <br/>
+
+        @textarea(
+            uploadForm("posturl"),
+            '_label -> "Blog-Connector-URL:"
+        )
+
+    </div>
+
+
+
+        <div id="layout" style="display:none;">
+
+
+            <div class="clearfix  " id="color_field">
+                <label for="color">Standard-Farbe:</label>
+                <div class="input">
+
+                    <input type="color" id="color" name="color" value="@uploadForm("color").value" >
+
+                    <span class="help-inline"></span>
+                    <span class="help-block"></span>
+                </div>
+            </div>
+            <br/>
+
+            <div class="clearfix  " id="color_field">
+                <label for="color_2">Komplementär-Farbe:</label>
+                <div class="input">
+
+                    <input type="color" id="color_2" name="color_2" value="@uploadForm("color_2").value" >
+
+                    <span class="help-inline"></span>
+                    <span class="help-block"></span>
+                </div>
+            </div>
+
+            <br/>
+
+            <div class="clearfix  " id="color_field">
+                <label for="color_3">Verlaufs-Farbe:</label>
+                <div class="input">
+
+                    <input type="color" id="color_3" name="color_3" value="@uploadForm("color_3").value" >
+
+                    <span class="help-inline"></span>
+                    <span class="help-block"></span>
+                </div>
+            </div>
+
+            <br/>
+
+            <div class="clearfix  " id="color_field">
+                <label for="color_4">Hintergrund-Farbe:</label>
+                <div class="input">
+
+                    <input type="color" id="color_4" name="color_4" value="@uploadForm("color_4").value" >
+
+                    <span class="help-inline"></span>
+                    <span class="help-block"></span>
+                </div>
+            </div>
+
+            <br/>
+
+            <div class="clearfix  " id="color_field">
+                <label for="color_5">Link-Farbe:</label>
+                <div class="input">
+
+                    <input type="color" id="color_5" name="color_5" value="@uploadForm("color_5").value" >
+
+                    <span class="help-inline"></span>
+                    <span class="help-block"></span>
+                </div>
+            </div>
+
+            <br/>
+
+
+            @inputFile(uploadForm("logo"), '_display -> "Attachment", '_label -> "Logo-Datei (*.jpg,*.png)" )
+
+            <br/>
+
+            @textarea(
+                uploadForm("addcss"),
+                '_label -> "CSS (wird in Header eingefügt):"
+            )
+
+
+
+
+     </div>
+        </div>
+
+
+
+    }
+
+
+
+
+    }
+
+
+
+

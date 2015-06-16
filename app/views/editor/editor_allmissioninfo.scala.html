@@ -1,0 +1,43 @@
+@(g:Game, m:models.GameParts.Mission)
+
+@import models.GameParts._
+<div id="allmissioncontent_@m.getId()">
+
+
+<div id="rulesinmissioncontainer@m.getId()">
+		
+					
+					 
+					 
+		
+				</div>
+				
+				
+				
+				
+	 			@editor_newcontentinmission(g,m)
+	 			
+	 				 			<div id="contentviewcontainer@m.getId" name="contentviewcontainer@m.getId">
+	 			
+	 			@for(c <- m.getContents){ 
+	 			
+	 			
+	 			
+	 			
+	 			@editor_contentincontent(g,m,c)
+	 			@editor_contentedit(g,c)
+	 			
+	 			@for(sc <- c.getSubContent()){
+	 				
+	 				@editor_contentedit(g,sc)
+	 				
+	 				
+	 			}
+	 			
+	 	
+	 			
+	 			 }
+	 			 
+	 			 </div>
+				@editor_missionedit(g,m)
+			</div>

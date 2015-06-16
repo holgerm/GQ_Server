@@ -1,0 +1,288 @@
+@(gamesList: List[GameRights],game: Game, userFound: Set[User],userForm:Form[_])
+
+    @import helper._
+    @import helpers._
+    
+	@import util.Global
+	
+
+@main("Administration von "+game.getName()+" (ID:"+game.getId()+")") {
+
+
+
+
+
+
+@if(!Application.getLocalPortal.hasGameType(game.getType)){ 
+	
+	
+	
+            <h3>Update verfügbar!</h3>
+          
+        Eine neue Version dieses Spieltyps ist verfügbar! Bitte beachte, dass ein Update auch Datenverluste mit sich bringen kann, falls sich Attributnamen im Spieltyp geändert haben. Bitte beachte dazu den Changelog der GeoQuest-Version.
+          
+          
+          <a href="@Global.SERVER_URL_2/@Application.getLocalPortal.getId()/@game.getId/migrate">Update ausführen</a>
+          
+          
+          <br/>
+          
+       }
+	
+	
+
+
+ 
+            <h3>Veröffentlichen</h3>
+          
+          
+           <input style="display:inline-block; width:80%;" type="checkbox"/ id="gamevisi" @if(Application.getLocalPortal().getGame(game).getVisibility() == true){ checked = "checked" } onchange="javascript:syncGameVisibility()"
+           onkeydown="document.getElementById('status_gamevisi').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
+                <img style="display:inline-block; position:relative; top:15px;" id="status_gamevisi" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
+        
+        
+        
+              <br/>
+
+    <h3>User-Rechte</h3>
+    @defining(Application.getLocalUser(session())) { user =>
+
+
+
+            @if(gamesList.isEmpty() == true){
+                Bisher keine Rechte eingetragen.
+            } else {
+
+                <div class="container" style="margin-top: 10px">
+                    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Rechte</th>
+                                <th class="no-sort">Optionen</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+
+                    @for(a_game <- gamesList){
+
+                        <tr>
+                            <td>@a_game.getUser().getName()</td>
+
+
+
+                                        @if(a_game.getRights() == "write"){
+
+                                               <td>Schreibrechte</td>
+
+                                            <td>
+                                                   @if(a_game.getUser.getId != user.getId){<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doEditUserRightsOnGame(Application.getLocalPortal.getId(),game.getId(),a_game.getUser.getId,"read")">Auf Leserechte reduzieren</a>  - <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doDeleteUserRightsOnGame(Application.getLocalPortal.getId(),game.getId(),a_game.getUser.getId)">Alle Rechte entziehen</a>}
+                                            </td>
+
+                                        } else {
+
+
+                                            @if(a_game.getRights() == "read"){
+
+
+
+                                              <td>Nur Leserechte</td>
+                                                <td>
+                                                @if(a_game.getUser.getId != user.getId){<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doEditUserRightsOnGame(Application.getLocalPortal.getId(),game.getId(),a_game.getUser.getId,"write")">Schreibrechte geben</a> | <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doDeleteUserRightsOnGame(Application.getLocalPortal.getId(),game.getId(),a_game.getUser.getId)">Rechte entziehen</a>}
+                                                </td>
+
+                                            } else {
+
+                                               <td><i> Öffentliche Leserechte</i></td>
+                                                <td>
+                                                @if(a_game.getUser.getId != user.getId){<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doEditUserRightsOnGame(Application.getLocalPortal.getId(),game.getId(),a_game.getUser.getId,"read")">Leserechte geben</a> | <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doEditUserRightsOnGame(Application.getLocalPortal.getId(),game.getId(),a_game.getUser.getId,"write")">Lese/Schreibrechte geben</a>}
+                                                </td>
+
+                                            }
+
+
+
+                                        }
+
+
+
+                        </tr>
+
+
+
+                    }
+
+                        </tbody>
+                    </table>
+                </div>
+
+            }
+            
+            
+           
+              
+
+
+
+    <h3>User hinzufügen</h3>
+
+
+
+
+
+
+
+    @helpers.form(routes.Portal.gameRightsonPortalUserSearch(Application.getLocalPortal().getId(),game.getId())) {
+
+        @if(userForm.hasGlobalErrors) {
+            <p class="error">
+                <span class="label label-important">@userForm.globalError.message</span>
+            </p>
+        }
+
+
+        <div class="row">
+            <div class="col-md-6">
+
+        @inputText(
+            userForm("email"),
+            '_label -> "Suche nach E-Mail-Adresse"
+        )
+               </div>
+            <div class="col-md-6">
+
+        @inputText(
+            userForm("name"),
+            '_label -> "Suche nach Name"
+        )
+            </div>
+            </div>
+
+        <input type="submit" value="Suche starten" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes") !=""))><br/>
+
+
+    }
+
+
+
+
+        @if(userFound.isEmpty() == true){
+            Keine User gefunden.
+        } else {
+
+            <ul>
+
+
+            @for(a_user <- userFound){
+
+                @if(a_user.getId != user.getId){
+
+                    <li>@a_user.getName()
+
+                        <a href="@routes.Portal.doEditUserRightsOnGame(Application.getLocalPortal.getId(),game.getId(),a_user.getId,"read").absoluteURL()">+Leserechte</a>
+
+                        <a href="@routes.Portal.doEditUserRightsOnGame(Application.getLocalPortal.getId(),game.getId(),a_user.getId,"write").absoluteURL()">+Lese/Schreibrechte</a> )
+
+
+                    }
+
+
+
+
+            </li>
+
+            }
+
+            </ul>
+
+        }
+
+
+
+
+
+    }
+    }
+    
+    
+    <script>
+
+
+
+
+    function syncGameVisibility(){
+
+
+
+    var statusdiv = "status_gamevisi";
+
+
+                    if(document.getElementById(statusdiv).tagName == "IMG"){ 
+                    document.getElementById(statusdiv).src = '@Global.SERVER_URL_2@routes.Assets.at("img/syncing.gif")';
+                    
+                    } else {
+
+        document.getElementById(statusdiv).innerHTML="syncing...";
+        
+        }
+
+    var xmlhttp;
+    if (window.XMLHttpRequest)
+      {// code for IE7+, Firefox, Chrome, Opera, Safari
+      xmlhttp=new XMLHttpRequest();
+      }
+    else
+      {// code for IE6, IE5
+      xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+      }
+
+
+    var field = document.getElementById('gamevisi');
+    value = 'false';
+    if(field.checked){ value='true'; } else { value='false'; }
+
+
+
+    xmlhttp.onreadystatechange=function()
+      {
+      if (xmlhttp.readyState==4 && xmlhttp.status==200)
+        {
+        
+        
+        
+          if(document.getElementById(statusdiv).tagName == "IMG"){ 
+          
+          
+          if(xmlhttp.responseText == "synced"){
+                    document.getElementById(statusdiv).src = '@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")';
+                    } else {
+                    
+                    alert(xmlhttp.responseText);
+                    
+                    }
+                    } else {
+        
+        
+        document.getElementById(statusdiv).innerHTML=xmlhttp.responseText;
+      
+      }
+        
+      
+        
+        }
+      }
+      
+      
+    xmlhttp.open("GET","@Global.SERVER_URL_2/@Application.getLocalPortal.getId()/@game.getId/setvisibility/"+encodeURIComponent(value),true);
+    xmlhttp.send();
+
+
+
+
+
+    }
+    </script>
+    
+    

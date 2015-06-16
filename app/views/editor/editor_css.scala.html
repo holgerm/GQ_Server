@@ -1,0 +1,1287 @@
+@(g: Game)
+
+    @import util.Global
+    
+    
+    
+ <style type="text/css">
+ body{
+ padding-top:0px;
+ }
+ 
+ 
+ #background-chooser {
+ z-index:9003;
+  position: absolute; bottom:10px; left:10px; background-color:#FFFFFF;
+   -webkit-border-radius: 9px;
+    -moz-border-radius: 9px;
+    border-radius: 9px;
+    -webkit-box-shadow: 3px 3px 5px #222;
+    -moz-box-shadow: 3px 3px 5px #222;
+    box-shadow: 5px 5px 7px #111;
+ 
+ }
+ .missionoverviewjs .window { 
+
+	width:auto; 
+	height:auto;
+	line-height:5em;
+	
+	top:100px;
+}
+
+/** ELEMENT POSITIONS **/
+
+/** JSPLUMB ARTEFACTS **/
+._jsPlumb_connector { z-index:9006; stroke:black;}
+._jsPlumb_endpoint { z-index:9007; }
+
+ #window{
+ position:absolute;
+ 
+ }
+            
+            #missionoverviewjs{
+           z-index:9001;
+           overflow-x:scroll;
+           overflow-y:scroll;
+              position:absolute;
+              margin: 0;
+                width: 100%;
+                height: 100%;
+           background: #999999; /* Old browsers */
+background: -moz-linear-gradient(-45deg,  #999999 0%, #898989 56%, #777777 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#999999), color-stop(56%,#898989), color-stop(100%,#777777)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(-45deg,  #999999 0%,#898989 56%,#777777 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(-45deg,  #999999 0%,#898989 56%,#777777 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(-45deg,  #999999 0%,#898989 56%,#777777 100%); /* IE10+ */
+background: linear-gradient(135deg,  #999999 0%,#898989 56%,#777777 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#999999', endColorstr='#777777',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */          
+          
+            }
+            #map {
+            position:absolute;
+           
+                margin: 0;
+                width: 100%;
+                height: 100%;
+                z-index:9000;
+            }
+            
+            #background{
+            z-index:9002;
+              position:absolute;
+              margin: 0;
+                width: 100%;
+                height: 100%;
+           background: #999999; /* Old browsers */
+background: -moz-linear-gradient(-45deg,  #999999 0%, #898989 56%, #777777 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#999999), color-stop(56%,#898989), color-stop(100%,#777777)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(-45deg,  #999999 0%,#898989 56%,#777777 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(-45deg,  #999999 0%,#898989 56%,#777777 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(-45deg,  #999999 0%,#898989 56%,#777777 100%); /* IE10+ */
+background: linear-gradient(135deg,  #999999 0%,#898989 56%,#777777 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#999999', endColorstr='#777777',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */          
+            }
+            
+           
+
+
+#missionlist{
+
+				height:80%;
+                width: 100%;
+                
+     
+
+
+
+}
+
+
+
+
+
+.leaflet-popup-close-button{
+
+margin-top:10px;
+margin-right:20px;
+
+}
+
+
+@@media (min-width: 980px) {
+	
+	
+	
+	.missionlink{
+	
+padding-top:5px;
+	
+	}
+	.inneredit{
+	   position: absolute;
+
+                top:25%; height:55%; 
+                bottom: 20%;
+  
+                left: 5%;
+                width: 72%;
+              
+                
+                
+                 background: #FFFFFF; /* Fallback IE 6-8 */
+    background: rgba(255, 255, 255, .9);
+    color: #000;
+	
+	}
+	
+	.missionedit{
+	
+	   position: absolute;
+
+               top:15%; height:75%; 
+                bottom: 10%;
+     background: rgba(256, 256, 256, .9);
+                left: 5%;
+                width: 72%;
+                 padding: 0 0.5em 0.5em 0.5em;
+	
+	}
+	 #missionview {
+	 
+	 width: 15%;
+	 
+                top:15%; height:75%; 
+                bottom: 10%;
+   background: rgba(256, 256, 256, .9);
+                right: 5%;
+                
+    -webkit-border-radius: 9px;
+    -moz-border-radius: 9px;
+    border-radius: 9px;
+    -webkit-box-shadow: 3px 3px 5px #222;
+    -moz-box-shadow: 3px 3px 5px #222;
+    box-shadow: 5px 5px 7px #111;
+	 }
+	 
+	#navbarbutton {
+	 display:none;
+	 }
+	 
+	 #missionviewbutton {
+	 display:none;
+	 }
+	
+	#missionviewclose{
+	display:none;
+	}
+	#navbarclose{
+	display:none;
+	}
+	
+	
+.actionaddselect{
+	
+	top:-70px;
+	
+	}
+	
+	
+	
+	
+	
+	
+	#tabletlogo{
+	display:none;
+	}
+	#pclogo{
+	display:block;
+	}
+	
+	 #xmlifylink{
+	 
+	 position:absolute; top:18px;
+	 right:10%;
+	 }
+	 
+	 
+	 #backlinks{
+	 
+	 display:none;
+	 
+	 }
+	
+	
+	}
+	
+	
+@@media (max-width: 979px) {
+
+
+ #background{
+ display:none;
+ }
+ 
+ #background-chooser{
+ display:none;
+ }
+ 
+ 
+#gamename{
+
+width:80% !important;
+
+}
+
+
+.icon-resize-full{
+display:none;
+
+}
+
+
+.missionlink{
+
+padding-top:20px;
+padding-bottom:20px;
+font-size:16px;
+
+
+}
+
+
+	#missionviewclose{
+	display:inline-block;
+	position:absolute;
+	top:10px;
+	right:20px;
+	}
+	
+	#navbarclose{
+	display:inline-block;
+	position:absolute;
+	top:10px;
+	right:60px;
+	}
+	
+	
+#missionsreiter  > .icon-map-marker{ margin-left:100px; }
+#missionsreiter > .icon-cog{ margin-left:100px; }
+	
+	 #tabletlogo {
+	 display:block;
+	 position: absolute;
+	 top:0%;
+	 right:2%;
+	 cursor:pointer;
+	
+	
+	    -webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+box-sizing: border-box;
+ms-box-sizing: border-box;
+webkit-box-sizing: border-box;
+moz-box-sizing: border-box;
+
+	 
+	 }
+	 
+	 #pclogo{
+	display:none;
+	}
+	
+	
+	  #missionviewbutton {
+	 display:block;
+	 position: absolute;
+	 top:20%;
+	 right:5%;
+	 cursor:pointer;
+	 color:#000000;
+	 background-color:#FFFFFF;
+	    -webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+box-sizing: border-box;
+ms-box-sizing: border-box;
+webkit-box-sizing: border-box;
+moz-box-sizing: border-box;
+padding:10px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-box-shadow: 3px 3px 5px #222;
+    -moz-box-shadow: 3px 3px 5px #222;
+    box-shadow: 5px 5px 7px #111;
+
+	 
+	 }
+	 
+	   #navbarbutton {
+	 display:block;
+	 position: absolute;
+	 top:10%;
+	 right:5%;
+	 cursor:pointer;
+	 color:#000000;
+	 background-color:#FFFFFF;
+	    -webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+box-sizing: border-box;
+ms-box-sizing: border-box;
+webkit-box-sizing: border-box;
+moz-box-sizing: border-box;
+padding:10px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-box-shadow: 3px 3px 5px #222;
+    -moz-box-shadow: 3px 3px 5px #222;
+    box-shadow: 5px 5px 7px #111;
+
+	 
+	 }
+	 
+	 
+	 
+	 
+	
+	 #missionview {
+	 top:0%;
+	 left:0%;
+	 width: 100%;
+	 height:100%;
+	  background: rgba(256, 256, 256, 1);
+	            display:none;
+    -webkit-border-radius: none;
+    -moz-border-radius: none;
+    border-radius: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+	 }
+	 
+	 
+	 
+	 
+	  .missionedit {
+	    position: absolute;
+	 top:0%;
+	 left:0%;
+	 width: 100%;
+	 height:100%;
+	  background: rgba(256, 256, 256, 1);
+	            display:none;
+    -webkit-border-radius: none;
+    -moz-border-radius: none;
+    border-radius: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+	 }
+	 
+	  .inneredit {
+	    position: absolute;
+	 top:0%;
+	 left:0%;
+	 width: 100%;
+	 height:100%;
+	  background: rgba(256, 256, 256, 1);
+	  border:0px white;
+	            display:none;
+    -webkit-border-radius: none;
+    -moz-border-radius: none;
+    border-radius: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+	 }
+	 
+	 
+	 
+	 
+	 
+	 .navbar{
+	top:0%;
+	 left:0%;
+	 width: 100%;
+	 height:100%;
+	 position:absolute;
+	 display:none;
+	 background-color:#FFFFFF;
+	-webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+	 }
+	 
+	  .navbar-inner{
+	top:0%;
+	 left:20px;
+	 padding:20px;
+	 width: 100%;
+	 height:100%;
+	 position:absolute;
+	 }
+	 
+	 #xmlifylink{
+	 
+
+	 
+	 display:block;
+	position:absolute;
+	top:100px;
+	left:10px;
+	 }
+	 
+	 #xmlbutton{
+	 position:relative;
+	 top:20px;
+	 
+	 
+	 }
+	 
+	 
+	 #backlinks{
+	 
+	 display:block;
+	 position:relative;
+	 top:40px;
+	 
+	 }
+	 
+	 
+	 
+
+	 
+	
+	}
+	
+
+
+
+
+            #missionview {
+            
+            
+            
+            
+            @if(g.getType.hasOnlyOneScene()){
+            display:none;
+            }
+            
+            -webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+box-sizing: border-box;
+ms-box-sizing: border-box;
+webkit-box-sizing: border-box;
+moz-box-sizing: border-box;
+
+
+                position: absolute;
+               
+                
+                
+                z-index: 10000;
+               
+                overflow-x: hidden;
+                
+                padding:15px;
+                
+                 background: #FFFFFF; /* Fallback IE 6-8 */
+   
+    color: #000;
+
+
+            }
+            
+            @@-moz-document url-prefix() {
+    #missionview {
+        width:10%;
+    }
+}
+            
+            
+            
+            h3{
+              -webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+            }
+            p{
+              -webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+
+}
+            
+            
+            
+            .actionattr{
+            
+            display:block;
+            position:relative;
+            left:100px;
+            }
+          
+            .scrollable-content::-webkit-scrollbar {
+      width:5px;
+      margin-left:10px;
+    }
+            .scrollable-content::-webkit-scrollbar * {
+    background:transparent !important;
+}
+.scrollable-content::-webkit-scrollbar-thumb {
+    background:#999 !important;
+     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #4d4d4d), color-stop(100%, #333333));
+    
+    
+}
+
+
+ .scrollable-content::-moz-scrollbar {
+      width:5px;
+      margin-left:10px;
+    }
+            .scrollable-content::-moz-scrollbar * {
+    background:transparent !important;
+}
+.scrollable-content::-moz-scrollbar-thumb {
+    background:#999 !important;
+     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #4d4d4d), color-stop(100%, #333333));
+    
+    
+}
+
+            
+             .missionedit {
+             -webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+box-sizing: border-box;
+ms-box-sizing: border-box;
+webkit-box-sizing: border-box;
+moz-box-sizing: border-box;
+overflow-y:hidden;
+display:none;
+             
+                z-index: 11000;
+               
+                overflow: none;
+                
+                
+                 background: #FFFFFF; /* Fallback IE 6-8 */
+ 
+    color: #000;
+
+    padding: 25px;
+    -webkit-border-radius: 9px;
+    -moz-border-radius: 9px;
+    border-radius: 9px;
+    -webkit-box-shadow: 3px 3px 5px #222;
+    -moz-box-shadow: 3px 3px 5px #222;
+    box-shadow: 5px 5px 7px #111;
+
+            }
+            
+            
+            
+              .inneredit {
+             -webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+box-sizing: border-box;
+ms-box-sizing: border-box;
+webkit-box-sizing: border-box;
+moz-box-sizing: border-box;
+overflow:none;
+display:none;
+             border:1px solid black;
+
+  z-index: 12000;
+                padding: 0 0.5em 0.5em 0.5em;
+                
+    padding: 25px;
+    -webkit-border-radius: 9px;
+    -moz-border-radius: 9px;
+    border-radius: 9px;
+    -webkit-box-shadow: 3px 3px 5px #222;
+    -moz-box-shadow: 3px 3px 5px #222;
+    box-shadow: 5px 5px 7px #111;
+
+            }
+            
+            
+         
+            
+            
+            
+            .missioninview{
+             -webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+
+line-height:auto;
+            
+            }
+            
+            .missionlink{
+           
+          
+                        cursor: pointer;            
+
+            }
+            
+            .mission_whitespace{
+            visibility:hidden;
+            }
+            
+            
+            .options{
+            position:fixed;
+         left:70%;
+           z-index:1000000000000;
+            }
+            
+            .icon-arrow-right{
+              position:absolute;
+              right:10px;
+            
+            
+           
+            }
+            
+            
+            @@media(max-width:1200px) and (min-width:979px){
+            	
+            	#gamename{
+            	
+            	width:35% !important;
+            	
+            	font-size:20px;
+            	
+            	}
+            	
+            }
+            
+            
+            .addoptions{
+             position:absolute;
+            left:1em;
+            bottom:1em;
+            }
+            
+            .icon-remove{
+             cursor: pointer;            
+            }
+            
+            .icon-plus-sign{
+            cursor: pointer;  
+            }
+            .icon-minus-sign{
+            cursor: pointer;  
+            }
+             .icon-tags{
+            cursor: pointer;  
+            }
+            .icon-resize-full{
+            cursor:pointer;
+            }
+            .icon-tasks{
+             cursor:pointer;
+            }
+            
+            .icon-folder-close{
+            cursor:pointer;
+            }
+            
+            .icon-map-marker{
+             cursor:pointer;
+            }
+            .icon-cog{
+              cursor:pointer;
+            }
+            
+            .pointerlink{
+                          cursor:pointer;
+            
+            }
+            
+             .mouseover{
+             cursor:pointer;
+             
+       
+             z-index:5002;
+            }
+            
+            
+            
+            
+            input[type="file"]{
+            
+            width: 100px;
+height: 40px;
+overflow-y: hidden;
+            }
+            
+            
+            
+            .h2textfield{
+            font-family: inherit;
+            width:auto;
+            font-size:24px !important;
+            font-weight:bold;
+            height:40px !important;
+            background-color:transparent !important;
+            border: 0px !important;
+            outline:none !important;
+            box-shadow:none !important;
+            
+            }
+            
+            .h2textfieldsmall{
+            font-family: inherit;
+            width:50%;
+            font-size:32px !important;
+            font-weight:bold;
+            height:40px !important;
+            background-color:transparent !important;
+            border: 0px !important;
+            outline:none !important;
+            box-shadow:none !important;
+            
+            }
+               .h2textfieldsmall:hover,.h2textfieldsmall:focus{
+            
+           
+            background-color:#FFFFFF !important;
+            border: 1px solid black !important;
+            
+            }
+            
+             .h2textfield:hover,.h2textfield:focus{
+            
+           
+            background-color:#FFFFFF !important;
+            border: 1px solid black !important;
+            
+            }
+            
+            
+            .accordion-toggle{
+            
+            text-decoration:none !important;
+           	color:#000000 ;
+            }
+            
+            .missionviewtext{
+            
+            padding-left:5px;
+            
+            }
+            
+            .floatright{
+            float:right;
+            }
+              
+              .navbar{
+              z-index:40000;
+              }
+              
+              .onclicklink{
+              cursor:pointer;
+              
+              }
+              
+              #hotspotsonly{
+              display:none;
+              }
+              #settingsonly{
+              dislay:none;
+              }
+              #missionsonly{
+              display:block;
+              }
+              
+              
+              
+@@-webkit-keyframes bounce-right {
+  0%, 20%, 50%, 80%, 100% {
+    -webkit-transform: translateX(0);
+    -moz-transform: translateX(0);
+    -ms-transform: translateX(0);
+    transform: translateX(0);
+  }
+
+  40% {
+    -webkit-transform: translateX(-30px);
+    -moz-transform: translateX(-30px);
+    -ms-transform: translateX(-30px);
+    transform: translateX(-30px);
+  }
+
+  60% {
+    -webkit-transform: translateX(-15px);
+    -moz-transform: translateX(-15px);
+    -ms-transform: translateX(-15px);
+    transform: translateX(-15px);
+  }
+}
+@@-moz-keyframes bounce-right {
+  0%, 20%, 50%, 80%, 100% {
+    -webkit-transform: translateX(0);
+    -moz-transform: translateX(0);
+    -ms-transform: translateX(0);
+    transform: translateX(0);
+  }
+
+  40% {
+    -webkit-transform: translateX(-30px);
+    -moz-transform: translateX(-30px);
+    -ms-transform: translateX(-30px);
+    transform: translateX(-30px);
+  }
+
+  60% {
+    -webkit-transform: translateX(-15px);
+    -moz-transform: translateX(-15px);
+    -ms-transform: translateX(-15px);
+    transform: translateX(-15px);
+  }
+}
+@@-ms-keyframes bounce-right {
+  0%, 20%, 50%, 80%, 100% {
+    -webkit-transform: translateX(0);
+    -moz-transform: translateX(0);
+    -ms-transform: translateX(0);
+    transform: translateX(0);
+  }
+
+  40% {
+    -webkit-transform: translateX(-30px);
+    -moz-transform: translateX(-30px);
+    -ms-transform: translateX(-30px);
+    transform: translateX(-30px);
+  }
+
+  60% {
+    -webkit-transform: translateX(-15px);
+    -moz-transform: translateX(-15px);
+    -ms-transform: translateX(-15px);
+    transform: translateX(-15px);
+  }
+}
+@@keyframes bounce-right {
+  0%, 20%, 50%, 80%, 100% {
+    -webkit-transform: translateX(0);
+    -moz-transform: translateX(0);
+    -ms-transform: translateX(0);
+    transform: translateX(0);
+  }
+
+  40% {
+    -webkit-transform: translateX(-30px);
+    -moz-transform: translateX(-30px);
+    -ms-transform: translateX(-30px);
+    transform: translateX(-30px);
+  }
+
+  60% {
+    -webkit-transform: translateX(-15px);
+    -moz-transform: translateX(-15px);
+    -ms-transform: translateX(-15px);
+    transform: translateX(-15px);
+  }
+}
+@@-webkit-keyframes bounce-left {
+  0%, 20%, 50%, 80%, 100% {
+    -webkit-transform: translateX(0);
+    -moz-transform: translateX(0);
+    -ms-transform: translateX(0);
+    transform: translateX(0);
+  }
+
+  40% {
+    -webkit-transform: translateX(30px);
+    -moz-transform: translateX(30px);
+    -ms-transform: translateX(30px);
+    transform: translateX(30px);
+  }
+
+  60% {
+    -webkit-transform: translateX(15px);
+    -moz-transform: translateX(15px);
+    -ms-transform: translateX(15px);
+    transform: translateX(15px);
+  }
+}
+@@-moz-keyframes bounce-left {
+  0%, 20%, 50%, 80%, 100% {
+    -webkit-transform: translateX(0);
+    -moz-transform: translateX(0);
+    -ms-transform: translateX(0);
+    transform: translateX(0);
+  }
+
+  40% {
+    -webkit-transform: translateX(30px);
+    -moz-transform: translateX(30px);
+    -ms-transform: translateX(30px);
+    transform: translateX(30px);
+  }
+
+  60% {
+    -webkit-transform: translateX(15px);
+    -moz-transform: translateX(15px);
+    -ms-transform: translateX(15px);
+    transform: translateX(15px);
+  }
+}
+@@-ms-keyframes bounce-left {
+  0%, 20%, 50%, 80%, 100% {
+    -webkit-transform: translateX(0);
+    -moz-transform: translateX(0);
+    -ms-transform: translateX(0);
+    transform: translateX(0);
+  }
+
+  40% {
+    -webkit-transform: translateX(30px);
+    -moz-transform: translateX(30px);
+    -ms-transform: translateX(30px);
+    transform: translateX(30px);
+  }
+
+  60% {
+    -webkit-transform: translateX(15px);
+    -moz-transform: translateX(15px);
+    -ms-transform: translateX(15px);
+    transform: translateX(15px);
+  }
+}
+@@keyframes bounce-left {
+  0%, 20%, 50%, 80%, 100% {
+    -webkit-transform: translateX(0);
+    -moz-transform: translateX(0);
+    -ms-transform: translateX(0);
+    transform: translateX(0);
+  }
+
+  40% {
+    -webkit-transform: translateX(30px);
+    -moz-transform: translateX(30px);
+    -ms-transform: translateX(30px);
+    transform: translateX(30px);
+  }
+
+  60% {
+    -webkit-transform: translateX(15px);
+    -moz-transform: translateX(15px);
+    -ms-transform: translateX(15px);
+    transform: translateX(15px);
+  }
+}
+@@-webkit-keyframes bounce-up {
+  0%, 20%, 50%, 80%, 100% {
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    transform: translateY(0);
+  }
+
+  40% {
+    -webkit-transform: translateY(30px);
+    -moz-transform: translateY(30px);
+    -ms-transform: translateY(30px);
+    transform: translateY(30px);
+  }
+
+  60% {
+    -webkit-transform: translateY(15px);
+    -moz-transform: translateY(15px);
+    -ms-transform: translateY(15px);
+    transform: translateY(15px);
+  }
+}
+@@-moz-keyframes bounce-up {
+  0%, 20%, 50%, 80%, 100% {
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    transform: translateY(0);
+  }
+
+  40% {
+    -webkit-transform: translateY(30px);
+    -moz-transform: translateY(30px);
+    -ms-transform: translateY(30px);
+    transform: translateY(30px);
+  }
+
+  60% {
+    -webkit-transform: translateY(15px);
+    -moz-transform: translateY(15px);
+    -ms-transform: translateY(15px);
+    transform: translateY(15px);
+  }
+}
+@@-ms-keyframes bounce-up {
+  0%, 20%, 50%, 80%, 100% {
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    transform: translateY(0);
+  }
+
+  40% {
+    -webkit-transform: translateY(30px);
+    -moz-transform: translateY(30px);
+    -ms-transform: translateY(30px);
+    transform: translateY(30px);
+  }
+
+  60% {
+    -webkit-transform: translateY(15px);
+    -moz-transform: translateY(15px);
+    -ms-transform: translateY(15px);
+    transform: translateY(15px);
+  }
+}
+@@keyframes bounce-up {
+  0%, 20%, 50%, 80%, 100% {
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    transform: translateY(0);
+  }
+
+  40% {
+    -webkit-transform: translateY(30px);
+    -moz-transform: translateY(30px);
+    -ms-transform: translateY(30px);
+    transform: translateY(30px);
+  }
+
+  60% {
+    -webkit-transform: translateY(15px);
+    -moz-transform: translateY(15px);
+    -ms-transform: translateY(15px);
+    transform: translateY(15px);
+  }
+}
+@@-webkit-keyframes bounce-down {
+  0%, 20%, 50%, 80%, 100% {
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    transform: translateY(0);
+  }
+
+  40% {
+    -webkit-transform: translateY(-30px);
+    -moz-transform: translateY(-30px);
+    -ms-transform: translateY(-30px);
+    transform: translateY(-30px);
+  }
+
+  60% {
+    -webkit-transform: translateY(-15px);
+    -moz-transform: translateY(-15px);
+    -ms-transform: translateY(-15px);
+    transform: translateY(-15px);
+  }
+}
+@@-moz-keyframes bounce-down {
+  0%, 20%, 50%, 80%, 100% {
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    transform: translateY(0);
+  }
+
+  40% {
+    -webkit-transform: translateY(-30px);
+    -moz-transform: translateY(-30px);
+    -ms-transform: translateY(-30px);
+    transform: translateY(-30px);
+  }
+
+  60% {
+    -webkit-transform: translateY(-15px);
+    -moz-transform: translateY(-15px);
+    -ms-transform: translateY(-15px);
+    transform: translateY(-15px);
+  }
+}
+@@-ms-keyframes bounce-down {
+  0%, 20%, 50%, 80%, 100% {
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    transform: translateY(0);
+  }
+
+  40% {
+    -webkit-transform: translateY(-30px);
+    -moz-transform: translateY(-30px);
+    -ms-transform: translateY(-30px);
+    transform: translateY(-30px);
+  }
+
+  60% {
+    -webkit-transform: translateY(-15px);
+    -moz-transform: translateY(-15px);
+    -ms-transform: translateY(-15px);
+    transform: translateY(-15px);
+  }
+}
+@@keyframes bounce-down {
+  0%, 20%, 50%, 80%, 100% {
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    transform: translateY(0);
+  }
+
+  40% {
+    -webkit-transform: translateY(-30px);
+    -moz-transform: translateY(-30px);
+    -ms-transform: translateY(-30px);
+    transform: translateY(-30px);
+  }
+
+  60% {
+    -webkit-transform: translateY(-15px);
+    -moz-transform: translateY(-15px);
+    -ms-transform: translateY(-15px);
+    transform: translateY(-15px);
+  }
+}
+
+.arrow {
+
+  display: block;
+  
+}
+
+.bounce-right {
+  -webkit-animation: bounce-right 2s infinite;
+  -moz-animation: bounce-right 2s infinite;
+  -ms-animation: bounce-right 2s infinite;
+  animation: bounce-right 2s infinite;
+}
+
+.bounce-left {
+  -webkit-animation: bounce-left 2s infinite;
+  -moz-animation: bounce-left 2s infinite;
+  -ms-animation: bounce-left 2s infinite;
+  animation: bounce-left 2s infinite;
+}
+
+.bounce-up {
+  -webkit-animation: bounce-up 2s infinite;
+  -moz-animation: bounce-up 2s infinite;
+  -ms-animation: bounce-up 2s infinite;
+  animation: bounce-up 2s infinite;
+}
+
+.bounce-down {
+  -webkit-animation: bounce-down 2s infinite;
+  -moz-animation: bounce-down 2s infinite;
+  -ms-animation: bounce-down 2s infinite;
+  animation: bounce-down 2s infinite;
+}
+      body:after
+{
+      content: url(@Global.SERVER_URL_2@routes.Assets.at("img/connection/green-trying.gif")) url(@Global.SERVER_URL_2@routes.Assets.at("img/connection/no-connection.gif")) url(@Global.SERVER_URL_2@routes.Assets.at("img/connection/red-trying.gif"));
+        display:none;
+        }    
+        
+        
+        
+                 #h1iewarning {
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	font-size: 24px;
+		text-align: center;
+	
+}
+#iewarningtext {
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+		text-align: center;
+	
+}
+.iewarning #h1iewarning {
+	text-align: center;
+}
+.iewarning p {
+	text-align: center;
+}
+.iewarning table tr td {
+	text-align: center;
+}
+
+
+         .iewarning {
+            position:absolute;
+            background-color:#FFFFFF;
+           top:0px;
+           left:0px;
+                width: 100%;
+                height: 100%;
+                z-index:99999999999999;
+            
+            
+            }
+        </style>
+        
+        
+        
+        
+
+
+         <style type="text/css">
+         
+
+        	
+.actionaddselect{
+	
+	top:0px !important;
+	
+	}
+	
+	
+	</style>
+	
+	
+	
+	

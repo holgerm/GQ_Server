@@ -1,0 +1,56 @@
+@* editor_newhotspot Template File *@
+@(g: Game,s:models.GameParts.Scene)
+
+
+   	<div class="missionedit" id="scene@s.getId()_hotspotnew" name="scene@s.getId()hotspotnew" style="display:none">
+<div class="options">
+ 					<i class="icon-resize-full" onClick="javascript:toggleFullscreen('scene@s.getId()_hotspotnew','72%','75%','120px','5%','35px')"></i>
+ 					<i class="icon-remove" onClick="javascript:document.getElementById('scene@s.getId()_hotspotnew').style.display = 'none';deactiveFullscreen('scene@s.getId()_hotspotnew','72%','75%','120px','5%','35px');"></i></div>
+              				              				<input type="text" id="scene@s.getId()_hotspotnew_name" class="h2textfield" value="Neuer Hotspot">
+              				<br/><em>in Szene @s.getName </em><br/>
+              					  <fieldset>
+      
+             @if(s.getType.getPossibleHotspotTypes.size() > 1){
+          <p>
+             <label>Hotspottyp</label>
+             
+             
+             
+             <select id = "hotspottype_new">
+             @for(a_htype <- s.getType.getPossibleHotspotTypes){
+             
+               
+               <option value = "@a_htype.getId()">@a_htype.getName()</option>
+             
+               }
+             </select>
+          
+          </p>
+          
+          } else {
+          @for(a_htype <- s.getType.getPossibleHotspotTypes){
+          <input type="hidden" id="hotspottype_new" value="@a_htype.getId">
+          }
+          }
+          
+            <p>
+             <label>Longitude</label>
+            <input type="text" id="hotspotnew_long" />
+            
+          </p>
+          
+          
+            <p>
+             <label>Latitude</label>
+            <input type="text" id="hotspotnew_lat" />
+            
+          </p>
+          
+          
+          
+          
+       </fieldset>
+       <br/>
+       <div class="btn btn-success" id="newhotspotbutton_scene@s.getId" onClick="newHotspotInScene(@s.getId)">Hinzufügen</div>
+              	</div>
+              	

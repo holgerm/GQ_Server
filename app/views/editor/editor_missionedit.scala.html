@@ -1,0 +1,216 @@
+@(g:Game,m:models.GameParts.Mission)
+@import util.Global
+
+
+
+ 				<div class="missionedit" id="missionedit@m.getId()" name="missionedit@m.getId()">
+ 				
+ 				              				<div class="scrollable-content" style="overflow:auto; height:100%; width:100%;">
+ 				
+ 					<div class="options">
+ 					<i class="icon-resize-full" onClick="javascript:toggleFullscreen('missionedit@m.getId()','72%','75%','120px','5%','35px')"></i>
+ 					<i class="icon-remove" onClick="javascript:document.getElementById('missionedit@m.getId()').style.display = 'none';hideInnerMissions('missionedit@m.getId()');deactiveFullscreen('missionedit@m.getId()','72%','75%','120px','5%','35px');"></i>
+ 					
+ 					</div>
+              				<input type="text" class="h2textfield" id="missionname@m.getId" value="@m.getName()"
+              				onchange="javascript:syncName('mission',@m.getId)" onkeydown="document.getElementById('status_missionname@m.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
+              			
+        <img id="status_missionname@m.getId" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
+        
+              				<br />
+              				<p class="missionviewtext">
+              				<em>@m.getType().getName()</em>
+              				</p>
+              				<p>
+              				 Optionen:<span style="cursor:pointer;" onClick="javascript:hideAddEditMissions();openMissionRule(@m.getId());"> <icon style="height:20px; width:20px; background-image:url('@Global.SERVER_URL_2/assets/icons/actions/default.png'); background-size:20px 20px; background-position:0px 24px; display:inline-block;"></icon> Ereignisse</span>
+              				 <span style="cursor:pointer;" onClick="javascript:duplicateMissionInGame(@m.getId());"> <icon class="icon-share" style="display:inline-block;"></icon> Duplizieren</span>
+              				 <span  style="cursor:pointer;" onClick="javascript:startUnityPreview('@Global.SERVER_URL_2/editor/@g.getId/webxml/@m.getId');"><icon class="icon-play" style="display:inline-block;"></icon> Vorschau</span></p>
+              				 <span  style="cursor:pointer;"><a href="https://www.quest-mill.com/tutorials/@m.getType().getNameEncoded()/index.html" target="_blank"><icon class="icon-question-sign" style="display:inline-block;"></icon> Anleitung</a></span></p>
+              				
+              				<br/>
+              				
+              				
+              				<div class="accordion" id="accordion-mission@m.getId()">
+              				
+              				
+              				
+              			
+              			
+              			
+              			
+              			
+			
+       @if(m.hasPossibleContentTypes()){      				
+              		
+
+ @if(m.showMultipleAchordions()){  
+ 
+  <div class="accordion-group">
+    <div class="accordion-heading">
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-mission@m.getId()" href="#collapseOne@m.getId">
+        Inhalt
+      </a>
+    </div>
+    <div id="collapseOne@m.getId" class="accordion-body collapse in">
+      <div class="accordion-inner">
+       
+     }  
+       
+       
+       <div id="missioncontentcontainer@m.getId" name="missioncontentcontainer@m.getId" >
+       @editor_contentlistinmission(g,m)
+        </div>
+        
+       
+       <br/><div class="floatright"><i class="icon-plus-sign" onClick="javascript:document.getElementById('contentnew_@m.getId()').style.display='block';"></i>    </div>
+     
+      
+       @if(m.showMultipleAchordions()){  
+      </div>
+
+      
+      
+    </div>
+  </div>
+  }
+  
+  }
+  
+              			
+              				
+              				
+              				
+   
+
+
+
+
+  
+  
+  
+  
+  
+  
+       @if(m.hasAttributeTypes()){      				
+              
+  
+   @if(m.showMultipleAchordions()){  
+   
+  <div class="accordion-group">
+    <div class="accordion-heading">
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-mission@m.getId()" href="#collapseThree@m.getId">
+        Einstellungen
+      </a>
+    </div>
+    <div id="collapseThree@m.getId" class="accordion-body collapse">
+      <div class="accordion-inner">
+      
+      }
+    
+    		@for(a <- m.getAllAttributes){
+    			
+    			
+    			<div id="attribute_@a.getId()_inmission@m.getId()">
+									        				
+									        				@if(a.isEditable){
+									        				
+       @a.getName() 
+             
+           <br/>
+       
+        
+        
+        @if(a.getFileType == "String"){
+        
+        
+        
+        @if(a.hasPossibleValues()){
+        	
+        	
+			<select id = "missionat@m.getId@a.getId" onchange="javascript:syncAttr('mission',@m.getId,@a.getId)" >
+             
+             <option ></option>
+              		@for(pm <- a.getPossibleValues()){
+              			   <option  value = "@pm" @if(m.getAttributeValue(a).equals(pm)){ selected="selected" } >@pm</option>
+              			
+              			
+              		}   </select>
+        	
+        	
+        } else {
+        <textarea id="missionat@m.getId@a.getId" onchange="javascript:syncAttr('mission',@m.getId,@a.getId)" onkeydown="document.getElementById('status_missionat@m.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">@m.getAttributeValue(a)</textarea>
+        
+        
+        }
+        
+        
+        }
+        
+         @if(a.getFileType == "var"){
+        
+        <input type="text"/ value="@m.getAttributeValue(a)" id="missionat@m.getId@a.getId" onchange="javascript:syncAttr('mission',@m.getId,@a.getId)" onkeydown="document.getElementById('status_missionat@m.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
+        
+        }
+         
+        @if(a.getFileType == "int"){
+        
+        <input type="number"/ value="@m.getAttributeValue(a)" id="missionat@m.getId@a.getId" onchange="javascript:syncAttr('mission',@m.getId,@a.getId)" onkeydown="document.getElementById('status_missionat@m.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
+        
+        }
+        
+        @if(a.getFileType == "boolean"){
+        
+        <input type="checkbox"/ id="missionat@m.getId@a.getId" @if(m.getAttributeValue(a) == "true"){ checked = "checked" } onchange="javascript:syncAttr('mission',@m.getId,@a.getId)" >
+        
+        }
+        
+        
+         @if(a.getFileType == "file"){
+         	
+         			         		<div id="mission@m.getId()fileattr@a.getId()" name="mission@m.getId()fileattr@a.getId()" class="fileattr">
+        	         	@if(m.getAttributeValue(a) != ""){
+        	
+									         	<a href="@m.getAttributeValue(a)" target="_blank">@editor_athumbnail(m.getAttributeValue(a))</a>
+									        }
+									        </div> 	
+									        
+									        
+									        
+         	<div id="missionfile_file_at@m.getId@a.getId">
+				<input type="file"/ id="missionfileat@m.getId@a.getId" onchange="javascript:uploadFile('mission',@m.getId,@a.getId)" >
+        
+        <a  onClick="javascript:document.getElementById('missionfile_file_at@m.getId@a.getId').style.display='none';document.getElementById('missionfile_text_at@m.getId@a.getId').style.display='block';">Variabel</a>
+        </div>
+                <div id="missionfile_text_at@m.getId@a.getId" style="display:none;">
+									        <input type="text"/ value="@m.getAttributeValue(a)" id="missionat@m.getId@a.getId" onchange="javascript:syncAttr('mission',@m.getId,@a.getId)" onkeydown="document.getElementById('status_missionat@m.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
+                      <a onClick="javascript:document.getElementById('missionfile_text_at@m.getId@a.getId').style.display='none';document.getElementById('missionfile_file_at@m.getId@a.getId').style.display='block';">Datei</a>
+              
+               </div>
+        
+        
+        
+        
+									        				}
+									        				
+           <img id="status_missionat@m.getId@a.getId" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
+    
+      <br/>
+               <br/>
+  
+     }
+     </div>
+       }
+     @if(m.showMultipleAchordions()){  
+      </div>
+     
+      
+    </div>
+  </div>
+ 
+  
+
+
+}
+              </div>				
+              		}
+              	</div>

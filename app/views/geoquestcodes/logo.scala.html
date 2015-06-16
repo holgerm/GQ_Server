@@ -1,0 +1,33 @@
+@import util.Global;
+@defining(Application.getLocalPortal()) { portal =>
+
+
+
+				@if(portal.logoExists()){
+					
+					
+					
+					<a class="brand" href="@portal.getTemplateServerURLDropSlash@portal.getPathTo(routes.Portal.portalNewsstream(portal.getId()))">
+					
+						<img src="@Global.SERVER_URL_2/assets/@portal.getLogoURL()">
+					
+					</a>
+
+					
+					
+					
+					
+				} else {
+				
+			<a class="brand" href="@portal.getTemplateServerURLDropSlash@portal.getPathTo(routes.Portal.portalNewsstream(portal.getId()))">@portal.getName()</a>
+				
+				
+				
+				}
+
+
+
+
+
+
+}

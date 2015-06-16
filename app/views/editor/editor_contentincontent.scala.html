@@ -1,0 +1,51 @@
+@(g:Game,m:models.GameParts.Mission,c:models.GameParts.Content)
+
+@import models.GameParts._
+
+  	@if(c.getType().canHaveSubContent){
+   		
+   		
+   		
+             
+	<div class="inneredit" id="contentnew_c@c.getId()" name="contentnew_c@c.getId()">
+									        				<div class="options">
+									        				
+									        				<i class="icon-resize-full" onClick="javascript:toggleFullscreen('contentnew_c@c.getId()','72%','60%','200px','5%','25px')"></i>
+									        				<i class="icon-remove" onClick="javascript:document.getElementById('contentnew_c@c.getId()').style.display = 'none';deactiveFullscreen('contentnew_c@c.getId()','72%','60%','200px','5%','25px')"></i>
+									        				
+									        				</div>   	
+              	        		
+              				              		
+              			              	<input type="text" id="contentnew_namec@c.getId()" class="h2textfield" value="Neuer Inhalt">
+              				              		<br/>
+              				              		<em>in Content @c.getName() (in Mission @m.getName() )</em>
+           
+              	
+              	
+              				              		 <label>Inhaltstyp</label>
+             <select id = "contenttype_c@c.getId()">
+              @for(ctype <- c.getType.getPossibleContentTypes){
+               <option value = "@ctype.getId()">@ctype.getName()</option>
+               }
+             </select>
+              				
+              				
+              				
+              				
+              				 <div class="btn btn-success" onClick="newContentInContent(@c.getId())">Hinzufügen</div>
+              
+         
+              				
+              				
+              				
+              				
+              				
+              				
+              				
+              					
+  </div>			  
+   		
+   		
+   		
+   		
+   	}

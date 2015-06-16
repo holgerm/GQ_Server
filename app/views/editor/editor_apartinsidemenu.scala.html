@@ -1,0 +1,127 @@
+@(g:Game, a_part:models.GameParts.Part)
+
+@import models.GameParts._
+
+@import util.Global;
+    
+    
+    <div id="onepartinsidemenu_@a_part.getId()">
+             @if(!a_part.isScene()){
+              		
+              		  @defining(a_part.getMission()) { m =>
+               
+             <div class="missioninview" id="listmission@m.getId">  
+             
+               <div class="missionlink"  onClick="javascript:openMission(@m.getId())" >
+            
+             
+               <i class="icon-file" style="display:inline-block;"></i>
+				 <div id="listmissionname@m.getId" style="display:inline-block; width:65%;  white-space: nowrap;    position:relative; ">
+             
+               
+               @m.getName()  &nbsp; <a href="@Global.SERVER_URL_2/editor/@g.getId/Part/@a_part.getId/move/up">^</a>
+               	<a href="@Global.SERVER_URL_2/editor/@g.getId/Part/@a_part.getId/move/down">v</a>
+                @if(a_part.isDeletable){
+              <i class="icon-minus-sign" onClick="javascript:deleteItem('Part',@a_part.getId,'mission',@m.getId)"></i> 
+            }
+               </div>
+               		
+              </div>
+               </div>
+               }
+              
+              		} else {
+              		
+              		  @defining(a_part.getScene()) { s =>
+              	
+              		 <div class="missionlink" id="listscene@s.getId" onClick="
+              			
+                  		 javascript:hideAddEditMissions(); hidePlayer();
+                		document.getElementById('sceneedit@s.getId()').style.display = 'block';
+         
+                		@if(s.getType.canSeeChildren){ document.getElementById('scene_@s.getId()').style.display = 'block'; }
+                		document.getElementById('scenefolderclose_@s.getId').style.display = 'none';
+                		document.getElementById('scenefolderopen_@s.getId').style.display = 'inline-block';
+                		
+          
+                  		 ">
+                  		 
+                  		 
+                  		 
+                  		 @if(s.getType.getIcon != null){
+                  		 	<i class="@s.getType.getIcon" id="scenefolderclose_@s.getId" style="display:inline-block;" ></i>
+              		<i class="@s.getType.getIconOpen" id="scenefolderopen_@s.getId" style="display:none;" ></i>
+           
+                  		 	
+                  		 } else {
+              		<i class="icon-folder-close" id="scenefolderclose_@s.getId" style="display:inline-block;" ></i>
+              		<i class="icon-folder-open" id="scenefolderopen_@s.getId" style="display:none;" ></i>
+              }
+              
+              
+ 				<div id="listscenename@s.getId" style="display:inline-block; width:65%;  white-space: nowrap;  overflow: hidden;  position:relative; top:5px;">
+	              	@s.getName()
+              	</div>
+              	  
+             @if(a_part.isDeletable){
+             	
+              <i class="icon-minus-sign"  style="display:inline-block;" onClick="javascript:deleteItem('Part',@a_part.getId,'scene',@s.getId)"></i>
+              
+            }
+              	</div>
+              	
+              	
+              	
+              	
+              	@if(s.getType.canSeeChildren){
+              	<div class= "missioninview" style="display:none; margin-left:20px;" id="listscenesubmissions@s.getId">
+              	
+              	
+              	 @for(s_part <- s.getParts()){
+              	
+              	@if(!s_part.isScene()){
+              		
+              		  @defining(s_part.getMission()) { ms =>
+               
+              
+               
+             <div class="missioninview" id="listmission@ms.getId">  
+                        
+             
+               <div class="missionlink" onClick="javascript:hideAddEditMissions();document.getElementById('missionedit@ms.getId()').style.display = 'block';" >
+               <i class="icon-file" style="display:inline-block;"></i>
+				 <div id="listmissionname@ms.getId" style="display:inline-block; width:65%;  white-space: nowrap;  overflow: hidden;  position:relative; top:5px;">
+               
+               @ms.getName()
+               </div>
+             
+             @if(s_part.isDeletable){
+             <i class="icon-minus-sign" style="display:inline-block;" onClick="javascript:deleteItem('Part',@s_part.getId,'mission',@ms.getId)"></i> 
+            }
+              </div>
+              
+                           
+              </div>
+            
+            
+               }
+              		}
+              	
+              			}
+                           
+              			  </div>
+              	
+              			
+              			
+              	}
+              	
+              	
+              	
+              		
+              		
+              		
+              		
+              		}
+              		
+              		}
+      </div>
