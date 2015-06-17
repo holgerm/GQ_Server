@@ -1,0 +1,436 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+
+
+
+
+# START
+GET    /                                                                      controllers.Application.index
+
+
+GET    /:pid/commenceLogout                                                   controllers.Portal.logoutsteptwo(pid:Long)
+
+GET    /commenceLogout                                                        controllers.Portal.logoutstepone()
+GET    /:pid/continueLogout                                                   controllers.Portal.logoutsteptwo(pid: Long)
+
+GET    /public                                                                controllers.Portal.publicGamesListOnCurrentPortal()
+
+GET    /:pid/public                                                           controllers.Portal.publicGamesList(pid: Long)
+GET    /:pid/public_mapscript                                                 controllers.Portal.publicGamesMap(pid: Long)
+
+
+GET    /testConnection                                                        controllers.Portal.getConnectionTest()
+
+
+
+
+GET    /assets/*file                                                          controllers.Assets.at(path="/public", file)
+GET    /assets/javascript/routes.js                                           controllers.Application.jsRoutes
+GET    /uploadedassets/*file                                                  controllers.Portal.at(file)
+
+
+
+GET    /defaulttemplate                                                       controllers.Application.getDefaultTemplate
+GET    /testingtemplate                                                       controllers.Application.getTestingTemplate
+GET    /testmapping                                                           controllers.Application.getTestMapping
+
+
+# LOGGED IN
+GET    /:pid/my                                                               controllers.Portal.myGamesList(pid: Long)
+GET    /my                                                                    controllers.Portal.myGamesListOnCurrentPortal()
+
+GET    /:pid/mygames                                                          controllers.Portal.myGamesList(pid: Long)
+
+
+
+## GAME
+
+GET    /:pid/game/edit/:gid                                                   controllers.Portal.editGame(pid: Long,gid:Long)
+POST   /:pid/game/edit/:gid                                                   controllers.Portal.doEditGame(pid: Long,gid:Long)
+
+GET    /:pid/game/copy/:gid                                                   controllers.Portal.doCopyGame(pid: Long,gid:Long)
+
+
+
+GET    /:pid/game/rights/:gid                                                 controllers.Portal.gameRightsonPortal(pid:Long,gid:Long)
+
+GET    /game/rights/:gid                                                      controllers.Portal.gameRightsOnCurrentPortal(gid:Long)
+
+POST   /:pid/game/rights/:gid                                                 controllers.Portal.gameRightsonPortalUserSearch(pid:Long,gid:Long)
+
+GET    /:pid/game/editrights/:gid/:uid/:right                                 controllers.Portal.doEditUserRightsOnGame(pid:Long,gid:Long,uid:Long,right:String)
+
+GET    /:pid/game/deleterights/:gid/:uid                                      controllers.Portal.doDeleteUserRightsOnGame(pid:Long,gid:Long,uid:Long)
+
+GET    /:pid/game/delete/:gid                                                 controllers.Portal.doDeleteGame(pid: Long,gid: Long)
+
+
+GET    /:pid/uploadgame                                                       controllers.Portal.uploadGame(pid: Long)
+POST   /:pid/uploadgame                                                       controllers.Portal.doUploadGame(pid: Long)
+
+
+
+
+GET    /:pid/game/:gid/togametype                                                       controllers.Portal.addGameTypeFromGame(pid: Long,gid: Long)
+POST   /:pid/game/:gid/togametype                                                       controllers.Portal.doAddGameTypeFromGame(pid: Long,gid: Long)
+
+
+## PORTALS
+
+
+GET    /:pid/newsstream                                                       controllers.Portal.portalNewsstream(pid:Long)
+GET    /newsstream                                                            controllers.Portal.portalNewsstreamOnCurrentPortal()
+
+
+GET    /:pid/newsstream/delete/:nid                                           controllers.Portal.doDeleteNewsItem(pid:Long,nid:Long)
+
+GET    /:pid/myportals                                                        controllers.Portal.myPortalsList(pid:Long)
+
+GET    /:pid/addmetoportal                                                    controllers.Portal.doAddMeToPortal(pid:Long)
+
+
+
+GET    /:gid/portal/gametypes/:pid                                             controllers.Portal.gameTypesonPortal(pid:Long,gid:Long)
+GET		/:pid/portal/:portal/gametypes/add/:gtid									controllers.Portal.doAddGameTypeToPortal(pid: Long, portal: Long, gtid: Long)
+GET		/:pid/portal/:portal/gametypes/remove/:gtid									controllers.Portal.doDeleteGameTypeFromPortal(pid: Long, portal: Long, gtid: Long)
+
+GET    /:pid/portal/rights/:gid                                               controllers.Portal.userRightsonPortal(pid:Long,gid:Long)
+GET    /portal/rights/:gid                                                    controllers.Portal.userRightsonCurrentPortal(gid:Long)
+
+
+GET    /:pid/portal/delete/:epid                                              controllers.Portal.doDeletePortal(pid: Long,epid: Long)
+
+GET    /:pid/portal/edit/:epid                                                controllers.Portal.editPortal(pid: Long,epid: Long)
+POST   /:pid/portal/edit/:epid                                                controllers.Portal.doEditPortal(pid: Long,epid: Long)
+
+
+
+GET    /:pid/:gid/migrate                                                     controllers.Portal.migrateGame(pid:Long,gid:Long)
+GET    /:pid/:gid/setvisibility/:value                                        controllers.Portal.setGameVisibility(pid:Long,gid: Long,value: String)
+GET    /:pid/portal/editrights/:gid/:uid/:right                               controllers.Portal.doEditUserRightsOnPortal(pid:Long,gid:Long,uid:Long,right:String)
+
+GET    /:pid/portal/deleterights/:gid/:uid                                    controllers.Portal.doDeleteUserRightsOnPortal(pid:Long,gid:Long,uid:Long)
+
+
+GET    /:pid/newPortal                                                        controllers.Portal.addPortal(pid: Long)
+POST   /:pid/newPortal                                                        controllers.Portal.doAddPortal(pid: Long)
+
+GET    /:pid/updatetemplate                                                   controllers.Portal.updatePortalTemplate(pid: Long)
+
+
+
+
+# EDITOR
+GET    /:pid/editor/:gid                                                      controllers.Editor.getEditorRedirect(gid: Long,pid:Long)
+
+GET    /editor/:gid                                                           controllers.Editor.getEditor(gid: Long)
+GET    /editor/mapscript/:gid                                                 controllers.Editor.getMapScript(gid: Long)
+GET    /editor/mapscriptsearch/:gid                                           controllers.Editor.getMapSearchScript(gid: Long)
+
+
+
+
+GET    /editor/:gid/:sid/add/:mtype/:name                                     controllers.Editor.addMissionInSzene(gid: Long, sid: Long, mtype: Long, name: String)
+GET    /editor/:gid/add/mission/:mtype/:name                                  controllers.Editor.addMissionInGame(gid: Long, mtype: Long, name: String)
+GET    /editor/:gid/add/scene/:stype/:name                                    controllers.Editor.addSceneInGame(gid: Long, stype: Long, name: String)
+GET    /editor/:gid/add/scene/:stype/:name/withPoint/:a/:b                    controllers.Editor.addSceneInGameWithPoints(gid: Long, stype: Long, name: String,a:String,b:String)
+GET    /editor/:gid/add/hotspot/:htype/:lat/:lon/:n                           controllers.Editor.addHotspotInGame(gid: Long, htype: Long, lon: String, lat:String, n:String)
+
+GET    /editor/:gid/duplicate/mission/:mid                                    controllers.Editor.duplicateMissionInGame(gid: Long, mid: Long)
+GET    /editor/:gid/duplicate/scene/:sid                                      controllers.Editor.duplicateSceneInGame(gid: Long, sid: Long)
+GET    /editor/:gid/duplicate/hotspot/:sid                                    controllers.Editor.duplicateHotspotInGame(gid: Long, sid: Long)
+
+GET    /editor/:gid/duplicate/rule/:rid/subrule/:srid                         controllers.Editor.duplicateSubRuleInRule(gid: Long, rid: Long,srid:Long)
+
+GET    /editor/:gid/add/menuitem/:title                                       controllers.Editor.addMenuItemInGame(gid: Long, title: String)
+
+
+
+GET    /editor/:gid/mission/:mid/add/rule/:rtype                              controllers.Editor.addRuleInMission(gid: Long, mid: Long, rtype: Long)
+GET    /editor/:gid/hotspot/:hid/add/rule/:rtype                              controllers.Editor.addRuleInHotspot(gid: Long, hid: Long, rtype: Long)
+
+
+
+GET    /editor/:gid/rule/:rid/remove/subrule/:srid                            controllers.Editor.deleteSubRuleFromRule(gid: Long, rid: Long, srid:Long)
+GET    /editor/:gid/rule/:rid/add/subrule                                     controllers.Editor.addSubRuleInRule(gid: Long, rid: Long)
+GET    /editor/:gid/rule/:rid/add/action/:atype                               controllers.Editor.addActionInRule(gid: Long, rid: Long, atype: Long)
+GET    /editor/:gid/rule/:rid/add/condition/:text                             controllers.Editor.addConditionInRule(gid: Long, rid: Long, text: String)
+GET    /editor/:gid/rule/:rid/edit/condition/:text                            controllers.Editor.editConditionInRule(gid: Long, rid: Long, text: String)
+
+
+GET    /editor/:gid/rule/:rid/move/:dire/action/:aid                          controllers.Editor.moveActionInRule(gid: Long, rid: Long, aid: Long,dire: String)
+
+
+GET    /editor/:gid/mission/:mid/add/content/:ctype/:name                     controllers.Editor.addContentInMission(gid: Long, mid: Long, ctype: Long, name: String)
+GET    /editor/:gid/content/:cid/add/content/:ctype/:name                     controllers.Editor.addContentInContent(gid: Long, cid: Long, ctype: Long, name: String)
+
+
+GET    /editor/:gid/rule/:rid/remove/action/:aid                              controllers.Editor.deleteActionFromRule(gid: Long, rid: Long, aid: Long)
+GET    /editor/:gid/attribute/:atrid/remove/action/:aid                       controllers.Editor.deleteActionFromAttribute(gid: Long, atrid: Long, aid: Long)
+GET    /editor/:gid/menuitem/:miid/remove/action/:aid                         controllers.Editor.deleteActionFromMenuItem(gid: Long, miid: Long, aid: Long)
+
+
+
+GET    /editor/:gid/mission/:mid/remove/content/:cid                          controllers.Editor.deleteContentFromMission(gid: Long, mid: Long, cid: Long)
+GET    /editor/:gid/content/:ccid/remove/content/:cid                         controllers.Editor.deleteContentFromContent(gid: Long, ccid: Long, cid: Long)
+
+
+
+
+GET    /editor/:gid/Mission/:mid/savepos/:top/:left                           controllers.Editor.setPositionInMission(gid: Long, mid: Long, top: Integer,left:Integer)
+
+
+
+## NAMES
+
+GET    /editor/:gid/setname/:value                                            controllers.Editor.setGameName(gid: Long,value: String)
+GET    /editor/:gid/hotspot/:hid/setname/:value                               controllers.Editor.setHotspotName(gid: Long,hid: Long,value: String)
+GET    /editor/:gid/menuitem/:hid/setname/:value                              controllers.Editor.setMenuItemName(gid: Long,hid: Long,value: String)
+GET    /editor/:gid/scene/:sid/setname/:value                                 controllers.Editor.setSceneName(gid: Long,sid: Long,value: String)
+GET    /editor/:gid/mission/:mid/setname/:value                               controllers.Editor.setMissionName(gid: Long,mid: Long,value: String)
+GET    /editor/:gid/content/:cid/setname/:value                               controllers.Editor.setContentName(gid: Long,cid: Long,value: String)
+GET    /editor/:gid/contentvalue/:cid/setname/:value                          controllers.Editor.setContentValue(gid: Long,cid: Long,value: String)
+GET    /editor/:gid/Part/:pid/delete                                          controllers.Editor.deletePartFromGame(gid: Long,pid: Long)
+GET    /editor/:gid/Part/:pid/move/:direction                                 controllers.Editor.movePartInGame(gid: Long,pid: Long, direction: String)
+GET    /editor/:gid/hotspot/:pid/delete                                       controllers.Editor.deleteHotspotFromGame(gid: Long,pid: Long)
+
+
+
+
+
+
+GET    /editor/:gid/menuitem/:pid/delete                                      controllers.Editor.deleteMenuItemFromGame(gid: Long,pid: Long)
+
+
+POST   /editor/:gid/file/:type/:hid/:cid                                      controllers.Editor.uploadAttributeFile(gid: Long,type: String,hid:Long,cid: Long)
+
+GET    /editor/:gid/hotspot/:hid/lonlat/:lon/:lat                             controllers.Editor.setHotspotCoords(gid: Long, hid: Long, lon: String, lat: String)
+
+
+
+GET    /editor/:gid/xmlify                                                    controllers.Editor.createXML(gid: Long)
+GET    /editor/:gid/webxml/:mid                                                   controllers.Editor.createXMLForWeb(gid: Long,mid: Long)
+GET    /editor/:gid/clientxml                                                   controllers.Editor.getXMLForClient(gid: Long)
+
+
+
+## ATTR
+GET    /editor/:gid/setattr/:atype/:value                                     controllers.Editor.setGameAttribute(gid: Long,atype: Long,value: String)
+GET    /editor/:gid/content/:cid/setattr/:atype/:value                        controllers.Editor.setContentAttribute(gid: Long,cid: Long,atype: Long,value: String)
+GET    /editor/:gid/mission/:mid/setattr/:atype/:value                        controllers.Editor.setMissionAttribute(gid: Long,mid: Long,atype: Long,value: String)
+GET    /editor/:gid/hotspot/:mid/setattr/:atype/:value                        controllers.Editor.setHotspotAttribute(gid: Long,mid: Long,atype: Long,value: String)
+GET    /editor/:gid/action/:mid/setattr/:atype/:value                         controllers.Editor.setActionAttribute(gid: Long,mid: Long,atype: Long,value: String)
+GET    /editor/:gid/scene/:mid/setattr/:atype/:value                          controllers.Editor.setSceneAttribute(gid: Long,mid: Long,atype: Long,value: String)
+GET    /editor/:gid/menuitem/:mid/setattr/:a/:value                           controllers.Editor.setMenuItemAttribute(gid: Long,mid: Long,a: String,value: String)
+
+
+## ACTION ATTR
+
+GET    /editor/:gid/action/:aid/attribute/:atrid/add/action/:atype            controllers.Editor.addActionInActionAttribute(gid: Long,aid: Long,atrid:Long, atype: Long)
+
+
+
+
+## FRAGMENTS
+
+GET    /editor/:gid/fragments/Part/:pid/insidemenu                            controllers.Editor.getPartInSideMenuForEditor(gid: Long, pid: Long)
+GET    /editor/:gid/fragments/Hotspot/:pid/insidemenu                         controllers.Editor.getHotspotInSideMenuForEditor(gid: Long, pid: Long)
+GET    /editor/:gid/fragments/Hotspot/:pid/ruleedit                           controllers.Editor.getHotspotRulesForEditor(gid: Long, pid: Long)
+GET    /editor/:gid/fragments/MenuItem/:pid/insidemenu                        controllers.Editor.getMenuItemInSideMenuForEditor(gid: Long, pid: Long)
+
+
+GET    /editor/:gid/fragments/Hotspot/:hid/popupcontent                       controllers.Editor.getHotspotPopupContent(gid: Long, hid: Long)
+
+
+GET    /editor/:gid/fragments/Mission/:mid/Content/:cid/newcontentincontent   controllers.Editor.getNewContentInContentForEditor(gid: Long, cid: Long, mid:Long)
+
+GET    /editor/:gid/fragments/Mission/:mid/Content/:cid/listitem              controllers.Editor.getContentListItemForEditor(gid: Long, cid: Long,mid:Long)
+GET    /editor/:gid/fragments/Content/:cid/Content/:scid/listitem             controllers.Editor.getContentInContentListForEditor(gid: Long, cid: Long,scid:Long)
+
+GET    /editor/:gid/fragments/missionselector/:v                                 controllers.Editor.getMissionSelectorForEditor(gid:Long,v:String)
+GET    /editor/:gid/fragments/Mission/:mid/Content/alllist                    controllers.Editor.getAllContentInMissionForEditor(gid:Long,mid:Long)
+
+GET    /editor/:gid/fragments/Content/:cid/allinfo                            controllers.Editor.getContentInfoForEditor(gid: Long, cid: Long)
+GET    /editor/:gid/fragments/Mission/:mid/Content/:cid/contentincontent      controllers.Editor.getContentInContentForEditor(gid: Long, cid: Long,mid:Long)
+
+GET    /editor/:gid/fragments/Mission/:mid/Action/:aid/allinfo/:rtype/:z      controllers.Editor.getMissionActionInfoForEditor(gid: Long, aid: Long,rtype:String,z:Integer,mid:Long)
+
+GET    /editor/:gid/fragments/Action/:aid/allinfo/:rtype/:z                   controllers.Editor.getActionInfoForEditor(gid: Long, aid: Long,rtype:String,z:Integer)
+GET    /editor/:gid/fragments/Action/:aid/inrule/:rid                         controllers.Editor.getActionInRuleForEditor(gid: Long, aid: Long,rid: Long)
+
+GET    /editor/:gid/fragments/Rule/:rid/oftype/:rtype                         controllers.Editor.getRuleForEditor(gid: Long,rid: Long,rtype:Long)
+GET    /editor/:gid/fragments/Rule/:rid/allactions                            controllers.Editor.getActionsForRuleForEditor(gid: Long,rid: Long)
+
+
+
+
+
+
+GET    /editor/:gid/fragments/Action/:aid/inatr/action/:parent/:atrid         controllers.Editor.getActionInActionAttributeForEditor(gid: Long, aid: Long,parent:Long,atrid: Long)
+
+
+
+GET    /editor/:gid/fragments/Mission/:mid/Rule/:rtype/view                   controllers.Editor.getRuleInMissionForEditor(gid: Long, rtype: Long,mid:Long)
+
+
+GET    /editor/:gid/fragments/Part/:pid/allinfo                               controllers.Editor.getPartInfoForEditor(gid: Long, pid: Long)
+GET    /editor/:gid/fragments/Scene/:pid/allinfo                              controllers.Editor.getSceneInfoForEditor(gid: Long, pid: Long)
+GET    /editor/:gid/fragments/Mission/:pid/allinfo                            controllers.Editor.getMissionInfoForEditor(gid: Long, pid: Long)
+GET    /editor/:gid/fragments/Mission/:pid/ruleedit                           controllers.Editor.getMissionRulesForEditor(gid: Long, pid: Long)
+
+GET    /editor/:gid/fragments/leaflet/:pid/addmarker/:last                    controllers.Editor.getMarkerAddScriptForEditor(gid: Long, pid: Long,last:Boolean)
+
+
+
+
+## IDs
+
+GET    /editor/:gid/id/Part/:pid                                              controllers.Editor.getIdFromPart(gid:Long,pid:Long)
+GET    /editor/:gid/id/Scene/:pid/hotspot                                     controllers.Editor.getIdFromSceneHotspot(gid:Long,pid:Long)
+
+
+
+
+
+
+
+
+
+
+
+
+
+## GAMETYPE EDITOR
+
+
+GET    /gteditor/:gtid/addscenetype/fromgame/:gid/:name                       controllers.Editor.addNewSceneTypeInGameTypeFromGame(gid: Long,gtid:Long,name:String)
+GET    /gteditor/:gtid/deletescenetype/:stid                                  controllers.Editor.deleteSceneTypeInGameType(stid: Long,gtid:Long)
+
+
+
+
+
+
+
+
+
+# JSON
+
+GET    /json/allportals                                                       controllers.Portal.getPortalsJson()
+
+GET    /json/:pid/publicgames                                                 controllers.Portal.getPublicGamesJson(pid:Long)
+
+GET    /json/:pid/privategames                                                controllers.Portal.getPrivateGamesJson(pid:Long)
+
+
+GET    /json/game/:gid                                                        controllers.Portal.getGameJson(gid:Long)
+
+# FUNCTIONS
+GET    /:pid/game/download/:gid                                               controllers.Portal.getGameFileForPortal(pid:Long,gid:Long)
+
+GET    /game/download/:gid                                                    controllers.Portal.getGameFile(gid:Long)
+
+
+GET    /:pid/game/filesize/:gid                                               controllers.Portal.getGameFileSizeForPortal(pid:Long,gid:Long)
+
+GET    /game/filesize/:gid                                                    controllers.Portal.getGameFileSize(gid:Long)
+
+
+
+
+
+GET    /:pid/updatetemplate                                                   controllers.Portal.updatePortalTemplate(pid: Long)
+
+
+# PlayAuthenticate
+
+
+GET    /:pid/profile                                                          controllers.Application.profile(pid: Long)
+
+GET    /login                                                                 controllers.Application.loginToPortalFromCache()
+GET    /:pid/:pid2/login                                                      controllers.Application.login2(pid: Long,pid2:Long)
+
+GET    /:pid/login                                                            controllers.Application.login(pid: Long)
+POST   /:pid/login                                                            controllers.Application.doLogin(pid: Long)
+
+
+GET    /:pid/logout                                                           controllers.Application.dologout(pid: Long)
+GET    /dologout                                                              com.feth.play.module.pa.controllers.Authenticate.logout()
+
+
+GET    /doauthenticate/:provider                                              controllers.Application.doauthenticate(pid: Long, provider: String)
+GET    /authenticate/:provider                                                com.feth.play.module.pa.controllers.Authenticate.authenticate( provider: String)
+
+GET    /:pid/signup                                                           controllers.Application.signup(pid: Long)
+POST   /:pid/signup                                                           controllers.Application.doSignup(pid: Long)
+
+GET    /:pid/accounts/unverified                                              controllers.Signup.unverified(pid: Long)
+
+GET    /:pid/authenticate/denied/:provider                                    controllers.Signup.oAuthDenied(pid: Long, provider: String)
+
+GET    /:pid/accounts/verify/:token                                           controllers.Signup.verify(pid: Long,token: String)
+
+
+GET    /accounts/exists                                                       controllers.Signup.exists
+
+GET    /:pid/accounts/password/reset/:token                                   controllers.Signup.resetPassword(pid: Long, token: String)
+POST   /:pid/accounts/password/reset                                          controllers.Signup.doResetPassword(pid: Long)
+
+GET    /:pid/accounts/password/change                                         controllers.Account.changePassword(pid: Long)
+POST   /:pid/accounts/password/change                                         controllers.Account.doChangePassword(pid: Long)
+
+GET    /:pid/accounts/verify                                                  controllers.Account.verifyEmail(pid: Long)
+
+GET    /:pid/accounts/add                                                     controllers.Account.link(pid: Long)
+
+
+GET    /:pid/accounts/link                                                    controllers.Account.askLink(pid: Long)
+POST   /:pid/accounts/link                                                    controllers.Account.doLink(pid: Long)
+
+GET    /:pid/accounts/merge                                                   controllers.Account.askMerge(pid: Long)
+POST   /:pid/accounts/merge                                                   controllers.Account.doMerge(pid: Long)
+
+GET    /:pid/login/password/forgot                                            controllers.Signup.forgotPassword(pid: Long, email: String ?= "")
+POST   /:pid/login/password/forgot                                            controllers.Signup.doForgotPassword(pid: Long)
+
+
+
+
+
+
+# STRING INSERTS
+
+GET    /:pid/strings/userrole                                                 controllers.Application.getUserRoleByPortal(pid: Long)
+
+
+
+
+
+
+
+
+
+
+
+
+# QEEVEE TEMPLATE
+
+GET    /qeeveetemplates/qeeve                                                 controllers.Application.getQeeveeHtml
+GET    /qeeveetemplates/geoquest                                              controllers.Application.getGeoQuestHtml
+GET    /qeeveetemplates/datatables                                            controllers.Application.getDataTableCSS
+
+# DEFAULT DESIGNS
+
+GET    /:pid/qeeveetemplates/:x/:y                                            controllers.Portal.getDesign(pid:Long,x:String,y:String)
+
+
+# IF NOTHING ELSE
+
+
+GET    /:pid                                                                  controllers.Application.portalindex(pid:Long)
+GET    /:pid/                                                                 controllers.Application.portalindex(pid:Long)
+
+
+GET    /:pid/*path                                                            controllers.Application.portalfourofour(pid:Long,path:String)

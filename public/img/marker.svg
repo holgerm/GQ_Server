@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="240.023px" height="297.029px" viewBox="0 0 240.023 297.029" enable-background="new 0 0 240.023 297.029"
+	 xml:space="preserve">
+<g id="Ebene_4">
+</g>
+<g id="Ebene_1">
+	<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="91.7109" y1="282.8564" x2="138.6021" y2="16.9232">
+		<stop  offset="0.1227" style="stop-color:#272727"/>
+		<stop  offset="0.5951" style="stop-color:#716D5B"/>
+	</linearGradient>
+	<path fill="url(#SVGID_1_)" d="M210.389,193.838c52.771-73.155-1.707-178.692-91.723-178.692
+		C28.65,15.147-25.828,120.683,26.944,193.838c25.032,34.699,61.597,63.188,91.722,93.771
+		C148.791,257.025,185.356,228.537,210.389,193.838z"/>
+</g>
+<g id="Ebene_2" display="none">
+	<rect x="170.087" y="177.999" display="inline" fill="none" width="140" height="118"/>
+	<text transform="matrix(1 0 0 1 170.0869 276.417)" display="inline" fill="#FFCB00" font-family="'Lithograph'" font-size="140">X</text>
+</g>
+<g id="Ebene_3">
+	<circle fill="#FFCC00" cx="118.667" cy="129.984" r="47.895"/>
+</g>
+</svg>
