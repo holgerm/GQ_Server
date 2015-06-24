@@ -29,6 +29,7 @@ GET    /testConnection                                                        co
 GET    /assets/*file                                                          controllers.Assets.at(path="/public", file)
 GET    /assets/javascript/routes.js                                           controllers.Application.jsRoutes
 GET    /uploadedassets/*file                                                  controllers.Portal.at(file)
+GET    /gqplayer/*file                                                  	  controllers.Portal.getGQPlayer(file)
 
 
 
@@ -321,6 +322,8 @@ GET    /gteditor/:gtid/deletescenetype/:stid                                  co
 GET    /json/allportals                                                       controllers.Portal.getPortalsJson()
 
 GET    /json/:pid/publicgames                                                 controllers.Portal.getPublicGamesJson(pid:Long)
+
+GET    /json/:pid/publicgamesinfo                                             controllers.Portal.getGamesInfoListJSON(pid:Long)
 
 GET    /json/:pid/privategames                                                controllers.Portal.getPrivateGamesJson(pid:Long)
 

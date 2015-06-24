@@ -33,507 +33,408 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-
-
 @Entity
 public class Scene extends Model {
 
-    @Id
-    private Long id;
-    @ManyToOne
-    private SceneType type;
-    private String name;
-    
-    @ManyToMany
-    private List<Part> parts;
-    @ManyToMany
-    private List<Attribute> attributes;
-    @ManyToMany
-    private List<Rule> rules;
-    
-    @ManyToMany
-    private List<Rule> rulesFirst;
-    
-    @ManyToMany
-    private List<Rule> rulesLast;
-    
-    @ManyToMany
-    private List<Hotspot> hotspots;
+	@Id
+	private Long id;
+	@ManyToOne
+	private SceneType type;
+	private String name;
 
-    public Scene(String n, SceneType t){
-     
-    	name = n;
-    	type = t;
+	@ManyToMany
+	private List<Part> parts;
+	@ManyToMany
+	private List<Attribute> attributes;
+	@ManyToMany
+	private List<Rule> rules;
 
-    }
+	@ManyToMany
+	private List<Rule> rulesFirst;
 
+	@ManyToMany
+	private List<Rule> rulesLast;
 
+	@ManyToMany
+	private List<Hotspot> hotspots;
 
+	public Scene(String n, SceneType t) {
 
-    // SETTER
-    public void setAttribute(Attribute t){
-    	
-   	 try{
-   	 List<Attribute> copyOfAttributes =  new ArrayList<Attribute>(attributes.size());;
-	     for(Attribute item: attributes) copyOfAttributes.add(item);	
+		name = n;
+		type = t;
 
-   	 for(Attribute aatr: copyOfAttributes){  		 
-   		 if(aatr.getXMLType().equals(t.getXMLType())){	 
-   			attributes.remove(aatr);
-   		 }
-   	 }
-   	 attributes.add(t);
-   	 
-   		} catch (RuntimeException e) {
+	}
 
-				System.out.println("Problem setting Attribute.");
-				e.printStackTrace();
+	// SETTER
+	public void setAttribute(Attribute t) {
 
+		try {
+			List<Attribute> copyOfAttributes = new ArrayList<Attribute>(
+					attributes.size());
+			;
+			for (Attribute item : attributes)
+				copyOfAttributes.add(item);
+
+			for (Attribute aatr : copyOfAttributes) {
+				if (aatr.getXMLType().equals(t.getXMLType())) {
+					attributes.remove(aatr);
+				}
 			}
+			attributes.add(t);
 
-   }
-    
-    
-    
-    public void addRule(Rule r){ rules.add(r); }
-    public void addPart(Part p){ parts.add(p); }
-    
-    
-   
-    public void addHotspot(Hotspot h){ hotspots.add(h); }
-    
-    
-    
-    
-    
-    // GETTER
-    
-    public String getName(){ return name; }
-    public List<Attribute> getAttributes(){ return attributes; }
-    public List<Rule> getRules(){ return rules; }
-    public List<Hotspot> getHotspots(){ return hotspots; }
-    public List<Part> getParts(){ return parts; }
-    
-    
-    
- 
-    
+		} catch (RuntimeException e) {
 
-    public boolean hasPossibleParts(){
-    	
-    	if(type.getPossiblePartTypes() != null){
-    	if(type.getPossiblePartTypes().size() > 0){ return true; } else { return false; }
-    	} else { return false; }
-    	
-    	
-    }
-    
-    
-    public void debug(String s){
-    	
-    	System.out.println(s);
-	
-    
-    }
-    
-    
-  public boolean hasPossibleHotspots(){
-    	
-    	if(type.getPossibleHotspotTypes().size() > 0){ return true; } else { return false; }
-    	
-    	
-    	
-    }
-    
- public boolean hasAttributeTypes(){ 
-    	
-    	if(type.getAttributeTypes().size() > 0){ return true; } else { return false; }
-    	
-    	
-    }
- 
- 
- 
- 
- 
- public void setLinkedAttribute(ObjectReference o){
-	 
-	 
-	 
-	 if(o.getObjectType().equals("Content")){
-		 
-		 
-		 
-		 
-	 } else if(o.getObjectType().equals("Attribute")){
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-	 }
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
- }
- 
- 
- public boolean showMultipleAchordions(){
-	 
-	 int count = 0;
-	 
-	
-	 if(hasAttributeTypes() == true){ 
-		
-		 count = count+1;
-		 }
-	 
-	 if(hasPossibleParts() == true){ 
-		 if(type.canSeeMissions() == true){
-				 count = count+1; } }
-	 
-	 if(hasPossibleHotspots()){
-		if( getHotspots().size() > 1 ) {
-			
-			if(type.canSeeHotspots()){
-			count = count+1;
-			}
-			
+			System.out.println("Problem setting Attribute.");
+			e.printStackTrace();
+
 		}
-	 }
-	 
-	 if(count > 1){ return true; } else { return false; }
-	 
-	 
- }
-    
-    
-    
 
-    public Long getId(){
-        return id;
-    }
-    
+	}
 
-    
-    
-    
-    
-    
-    /// CREATION
-    
-    public Scene copyMe(String n, Map<Mission, Mission> missionbinder, Map<Hotspot, Hotspot> hotspotbinder){
-    	
-    	
-		String nam = name+" "+n;
-		
-		try  
-		  {  
-		    double d = Double.parseDouble(n);  
-		  }  
-		  catch(NumberFormatException nfe)  
-		  {  
-			  
-			  if(n.contains("(1)")){
-				  
-				 n.replace("(1)", "");
-				  
-			  }
-			  
-		   nam =name+" "+String.valueOf(n);
-		  }
-		    
-    	Scene s = new Scene(nam,type);
-    	s.save();
-    	
-    	// PARTS
-    	
-    	int counter = 1;
-    	String add = "";
-    	
-    	Set<String> in = new HashSet<String>();
+	public void addRule(Rule r) {
+		rules.add(r);
+	}
 
-    	
-    	
-    	for(Part ap: parts){ 
-    		
-    		
-    		
-    		
-    		
-	if(ap.isScene()){
-        		
-        		if(in.contains(ap.getScene().getName())){
-        			
-        			for(String st:in){ 
-        				if(st.equals(ap.getScene().getName())){
-        					counter++;
-        				}
-        				
-        			} 
-        		}
+	public void addPart(Part p) {
+		parts.add(p);
+	}
 
-        		in.add(ap.getScene().getName());
-        		
-        		
-        		
-        		
-    		} else {
-    			
-    			
-    			if(in.contains(ap.getMission().getName())){
-        			
-        			for(String st:in){ 
-        				if(st.equals(ap.getMission().getName())){
-        					counter++;
-        				}
-        				
-        			} 
-        		}
-    			
-    			in.add(ap.getMission().getName());
-    			
-    			
-    		}
-    		
-    	if(counter > 1){ add = ""+counter; }
-    		
-    		
-    		
-    		
-    	try  
-		  {  
-		    double d = Double.parseDouble(n);  
-		  }  
-		  catch(NumberFormatException nfe)  
-		  {  
-			  
-			  if(ap.isScene()){
-			  
-			add = ap.getScene().getName();
-			  } else {
-				  if(counter > 1){ add = ""+counter; }
-			    	
+	public void addHotspot(Hotspot h) {
+		hotspots.add(h);
+	}
 
-				  
-			  }
-			  
-		  }
-    		
-    		
-    		
-    		
-    		
-    		s.addPart(ap.copyMe(add,missionbinder,hotspotbinder)); 
-    		s.update(); 
-    		counter++;
-    		}
-    	
-    	// ATTRIBUTES
+	// GETTER
 
-    	for(Attribute aart: attributes){ s.setAttribute(aart.copyMe()); s.update(); }
-    	
-    	// RULES
-    	
-    	for(Rule ar: rules){ s.addRule(ar.copyMe()); s.update(); }
-    	
-    	// HOTSPOTS
-    	counter = 1;
-    	for(Hotspot ah:hotspots){ 
-    		
-    		Hotspot newhotspot = ah.copyMe(""+counter);
-    		
-    		newhotspot.save();
-    		
-    		hotspotbinder.put(ah, newhotspot);
-    		
-    		s.addHotspot(newhotspot);
-    		s.update();
-    	
-    	counter++; }
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	    	
-    	
-    	
-    	
-    	
-    	
-    	return s;
-    	
-    	
-    }
-    
-    public void redoLinking(Game g){
-    	
+	public String getName() {
+		return name;
+	}
 
-    	
-    	List<AttributeType> attributeTypes = new ArrayList<AttributeType>();
-    	attributeTypes.addAll(getAllAttributes());
-    	
+	public List<Attribute> getAttributes() {
+		return attributes;
+	}
 
+	public List<Rule> getRules() {
+		return rules;
+	}
 
+	public List<Hotspot> getHotspots() {
+		return hotspots;
+	}
 
-    	for(AttributeType atrttype:attributeTypes){
-    		
-    		
-    		Attribute atrt = this.getAttribute(atrttype);
-    			
-    		if(atrt != null){
-    				if(atrt.hasLink()){
-    					
-    					
-						System.out.println("An attribute wants to link to another object");
+	public List<Part> getParts() {
+		return parts;
+	}
 
-    					
-    					if(atrt.getLink().getObjectId() != null){
-    				
-    					
-    					Attribute atr = new Attribute(atrttype);
-    					atr.save();
-    					ObjectReference o = g.getAbstractRelinkObject(atrt.getLink(), this);
-    					if(o != null){
-						System.out.println("and is setting it to "+o.getObjectType()+" ("+o.getObjectId()+")");
+	public boolean hasPossibleParts() {
 
-						o.save();
-    					atr.setLink(o);
-    					atr.update();
-    					
-    					
-    					this.setAttribute(atr);
-    					this.update();
-    					
-    					} else {
-    						
-    						System.out.println("but didn't find a fitting equivalent.");
+		if (type.getPossiblePartTypes() != null) {
+			if (type.getPossiblePartTypes().size() > 0) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
 
-    						
-    					}
-    				
-    					
-    					
-    					} else {
-    						
-    						System.out.println("but has no object reference specified correctly.");
-    						
-    					}
-    					
-    					
-    				}
-    		
-    		}
-    		
-    	}
-    	
-    	
-    	
+	}
 
-    	
-    	
-    }
-    
-    
-   
+	public void debug(String s) {
 
+		System.out.println(s);
 
+	}
 
-    public static final Finder<Long, Scene> find = new Finder<Long, Scene>(
-            Long.class, Scene.class);
+	public boolean hasPossibleHotspots() {
+
+		if (type.getPossibleHotspotTypes().size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
+	public boolean hasAttributeTypes() {
+
+		if (type.getAttributeTypes().size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
+	public void setLinkedAttribute(ObjectReference o) {
+
+		if (o.getObjectType().equals("Content")) {
+
+		} else if (o.getObjectType().equals("Attribute")) {
+
+		}
+
+	}
+
+	public boolean showMultipleAchordions() {
+
+		int count = 0;
+
+		if (hasAttributeTypes() == true) {
+
+			count = count + 1;
+		}
+
+		if (hasPossibleParts() == true) {
+			if (type.canSeeMissions() == true) {
+				count = count + 1;
+			}
+		}
+
+		if (hasPossibleHotspots()) {
+			if (getHotspots().size() > 1) {
+
+				if (type.canSeeHotspots()) {
+					count = count + 1;
+				}
+
+			}
+		}
+
+		if (count > 1) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	// / CREATION
+
+	public Scene copyMe(String n, Map<Mission, Mission> missionbinder,
+			Map<Hotspot, Hotspot> hotspotbinder) {
+
+		String nam = name + " " + n;
+
+		try {
+			double d = Double.parseDouble(n);
+		} catch (NumberFormatException nfe) {
+
+			if (n.contains("(1)")) {
+
+				n.replace("(1)", "");
+
+			}
+
+			nam = name + " " + String.valueOf(n);
+		}
+
+		Scene s = new Scene(nam, type);
+		s.save();
+
+		// PARTS
+
+		int counter = 1;
+		String add = "";
+
+		Set<String> in = new HashSet<String>();
+
+		for (Part ap : parts) {
+
+			if (ap.isScene()) {
+
+				if (in.contains(ap.getScene().getName())) {
+
+					for (String st : in) {
+						if (st.equals(ap.getScene().getName())) {
+							counter++;
+						}
+
+					}
+				}
+
+				in.add(ap.getScene().getName());
+
+			} else {
+
+				if (in.contains(ap.getMission().getName())) {
+
+					for (String st : in) {
+						if (st.equals(ap.getMission().getName())) {
+							counter++;
+						}
+
+					}
+				}
+
+				in.add(ap.getMission().getName());
+
+			}
+
+			if (counter > 1) {
+				add = "" + counter;
+			}
+
+			try {
+				double d = Double.parseDouble(n);
+			} catch (NumberFormatException nfe) {
+
+				if (ap.isScene()) {
+
+					add = ap.getScene().getName();
+				} else {
+					if (counter > 1) {
+						add = "" + counter;
+					}
+
+				}
+
+			}
+
+			s.addPart(ap.copyMe(add, missionbinder, hotspotbinder));
+			s.update();
+			counter++;
+		}
+
+		// ATTRIBUTES
+
+		for (Attribute aart : attributes) {
+			s.setAttribute(aart.copyMe());
+			s.update();
+		}
+
+		// RULES
+
+		for (Rule ar : rules) {
+			s.addRule(ar.copyMe());
+			s.update();
+		}
+
+		// HOTSPOTS
+		counter = 1;
+		for (Hotspot ah : hotspots) {
+
+			Hotspot newhotspot = ah.copyMe("" + counter);
+
+			newhotspot.save();
+
+			hotspotbinder.put(ah, newhotspot);
+
+			s.addHotspot(newhotspot);
+			s.update();
+
+			counter++;
+		}
+
+		return s;
+
+	}
+
+	public void redoLinking(Game g) {
+
+		List<AttributeType> attributeTypes = new ArrayList<AttributeType>();
+		attributeTypes.addAll(getAllAttributes());
+
+		for (AttributeType atrttype : attributeTypes) {
+
+			Attribute atrt = this.getAttribute(atrttype);
+
+			if (atrt != null) {
+				if (atrt.hasLink()) {
+
+					System.out
+							.println("An attribute wants to link to another object");
+
+					if (atrt.getLink().getObjectId() != null) {
+
+						Attribute atr = new Attribute(atrttype);
+						atr.save();
+						ObjectReference o = g.getAbstractRelinkObject(
+								atrt.getLink(), this);
+						if (o != null) {
+							System.out.println("and is setting it to "
+									+ o.getObjectType() + " ("
+									+ o.getObjectId() + ")");
+
+							o.save();
+							atr.setLink(o);
+							atr.update();
+
+							this.setAttribute(atr);
+							this.update();
+
+						} else {
+
+							System.out
+									.println("but didn't find a fitting equivalent.");
+
+						}
+
+					} else {
+
+						System.out
+								.println("but has no object reference specified correctly.");
+
+					}
+
+				}
+
+			}
+
+		}
+
+	}
+
+	public static final Finder<Long, Scene> find = new Finder<Long, Scene>(
+			Long.class, Scene.class);
 
 	public SceneType getType() {
 		return type;
 	}
 
+	public List<Mission> getAllMissions() {
 
-	 public List<Mission> getAllMissions(){
-		    
-	    	List<Mission> all = new ArrayList<Mission>();
-	    	
-	    	
-	    	
-	    	for(Part ap:parts){
-	    		
-	    		
-	    		if(!ap.isScene()){
-	    			
-	    			all.add(ap.getMission());
-	    			
-	    		} else {
-	    			
-	    			all.addAll(ap.getScene().getAllMissions());
-	    			
-	    			
-	    		}
-	    		
-	    		
-	    		
-	    	}
-	    	
-	    	return all;
-	 }
+		List<Mission> all = new ArrayList<Mission>();
 
+		for (Part ap : parts) {
 
+			if (!ap.isScene()) {
 
+				all.add(ap.getMission());
 
-	public Set<Scene> getAllScenes() {
-		
+			} else {
 
-    	Set<Scene> all = new HashSet<Scene>();
-    	
-    	
-for(Part ap:parts){
-    		
-    		
-    		if(ap.isScene()){
-    			all.addAll(ap.getScene().getAllScenes());
-    			all.add(ap.getScene());
-    			
-    		} 
-    		
-    		
-    		
-    	}
-    	
-    	
-    	
-    	return all;
+				all.addAll(ap.getScene().getAllMissions());
+
+			}
+
+		}
+
+		return all;
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-public void removeMe(){
-		
-		
+	public Set<Scene> getAllScenes() {
+
+		Set<Scene> all = new HashSet<Scene>();
+
+		for (Part ap : parts) {
+
+			if (ap.isScene()) {
+				all.addAll(ap.getScene().getAllScenes());
+				all.add(ap.getScene());
+
+			}
+
+		}
+
+		return all;
+	}
+
+	public void removeMe() {
+
 		Set<Attribute> atrs = new HashSet<Attribute>();
 		atrs.addAll(attributes);
 		Set<Rule> rls = new HashSet<Rule>();
@@ -542,902 +443,595 @@ public void removeMe(){
 		prts.addAll(parts);
 		Set<Hotspot> htsps = new HashSet<Hotspot>();
 		htsps.addAll(hotspots);
-		 
-	   try{
-	    for(Attribute aa:atrs){ attributes.remove(aa); this.update(); aa.delete();  }
-	    for(Rule ar:rls){ rules.remove(ar); this.update();  ar.removeMe(); ar.delete(); }
-	    for(Part ap:prts){ parts.remove(ap); this.update();  ap.removeMe(); ap.delete(); }
-	    for(Hotspot ah:htsps){ hotspots.remove(ah); this.update();  ah.removeMe(); ah.delete(); }
-	   } catch (RuntimeException e) {
+
+		try {
+			for (Attribute aa : atrs) {
+				attributes.remove(aa);
+				this.update();
+				aa.delete();
+			}
+			for (Rule ar : rls) {
+				rules.remove(ar);
+				this.update();
+				ar.removeMe();
+				ar.delete();
+			}
+			for (Part ap : prts) {
+				parts.remove(ap);
+				this.update();
+				ap.removeMe();
+				ap.delete();
+			}
+			for (Hotspot ah : htsps) {
+				hotspots.remove(ah);
+				this.update();
+				ah.removeMe();
+				ah.delete();
+			}
+		} catch (RuntimeException e) {
 
 			System.out.println("Can't delete Mission.");
 			e.printStackTrace();
 
 		}
-    
-		
+
 	}
 
+	public void removePart(Part x) {
 
+		if (parts.contains(x)) {
+			parts.remove(x);
+			this.update();
+			x.removeMe();
+			x.delete();
+		} else {
 
-public void removePart(Part x){
-	
-	
-	if(parts.contains(x)){
-	parts.remove(x);
-	this.update();
-	x.removeMe();
-	x.delete();
-	} else {
-		
-		
-		for(Part ap:parts){
-			
-			if(ap.isScene()){
-				
-				ap.getScene().removePart(x);
-				
-				
+			for (Part ap : parts) {
+
+				if (ap.isScene()) {
+
+					ap.getScene().removePart(x);
+
+				}
+
 			}
-			
-			
+
 		}
-		
-		
-		
-		
+
 	}
-	
-}
 
+	public List<Element> createXML(Document doc, Game g, ZipOutputStream zout) {
+		List<Element> e = new ArrayList<Element>();
 
+		for (Part ap : parts) {
 
+			if (!ap.isScene()) {
+				if (!ap.getMission().equals(g.getFirstMission())) {
+					e.addAll(ap.createXML(doc, g, zout));
+				}
 
-public List<Element> createXML(Document doc,Game g, ZipOutputStream zout) {
-	List<Element> e = new ArrayList<Element>();
-	
-	for(Part ap: parts){
-	
-		
-		
-
-		if(!ap.isScene() ){
-			if(!ap.getMission().equals(g.getFirstMission())){
-				e.addAll(ap.createXML(doc,g,zout));
-			}
-	
-	} else {
-		
-		e.addAll(ap.createXML(doc,g,zout));
-		
-	}
-		
-		
-		
-		
-		
-		
-	
-		
-	}
-	
-	return e;
-}
-
-
-
-
-
-
-public List<Element> createXMLForWeb(Document doc, Game g) {
-List<Element> e = new ArrayList<Element>();
-	
-	for(Part ap: parts){
-	
-		
-		
-
-		if(!ap.isScene() ){
-			if(!ap.getMission().equals(g.getFirstMission())){
-				e.addAll(ap.createXMLForWeb(doc,g));
-			}
-	
-	} else {
-		
-		e.addAll(ap.createXMLForWeb(doc,g));
-		
-	}
-		
-		
-		
-		
-		
-		
-	
-		
-	}
-	
-	return e;
-}
-
-
-
-
-
-public Mission getFirstMission() {
-	
-	if(!parts.isEmpty()){
-	Part first = parts.get(0);
-	
-	if(first.isScene()){
-		
-		return first.getScene().getFirstMission();
-		
-	} else {
-		
-		return first.getMission();
-		
-	}
-	
-	} else {
-		
-		return null;
-	}
-	
-	
-}
-
-
-
-
-public boolean containsMission(Mission m) {
-	
-
-	
-	
-	boolean contains = false;
-	
-	for(Part p:parts){
-		if(!contains){
-			if(p.isScene()){
-				
-				
-			contains = p.getScene().containsMission(m);
-			
-				
 			} else {
-				
-				if(p.getMission().equals(m)){ contains = true; }
-				
-				
+
+				e.addAll(ap.createXML(doc, g, zout));
+
+			}
+
+		}
+
+		return e;
+	}
+
+	public List<Element> createXMLForWeb(Document doc, Game g) {
+		List<Element> e = new ArrayList<Element>();
+
+		for (Part ap : parts) {
+
+			if (!ap.isScene()) {
+				if (!ap.getMission().equals(g.getFirstMission())) {
+					e.addAll(ap.createXMLForWeb(doc, g));
+				}
+
+			} else {
+
+				e.addAll(ap.createXMLForWeb(doc, g));
+
+			}
+
+		}
+
+		return e;
+	}
+
+	public Mission getFirstMission() {
+
+		if (!parts.isEmpty()) {
+			Part first = parts.get(0);
+
+			if (first.isScene()) {
+
+				return first.getScene().getFirstMission();
+
+			} else {
+
+				return first.getMission();
+
+			}
+
+		} else {
+
+			return null;
+		}
+
+	}
+
+	public boolean containsMission(Mission m) {
+
+		boolean contains = false;
+
+		for (Part p : parts) {
+			if (!contains) {
+				if (p.isScene()) {
+
+					contains = p.getScene().containsMission(m);
+
+				} else {
+
+					if (p.getMission().equals(m)) {
+						contains = true;
+					}
+
+				}
 			}
 		}
+
+		return contains;
+
 	}
-	
-	
-	
-	return contains;
-	
-	
-	
-	
-	
-	
-	
-	
-	
-}
 
+	public Mission getNextMission(Mission m) {
 
+		Mission n = m;
+		boolean current = false;
+		boolean done = false;
 
+		for (Part p : parts) {
 
-public Mission getNextMission(Mission m) {
-	
-	
-	Mission n = m;
-	boolean current = false;
-	boolean done = false;
-	
-	for(Part p:parts){
-		
-		if(p.isScene()){
-			
-			if(current == true){ n = p.getScene().getFirstMission(); } else {
-			
-				if(p.getScene().containsMission(m)){
-					
-					
-					
-					if(p.getScene().isLastMission(m)){
-						
-						current = true;
-					} else {
-					
-					n = p.getScene().getNextMission(m);
+			if (p.isScene()) {
+
+				if (current == true) {
+					n = p.getScene().getFirstMission();
+				} else {
+
+					if (p.getScene().containsMission(m)) {
+
+						if (p.getScene().isLastMission(m)) {
+
+							current = true;
+						} else {
+
+							n = p.getScene().getNextMission(m);
+							current = false;
+							done = true;
+						}
+
+					}
+
+				}
+
+			} else {
+
+				if (current == true) {
+
+					n = p.getMission();
 					current = false;
 					done = true;
+				} else {
+
+					if (p.getMission().equals(m)) {
+						current = true;
 					}
-					
-					
+
 				}
-				
-				
+
 			}
-			
-			
-			
-			
+
+		}
+
+		// TODO Auto-generated method stub
+		return n;
+	}
+
+	public boolean isLastMission(Mission m) {
+
+		Part lastPart = parts.get(parts.size() - 1);
+		if (lastPart.isScene()) {
+
+			return lastPart.getScene().isLastMission(m);
+
 		} else {
-			
-			if(current == true){
-				
-				n = p.getMission();
-				current = false;
-				done = true;
+
+			if (lastPart.getMission().equals(m)) {
+				return true;
 			} else {
-				
-				if(p.getMission().equals(m)){ current = true;  }
-				
+				return false;
 			}
-			
-			
-			
+
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	// TODO Auto-generated method stub
-	return n;
-}
 
-
-
-
-public boolean isLastMission(Mission m) {
-	
-	Part lastPart = parts.get(parts.size()-1);
-	if(lastPart.isScene()){
-		
-		return lastPart.getScene().isLastMission(m);
-		
-		
-	} else {
-		
-		if(lastPart.getMission().equals(m)){ return true; } else { return false; }
-		
-	}
-	
-	
-}
-
-
-
-
-
-
-public List<AttributeType> getAllAttributes(){ 
-	return type.getAttributeTypes();
-	
-	
-	
 	}
 
+	public List<AttributeType> getAllAttributes() {
+		return type.getAttributeTypes();
 
+	}
 
+	public List<Attribute> getAllSubAttributes() {
 
+		List<AttributeType> allsubsty = new ArrayList<AttributeType>();
+		List<Attribute> allsubs = new ArrayList<Attribute>();
 
-public List<Attribute> getAllSubAttributes(){ 
-	
-	List<AttributeType> allsubsty = new ArrayList<AttributeType>();
-	List<Attribute> allsubs = new ArrayList<Attribute>();
+		// Sub Parts
 
-	
-	// Sub Parts
-	
-	
-	for(Part ap:parts){
-		
-		if(!ap.isScene()){
-			
-			
-			Mission am = ap.getMission();
-			for(AttributeType att:am.getAllAttributes()){
-				
-				if(am.getAttribute(att) != null){
-					
-					allsubs.add(am.getAttribute(att));
-					
-				}
-			
-				
-				
-				
+		for (Part ap : parts) {
 
-				// Contents
-				
-				
-				for(Content ac:am.getContents()){
-					
-					
-					for(AttributeType att1:ac.getAllAttributes()){
-						
-						if(ac.getAttribute(att1) != null){
-							
-							allsubs.add(ac.getAttribute(att1));
-							
-							
-						}
-						
-						
+			if (!ap.isScene()) {
+
+				Mission am = ap.getMission();
+				for (AttributeType att : am.getAllAttributes()) {
+
+					if (am.getAttribute(att) != null) {
+
+						allsubs.add(am.getAttribute(att));
+
 					}
-					
-					
-					for(Content asc:ac.getSubContents()){
-						
 
-						for(AttributeType att2:asc.getAllAttributes()){
-							
-							if(asc.getAttribute(att2) != null){
-								
-								allsubs.add(asc.getAttribute(att2));
-								
-								
+					// Contents
+
+					for (Content ac : am.getContents()) {
+
+						for (AttributeType att1 : ac.getAllAttributes()) {
+
+							if (ac.getAttribute(att1) != null) {
+
+								allsubs.add(ac.getAttribute(att1));
+
 							}
-							
-							
+
 						}
-						
-						
-					}
-					
-					
-				}
-				
-				
-				
-				
-				// Rules
-				
-				for(Rule ar:am.getRules()){
-					
-					
-					
-					
-					for(Rule asr:ar.getSubRules()){
-						
-						
-						
-						
-						for(Action asrac:asr.getActions()){
-							
 
-							
-							allsubs.addAll(asrac.getAllSubAttributes());
+						for (Content asc : ac.getSubContents()) {
 
-							
-							
-							
-						
-							
-							
-							
+							for (AttributeType att2 : asc.getAllAttributes()) {
+
+								if (asc.getAttribute(att2) != null) {
+
+									allsubs.add(asc.getAttribute(att2));
+
+								}
+
+							}
+
 						}
-						
-						
-						
-						
-						
+
 					}
-					
-					
-					
-					
-					
+
+					// Rules
+
+					for (Rule ar : am.getRules()) {
+
+						for (Rule asr : ar.getSubRules()) {
+
+							for (Action asrac : asr.getActions()) {
+
+								allsubs.addAll(asrac.getAllSubAttributes());
+
+							}
+
+						}
+
+					}
+
 				}
-				
-				
 
-				
-				
-				
-				
-				
-				
-				
 			}
-			
-			
-			
-			
-		
-			
-			
-			
+
 		}
-		
-	}
-	
-	// Sub Hotspots
-	
-	for(Hotspot ah: hotspots){
-    	
-    	
-	    ///// TRIGGER RULES
-			
-			for(Rule atr: ah.getRules()){
-				
-				
-			////// RULES
-			
-			for(Rule ar: atr.getSubRules()){
-				
-				
-			/////// ACTIONS
-				
-			for(Action aa: ar.getActions()){
-				
-				
-				allsubs.addAll(aa.getAttributes());
-				
-				
-				
-			}
-				
-				
-				
-			}
-				
-				
-				
-			}
-			
-	}
-	
-	
-	
-	
-	
-	return allsubs;
-	
-	
-	
-	}
 
+		// Sub Hotspots
 
+		for (Hotspot ah : hotspots) {
 
-public Long getAttributeId(AttributeType at){
-	
-Long x = 0L;
-	
-	for(Attribute aa: attributes){
-		
-		if(aa.getXMLType().equals(at.getXMLType())){
-			
-			x = aa.getId();
-			
+			// /// TRIGGER RULES
+
+			for (Rule atr : ah.getRules()) {
+
+				// //// RULES
+
+				for (Rule ar : atr.getSubRules()) {
+
+					// ///// ACTIONS
+
+					for (Action aa : ar.getActions()) {
+
+						allsubs.addAll(aa.getAttributes());
+
+					}
+
+				}
+
+			}
+
 		}
-		
+
+		return allsubs;
+
 	}
-	
-	return x;
-	
-}
 
+	public Long getAttributeId(AttributeType at) {
 
-public String getAttributeValue(AttributeType at){
-	
-	String x = at.getDefaultValue();
-	
-	for(Attribute aa: attributes){
-		
-		if(aa.getXMLType().equals(at.getXMLType())){
-			
-			
-			if(aa.getType().getFileType().equals("QuoteString")){
-				
-				if(aa.getValue()!= null){
-				x = aa.getValue().replace("\"", "");
+		Long x = 0L;
+
+		for (Attribute aa : attributes) {
+
+			if (aa.getXMLType().equals(at.getXMLType())) {
+
+				x = aa.getId();
+
+			}
+
+		}
+
+		return x;
+
+	}
+
+	public String getAttributeValue(AttributeType at) {
+
+		String x = at.getDefaultValue();
+
+		for (Attribute aa : attributes) {
+
+			if (aa.getXMLType().equals(at.getXMLType())) {
+
+				if (aa.getType().getFileType().equals("QuoteString")) {
+
+					if (aa.getValue() != null) {
+						x = aa.getValue().replace("\"", "");
+					} else {
+						x = "";
+
+					}
 				} else {
-					x = "";
-					
+
+					x = aa.getValue();
+
 				}
-			} else {
-			
-			x = aa.getValue();
-			
+
 			}
-			
+
 		}
-		
+
+		return x;
+
 	}
-	
-	
-	return x;
-	
-	
-}
 
+	public Attribute getAttribute(AttributeType at) {
 
-public Attribute getAttribute(AttributeType at){
-	
-	Attribute x = null;
-	
-	for(Attribute aa: attributes){
-		
-		if(aa.getXMLType().equals(at.getXMLType())){
-			
-			x = aa;
-			
+		Attribute x = null;
+
+		for (Attribute aa : attributes) {
+
+			if (aa.getXMLType().equals(at.getXMLType())) {
+
+				x = aa;
+
+			}
+
 		}
-		
+
+		return x;
+
 	}
-	
-	return x;
-	
-	
-}
 
+	public void setName(String n) {
+		name = n;
+	}
 
+	public Scene migrateTo(SceneType sceneType,
+			Map<Mission, Mission> missionbinder,
+			Map<Hotspot, Hotspot> hotspotbinder) {
 
-	
+		Scene s = new Scene(name, sceneType);
+		s.save();
 
+		// PARTS
 
+		for (Part p : parts) {
 
+			boolean done = false;
 
+			if (p.isScene()) {
 
-public void setName(String n) {
-	name = n;
-}
+				SceneType old = p.getScene().getType();
+				System.out.println("SceneType search: " + old.getName());
 
+				for (PartType tnpt : type.getPossiblePartTypes()) {
 
+					if (tnpt.isSceneType()) {
 
-
-public Scene migrateTo(SceneType sceneType, Map<Mission, Mission> missionbinder, Map<Hotspot, Hotspot> hotspotbinder) {
-	
-	Scene s = new Scene(name,sceneType);
-	s.save();
-	
-	
-	
-	
-	
-	
-	
-	
-	// PARTS
-	
-			for(Part p:parts){
-				
-				
-				boolean done = false;
-				
-				if(p.isScene()){ 
-				
-					
-					
-					SceneType old = p.getScene().getType();
-					System.out.println("SceneType search: "+old.getName());
-
-					
-					for(PartType tnpt:type.getPossiblePartTypes()){
-						
-						
-						if(tnpt.isSceneType()){
-
-						
 						SceneType npt = tnpt.getSceneType();
-							
-							
-							if(npt.getName().equals(old.getName())){
-								
-								done = true;
-								Scene nss = p.getScene().migrateTo(npt,missionbinder,hotspotbinder);
-								nss.save();
-								Part ns = new Part(nss);
-								ns.save();
-								
-								s.addPart(ns);
-								s.update();
-								
-							
-							
-							
-							
-						} 
-						
-						}
-					}
-					
-					
-					if(done == false){
-						
-						System.out.println("Didn't find SceneType "+old.getName());
-					}
-					
-					
-				
-				
-				
-				} else {
-					
-					
-					
-					MissionType old = p.getMission().getType();
-					
-					
-					for(PartType npt:type.getPossiblePartTypes()){
-						
-						if(!npt.isSceneType()){
-							
-							
-							if(npt.getMissionType().getXMLType().equals(old.getXMLType())){
-								
-								done = true;
-								
-								s.addPart(p.migrateTo(npt.getMissionType(),missionbinder));
-								s.update();
-								
-							}
-							
-							
-							
-						}
-						
-					}
-					
-					
-					if(done == false){
-						
-						System.out.println("Didn't find MissionType "+old.getName());
-					}
-					
-					
-					
-					
-					
-					
-					
-					
-				}
-				
-				
-				
-				
-				
-				s.update();
-				
-				
-				
-				
-			}
-			
-	
 
-	
-			// ATTRIBUTES
-			
-			for(Attribute at:attributes){
-				
-				
-				boolean done = false;
-				AttributeType attt = at.getType();
-				
-				
-				for(AttributeType atrt:type.getAttributeTypes()){
-					
-					
-					if(atrt.getXMLType().equals(attt.getXMLType())){
-						
-						
-						
-						s.setAttribute(at.migrateTo(atrt));
-						s.update();
-						done = true;
-						
-					}
-					
-					
-					
-					
-					
-				}
-				
+						if (npt.getName().equals(old.getName())) {
 
-				if(done == false){
-					
-					System.out.println("Didn't find AttributeType "+at.getName());
-				}
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				s.update();
-				
-			}
-	
-	
-	
-			// HOTSPOTS
-			
-			
-			for(Hotspot hs:hotspots){
-				
-				
-				boolean done = false;
-				
-				HotspotType old = hs.getType();
-				
-				
-				
-				for(HotspotType hst:type.getPossibleHotspotTypes()){
-					
-					
-					
-						if(hst.getName().equals(old.getName())){
-							
 							done = true;
-							
-							s.addHotspot(hs.migrateTo(hst,hotspotbinder));
+							Scene nss = p.getScene().migrateTo(npt,
+									missionbinder, hotspotbinder);
+							nss.save();
+							Part ns = new Part(nss);
+							ns.save();
+
+							s.addPart(ns);
 							s.update();
-							
-							
-							
-							
+
 						}
-				
-					
-					
-					
+
+					}
 				}
-				
 
-				if(done == false){
-					
-					System.out.println("Didn't find HotspotType "+old.getName());
+				if (done == false) {
+
+					System.out
+							.println("Didn't find SceneType " + old.getName());
 				}
-				
-				
-				
-				
-				
-				s.update();
-				
-				
+
+			} else {
+
+				MissionType old = p.getMission().getType();
+
+				for (PartType npt : type.getPossiblePartTypes()) {
+
+					if (!npt.isSceneType()) {
+
+						if (npt.getMissionType().getXMLType()
+								.equals(old.getXMLType())) {
+
+							done = true;
+
+							s.addPart(p.migrateTo(npt.getMissionType(),
+									missionbinder));
+							s.update();
+
+						}
+
+					}
+
+				}
+
+				if (done == false) {
+
+					System.out.println("Didn't find MissionType "
+							+ old.getName());
+				}
+
 			}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	return s;
-}
 
+			s.update();
 
+		}
 
-public Set<Content> getAllContents(){
-	
-	
-	Set<Content> allc = new HashSet<Content>();
-	
-	for(Mission am: getAllMissions()){
-		
-		
-		
-		for(Content ac: am.getContents()){
-		
-		allc.add(ac);
-		
-		if(ac.hasSubContent()){
-		
-			for(Content asc: ac.getSubContents()){
-				
-				allc.add(asc);
-				
+		// ATTRIBUTES
+
+		for (Attribute at : attributes) {
+
+			boolean done = false;
+			AttributeType attt = at.getType();
+
+			for (AttributeType atrt : type.getAttributeTypes()) {
+
+				if (atrt.getXMLType().equals(attt.getXMLType())) {
+
+					s.setAttribute(at.migrateTo(atrt));
+					s.update();
+					done = true;
+
+				}
+
 			}
-		
-			
+
+			if (done == false) {
+
+				System.out.println("Didn't find AttributeType " + at.getName());
+			}
+
+			s.update();
+
 		}
-		
+
+		// HOTSPOTS
+
+		for (Hotspot hs : hotspots) {
+
+			boolean done = false;
+
+			HotspotType old = hs.getType();
+
+			for (HotspotType hst : type.getPossibleHotspotTypes()) {
+
+				if (hst.getName().equals(old.getName())) {
+
+					done = true;
+
+					s.addHotspot(hs.migrateTo(hst, hotspotbinder));
+					s.update();
+
+				}
+
+			}
+
+			if (done == false) {
+
+				System.out.println("Didn't find HotspotType " + old.getName());
+			}
+
+			s.update();
+
 		}
-		
+
+		return s;
 	}
-	
-	
-	
-	
-	return allc;
-	
-	
-	
-	
-	
-}
 
+	public Set<Content> getAllContents() {
 
+		Set<Content> allc = new HashSet<Content>();
 
+		for (Mission am : getAllMissions()) {
 
+			for (Content ac : am.getContents()) {
 
-public List<Content> getAllSubContents() {
+				allc.add(ac);
 
-	
-	List<Content> allcs = new ArrayList<Content>();
-	
-	
+				if (ac.hasSubContent()) {
 
-	for(Part ap:parts){
-		
-		if(!ap.isScene()){
-			
-			
-			Mission am = ap.getMission();
-				
-				
-				
+					for (Content asc : ac.getSubContents()) {
+
+						allc.add(asc);
+
+					}
+
+				}
+
+			}
+
+		}
+
+		return allc;
+
+	}
+
+	public List<Content> getAllSubContents() {
+
+		List<Content> allcs = new ArrayList<Content>();
+
+		for (Part ap : parts) {
+
+			if (!ap.isScene()) {
+
+				Mission am = ap.getMission();
 
 				// Contents
-				
-			allcs.addAll(am.getContents());	
-			
-				for(Content ac:am.getContents()){
-					
-					
+
+				allcs.addAll(am.getContents());
+
+				for (Content ac : am.getContents()) {
+
 					allcs.addAll(ac.getSubContents());
-					
+
 				}
-	
-	
+
+			}
 		}
+
+		return allcs;
 	}
-	
-	
-	return allcs;
-}
-
-
-
-
-	
-	
-	
-	
-	
 
 }

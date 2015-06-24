@@ -38,8 +38,10 @@ public class Global extends GlobalSettings {
 
     public static final String GEOQUEST_VERSION = "0.1.20";
 
-    public static String SERVER_URL = "http://qeevee.org:9091/";
-    public static String SERVER_URL_2 = "http://qeevee.org:9091";
+    // public static String SERVER_URL = "http://qeevee.org:9091/";
+    // public static String SERVER_URL_2 = "http://qeevee.org:9091";
+    public static String SERVER_URL = "http://localhost:9000/";
+    public static String SERVER_URL_2 = "http://localhost:9000";
 
      public static ProviderPortal defaultportal;
     public static MyUserPortalRights securityGuard;
