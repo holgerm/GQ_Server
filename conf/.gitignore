@@ -1,2 +1,3 @@
 /application_local.conf
 *.conf
+/application.conf

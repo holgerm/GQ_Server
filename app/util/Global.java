@@ -36,10 +36,17 @@ public class Global extends GlobalSettings {
 
 	public static final String GEOQUEST_VERSION = "0.1.20";
 
-	public static String SERVER_URL = "http://qeevee.org:9091/";
-	public static String SERVER_URL_2 = "http://qeevee.org:9091";
-	//	public static String SERVER_URL = "http://localhost:9000/";
-//	public static String SERVER_URL_2 = "http://localhost:9000";
+	private static String SERVER_URL_2_FALLBACK = "http://qeevee.org:9091";
+	public static String SERVER_URL_2;
+	public static String SERVER_URL;
+
+	static {
+		SERVER_URL_2 = System.getenv("GQ_EDITOR_BASE_URL");
+		if (SERVER_URL_2 == null)
+			SERVER_URL_2 = SERVER_URL_2_FALLBACK;
+
+		SERVER_URL = SERVER_URL_2 + "/";
+	}
 
 	public static ProviderPortal defaultportal;
 	public static MyUserPortalRights securityGuard;
