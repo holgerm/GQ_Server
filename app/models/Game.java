@@ -380,20 +380,36 @@ public class Game extends Model {
 							.entrySet()) {
 
 						if (a.getValue()
-								.contains("$_" + entry.getKey().getId())) {
+								.contains("$_" + entry.getKey().getId())
+								|| a.getValue().contains(
+										"$_mission_" + entry.getKey().getId())) {
 
 							String newvalue = a.getValue();
 
 							newvalue = newvalue.replace("$_"
-									+ entry.getKey().getId(), "$_"
+									+ entry.getKey().getId(), "$_mission_"
 									+ entry.getValue().getId());
 							newvalue = newvalue.replace("$_mission_"
 									+ entry.getKey().getId(), "$_mission_"
 									+ entry.getValue().getId());
-							System.out.println("excecuting in "
-									+ a.getType().getName() + " of type "
-									+ a.getTypeDescription() + ":$_"
-									+ entry.getKey().getId() + " -> $_"
+
+							a.setValue(newvalue);
+							a.update();
+						}
+					}
+
+					for (Map.Entry<Hotspot, Hotspot> entry : hotspotbinder
+							.entrySet()) {
+
+						if (a.getValue()
+								.contains("$_" + entry.getKey().getId())
+								|| a.getValue().contains(
+										"$_hotspot_" + entry.getKey().getId())) {
+
+							String newvalue = a.getValue();
+
+							newvalue = newvalue.replace("$_hotspot_"
+									+ entry.getKey().getId(), "$_hotspot_"
 									+ entry.getValue().getId());
 
 							a.setValue(newvalue);
@@ -1633,8 +1649,7 @@ public class Game extends Model {
 				}
 				i++;
 
-			} while ((m == null)
-					|| i > parts.size()
+			} while ((m == null) || i > parts.size()
 					|| m.getType().getXMLType().equals("MetaData"));
 		}
 		return m;

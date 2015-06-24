@@ -99,14 +99,7 @@
               		
               		
               		
-@if(g.getType.getId < 981){  
-              		<a onClick="deleteSubRuleFromRule(@m.getRule(rt).getId,@r.getId())" style="cursor:pointer;">Löschen</a>
-              		<a onClick="javascript:document.getElementById('oldconditions@r.getId').style.display='block';" style="cursor:pointer;">Konditionen</a>
-              		
-              		}
-              		
-              		
-              		
+
               		
               		@editor_arule(g,r,rt)
               		
@@ -159,27 +152,6 @@
               		}
               	
               	
-              	
-              @if(g.getType.getId < 981 && m.hasRule(rt)){
-              	
-              	<div id="triggerarrowx_@rt.getId" style="overflow:wrap; display:inline-block; width:30px;"><img style="position:relative; top:-70px;" src="@Global.SERVER_URL_2/assets/icons/next.png"></div>
-              		
-              	<div style="display:inline-block; width:130px;">
-              		
-              		<div style=" position:relative; top:-70px;">
-             
-              		
-              		<div id="rulet_add_action_button_@rt.getId()_m@m.getId"  class="btn btn-success" onClick="newSubRuleInRule(@m.getRule(rt).getId);">Neue Regel</span>
-              
-              </div>
-              		</div>
-              		
-              		
-              		
-              		</div>
-              	
-              	
-              	}
               	
               	
               		
