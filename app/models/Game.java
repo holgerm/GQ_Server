@@ -2527,35 +2527,52 @@ public class Game extends Model {
 
 			} else {
 
-				MissionType old = p.getMission().getType();
+				MissionType oldMissionType = p.getMission().getType();
+
+				PartType targetPartType = null;
+
+				String xmlTypeOld = oldMissionType.getXMLType();
+				if (xmlTypeOld.equals("NPCTalk")
+						&& oldMissionType.getName().equals("Text mit Bild")) {
+					xmlTypeOld = "ImageWithText";
+				}
+				if (xmlTypeOld.equals("MultipleChoiceQuestion")
+						&& oldMissionType.getName().equals("Auswahlmenü")) {
+					xmlTypeOld = "Menu";
+				}
 
 				for (PartType npt : gt.getPossiblePartTypes()) {
 
 					if (!npt.isSceneType()) {
 
+						// TODO special solution for migration e.g. from
+						// textmitbild to whatever or auswahlmenu
+
 						if (npt.getMissionType().getXMLType()
-								.equals(old.getXMLType())) {
+								.equals(xmlTypeOld)) {
 
-							done = true;
+							targetPartType = npt;
 
-							Part np = p.migrateTo(npt.getMissionType(),
-									missionbinder);
-
-							g.addPart(np);
-							g.update();
-
-							p.getMission().setName(String.valueOf(np.getId()));
-							p.getMission().update();
+							break;
 						}
 
 					}
 
 				}
 
-				if (done == false) {
+				if (targetPartType != null) {
+					Part np = p.migrateTo(targetPartType.getMissionType(),
+							missionbinder);
+
+					g.addPart(np);
+					g.update();
+					
+				}
+
+				else {
 
 					System.out.println("Didn't find MissionType "
-							+ old.getName());
+							+ oldMissionType.getName());
 				}
 
 			}

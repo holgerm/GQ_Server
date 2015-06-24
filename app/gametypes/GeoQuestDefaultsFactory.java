@@ -1153,7 +1153,7 @@ public class GeoQuestDefaultsFactory {
 
 		// MISSION TYPE: Multiple Choice Question
 
-		menu = new MissionType("Auswahlmenü", "MultipleChoiceQuestion");
+		menu = new MissionType("Auswahlmenü", "Menu");
 		menu.save();
 
 		mt.add(menu);
@@ -1258,7 +1258,7 @@ public class GeoQuestDefaultsFactory {
 
 		// MISSION TYPE: NPCTalk
 
-		textimage = new MissionType("Text mit Bild", "NPCTalk");
+		textimage = new MissionType("Text mit Bild", "ImageWithText");
 		textimage.save();
 
 		mt.add(textimage);
