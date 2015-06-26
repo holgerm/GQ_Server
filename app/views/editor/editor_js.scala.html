@@ -4831,7 +4831,24 @@ arrowright.style.position = "absolute";
  }
  
  
+ 
  }
+ 
+ 
+function movePartInSideMenu(part, direction){
+
+  		var url ="@Global.SERVER_URL_2/editor/@g.getId/Part/" + part + "/move/" + direction;
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById('missionlist').innerHTML = data;
+           }
+
+});
+  		
+
+}
  
     
   </script>

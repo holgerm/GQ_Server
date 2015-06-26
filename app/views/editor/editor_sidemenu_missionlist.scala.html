@@ -1,0 +1,22 @@
+@(g:Game)
+
+@import models.GameParts._
+
+@import util.Global;
+    
+    
+         <div id="allsidemenuparts" name="allsidemenuparts">
+              	  @for(a_part <- g.getParts()){
+              	
+              					@editor_apartinsidemenu(g,a_part)
+              			} 
+              	
+           </div> 
+                
+          
+             
+             
+  
+            		         
+             
+    

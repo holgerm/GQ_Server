@@ -134,6 +134,23 @@ public class Editor extends Controller {
 		}
 
 	}
+	
+	@Restrict(@Group(Application.USER_ROLE))
+	public static Result getMissionListInSideMenuForEditor(Long gid) {
+
+		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+
+			return badRequest(views.html.norights
+					.render("Das Spiel existiert nicht"));
+
+		} else {
+
+			return ok(views.html.editor.editor_sidemenu_missionlist.render(
+						Game.find.byId(gid)));
+
+		}
+	}
+
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result getMenuItemInSideMenuForEditor(Long gid, Long pid) {
@@ -3035,8 +3052,8 @@ public class Editor extends Controller {
 					g.part_down(p);
 				}
 
-				return ok(views.html.editor.editormain.render(Game.find
-						.byId(gid)));
+				return ok(views.html.editor.editor_sidemenu_missionlist.render(
+						Game.find.byId(gid)));
 
 			}
 		}
