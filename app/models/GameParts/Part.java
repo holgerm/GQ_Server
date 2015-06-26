@@ -167,10 +167,12 @@ public class Part extends Model {
 
 			try{
 			Mission m = mission;
-			mission = null;
 			this.update();
 			mission.removeMe();
 			mission.delete();
+			mission = null;
+
+			this.update();
 			  } catch (RuntimeException e) {
 
 					System.out.println("Can't delete Part->Mission.");
