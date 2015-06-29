@@ -1,0 +1,31 @@
+package models;
+
+import models.GameParts.*;
+import java.util.Date;
+
+
+public class GameInfo {
+
+	private long id;
+	private long typeID;
+	private String name;
+
+	public Date lastUpdate;
+
+	private List<Hotspot> hotspots = new ArrayList<Hotspot>();
+	private List<Metadata> metadata = new ArrayList<Metadata>();
+
+	public GameInfo(Game game) {
+
+		id = game.id;
+		typeID = game.getType().id;
+		
+
+	}
+
+	public class Metadata {
+		private String key;
+		private String value;
+	}
+
+}
