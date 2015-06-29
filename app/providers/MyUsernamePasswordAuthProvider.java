@@ -1,15 +1,17 @@
 package providers;
 
-import com.feth.play.module.mail.Mailer.Mail.Body;
-import com.feth.play.module.pa.PlayAuthenticate;
-import com.feth.play.module.pa.providers.password.UsernamePasswordAuthProvider;
-import com.feth.play.module.pa.providers.password.UsernamePasswordAuthUser;
-import controllers.routes;
+import static play.data.Form.form;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import models.LinkedAccount;
 import models.TokenAction;
 import models.TokenAction.Type;
 import models.User;
-import controllers.Portal;
 import play.Application;
 import play.Logger;
 import play.data.Form;
@@ -20,15 +22,14 @@ import play.i18n.Lang;
 import play.i18n.Messages;
 import play.mvc.Call;
 import play.mvc.Http.Context;
-import util.Global;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import com.feth.play.module.mail.Mailer.Mail.Body;
+import com.feth.play.module.pa.PlayAuthenticate;
+import com.feth.play.module.pa.providers.password.UsernamePasswordAuthProvider;
+import com.feth.play.module.pa.providers.password.UsernamePasswordAuthUser;
 
-import static play.data.Form.form;
+import controllers.Portal;
+import controllers.routes;
 
 public class MyUsernamePasswordAuthProvider
 		extends
@@ -41,7 +42,6 @@ public class MyUsernamePasswordAuthProvider
 	private static final String SETTING_KEY_LINK_LOGIN_AFTER_PASSWORD_RESET = "loginAfterPasswordReset";
 
 	private static final String EMAIL_TEMPLATE_FALLBACK_LANGUAGE = "en";
-
 
 	@Override
 	protected List<String> neededSettingKeys() {
@@ -126,7 +126,8 @@ public class MyUsernamePasswordAuthProvider
 	}
 
 	@Override
-	protected com.feth.play.module.pa.providers.password.UsernamePasswordAuthProvider.SignupResult signupUser(final MyUsernamePasswordAuthUser user) {
+	protected com.feth.play.module.pa.providers.password.UsernamePasswordAuthProvider.SignupResult signupUser(
+			final MyUsernamePasswordAuthUser user) {
 		final User u = User.findByUsernamePasswordIdentity(user);
 		if (u != null) {
 			if (u.emailValidated) {
@@ -142,29 +143,12 @@ public class MyUsernamePasswordAuthProvider
 		@SuppressWarnings("unused")
 		final User newUser = User.create(user);
 
+		// Assign user to current Portal
 
-		
-        //  Assign user to current Portal
+		controllers.Portal.getLocalPortal().addNewUser(newUser);
+		controllers.Portal.getLocalPortal().save();
 
-             controllers.Portal.getLocalPortal().addNewUser(newUser);
-             controllers.Portal.getLocalPortal().save();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // Usually the email should be verified before allowing login, however
+		// Usually the email should be verified before allowing login, however
 		// if you return
 		// return SignupResult.USER_CREATED;
 		// then the user gets logged in directly
@@ -223,10 +207,10 @@ public class MyUsernamePasswordAuthProvider
 		return new MyLoginUsernamePasswordAuthUser(login.getPassword(),
 				login.getEmail());
 	}
-	
 
 	@Override
-	protected MyLoginUsernamePasswordAuthUser transformAuthUser(final MyUsernamePasswordAuthUser authUser, final Context context) {
+	protected MyLoginUsernamePasswordAuthUser transformAuthUser(
+			final MyUsernamePasswordAuthUser authUser, final Context context) {
 		return new MyLoginUsernamePasswordAuthUser(authUser.getEmail());
 	}
 
@@ -250,7 +234,8 @@ public class MyUsernamePasswordAuthProvider
 
 		final boolean isSecure = getConfiguration().getBoolean(
 				SETTING_KEY_VERIFICATION_LINK_SECURE);
-		final String url = routes.Signup.verify(Portal.getLocalPortal().getId(),token).absoluteURL(
+		final String url = routes.Signup.verify(
+				Portal.getLocalPortal().getId(), token).absoluteURL(
 				ctx.request(), isSecure);
 
 		final Lang lang = Lang.preferred(ctx.request().acceptLanguages());
@@ -299,7 +284,8 @@ public class MyUsernamePasswordAuthProvider
 
 		final boolean isSecure = getConfiguration().getBoolean(
 				SETTING_KEY_PASSWORD_RESET_LINK_SECURE);
-		final String url = routes.Signup.resetPassword(Portal.getLocalPortal().getId(),token).absoluteURL(
+		final String url = routes.Signup.resetPassword(
+				Portal.getLocalPortal().getId(), token).absoluteURL(
 				ctx.request(), isSecure);
 
 		final Lang lang = Lang.preferred(ctx.request().acceptLanguages());
@@ -380,7 +366,8 @@ public class MyUsernamePasswordAuthProvider
 
 		final boolean isSecure = getConfiguration().getBoolean(
 				SETTING_KEY_VERIFICATION_LINK_SECURE);
-		final String url = routes.Signup.verify(Portal.getLocalPortal().getId(),token).absoluteURL(
+		final String url = routes.Signup.verify(
+				Portal.getLocalPortal().getId(), token).absoluteURL(
 				ctx.request(), isSecure);
 
 		final Lang lang = Lang.preferred(ctx.request().acceptLanguages());

@@ -1,9 +1,12 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
+import models.GameParts.Attribute;
 import models.GameParts.AttributeType;
 import models.GameParts.Content;
 import models.GameParts.Hotspot;
