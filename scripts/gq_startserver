@@ -5,11 +5,30 @@
 echo "Starting GeoQuest Server ..."
 
 #TODO: Check that Java 1.7 is available and set it active.
-echo "switching to Java Version 1.7 ..."
+echo "  switching to Java Version 1.7 ..."
 JAVA_HOME_OLD=$JAVA_HOME
 JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_25.jdk/Contents/Home/
 
-pushd $GQ_SERVER_PLAY_BASE_DIR
+# check wether $GQ_SERVER_PLAY_BASE_DIR is set:
+if [ -z ${GQ_SERVER_PLAY_BASE_DIR+valueIfSet} ]; then
+	echo "ERROR: This script assume that you have set the environment variable GQ_SERVER_PLAY_BASE_DIR pointing to the application directory."
+	echo "  exiting."
+	exit -1
+else
+	echo "  your geoquest play project home is $GQ_SERVER_PLAY_BASE_DIR"
+fi
+
+pushd $GQ_SERVER_PLAY_BASE_DIR > /dev/null
+
+# gathering application.conf:
+APP_CONF=${GQ_LOCAL_APP_CONF:-${GQ_SERVER_PLAY_BASE_DIR}/conf/application.conf}
+if [ ! -f $APP_CONF ]; then
+	echo "ERROR: application config file $APP_CONF not found. Exiting ..."
+	exit -1
+else
+	echo "  application config file is: $APP_CONF "
+fi
+
 
 # check for RUNNING_PID file:
 if [ -f "RUNNING_PID" ]; then
@@ -17,19 +36,22 @@ if [ -f "RUNNING_PID" ]; then
 	kill `cat RUNNING_PID`
 fi 
 
+# DO it:
 if [ $# -gt 0 ] && [ $1 = "run" ]; then
-	echo "running play ..."
-	play run
+	echo "  running play ..."
+	play -Dconfig.file=$APP_CONF run
 elif [ $# -gt 0 ] && [ $1 = "debug" ]; then
-	echo "running play in debug mode ..."
-	play debug run
+	echo "  running play in debug mode ..."
+	play -Dconfig.file=$APP_CONF debug run
 else
-	echo "starting play ..."
-	play start
+	echo "  starting play ..."
+	play -Dconfig.file=$APP_CONF start
 fi
 
+
+# Afterwards:
 echo "back from play."
 
 # finally setting back to the previously used Java version and the directory we had been before:
 #export JAVA_HOME=$JAVA_HOME_OLD
-popd
+popd > /dev/null
