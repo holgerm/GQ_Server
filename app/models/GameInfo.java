@@ -15,6 +15,9 @@ public class GameInfo {
 	public long id;
 	public long typeID;
 	public String name;
+	public String iconPath;
+	public String featuredImagePath;
+	public String version;
 
 	public Date lastUpdate;
 
@@ -32,6 +35,38 @@ public class GameInfo {
 		for (Scene curScene : game.getAllScenes()) {
 			hotspots.addAll(curScene.getHotspots());
 		}
+		List<String> staticMetadata = new ArrayList<String>(Arrays.asList(
+				"author", "age"));
+
+		Set<Attribute> gameAttributes = game.getAttributes();
+		System.err.println("Game " + game.getName() + " has " + gameAttributes.size() + " attributes.");
+
+
+		for (Attribute curAtt : gameAttributes) {
+
+			// Metadata can be searched in client to filter and sort list of
+			// quests.
+
+			if (staticMetadata.contains(curAtt.getXMLType())) {
+				String key = curAtt.getType().getName();
+				String value = curAtt.getValue();
+				metadata.add(new Metadata(key, value));
+			}
+
+			// This is data that is not used for search
+
+			if (curAtt.getXMLType().equals("icon")) {
+				iconPath = curAtt.getValue();
+			}
+			if (curAtt.getXMLType().equals("featuredimage")) {
+				featuredImagePath = curAtt.getValue();
+			}
+			if (curAtt.getXMLType().equals("version")) {
+				version = curAtt.getValue();
+			}
+		}
+
+		// Metadata can be searched in client to filter and sort list of quests.
 
 		for (Mission curMission : game.getAllMissions()) {
 			if (curMission.getType().getXMLType().equals("MetaData")) {
