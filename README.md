@@ -15,15 +15,28 @@ Please do not check your personal variable settings file in this git repo since 
 
 # Run and Debug Server Locally #
 
-We have a simple bash script that starts the server. You find it in $GQ_SERVER_PROJECT_HOME/scripts.
+We have a simple bash script that starts the server. You find it in $GQ_SERVER_PROJECT_HOME/scripts. Put its location in your PATH variable to use it independently of your working directory.
 
 	gq_startserver <option>
 
 The options are:
 
-- **run** to start the server in run mode
+- **run** to start the server in run mode (dynamically compiling new files without restart)
+- **debug** to use eclipse debugger with breakpoints etc. (cf. below for details)
 - nothing to start the server in start mode
 
 ## Local Configuration ##
 
 Set the environment variable $GQ_LOCAL_APP_CONF to point to your local application.con file - which can have any name. Do not put this file under version control. This git only contains server side configuration files.
+
+## Debugging ##
+
+You can debug the server code interactively in eclipse. Tod o so start the server in debug mode, i.e. 
+
+	gq_startserver debug
+
+Then in Eclipse Scala IDE define a Debug Configuration (in context menu on the project) as shown:
+
+![Screenshot Eclipse Debug Configuration](doc/debugConfiguration.jpg)
+
+Now the server will stop when reaching a breakpoint and eclipse will be brought to the front and switch to debug perspective.
