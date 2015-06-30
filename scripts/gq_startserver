@@ -42,7 +42,7 @@ if [ $# -gt 0 ] && [ $1 = "run" ]; then
 	play -Dconfig.file=$APP_CONF run
 elif [ $# -gt 0 ] && [ $1 = "debug" ]; then
 	echo "  running play in debug mode ..."
-	play -Dconfig.file=$APP_CONF debug run
+	play debug -Dconfig.file=$APP_CONF run
 else
 	echo "  starting play ..."
 	play -Dconfig.file=$APP_CONF start
