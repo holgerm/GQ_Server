@@ -134,7 +134,7 @@ public class Editor extends Controller {
 		}
 
 	}
-	
+
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result getMissionListInSideMenuForEditor(Long gid) {
 
@@ -145,12 +145,11 @@ public class Editor extends Controller {
 
 		} else {
 
-			return ok(views.html.editor.editor_sidemenu_missionlist.render(
-						Game.find.byId(gid)));
+			return ok(views.html.editor.editor_sidemenu_missionlist
+					.render(Game.find.byId(gid)));
 
 		}
 	}
-
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result getMenuItemInSideMenuForEditor(Long gid, Long pid) {
@@ -2838,7 +2837,7 @@ public class Editor extends Controller {
 							a.getLink().setObjectValue(value);
 
 						} else {
-							
+
 							System.out.println(a.getName() + " has no link");
 
 						}
@@ -2977,20 +2976,16 @@ public class Editor extends Controller {
 
 			} else {
 
-				
 				Game g = Game.find.byId(gid);
 				Mission m = Mission.find.byId(mid);
 				String result = g.createXMLForWeb(m);
-				
-				
-				
+
 				return ok(result);
 			}
 		}
 
 	}
-	
-	
+
 	@BodyParser.Of(Xml.class)
 	public static Result getXMLForClient(Long gid) {
 
@@ -3001,25 +2996,39 @@ public class Editor extends Controller {
 
 		} else {
 
+			Game g = Game.find.byId(gid);
+
+			if (g.zip == null) {
+				return ok("<error>No Pages defined</error>");
+			}
+
+			File gameXMLFile = new File(g.zip);
 			
-				
-				Game g = Game.find.byId(gid);
-				
-				if(g.getFirstMission() != null){
-				Mission m = g.getFirstMission();
-				String result = g.createXMLForWeb(m);
-				
-				
-				
-				return ok(result);
-				
-				} else {
-					
-					return ok("<error>No Pages defined</error>");
-				
-				}
-				
+			if (!gameXMLFile.exists() || !gameXMLFile.canRead()) {
+				return ok("<error>No Pages defined</error>");
+			}
 			
+			if (gameXMLFile.getName().endsWith(".zip")) {
+				g.createXML();
+				gameXMLFile = new File(g.zip);
+			}
+
+			if ("game.xml".equals(gameXMLFile.getName())) {
+				// Mission m = g.getFirstMission();
+				// String result = g.createXMLForWeb(m); // return file instead
+
+				response().setContentType("text/xml");
+				response().setHeader("Content-disposition",
+						"attachment; filename=game.xml");
+				response().setHeader("Content-Length",
+						gameXMLFile.length() + "");
+
+				return ok(gameXMLFile);
+			}
+			else {
+				return ok("<error>No Pages defined</error>");
+			}
+
 		}
 
 	}
@@ -3052,8 +3061,8 @@ public class Editor extends Controller {
 					g.part_down(p);
 				}
 
-				return ok(views.html.editor.editor_sidemenu_missionlist.render(
-						Game.find.byId(gid)));
+				return ok(views.html.editor.editor_sidemenu_missionlist
+						.render(Game.find.byId(gid)));
 
 			}
 		}

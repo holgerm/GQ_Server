@@ -334,7 +334,7 @@ GET    /json/game/:gid                                                        co
 # FUNCTIONS
 GET    /:pid/game/download/:gid                                               controllers.Portal.getGameFileForPortal(pid:Long,gid:Long)
 
-GET    /game/download/:gid                                                    controllers.Portal.getGameFile(gid:Long)
+GET    /game/download/:gid                                                    controllers.Editor.getXMLForClient(gid:Long)
 
 
 GET    /:pid/game/filesize/:gid                                               controllers.Portal.getGameFileSizeForPortal(pid:Long,gid:Long)

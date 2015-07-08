@@ -73,7 +73,7 @@ init();
                               	
                               	  <td class="center">
                             @if(a_game.getGame().hasFile()){
-                            <a href="geoquest://geo.quest-mill.com@routes.Portal.getGameFile(a_game.getGame().getId())">In GeoQuest App öffnen</a>
+                            <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Editor.getXMLForClient(a_game.getGame().getId())">In GeoQuest App öffnen</a>
                          } else { Noch keine XML-Daten }
                             </td>
                         </tr>

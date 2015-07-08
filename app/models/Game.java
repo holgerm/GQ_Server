@@ -1,36 +1,28 @@
 package models;
 
-import be.objectify.deadbolt.core.models.Permission;
-import be.objectify.deadbolt.core.models.Role;
-import be.objectify.deadbolt.core.models.Subject;
-
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.ExpressionList;
-import com.avaje.ebean.validation.Email;
-import com.feth.play.module.pa.providers.password.UsernamePasswordAuthUser;
-import com.feth.play.module.pa.user.*;
-
-import controllers.Application;
-import flexjson.JSON;
-import models.TokenAction.Type;
-
-import org.apache.commons.io.FileUtils;
-
-import models.GameParts.*;
-import play.data.format.Formats;
-import play.db.ebean.Model;
-import util.Global;
-
-import javax.persistence.*;
-
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -42,15 +34,33 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import models.GameParts.Action;
+import models.GameParts.Attribute;
+import models.GameParts.AttributeType;
+import models.GameParts.Content;
+import models.GameParts.GameType;
+import models.GameParts.Hotspot;
+import models.GameParts.HotspotType;
+import models.GameParts.MenuItem;
+import models.GameParts.Mission;
+import models.GameParts.MissionType;
+import models.GameParts.ObjectReference;
+import models.GameParts.Part;
+import models.GameParts.PartType;
+import models.GameParts.Rule;
+import models.GameParts.Scene;
+import models.GameParts.SceneType;
+
+import org.apache.commons.io.FileUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-import java.io.File;
-import java.math.BigDecimal;
+import play.data.format.Formats;
+import play.db.ebean.Model;
+import util.Global;
+import controllers.Application;
+import flexjson.JSON;
 
 @Entity
 @Table(name = "games")
@@ -1018,9 +1028,9 @@ public class Game extends Model {
 
 	public void createXML() {
 
+		String xmlString = createXMLForWeb(getFirstMission());
 		String sid = String.valueOf(id);
 
-		FileOutputStream fout;
 		try {
 
 			File theDir3 = new File("public/uploads/"
@@ -1039,160 +1049,19 @@ public class Game extends Model {
 			if (!theDir.exists())
 				theDir.mkdir();
 
-			boolean isZipCreated = new File("public/uploads/"
+			File f = new File("public/uploads/"
 					+ Application.getLocalPortal().getId() + "/editor/" + sid
-					+ "/", "game.zip").createNewFile();
+					+ "/", "game.xml");
 
-			fout = new FileOutputStream("public/uploads/"
-					+ Application.getLocalPortal().getId() + "/editor/" + sid
-					+ "/game.zip");
+			String xmlFilePath = f.getAbsolutePath();
 
-			ZipOutputStream zout = new ZipOutputStream(fout);
+			Files.write(Paths.get(xmlFilePath), xmlString.getBytes());
 
-			DocumentBuilderFactory docFactory = DocumentBuilderFactory
-					.newInstance();
-			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+			zip = xmlFilePath;
+			this.update();
 
-			// game element
-			Document doc = docBuilder.newDocument();
-			Element game = doc.createElement("game");
-			doc.appendChild(game);
+			System.out.println("File saved!");
 
-			// / GAME ATTRIBUTES
-			Attr attr = doc.createAttribute("id");
-			attr.setValue(sid);
-			game.setAttributeNode(attr);
-
-			Attr attr2 = doc.createAttribute("name");
-			attr2.setValue(name);
-			game.setAttributeNode(attr2);
-
-			Attr attr3 = doc.createAttribute("xmlformat");
-			attr3.setValue("5");
-			game.setAttributeNode(attr3);
-
-			for (Attribute aa : attributes) {
-
-				if (!aa.getXMLType().contains(".")) {
-					Attr attr4 = doc.createAttribute(aa.getXMLType());
-					attr4.setValue(aa.getValue());
-					game.setAttributeNode(attr4);
-				}
-
-			}
-
-			if (!parts.isEmpty()) {
-
-				// Missions
-
-				List<Part> partmirror = new ArrayList<Part>();
-				partmirror.addAll(parts);
-
-				Mission first = this.getFirstMission();
-
-				// / FIRST
-
-				for (Element e : first.createXML(doc, this, zout)) {
-
-					game.appendChild(e);
-
-				}
-
-				// / OTHERS
-
-				for (Part p : parts) {
-
-					for (Element e : p.createXML(doc, this, zout)) {
-
-						if (!p.isScene()) {
-							if (!p.getMission().equals(first)) {
-								game.appendChild(e);
-							}
-
-						} else {
-
-							game.appendChild(e);
-
-						}
-
-					}
-				}
-
-			}
-
-			for (Hotspot h : getAllHotspots()) {
-				Element spot = h.createXML(doc, this, zout);
-				game.appendChild(spot);
-
-			}
-
-			for (MenuItem h : this.getMenuItems()) {
-				Element mi = h.createXML(doc, this, zout);
-				game.appendChild(mi);
-
-			}
-
-			// write the content into xml file
-			TransformerFactory transformerFactory = TransformerFactory
-					.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			DOMSource source = new DOMSource(doc);
-
-			boolean isFileCreated = new File("public/uploads/"
-					+ Application.getLocalPortal().getId() + "/editor/" + sid
-					+ "/", "game.xml").createNewFile();
-			boolean isFileExisting = new File("public/uploads/"
-					+ Application.getLocalPortal().getId() + "/editor/" + sid
-					+ "/", "game.xml").exists();
-
-			if (isFileExisting) {
-				StreamResult result = new StreamResult(new File(
-						"public/uploads/"
-								+ Application.getLocalPortal().getId()
-								+ "/editor/" + sid + "/", "game.xml"));
-
-				// Output to console for testing
-				// StreamResult result = new StreamResult(System.out);
-
-				transformer.transform(source, result);
-
-				final int BUFFER = 2048;
-
-				File f = new File("public/uploads/"
-						+ Application.getLocalPortal().getId() + "/editor/"
-						+ sid + "/", "game.xml");
-				byte data[] = new byte[BUFFER];
-
-				FileInputStream fis = new FileInputStream(f);
-				BufferedInputStream bis = new BufferedInputStream(fis, BUFFER);
-
-				ZipEntry ze = new ZipEntry("game.xml");
-				zout.putNextEntry(ze);
-
-				int size = -1;
-				while ((size = bis.read(data, 0, BUFFER)) != -1) {
-					zout.write(data, 0, size);
-				}
-
-				zout.closeEntry();
-
-				zout.close();
-
-				zip = "public/uploads/" + Application.getLocalPortal().getId()
-						+ "/editor/" + sid + "/game.zip";
-				this.update();
-
-				System.out.println("File saved!");
-			} else {
-
-				System.out.println("File not existing!");
-
-			}
-
-		} catch (ParserConfigurationException pce) {
-			pce.printStackTrace();
-		} catch (TransformerException tfe) {
-			tfe.printStackTrace();
 		} catch (IOException ioe) {
 
 			ioe.printStackTrace();
@@ -2566,7 +2435,7 @@ public class Game extends Model {
 
 					g.addPart(np);
 					g.update();
-					
+
 				}
 
 				else {

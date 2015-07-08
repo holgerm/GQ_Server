@@ -2300,25 +2300,7 @@ public class Portal extends Controller {
 
 	public static Result getGameFileForPortal(Long portal, Long game) {
 
-		if (Game.find.where().eq("id", game).findRowCount() != 1) {
-
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
-
-		} else {
-
-			Game mygame = Game.find.byId(game);
-
-			response().setContentType("application/x-download");
-			response().setHeader("Content-disposition",
-					"attachment; filename=game.zip");
-			// response().setHeader("Content-Length" , new
-			// File(mygame.getFile()).length()+"");
-
-			System.out.println("Content-Length: "
-					+ (new File(mygame.getFile()).length()));
-			return ok(new File(mygame.getFile()));
-		}
+		return redirect(routes.Editor.getXMLForClient(game));
 	}
 
 	public static Result getGameFile(Long game) {
