@@ -44,6 +44,12 @@
   </head>
     <body onLoad="connectionTester(); browserTester(); initmap(); @if(g.getType.hasOnlyOneScene()){ document.getElementById('background').style.display='none'; document.getElementById('tutorial').style.display='none'; document.getElementById('missionoverviewjs').style.display='none'; } @if(g.getHotspots != null){ @if(g.getHotspots.size() > 0){  document.getElementById('background').style.display='none'; document.getElementById('tutorial').style.display='none'; document.getElementById('missionoverviewjs').style.display='none';}}">
 
+             <div style="display:inline-block; cursor:pointer; position:absolute; bottom:0; right:0; z-index:10001;">
+          	 	<a id="xmlshow"  onClick="javascript:@if(g.hasFile()){LoadXML('xmlcontainer','@Global.SERVER_URL_2@routes.Portal.at(Application.getLocalPortal().getId()+"/editor/"+g.getId()+"/game.xml")');} hideAddEditMissions(); hidePlayer(); document.getElementById('xmlview').style.display = 'block';"onMouseOver="javascript:showLinkDescription('Erzeugtes XML anzeigen');" onMouseOut="javascript:showLinkDescription('');" >
+          			<img alt="Erzeugtes XML anzeigen" src="@Global.SERVER_URL_2@routes.Assets.at("icons/hiddencode.png")">
+          	 	</a>
+             </div> 
+                         
 
 
 
@@ -155,11 +161,12 @@
                   
                   
                   
-                       <div style="display:inline-block; padding-right:1px;"> <img alt="Speichern" style="cursor:pointer;" onClick="javascript:xmlify();" onMouseOver="javascript:showLinkDescription('Speichern');" onMouseOut="javascript:showLinkDescription('');" src="@Global.SERVER_URL_2@routes.Assets.at("icons/disk.png")"></div> 
-                         <div style="display:inline-block; cursor:pointer; padding-right:30px;"><a id="xmlshow"  onClick="javascript:@if(g.hasFile()){LoadXML('xmlcontainer','@Global.SERVER_URL_2@routes.Portal.at(Application.getLocalPortal().getId()+"/editor/"+g.getId()+"/game.xml")');} hideAddEditMissions(); hidePlayer(); document.getElementById('xmlview').style.display = 'block';"onMouseOver="javascript:showLinkDescription('Erzeugtes XML anzeigen');" onMouseOut="javascript:showLinkDescription('');" ><img alt="Erzeugtes XML anzeigen" src="@Global.SERVER_URL_2@routes.Assets.at("icons/xml.png")"></a></div> 
-                         
-                                 <div style="display:inline-block;"> <a id="mapboundsbutton" target="_blank" onClick="javascript:document.getElementById('background').style.display='none'; zoomToMapBounds();" style="cursor:pointer;"><img onMouseOver="javascript:showLinkDescription('Karte auf Hotspots zentrieren');" onMouseOut="javascript:showLinkDescription('');" alt="Karte auf Hotspots zentrieren" src="@Global.SERVER_URL_2@routes.Assets.at("icons/home.png")"></a></div> 
-                                 <div style="display:inline-block;"> <a id="hideallbutton" target="_blank" onClick="javascript:hideAddEditMissions();" style="cursor:pointer;"><img onMouseOver="javascript:showLinkDescription('Alle Fenster schließen');" onMouseOut="javascript:showLinkDescription('');" alt="Alle Fenster schließen" src="@Global.SERVER_URL_2@routes.Assets.at("icons/desktop.png")"></a></div> 
+                       		<div style="display:inline-block; padding-right:1px;"> 
+                       			<img alt="Speichern" style="cursor:pointer;" onClick="javascript:confirm('Wirklich veröffentlichen?')?xmlify():void(0);" onMouseOver="javascript:showLinkDescription('Veröffentlichen');" onMouseOut="javascript:showLinkDescription('');" src="@Global.SERVER_URL_2@routes.Assets.at("icons/publish.png")">
+                       		</div> 
+
+             <div style="display:inline-block;"> <a id="mapboundsbutton" target="_blank" onClick="javascript:document.getElementById('background').style.display='none'; zoomToMapBounds();" style="cursor:pointer;"><img onMouseOver="javascript:showLinkDescription('Karte auf Hotspots zentrieren');" onMouseOut="javascript:showLinkDescription('');" alt="Karte auf Hotspots zentrieren" src="@Global.SERVER_URL_2@routes.Assets.at("icons/home.png")"></a></div> 
+             <div style="display:inline-block;"> <a id="hideallbutton" target="_blank" onClick="javascript:hideAddEditMissions();" style="cursor:pointer;"><img onMouseOver="javascript:showLinkDescription('Alle Fenster schließen');" onMouseOut="javascript:showLinkDescription('');" alt="Alle Fenster schließen" src="@Global.SERVER_URL_2@routes.Assets.at("icons/desktop.png")"></a></div> 
      
      
      <span style="position:absolute; bottom:0px; right:0%; white-space:nowrap;" id="xmlstatus">&nbsp;</span>

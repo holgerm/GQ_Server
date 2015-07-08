@@ -2953,6 +2953,12 @@ public class Editor extends Controller {
 
 			Game g = Game.find.byId(gid);
 			g.createXML();
+
+			for (ProviderGames accessRight : g.getPortals()) {
+				accessRight.setVisibility(true);
+				accessRight.update();
+			}
+
 			return ok("synced");
 
 		}
@@ -3003,11 +3009,11 @@ public class Editor extends Controller {
 			}
 
 			File gameXMLFile = new File(g.zip);
-			
+
 			if (!gameXMLFile.exists() || !gameXMLFile.canRead()) {
 				return ok("<error>No Pages defined</error>");
 			}
-			
+
 			if (gameXMLFile.getName().endsWith(".zip")) {
 				g.createXML();
 				gameXMLFile = new File(g.zip);
@@ -3024,8 +3030,7 @@ public class Editor extends Controller {
 						gameXMLFile.length() + "");
 
 				return ok(gameXMLFile);
-			}
-			else {
+			} else {
 				return ok("<error>No Pages defined</error>");
 			}
 
