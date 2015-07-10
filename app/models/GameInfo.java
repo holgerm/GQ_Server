@@ -41,31 +41,29 @@ public class GameInfo {
 		List<String> staticMetadata = new ArrayList<String>(Arrays.asList(
 				"author", "age"));
 
-		Set<Attribute> gameAttributes = game.getAttributes();
-		System.err.println("Game " + game.getName() + " has " + gameAttributes.size() + " attributes.");
-
-
-		for (Attribute curAtt : gameAttributes) {
+		List<AttributeType> gameAttributeTypes = game.getType().getAttributeTypes();
+		
+		for (AttributeType curAttType : gameAttributeTypes) {
 
 			// Metadata can be searched in client to filter and sort list of
 			// quests.
 
-			if (staticMetadata.contains(curAtt.getXMLType())) {
-				String key = curAtt.getType().getName();
-				String value = curAtt.getValue();
+			if (staticMetadata.contains(curAttType.getXMLType())) {
+				String key = curAttType.getName();
+				String value = game.getAttributeValue(curAttType);
 				metadata.add(new Metadata(key, value));
 			}
 
 			// This is data that is not used for search
 
-			if (curAtt.getXMLType().equals("icon")) {
-				iconPath = curAtt.getValue();
+			if (curAttType.getXMLType().equals("icon")) {
+				iconPath = game.getAttributeValue(curAttType);
 			}
-			if (curAtt.getXMLType().equals("featuredimage")) {
-				featuredImagePath = curAtt.getValue();
+			if (curAttType.getXMLType().equals("featuredimage")) {
+				featuredImagePath = game.getAttributeValue(curAttType);
 			}
-			if (curAtt.getXMLType().equals("version")) {
-				version = curAtt.getValue();
+			if (curAttType.getXMLType().equals("version")) {
+				version = game.getAttributeValue(curAttType);
 			}
 		}
 
