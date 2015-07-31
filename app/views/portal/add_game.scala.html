@@ -37,13 +37,16 @@
 
                  <br/>
 
+
+
+<div style="display:none;">
             @checkbox(
                 uploadForm("publ"),
                 '_label -> "Öffentlich?"
 
             )
             <br/>
-            
+            </div>
             @if(!Application.getLocalPortal().gameTypesIsEmpty()){
             	@if(!Application.getLocalPortal().getContentHtmlParameter("general.games.onlyonegametype")){
        @Application.getLocalPortal.getLanguageParameter("Spieltyp")

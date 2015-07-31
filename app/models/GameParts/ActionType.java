@@ -87,6 +87,21 @@ public class ActionType extends Model {
 
     public String getName(){ return name; }
     
+    public String getNameEncoded(){
+    	
+    String n = name;
+    	
+    	n = n.replaceAll("ä", "ae");
+    	n = n.replaceAll("ö", "oe");
+    	n = n.replaceAll("ü", "ue");
+    	n = n.replaceAll("ß", "ss");
+    	n = n.replaceAll(" ", "");
+    	n = n.replaceAll("\\(", "");
+    	n = n.replaceAll("\\)", "");
+    	
+    	return n;
+    
+    }
     
     
     public Action createMe(String n){

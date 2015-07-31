@@ -55,8 +55,10 @@
 									              	
 									              		
 									              				<div id="action_@ac.getId"><h1>@ac.getName()</h1></div>
-									              				<br/>
 									              				
+									              			
+									              				<span  style="cursor:pointer;"><a href="https://www.quest-mill.com/geoquest/index.php?content=@ac.getType().getNameEncoded()" target="_blank"><icon class="icon-question-sign" style="display:inline-block;"></icon> Anleitung</a></span>
+									              				<br/><br/>
 									              				<div id="actionattributes_@ac.getId()" >
 									              				
 																		              				@for(a <- ac.getAllAttributes){

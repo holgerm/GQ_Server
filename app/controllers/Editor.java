@@ -2934,10 +2934,73 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
 
+			ProviderPortal p = Application.getLocalPortal();
+
+			
+			boolean doit = true;
+			String help1 = "false";
+			if(p.getContentHtmlParameter("general.games.adminshavetopublish") != null){
+				
+			help1 = p.getContentHtmlParameter("general.games.adminshavetopublish");
+			}
+			if(help1.equals("true")){
+				if (Global.securityGuard
+						.hasAdminRightsOnPortal(Application.getLocalUser(session())) == false) {
+
+					doit = false;
+				}
+			}
+			
+			
+			Game c = Game.find.byId(gid);
+
+			
+	
+			if(doit){
+
+			
+			
+			
+			
+			if(p.getGame(c) != null){
+			p.getGame(c).setVisibility(true);
+			p.getGame(c).update();
+			p.update();
+			
+			}
+			
 			Game g = Game.find.byId(gid);
 			g.createXML();
+			} else {
+				
+				String help = "false";
+				if(p.getContentHtmlParameter("general.games.adminsgetnotified") != null){
+					
+				help = p.getContentHtmlParameter("general.games.adminsgetnotified");
+				}
+				if(help.equals("true")){
+
+				
+				for(ProviderUsers au: p.getUsers()){
+				
+					if(au.getRights().equals("admin")){
+						System.out.println("trying to send an email to admin: "+au.getUser().getName());
+				final MyUsernamePasswordAuthProvider provider = MyUsernamePasswordAuthProvider
+						.getProvider();
+				String text = "Auf einem deiner Geoquest Portale wurde eine neue Quest mit dem Namen'"+c.getName()+"' und der ID "+c.getId()+" erstellt. Solltest nur du die Berechtigung haben, diese Quest zu veröffentlichen, kümmere dich bitte darum.";
+				
+				
+				String html = "Auf einem deiner Geoquest Portale wurde eine neue Quest mit dem Namen'"+c.getName()+"' und der ID "+c.getId()+" erstellt.<br/><br/> Solltest nur du die Berechtigung haben, diese Quest zu veröffentlichen, kümmere dich bitte darum.";
+				provider.sendEmailToUser(au.getUser(), "Neue Quest: "+c.getName(), text,html);
+					}
+				
+				}
+				}
+			}
 			return ok("synced");
+			
 
 		}
 
@@ -2998,7 +3061,7 @@ public class Editor extends Controller {
 				
 				} else {
 					
-					return ok("<error>No Pages defined</error>");
+					return ok("<error>No Pages defined.</error>");
 				
 				}
 				

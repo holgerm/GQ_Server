@@ -21,6 +21,8 @@ GET    /:pid/public                                                           co
 GET    /:pid/public_mapscript                                                 controllers.Portal.publicGamesMap(pid: Long)
 
 
+GET	   /publicmenu															controllers.Portal.getMenu()
+
 GET    /testConnection                                                        controllers.Portal.getConnectionTest()
 
 

@@ -1639,18 +1639,25 @@ public class Game extends Model {
 
 		if (!parts.isEmpty()) {
 			int i = 1;
+			System.out.println("parts.size: "+parts.size());
 
-			do {
+			while (((m == null) || i <= parts.size()
+					|| m.getType().getXMLType().equals("MetaData")) && (parts.size() - i) >= 0) {
+				
+				
+				
+				System.out.println("looking for: "+(parts.size() - i));
 
+				if(parts.get(parts.size() - i) != null){
 				Part p = parts.get(parts.size() - i);
 				if (p.getLastMission() != null) {
 					m = p.getLastMission();
 
 				}
+			
+				} 
 				i++;
-
-			} while ((m == null) || i > parts.size()
-					|| m.getType().getXMLType().equals("MetaData"));
+			}
 		}
 		return m;
 
@@ -1678,6 +1685,7 @@ public class Game extends Model {
 		for (AttributeType att : type.getAttributeTypes()) {
 
 			if (att.getXMLType().equals("Editor.StartMission")) {
+				System.out.println("found StartMission Attribute for game");
 				if (!this.getAttributeValue(att).equals("")) {
 
 					Long testid = Long.valueOf(this.getAttributeValue(att));

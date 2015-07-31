@@ -2,6 +2,7 @@ package security;
 
 import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.user.AuthUser;
+
 import controllers.Application;
 import models.GameRights;
 import models.ProviderPortal;
@@ -168,7 +169,7 @@ public class MyUserPortalRights {
     	
     	
     	
-    	
+
     	
         try {
             Long idd = u.getId();
@@ -179,6 +180,23 @@ public class MyUserPortalRights {
 
 
         }
+        
+        
+        
+        ProviderPortal p = Application.getLocalPortal();
+
+    	String help1 = "false";
+		if(p.getContentHtmlParameter("general.games.adminshaveallrights") != null){
+			
+		help1 = p.getContentHtmlParameter("general.games.adminshaveallrights");
+		}
+		if(help1.equals("true") && Global.securityGuard.hasAdminRightsOnPortalX(u, p)){
+    		
+    		return true;
+    		
+    		
+    	}
+    	
 
         if(g.existsUser(u) == true){
 

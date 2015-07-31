@@ -109,6 +109,10 @@ public class MyUsernamePasswordAuthProvider
 			return null;
 		}
 	}
+	
+	
+
+
 
 	public static final Form<MySignup> SIGNUP_FORM = form(MySignup.class);
 	public static final Form<MyLogin> LOGIN_FORM = form(MyLogin.class);
@@ -396,6 +400,13 @@ public class MyUsernamePasswordAuthProvider
 		return new Body(text, html);
 	}
 
+	
+	public void sendEmailToUser(final User user,String subject, String text,String html) {
+		final Body body = new Body(text,html);
+		mailer.sendMail(subject, body, getEmailName(user));
+	}
+	
+	
 	public void sendVerifyEmailMailingAfterSignup(final User user,
 			final Context ctx) {
 
@@ -405,6 +416,14 @@ public class MyUsernamePasswordAuthProvider
 		final Body body = getVerifyEmailMailingBodyAfterSignup(token, user, ctx);
 		mailer.sendMail(subject, body, getEmailName(user));
 	}
+	
+	
+	
+	
+	
+	
+	
+	
 
 	private String getEmailName(final User user) {
 		return getEmailName(user.email, user.name);

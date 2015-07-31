@@ -145,6 +145,31 @@ public class User extends Model implements Subject {
 
     public Set<GameRights> getGamesOnPortal(ProviderPortal p){
 
+    	
+    	String help = "false";
+   
+    	if(p.getContentHtmlParameter("general.games.adminshaveallrights") != null){
+    	
+    		help = p.getContentHtmlParameter("general.games.adminshaveallrights");
+    	
+    	}
+    	
+    	if(help.equals("true") && Global.securityGuard.hasAdminRightsOnPortalX(this, p)){
+    		
+    		Set<GameRights> x = new HashSet<GameRights>();
+    	for(ProviderGames pg : p.getGameList()){
+    		
+    		GameRights gr = new GameRights();
+    		gr.setGame(pg.getGame());
+    		gr.setUser(this);
+    gr.setRights("write");
+    		x.add(gr);
+    		
+    	}
+    		return x;
+    		
+    	}
+    	
         Set<GameRights> onPortal = new HashSet<GameRights>();
 
 

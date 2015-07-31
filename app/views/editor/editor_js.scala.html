@@ -1675,6 +1675,10 @@ xhr.send(formData);
 
 function xmlify(){
 
+
+if (confirm('Wirklich veröffentlichen?')) {
+
+
 showstatus = 1;
 
  document.getElementById('xmlstatus').innerHTML="syncing...";
@@ -1721,7 +1725,7 @@ xmlhttp.send();
 
 
 
-
+}
 
 
 

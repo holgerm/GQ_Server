@@ -51,19 +51,7 @@
                            
                             </td>
                             <td class="center"> @if(a_game.getRights() == "write"){
-                            	@defining(Application.getLocalPortal.getTemplateServerURLDropSlash){ url1 =>
-                            	
-                            	@defining(Application.getLocalPortal.getPathTo(routes.Portal.doDeleteGame(Application.getLocalPortal().getId(),a_game.getGame().getId()))){ url2 =>
-                         <a href="javascript:confirm('Wirklich löschen?')?window.location.href = '@url1@url2':void(0);">Löschen</a>
-                            	                                | <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.addGameTypeFromGame(Application.getLocalPortal().getId(),a_game.getGame().getId()))">In Spieltyp umwandeln</a>
-                            	
-                            	 
-                            	
-                            	
-                            	
-                            	
-                            	}
-                            	}
+                           
                             	
                             	
                             	
@@ -71,15 +59,41 @@
  					 	| @Global.securityGuard.hasWriteRightsOnGame(
 					Application.getLocalUser(session()), a_game.getGame())
 
-                                | <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.editGame(Application.getLocalPortal().getId(),a_game.getGame().getId()))">Editdieren</a>
+                                <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.editGame(Application.getLocalPortal().getId(),a_game.getGame().getId()))">Editdieren</a>
 
 
-						} else { | <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Editor.getEditor(a_game.getGame().getId()))">Editor aufrufen</a> }
+						} else {
+						
+						  <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Editor.getEditor(a_game.getGame().getId()))">Editor aufrufen</a>
+						  }
 
                                 | <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.gameRightsonPortal(Application.getLocalPortal().getId(),a_game.getGame().getId()))">Administration</a>
 								
 								 | <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.doCopyGame(Application.getLocalPortal().getId(),a_game.getGame().getId()))">Duplizieren</a>
 								
+								 	@defining(Application.getLocalPortal.getTemplateServerURLDropSlash){ url1 =>
+                            	
+                            	@defining(Application.getLocalPortal.getPathTo(routes.Portal.doDeleteGame(Application.getLocalPortal().getId(),a_game.getGame().getId()))){ url2 =>
+                        | <a href="javascript:confirm('Wirklich löschen?')?window.location.href = '@url1@url2':void(0);">Löschen</a>
+                        }
+                        }
+                     
+@defining(Application.getLocalUser(session())) { user =>
+
+
+
+@if(Global.securityGuard.hasAdminRightsOnPortal(user)==true){
+	
+| <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.addGameTypeFromGame(Application.getLocalPortal().getId(),a_game.getGame().getId()))">In Spieltyp umwandeln</a>
+                            	
+                            	 }
+                            	 
+                            	
+                            	
+                            	
+                            	
+                            	}
+                            	
 
                             } else {
 		Keine Rechte

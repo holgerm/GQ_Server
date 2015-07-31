@@ -59,14 +59,14 @@ public class Application extends Controller {
 
         session("currentportal",Global.defaultportal.getId().toString());
 
-        return redirect(routes.Portal.publicGamesList(61L));
+        return redirect(routes.Portal.myGamesList(61L));
 	}
 
 
     public static Result portalindex(Long pid) {
 
 
-        return redirect(routes.Portal.publicGamesListOnCurrentPortal());
+        return redirect(routes.Portal.myGamesList(pid));
     }
 
 
@@ -354,7 +354,7 @@ public static String getDarkerColor(String in){
             }
         } else {
 
-            return Global.defaultportal;
+            return ProviderPortal.find.byId(61L);
 
         }
 
@@ -371,7 +371,21 @@ public static String getDarkerColor(String in){
 
 	public static Result login(Long pid) {
         session("currentportal",pid.toString());
+        
+        
+if(pid == 1L){
+			
+			
+			return redirect("https://quest-mill.com/geoquest/private.php");
+}else if(pid == 61L){
+			
+			return ok(views.html.portal.publicportal_login.render());
+			
+		} else {
+
         return ok(login.render(MyUsernamePasswordAuthProvider.LOGIN_FORM));
+        
+		}
 	}
 	
 		public static Result loginToPortalFromCache() {
@@ -401,9 +415,18 @@ public static String getDarkerColor(String in){
 	public static Result signup(Long pid) {
         session("currentportal",pid.toString());
 
-
-
+if(pid == 1L){
+			
+			
+			return redirect("https://quest-mill.com/geoquest/private.php");
+}else if(pid == 61L){
+			
+			return ok(views.html.portal.publicportal_signup.render());
+			
+		} else {
         return ok(signup.render(MyUsernamePasswordAuthProvider.SIGNUP_FORM));
+        
+		}
 	}
 
 	public static Result jsRoutes() {

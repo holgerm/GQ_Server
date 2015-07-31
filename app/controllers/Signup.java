@@ -43,7 +43,15 @@ public class Signup extends Controller {
 
 	public static Result unverified(Long pid) {
 		com.feth.play.module.pa.controllers.Authenticate.noCache(response());
+		
+		
+		if(pid == 61L){
+			
+			  return redirect("https://www.quest-mill.com/geoquest/unverified.php");
+
+		} else {
 		return ok(unverified.render());
+		}
 	}
 
 	private static final Form<MyIdentity> FORGOT_PASSWORD_FORM = form(MyIdentity.class);
@@ -54,7 +62,16 @@ public class Signup extends Controller {
 		if (email != null && !email.trim().isEmpty()) {
 			form = FORGOT_PASSWORD_FORM.fill(new MyIdentity(email));
 		}
+		
+		
+	if(pid == 61L){
+			
+			return ok(views.html.portal.publicportal_forgotpassword.render(form));
+			
+		} else {
 		return ok(password_forgot.render(form));
+		
+		}
 	}
 
 	public static Result doForgotPassword(Long pid) {

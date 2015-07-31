@@ -318,7 +318,7 @@ import util.Global;
                 HtmlForm form = null;
                 
 
-                     if(!TemplatePw.equals("")){
+                     if(TemplatePw != null && !TemplatePw.equals("")){
 
                     	 use_first_page = false;
 

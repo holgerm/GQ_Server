@@ -81,17 +81,82 @@ public class Portal extends Controller {
 
 		session("currentportal", pid.toString());
 
+		if(pid == 1L){
+			
+			
+			return redirect("https://quest-mill.com/geoquest/private.php");
+			
+		} else if(pid == 61L || (Application.getLocalPortal().getContentHtmlParameter("general.includesites.Oeffentliche_Spiele").equals("false"))){
+
+			User u = getLocalUser(session());
+			
+			if(u == null){
+				
+				return redirect(routes.Application.login(pid));
+
+
+				
+			} else {
+				
+				
+				
+				
+				return redirect(routes.Portal.myGamesListOnCurrentPortal());
+
+				
+			}
+			
+			
+			
+		} else {
+			
+			
+			
+			
 		List<ProviderGames> gr = Application.getLocalPortal()
 				.getPublicGamesList();
 		return ok(views.html.portal.public_games.render(gr));
+		}
 
 	}
+	
+	
+	
 
 	public static Result publicGamesListOnCurrentPortal() {
+		
+		
+		
+		long pid = Application.getLocalPortal().getId();
+if(pid == 1L){
+			
+			
+			return redirect("https://quest-mill.com/geoquest/private.php");
+			
+		} else if(pid == 61L){
 
+			User u = getLocalUser(session());
+			
+			if(u == null){
+				
+				return redirect(routes.Application.login(61L));
+
+
+				
+			} else {
+				
+				return redirect(routes.Portal.myGamesListOnCurrentPortal());
+
+				
+			}
+			
+			
+			
+		} else {
 		List<ProviderGames> gr = Application.getLocalPortal()
 				.getPublicGamesList();
 		return ok(views.html.portal.public_games.render(gr));
+		}
 
 	}
 
@@ -116,7 +181,17 @@ public class Portal extends Controller {
 
 		session("currentportal", pid.toString());
 
-		ProviderPortal p = Application.getLocalPortal();
+    	ProviderPortal p = Application.getLocalPortal();
+
+		
+
+        if(ProviderPortal.find.where().eq("id", pid).findRowCount() == 1){
+
+
+            p = ProviderPortal.find.byId(pid);
+
+
+        }
 
 		User u = getLocalUser(session());
 
@@ -733,8 +808,14 @@ public class Portal extends Controller {
 							SceneType s = new SceneType(form.scenename);
 							s.save();
 							String log = s.addDefaultsFromGame(g);
+					
+							
 							s.update();
 							gt.addPossibleSceneType(s);
+							gt.update();
+
+							gt.setOnlySceneType(s);
+							
 							gt.update();
 
 							gt.editor_only_scene_type = s;
@@ -1134,7 +1215,6 @@ public class Portal extends Controller {
 	 * RESULTS
 	 */
 
-	@Restrict(@Group(Application.USER_ROLE))
 	public static Result myPortalsList(Long pid) {
 
 		session("currentportal", pid.toString());
@@ -1142,6 +1222,8 @@ public class Portal extends Controller {
 		ProviderPortal p = Application.getLocalPortal();
 
 		User u = getLocalUser(session());
+		
+		
 
 		if (Global.securityGuard.isDefaultPortal() == false) {
 
@@ -1163,6 +1245,29 @@ public class Portal extends Controller {
 					.all()));
 
 		}
+	}
+
+	
+	public static Result getMenu() {
+
+
+		ProviderPortal p = Application.getLocalPortal();
+		User u = getLocalUser(session());
+
+		if(p.getId() == 61L && u != null){
+
+		for (SortedHtml sh:	p.getHtml()){
+			
+			if(sh.getWort().equals("%%_GEOQUEST_NAV_LI_%%")){
+			return ok(views.html.geoquestcodes.mainnavigation.render(sh,""));
+			}
+			
+		} 
+			
+
+		} 
+		
+		return ok("");
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
@@ -2032,6 +2137,35 @@ public class Portal extends Controller {
 
 		session("currentportal", pid.toString());
 
+		
+		
+if(pid == 1L){
+			
+			
+			return redirect("https://quest-mill.com/geoquest/private.php");
+			
+} else if(pid == 61L || (Application.getLocalPortal().getContentHtmlParameter("general.includesites.Newsstream").equals("false"))){
+
+			User u = getLocalUser(session());
+			
+			if(u == null){
+				
+				return redirect(routes.Application.login(pid));
+
+
+				
+			} else {
+				
+				return redirect(routes.Portal.myGamesListOnCurrentPortal());
+
+				
+			}
+			
+			
+			
+		} else {
+		
+		
 		ProviderPortal p = Application.getLocalPortal();
 
 		Set<ProviderUsers> pplist = new HashSet<ProviderUsers>();
@@ -2040,6 +2174,7 @@ public class Portal extends Controller {
 		ilist = getLocalPortal().getNewsstream();
 
 		return ok(views.html.portal.portalnewsstream.render(ilist));
+		}
 
 	}
 
@@ -2395,6 +2530,14 @@ public class Portal extends Controller {
 		final AuthUser currentAuthUser = PlayAuthenticate.getUser(session);
 		final User localUser = User.findByAuthUserIdentity(currentAuthUser);
 		return localUser;
+	}
+	
+	
+	
+	public static User getLocalUser(){
+		
+		return getLocalUser(session());
+		
 	}
 
 	public static ProviderPortal getLocalPortal() {
