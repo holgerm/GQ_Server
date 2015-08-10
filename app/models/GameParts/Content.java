@@ -91,7 +91,7 @@ public class Content extends Model {
 	     for(Attribute item: attributes) copyOfAttributes.add(item);	
 
    	 for(Attribute aatr: copyOfAttributes){  		 
-   		 if(aatr.getXMLType() == t.getXMLType()){	 
+   		 if(aatr.getXMLType().equals(t.getXMLType())){	 
    			attributes.remove(aatr);
    		 }
    	 }

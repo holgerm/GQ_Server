@@ -45,7 +45,7 @@
                             <td class="center">
                               @if(a_game.getGame().hasFile()){
                             
-                            <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.getGameFile(a_game.getGame().getId())">Download</a>
+                            <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Editor.getXMLForClient(a_game.getGame().getId())">Download</a>
                            } else { Noch keine XML-Daten }
                            
                            

@@ -31,7 +31,7 @@ GET    /testConnection                                                        co
 GET    /assets/*file                                                          controllers.Assets.at(path="/public", file)
 GET    /assets/javascript/routes.js                                           controllers.Application.jsRoutes
 GET    /uploadedassets/*file                                                  controllers.Portal.at(file)
-GET    /gqplayer/*file                                                  	  controllers.Portal.getGQPlayer(file)
+GET    /gqplayer/*file                                                        controllers.Portal.getGQPlayer(file)
 
 
 
@@ -76,8 +76,8 @@ POST   /:pid/uploadgame                                                       co
 
 
 
-GET    /:pid/game/:gid/togametype                                                       controllers.Portal.addGameTypeFromGame(pid: Long,gid: Long)
-POST   /:pid/game/:gid/togametype                                                       controllers.Portal.doAddGameTypeFromGame(pid: Long,gid: Long)
+GET    /:pid/game/:gid/togametype                                             controllers.Portal.addGameTypeFromGame(pid: Long,gid: Long)
+POST   /:pid/game/:gid/togametype                                             controllers.Portal.doAddGameTypeFromGame(pid: Long,gid: Long)
 
 
 ## PORTALS
@@ -95,9 +95,9 @@ GET    /:pid/addmetoportal                                                    co
 
 
 
-GET    /:gid/portal/gametypes/:pid                                             controllers.Portal.gameTypesonPortal(pid:Long,gid:Long)
-GET		/:pid/portal/:portal/gametypes/add/:gtid									controllers.Portal.doAddGameTypeToPortal(pid: Long, portal: Long, gtid: Long)
-GET		/:pid/portal/:portal/gametypes/remove/:gtid									controllers.Portal.doDeleteGameTypeFromPortal(pid: Long, portal: Long, gtid: Long)
+GET    /:gid/portal/gametypes/:pid                                            controllers.Portal.gameTypesonPortal(pid:Long,gid:Long)
+GET    /:pid/portal/:portal/gametypes/add/:gtid                               controllers.Portal.doAddGameTypeToPortal(pid: Long, portal: Long, gtid: Long)
+GET    /:pid/portal/:portal/gametypes/remove/:gtid                            controllers.Portal.doDeleteGameTypeFromPortal(pid: Long, portal: Long, gtid: Long)
 
 GET    /:pid/portal/rights/:gid                                               controllers.Portal.userRightsonPortal(pid:Long,gid:Long)
 GET    /portal/rights/:gid                                                    controllers.Portal.userRightsonCurrentPortal(gid:Long)
@@ -214,8 +214,8 @@ GET    /editor/:gid/hotspot/:hid/lonlat/:lon/:lat                             co
 
 
 GET    /editor/:gid/xmlify                                                    controllers.Editor.createXML(gid: Long)
-GET    /editor/:gid/webxml/:mid                                                   controllers.Editor.createXMLForWeb(gid: Long,mid: Long)
-GET    /editor/:gid/clientxml                                                   controllers.Editor.getXMLForClient(gid: Long)
+GET    /editor/:gid/webxml/:mid                                               controllers.Editor.createXMLForWeb(gid: Long,mid: Long)
+GET    /editor/:gid/clientxml                                                 controllers.Editor.getXMLForClient(gid: Long)
 
 
 
@@ -238,6 +238,7 @@ GET    /editor/:gid/action/:aid/attribute/:atrid/add/action/:atype            co
 
 ## FRAGMENTS
 
+GET    /editor/:gid/fragments/sidemenu/missionlist/                           controllers.Editor.getMissionListInSideMenuForEditor(gid: Long)
 GET    /editor/:gid/fragments/Part/:pid/insidemenu                            controllers.Editor.getPartInSideMenuForEditor(gid: Long, pid: Long)
 GET    /editor/:gid/fragments/Hotspot/:pid/insidemenu                         controllers.Editor.getHotspotInSideMenuForEditor(gid: Long, pid: Long)
 GET    /editor/:gid/fragments/Hotspot/:pid/ruleedit                           controllers.Editor.getHotspotRulesForEditor(gid: Long, pid: Long)
@@ -252,7 +253,7 @@ GET    /editor/:gid/fragments/Mission/:mid/Content/:cid/newcontentincontent   co
 GET    /editor/:gid/fragments/Mission/:mid/Content/:cid/listitem              controllers.Editor.getContentListItemForEditor(gid: Long, cid: Long,mid:Long)
 GET    /editor/:gid/fragments/Content/:cid/Content/:scid/listitem             controllers.Editor.getContentInContentListForEditor(gid: Long, cid: Long,scid:Long)
 
-GET    /editor/:gid/fragments/missionselector/:v                                 controllers.Editor.getMissionSelectorForEditor(gid:Long,v:String)
+GET    /editor/:gid/fragments/missionselector/:v                              controllers.Editor.getMissionSelectorForEditor(gid:Long,v:String)
 GET    /editor/:gid/fragments/Mission/:mid/Content/alllist                    controllers.Editor.getAllContentInMissionForEditor(gid:Long,mid:Long)
 
 GET    /editor/:gid/fragments/Content/:cid/allinfo                            controllers.Editor.getContentInfoForEditor(gid: Long, cid: Long)
@@ -335,7 +336,7 @@ GET    /json/game/:gid                                                        co
 # FUNCTIONS
 GET    /:pid/game/download/:gid                                               controllers.Portal.getGameFileForPortal(pid:Long,gid:Long)
 
-GET    /game/download/:gid                                                    controllers.Portal.getGameFile(gid:Long)
+GET    /game/download/:gid                                                    controllers.Editor.getXMLForClient(gid:Long)
 
 
 GET    /:pid/game/filesize/:gid                                               controllers.Portal.getGameFileSizeForPortal(pid:Long,gid:Long)

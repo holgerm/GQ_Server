@@ -85,7 +85,7 @@ var Icon@hs.getId = L.icon({
 
 // add a marker in the given location, attach some popup content to it and open the popup
 	marker@hs.getId =  L.marker([@hs.getLatitude,@hs.getLongitude], {draggable: false,icon: Icon@hs.getId}).addTo(map)
-	.bindPopup("<h2>@a_game.getGame().getName()</h2>@if(a_game.getGame().hasFilledNPCTalk()){<a href=\"@a_game.getGame().getNPCTalkPictureURL()\" data-lightbox=\"image-@hs.getId\" rel=\"lightbox\" title=\"@a_game.getGame().getNPCTalkText()\"><img src=\"@a_game.getGame().getNPCTalkPictureURL()\" width=\"100\" height=\"100\" /></a><br/>@Html(a_game.getGame().getNPCTalkText())} else {@if(a_game.getGame().hasFile()){<br/><a href=\"@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.getGameFile(a_game.getGame().getId())\">Download</a>}}")
+	.bindPopup("<h2>@a_game.getGame().getName()</h2>@if(a_game.getGame().hasFilledNPCTalk()){<a href=\"@a_game.getGame().getNPCTalkPictureURL()\" data-lightbox=\"image-@hs.getId\" rel=\"lightbox\" title=\"@a_game.getGame().getNPCTalkText()\"><img src=\"@a_game.getGame().getNPCTalkPictureURL()\" width=\"100\" height=\"100\" /></a><br/>@Html(a_game.getGame().getNPCTalkText())} else {@if(a_game.getGame().hasFile()){<br/><a href=\"@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Editor.getXMLForClient(a_game.getGame().getId())\">Download</a>}}")
    .on('dragend', function(event){
     var marker = event.target;
     var longi = marker.getLatLng().lng;

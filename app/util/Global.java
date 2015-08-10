@@ -39,6 +39,8 @@ public class Global extends GlobalSettings {
 	private static String SERVER_URL_2_FALLBACK = "http://qeevee.org:9091";
 	public static String SERVER_URL_2;
 	public static String SERVER_URL;
+	
+	public static boolean SECURED_MODE = true;
 
 	static {
 		SERVER_URL_2 = System.getenv("GQ_EDITOR_BASE_URL");
@@ -46,7 +48,12 @@ public class Global extends GlobalSettings {
 			SERVER_URL_2 = SERVER_URL_2_FALLBACK;
 
 		SERVER_URL = SERVER_URL_2 + "/";
+		
+		if (System.getenv("GQ_EDITOR_MODE_INSECURE") != null) {
+			SECURED_MODE = false;
+		}
 	}
+	
 
 	public static ProviderPortal defaultportal;
 	public static MyUserPortalRights securityGuard;

@@ -33,374 +33,278 @@ import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.providers.password.UsernamePasswordAuthProvider;
 import com.feth.play.module.pa.user.AuthUser;
 
-
 public class Application extends Controller {
 
 	public static final String FLASH_MESSAGE_KEY = "message";
 	public static final String FLASH_ERROR_KEY = "error";
 	public static final String USER_ROLE = "user";
-    public static final String ADMIN_ROLE = "admin";
-    public static final String UNVERIFIED_ROLE = "unverified";
+	public static final String ADMIN_ROLE = "admin";
+	public static final String UNVERIFIED_ROLE = "unverified";
 
+	public static Result index() {
 
+		session("currentportal", Global.defaultportal.getId().toString());
 
-
-
-
-
-
-    public static Result index() {
-
-
-
-
-
-
-
-        session("currentportal",Global.defaultportal.getId().toString());
-
-        return redirect(routes.Portal.myGamesList(61L));
+		return redirect(routes.Portal.myGamesList(61L));
 	}
 
+	public static Result portalindex(Long pid) {
 
-    public static Result portalindex(Long pid) {
+		return redirect(routes.Portal.myGamesList(pid));
+	}
 
+	public static Result getDefaultTemplate() {
 
-        return redirect(routes.Portal.myGamesList(pid));
-    }
+		return ok(views.html.defaulttemplate.render());
+	}
 
+	public static Result getTestingTemplate() {
 
+		return ok(views.html.testingtemplate.render());
+	}
 
-    public static Result getDefaultTemplate(){
+	public static Result getTestMapping() {
 
-                    return ok(views.html.defaulttemplate.render());
-     }
+		return ok(views.html.testingmapping.render());
+	}
 
-    public static Result getTestingTemplate(){
+	public static Result getUserRoleByPortal(Long pid) {
 
-        return ok(views.html.testingtemplate.render());
-    }
+		return ok(views.html.string_getuserrole.render());
 
-    public static Result getTestMapping(){
+	}
 
-        return ok(views.html.testingmapping.render());
-    }
+	public static String getUserRoleOfCurrentPortal() {
 
-
-    public static Result getUserRoleByPortal(Long pid){
-
-
-        return ok(views.html.string_getuserrole.render());
-
-
-    }
-
-    public static String getUserRoleOfCurrentPortal(){
-
-        String i = "";
-        if(getLocalPortal().existsUser(getLocalUser(session()))){
-            i =  getLocalPortal().getUser(getLocalUser(session())).getRights();
-        }
-
-        return i;
-
-
-    }
-
-
-    public static Result portalfourofour(Long pid,String path){
-
-
-        return ok(views.html.notfound.render("/"+path));
-
-
-
-    }
-
-
-
-    
-   
-
-
-    public static Result getQeeveeHtml(){
-
-
-
-        return ok(views.html.template.render());
-
-    }
-    
-    public static Result getGeoQuestHtml(){
-
-
-
-        return ok(views.html.template_p.render());
-
-    }
-
-
-    public static Result getDataTableCSS(){
-
-
-
-        return ok(views.html.datatables.render()).as("text/css");
-
-    }
-
-
-
-
-    
-
-
-    /*
-     * HELPER FUNCTIONS
-     *
-     * These are for example used to help routing to the page with the wished content and the
-     * global variables set to the right value.
-     */
-
-
-    /*
-     * getLocalPortal() looks for the global variable currentportal.
-     * If it is not set, it looks at the defaultportal variable, but in most cases currentportal should be set,
-     * because it gets set to defaultportal onStart of Global.
-     *
-     */
-
-    public static ProviderPortal getLocalPortal() {
-
-    return getCurrentPortal(session());
-
-
-    }
-
-    public static boolean onDefaultProviderPortal() {
-
-return Global.securityGuard.isDefaultPortal();
-
-    }
-
-
-    public static ProviderPortal getPortalById(Long pid) {
-
-
-if(ProviderPortal.find.where().eq("id", pid).findRowCount() != 1){
-	  return Global.defaultportal;
-		
-		} else {
-    	
-        ProviderPortal p = ProviderPortal.find.byId(pid);
-
-
-            return p;
-       
+		String i = "";
+		if (getLocalPortal().existsUser(getLocalUser(session()))) {
+			i = getLocalPortal().getUser(getLocalUser(session())).getRights();
 		}
 
+		return i;
 
-    }
+	}
 
+	public static Result portalfourofour(Long pid, String path) {
 
-    
-    
-    
-    /*
-     * TOOLS
-     */
-    
-    
-    public static String getInverseColor(String in){
-    	
-    	String inColor = in;
+		return ok(views.html.notfound.render("/" + path));
 
-    	String rawInColor = inColor.substring(1,inColor.length());
-    	int rgb = Integer.parseInt(rawInColor, 16);
+	}
 
-    	Color inn = new Color(rgb);
-    	
-    	
-    	
-    	Color inverse = new Color(255-inn.getRed(),
-                255-inn.getGreen(),
-                255-inn.getBlue());
-    	
-    	String hex = "#"+Integer.toHexString(inverse.getRGB()).substring(2);
-    	return hex;
-    }
-    
-    
-    public static String getBrighterColor(String in){
-    	
-    	String inColor = in;
+	public static Result getQeeveeHtml() {
 
-    	String rawInColor = inColor.substring(1,inColor.length());
-    	int rgb = Integer.parseInt(rawInColor, 16);
+		return ok(views.html.template.render());
 
-    	Color inn = new Color(rgb);
-    	
-    	
-    	Color brighter = inn.brighter();
-    	Color brighter2 = brighter.brighter();
-    	
-    	
-    	
-    	String hex = "#"+Integer.toHexString(brighter2.getRGB()).substring(2);
-    	return hex;
-    	
-    	
-    	
-    }
-    
-public static String getDarkerColor(String in){
-    	
-    	String inColor = in;
+	}
 
-    	String rawInColor = inColor.substring(1,inColor.length());
-    	int rgb = Integer.parseInt(rawInColor, 16);
+	public static Result getGeoQuestHtml() {
 
-    	Color inn = new Color(rgb);
-    	
-    	
-    	Color darker = inn.darker();
-    	
-    	
-    	
-    	String hex = "#"+Integer.toHexString(darker.getRGB()).substring(2);
-    	return hex;
-    	
-    	
-    	
-    }
-    
-    
-    
+		return ok(views.html.template_p.render());
 
-    public static String getFontColor(String fontColor){
-    	
-    	
-    	
-    	String rawFontColor = fontColor.substring(1,fontColor.length());
-    	int rgb = Integer.parseInt(rawFontColor, 16);
+	}
 
-    	Color c = new Color(rgb);
+	public static Result getDataTableCSS() {
 
-    	float[] hsb = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
+		return ok(views.html.datatables.render()).as("text/css");
 
-    	float brightness = hsb[2];
+	}
 
-    	if (brightness < 0.5) {
-    	   return "#FFFFFF";
-    	} else {
-    		
-    	  return "#000000";
-    	}
-    	
-    	
-    }
-    
-    
+	/*
+	 * HELPER FUNCTIONS
+	 * 
+	 * These are for example used to help routing to the page with the wished
+	 * content and the global variables set to the right value.
+	 */
 
+	/*
+	 * getLocalPortal() looks for the global variable currentportal. If it is
+	 * not set, it looks at the defaultportal variable, but in most cases
+	 * currentportal should be set, because it gets set to defaultportal onStart
+	 * of Global.
+	 */
 
-    /*
-     * setPidRedirect and setPidRdirectWithAppendix are used to set the global variable currentportal.
-     * If any page in routes is opened with a /:id/ in front of the page adress, this function gets called.
-     * It will then set the currentportal to the ProviderPortal with the id = pid and redirect the user to the
-     * page that is set in linkto. If the page needs another variable the function withAppendix can be called and
-     * the needed String from linkadd will be appended.
-     */
+	public static ProviderPortal getLocalPortal() {
 
+		return getCurrentPortal(session());
 
+	}
 
+	public static boolean onDefaultProviderPortal() {
 
+		return Global.securityGuard.isDefaultPortal();
 
+	}
 
+	public static ProviderPortal getPortalById(Long pid) {
 
+		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
+			return Global.defaultportal;
 
-       /*
-        * Play Authenticate Code
-        *
-        */
+		} else {
 
-    public static User getLocalUser(final Session session) {
-        final AuthUser currentAuthUser = PlayAuthenticate.getUser(session);
-        final User localUser = User.findByAuthUserIdentity(currentAuthUser);
-        return localUser;
-    }
+			ProviderPortal p = ProviderPortal.find.byId(pid);
 
-    public static ProviderPortal getCurrentPortal(final Session session){
+			return p;
 
+		}
 
-        String pid = session("currentportal");
+	}
 
-        if(pid != null) {
+	/*
+	 * TOOLS
+	 */
 
-            Long pidlong = Long.parseLong(pid,10);
+	public static String getInverseColor(String in) {
 
+		String inColor = in;
 
-            if(ProviderPortal.find.where().eq("id", pidlong).findRowCount() == 1){
+		String rawInColor = inColor.substring(1, inColor.length());
+		int rgb = Integer.parseInt(rawInColor, 16);
 
+		Color inn = new Color(rgb);
 
-                return ProviderPortal.find.byId(pidlong);
+		Color inverse = new Color(255 - inn.getRed(), 255 - inn.getGreen(),
+				255 - inn.getBlue());
 
+		String hex = "#" + Integer.toHexString(inverse.getRGB()).substring(2);
+		return hex;
+	}
 
-            } else {
+	public static String getBrighterColor(String in) {
 
+		String inColor = in;
 
-                return Global.defaultportal;
+		String rawInColor = inColor.substring(1, inColor.length());
+		int rgb = Integer.parseInt(rawInColor, 16);
 
+		Color inn = new Color(rgb);
 
+		Color brighter = inn.brighter();
+		Color brighter2 = brighter.brighter();
 
-            }
-        } else {
+		String hex = "#" + Integer.toHexString(brighter2.getRGB()).substring(2);
+		return hex;
 
-            return ProviderPortal.find.byId(61L);
+	}
 
-        }
+	public static String getDarkerColor(String in) {
 
+		String inColor = in;
 
+		String rawInColor = inColor.substring(1, inColor.length());
+		int rgb = Integer.parseInt(rawInColor, 16);
 
-    }
+		Color inn = new Color(rgb);
+
+		Color darker = inn.darker();
+
+		String hex = "#" + Integer.toHexString(darker.getRGB()).substring(2);
+		return hex;
+
+	}
+
+	public static String getFontColor(String fontColor) {
+
+		String rawFontColor = fontColor.substring(1, fontColor.length());
+		int rgb = Integer.parseInt(rawFontColor, 16);
+
+		Color c = new Color(rgb);
+
+		float[] hsb = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(),
+				null);
+
+		float brightness = hsb[2];
+
+		if (brightness < 0.5) {
+			return "#FFFFFF";
+		} else {
+
+			return "#000000";
+		}
+
+	}
+
+	/*
+	 * setPidRedirect and setPidRdirectWithAppendix are used to set the global
+	 * variable currentportal. If any page in routes is opened with a /:id/ in
+	 * front of the page adress, this function gets called. It will then set the
+	 * currentportal to the ProviderPortal with the id = pid and redirect the
+	 * user to the page that is set in linkto. If the page needs another
+	 * variable the function withAppendix can be called and the needed String
+	 * from linkadd will be appended.
+	 */
+
+	/*
+	 * Play Authenticate Code
+	 */
+
+	public static User getLocalUser(final Session session) {
+		final AuthUser currentAuthUser = PlayAuthenticate.getUser(session);
+		final User localUser = User.findByAuthUserIdentity(currentAuthUser);
+		return localUser;
+	}
+
+	public static ProviderPortal getCurrentPortal(final Session session) {
+
+		String pid = session("currentportal");
+
+		if (pid != null) {
+
+			Long pidlong = Long.parseLong(pid, 10);
+
+			if (ProviderPortal.find.where().eq("id", pidlong).findRowCount() == 1) {
+
+				return ProviderPortal.find.byId(pidlong);
+
+			} else {
+
+				return Global.defaultportal;
+
+			}
+		} else {
+
+			return ProviderPortal.find.byId(61L);
+
+		}
+
+	}
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result profile(Long pid) {
-        session("currentportal",pid.toString());
-        final User localUser = getLocalUser(session());
+		session("currentportal", pid.toString());
+		final User localUser = getLocalUser(session());
 		return ok(profile.render(localUser));
 	}
 
 	public static Result login(Long pid) {
-        session("currentportal",pid.toString());
-        
-        
-if(pid == 1L){
-			
-			
+		session("currentportal", pid.toString());
+
+		if (pid == 1L && Global.SECURED_MODE) {
+
 			return redirect("https://quest-mill.com/geoquest/private.php");
-}else if(pid == 61L){
-			
+		} else if (pid == 61L) {
+
 			return ok(views.html.portal.publicportal_login.render());
-			
+
 		} else {
 
-        return ok(login.render(MyUsernamePasswordAuthProvider.LOGIN_FORM));
-        
+			return ok(login.render(MyUsernamePasswordAuthProvider.LOGIN_FORM));
+
 		}
 	}
-	
-		public static Result loginToPortalFromCache() {
-        return ok(login.render(MyUsernamePasswordAuthProvider.LOGIN_FORM));
+
+	public static Result loginToPortalFromCache() {
+		return ok(login.render(MyUsernamePasswordAuthProvider.LOGIN_FORM));
 	}
-		
-		
-		public static Result login2(Long pid,Long pid2) {
-	        session("currentportal",pid.toString());
-	        return ok(login.render(MyUsernamePasswordAuthProvider.LOGIN_FORM));
-		}
+
+	public static Result login2(Long pid, Long pid2) {
+		session("currentportal", pid.toString());
+		return ok(login.render(MyUsernamePasswordAuthProvider.LOGIN_FORM));
+	}
 
 	public static Result doLogin(Long pid) {
-        session("currentportal",pid.toString());
-        com.feth.play.module.pa.controllers.Authenticate.noCache(response());
+		session("currentportal", pid.toString());
+		com.feth.play.module.pa.controllers.Authenticate.noCache(response());
 		final Form<MyLogin> filledForm = MyUsernamePasswordAuthProvider.LOGIN_FORM
 				.bindFromRequest();
 		if (filledForm.hasErrors()) {
@@ -413,19 +317,18 @@ if(pid == 1L){
 	}
 
 	public static Result signup(Long pid) {
-        session("currentportal",pid.toString());
+		session("currentportal", pid.toString());
 
-if(pid == 1L){
-			
-			
+		if (pid == 1L) {
+
 			return redirect("https://quest-mill.com/geoquest/private.php");
-}else if(pid == 61L){
-			
+		} else if (pid == 61L) {
+
 			return ok(views.html.portal.publicportal_signup.render());
-			
+
 		} else {
-        return ok(signup.render(MyUsernamePasswordAuthProvider.SIGNUP_FORM));
-        
+			return ok(signup.render(MyUsernamePasswordAuthProvider.SIGNUP_FORM));
+
 		}
 	}
 
@@ -437,52 +340,49 @@ if(pid == 1L){
 	}
 
 	public static Result doSignup(Long pid) {
-        session("currentportal",pid.toString());
+		session("currentportal", pid.toString());
 
-        com.feth.play.module.pa.controllers.Authenticate.noCache(response());
+		com.feth.play.module.pa.controllers.Authenticate.noCache(response());
 
-        final Form<MySignup> filledForm = MyUsernamePasswordAuthProvider.SIGNUP_FORM
+		final Form<MySignup> filledForm = MyUsernamePasswordAuthProvider.SIGNUP_FORM
 				.bindFromRequest();
 
 		if (filledForm.hasErrors()) {
 			// User did not fill everything properly
-            return badRequest(signup.render(filledForm));
+			return badRequest(signup.render(filledForm));
 		} else {
 			// Everything was filled
 			// do something with your part of the form before handling the user
 			// signup
 
-            return UsernamePasswordAuthProvider.handleSignup(ctx());
+			return UsernamePasswordAuthProvider.handleSignup(ctx());
 		}
 
+	}
 
+	public void comment(String s) {
 
-    }
-
-    public void comment(String s){
-
-    }
+	}
 
 	public static String formatTimestamp(final long t) {
 		return new SimpleDateFormat("yyyy-dd-MM HH:mm:ss").format(new Date(t));
 	}
 
+	public static Result dologout(Long pid) {
 
-    public static Result dologout(Long pid){
+		session("currentportal", pid.toString());
 
-        session("currentportal",pid.toString());
+		return redirect(Global.SERVER_URL_2 + "/dologout");
 
-        return redirect(Global.SERVER_URL_2+"/dologout");
+	}
 
-    }
+	public static Result doauthenticate(Long pid, String provider) {
 
-    public static Result doauthenticate(Long pid, String provider){
+		session("currentportal", Global.defaultportal.getId().toString());
 
-        session("currentportal",Global.defaultportal.getId().toString());
+		return redirect(Application.getLocalPortal()
+				.getTemplateServerURLDropSlash() + "/authenticate/" + provider);
 
-
-        return redirect(Application.getLocalPortal().getTemplateServerURLDropSlash()+"/authenticate/"+provider);
-
-    }
+	}
 
 }

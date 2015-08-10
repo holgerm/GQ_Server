@@ -10,23 +10,17 @@
               		
               		  @defining(a_part.getMission()) { m =>
                
-             <div class="missioninview" id="listmission@m.getId">  
+             <div class="missioninview" id="listmission@m.getId" style="white-space:nowrap">  
              
-               <div class="missionlink"  onClick="javascript:openMission(@m.getId())" >
-            
-             
-               <i class="icon-file" style="display:inline-block;"></i>
-				 <div id="listmissionname@m.getId" style="display:inline-block; width:65%;  white-space: nowrap;    position:relative; ">
-             
-               
-               @m.getName()  &nbsp; <a href="@Global.SERVER_URL_2/editor/@g.getId/Part/@a_part.getId/move/up">^</a>
-               	<a href="@Global.SERVER_URL_2/editor/@g.getId/Part/@a_part.getId/move/down">v</a>
-                @if(a_part.isDeletable){
-              <i class="icon-minus-sign" onClick="javascript:deleteItem('Part',@a_part.getId,'mission',@m.getId)"></i> 
-            }
+               <i class="icon-file" style="display:inline-block;"  onClick="javascript:openMission(@m.getId())" ></i>
+				<div id="listmissionname@m.getId" onClick="javascript:openMission(@m.getId())"  style="display:inline-block; white-space: nowrap;    position:relative; ">
+					@m.getName()  &nbsp; 
                </div>
-               		
-              </div>
+                <div style="cursor:pointer; display:inline-block;" onClick="javascript:movePartInSideMenu(@a_part.getId, 'up');">^</div>
+               	<div style="cursor:pointer; display:inline-block;" onClick="javascript:movePartInSideMenu(@a_part.getId, 'down');">v</div>
+                @if(a_part.isDeletable){
+                <i class="icon-minus-sign"  style="display:inline-block;" onClick="javascript:deleteItem('Part',@a_part.getId,'mission',@m.getId)"></i> 
+           }
                </div>
                }
               

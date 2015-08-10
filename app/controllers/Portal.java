@@ -81,81 +81,61 @@ public class Portal extends Controller {
 
 		session("currentportal", pid.toString());
 
-		if(pid == 1L){
-			
-			
+		if (pid == 1L) {
+
 			return redirect("https://quest-mill.com/geoquest/private.php");
-			
-		} else if(pid == 61L || (Application.getLocalPortal().getContentHtmlParameter("general.includesites.Oeffentliche_Spiele").equals("false"))){
+
+		} else if (pid == 61L
+				|| (Application.getLocalPortal().getContentHtmlParameter(
+						"general.includesites.Oeffentliche_Spiele")
+						.equals("false"))) {
 
 			User u = getLocalUser(session());
-			
-			if(u == null){
-				
+
+			if (u == null) {
+
 				return redirect(routes.Application.login(pid));
 
-
-				
 			} else {
-				
-				
-				
-				
+
 				return redirect(routes.Portal.myGamesListOnCurrentPortal());
 
-				
 			}
-			
-			
-			
+
 		} else {
-			
-			
-			
-			
-		List<ProviderGames> gr = Application.getLocalPortal()
-				.getPublicGamesList();
-		return ok(views.html.portal.public_games.render(gr));
+
+			List<ProviderGames> gr = Application.getLocalPortal()
+					.getPublicGamesList();
+			return ok(views.html.portal.public_games.render(gr));
 		}
 
 	}
-	
-	
-	
 
 	public static Result publicGamesListOnCurrentPortal() {
-		
-		
-		
+
 		long pid = Application.getLocalPortal().getId();
-if(pid == 1L){
-			
-			
+		if (pid == 1L) {
+
 			return redirect("https://quest-mill.com/geoquest/private.php");
-			
-		} else if(pid == 61L){
+
+		} else if (pid == 61L) {
 
 			User u = getLocalUser(session());
-			
-			if(u == null){
-				
+
+			if (u == null) {
+
 				return redirect(routes.Application.login(61L));
 
-
-				
 			} else {
-				
+
 				return redirect(routes.Portal.myGamesListOnCurrentPortal());
 
-				
 			}
-			
-			
-			
+
 		} else {
-		List<ProviderGames> gr = Application.getLocalPortal()
-				.getPublicGamesList();
-		return ok(views.html.portal.public_games.render(gr));
+			List<ProviderGames> gr = Application.getLocalPortal()
+					.getPublicGamesList();
+			return ok(views.html.portal.public_games.render(gr));
 		}
 
 	}
@@ -181,17 +161,13 @@ if(pid == 1L){
 
 		session("currentportal", pid.toString());
 
-    	ProviderPortal p = Application.getLocalPortal();
+		ProviderPortal p = Application.getLocalPortal();
 
-		
+		if (ProviderPortal.find.where().eq("id", pid).findRowCount() == 1) {
 
-        if(ProviderPortal.find.where().eq("id", pid).findRowCount() == 1){
+			p = ProviderPortal.find.byId(pid);
 
-
-            p = ProviderPortal.find.byId(pid);
-
-
-        }
+		}
 
 		User u = getLocalUser(session());
 
@@ -808,14 +784,13 @@ if(pid == 1L){
 							SceneType s = new SceneType(form.scenename);
 							s.save();
 							String log = s.addDefaultsFromGame(g);
-					
-							
+
 							s.update();
 							gt.addPossibleSceneType(s);
 							gt.update();
 
 							gt.setOnlySceneType(s);
-							
+
 							gt.update();
 
 							gt.editor_only_scene_type = s;
@@ -1222,8 +1197,6 @@ if(pid == 1L){
 		ProviderPortal p = Application.getLocalPortal();
 
 		User u = getLocalUser(session());
-		
-		
 
 		if (Global.securityGuard.isDefaultPortal() == false) {
 
@@ -1247,26 +1220,24 @@ if(pid == 1L){
 		}
 	}
 
-	
 	public static Result getMenu() {
-
 
 		ProviderPortal p = Application.getLocalPortal();
 		User u = getLocalUser(session());
 
-		if(p.getId() == 61L && u != null){
+		if (p.getId() == 61L && u != null) {
 
-		for (SortedHtml sh:	p.getHtml()){
-			
-			if(sh.getWort().equals("%%_GEOQUEST_NAV_LI_%%")){
-			return ok(views.html.geoquestcodes.mainnavigation.render(sh,""));
+			for (SortedHtml sh : p.getHtml()) {
+
+				if (sh.getWort().equals("%%_GEOQUEST_NAV_LI_%%")) {
+					return ok(views.html.geoquestcodes.mainnavigation.render(
+							sh, ""));
+				}
+
 			}
-			
-		} 
-			
 
-		} 
-		
+		}
+
 		return ok("");
 	}
 
@@ -2137,43 +2108,39 @@ if(pid == 1L){
 
 		session("currentportal", pid.toString());
 
-		
-		
-if(pid == 1L){
-			
-			
+		if (pid == 1L) {
+
 			return redirect("https://quest-mill.com/geoquest/private.php");
-			
-} else if(pid == 61L || (Application.getLocalPortal().getContentHtmlParameter("general.includesites.Newsstream").equals("false"))){
+
+		} else if (pid == 61L
+				|| (Application.getLocalPortal().getContentHtmlParameter(
+						"general.includesites.Newsstream") != null && (Application
+						.getLocalPortal().getContentHtmlParameter(
+								"general.includesites.Newsstream")
+						.equals("false")))) {
 
 			User u = getLocalUser(session());
-			
-			if(u == null){
-				
+
+			if (u == null) {
+
 				return redirect(routes.Application.login(pid));
 
-
-				
 			} else {
-				
+
 				return redirect(routes.Portal.myGamesListOnCurrentPortal());
 
-				
 			}
-			
-			
-			
+
 		} else {
-		
-		
-		ProviderPortal p = Application.getLocalPortal();
 
-		Set<ProviderUsers> pplist = new HashSet<ProviderUsers>();
+			ProviderPortal p = Application.getLocalPortal();
 
-		List<NewsstreamItem> ilist;
-		ilist = getLocalPortal().getNewsstream();
+			Set<ProviderUsers> pplist = new HashSet<ProviderUsers>();
 
-		return ok(views.html.portal.portalnewsstream.render(ilist));
+			List<NewsstreamItem> ilist;
+			ilist = getLocalPortal().getNewsstream();
+
+			return ok(views.html.portal.portalnewsstream.render(ilist));
 		}
 
 	}
@@ -2216,7 +2183,8 @@ if(pid == 1L){
 		JSONSerializer postDetailsSerializer = new JSONSerializer()
 				.include("id", "typeID", "name", "hotspots",
 						"hotspots.longitude", "hotspots.latitude", "metadata",
-						"metadata.key", "metadata.value", "lastUpdate")
+						"metadata.key", "metadata.value", "lastUpdate",
+						"version", "featuredImagePath", "iconPath")
 				.exclude("*").prettyPrint(true);
 
 		List<GameInfo> gameInfos = new ArrayList<GameInfo>();
@@ -2435,25 +2403,7 @@ if(pid == 1L){
 
 	public static Result getGameFileForPortal(Long portal, Long game) {
 
-		if (Game.find.where().eq("id", game).findRowCount() != 1) {
-
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
-
-		} else {
-
-			Game mygame = Game.find.byId(game);
-
-			response().setContentType("application/x-download");
-			response().setHeader("Content-disposition",
-					"attachment; filename=game.zip");
-			// response().setHeader("Content-Length" , new
-			// File(mygame.getFile()).length()+"");
-
-			System.out.println("Content-Length: "
-					+ (new File(mygame.getFile()).length()));
-			return ok(new File(mygame.getFile()));
-		}
+		return redirect(routes.Editor.getXMLForClient(game));
 	}
 
 	public static Result getGameFile(Long game) {
@@ -2531,13 +2481,11 @@ if(pid == 1L){
 		final User localUser = User.findByAuthUserIdentity(currentAuthUser);
 		return localUser;
 	}
-	
-	
-	
-	public static User getLocalUser(){
-		
+
+	public static User getLocalUser() {
+
 		return getLocalUser(session());
-		
+
 	}
 
 	public static ProviderPortal getLocalPortal() {

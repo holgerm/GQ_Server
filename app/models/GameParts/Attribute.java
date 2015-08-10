@@ -77,6 +77,9 @@ public class Attribute extends Model {
     }
 
 
+    public String toString() {
+    	return getType().getXMLType() + ":" + value;
+    }
     
     
     // SETTER
