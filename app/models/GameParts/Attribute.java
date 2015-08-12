@@ -521,7 +521,7 @@ if(parent != null){
 			
 			
 
-				String x = help[1];
+				String x =  value.substring(1, value.length() - 1);
 				
 					
 					Element y = doc.createElement("string");

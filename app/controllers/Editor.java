@@ -2828,6 +2828,18 @@ public class Editor extends Controller {
 
 					if (c.getAttribute(at) != null) {
 
+						
+						
+						
+						
+						
+						if (at.getFileType().equals("QuoteStringTextArea")) {
+
+						value = value.replaceAll("\n", "<br>");
+							
+						}
+						
+						
 						Attribute a = c.getAttribute(at);
 						a.setValue(value);
 						a.update();
@@ -2854,7 +2866,7 @@ public class Editor extends Controller {
 
 					}
 
-					if (at.getFileType().equals("QuoteString")) {
+					if (at.getFileType().equals("QuoteString") || at.getFileType().equals("QuoteStringTextArea")) {
 
 						help = "synced";
 

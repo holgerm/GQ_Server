@@ -793,10 +793,14 @@ public class Scene extends Model {
 
 			if (aa.getXMLType().equals(at.getXMLType())) {
 
-				if (aa.getType().getFileType().equals("QuoteString")) {
+				if (aa.getType().getFileType().equals("QuoteString") || aa.getType().getFileType().equals("QuoteStringTextArea")) {
 
 					if (aa.getValue() != null) {
-						x = aa.getValue().replace("\"", "");
+						
+						 x =  aa.getValue().substring(1, aa.getValue().length() - 1);
+
+						x = x.replace("<br>", "\n");
+
 					} else {
 						x = "";
 

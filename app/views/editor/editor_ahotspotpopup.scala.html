@@ -35,18 +35,21 @@
         
         
         @if(a.getMimeType().equals("area")){
-        	        <textarea rows="8" cols="100" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)" onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').innerHTML = 'waiting...';">@s.getAttributeValue(a)</textarea>
+        	        <textarea rows="8" cols="100" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)"
+        	        onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");">@s.getAttributeValue(a)</textarea>
         	
         } else {
         
         
         
         @if(a.getName() == "Text"){
-        	        	        <textarea rows="8" cols="100" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)" onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').innerHTML = 'waiting...';">@s.getAttributeValue(a)</textarea>
+        	        	        <textarea rows="8" cols="100" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)"
+        	        onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");">@s.getAttributeValue(a)</textarea>
         	
         	
         	} else {
-                <input style="display:inline-block" type="text"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)" onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').innerHTML = 'waiting...';">
+                <input style="display:inline-block" type="text"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)"
+                       	        onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");"/>
         	}
         
         }
@@ -64,17 +67,34 @@
         
         
         
-                <input type="text"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId,true)" onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').innerHTML = 'waiting...';">
+                <input type="text"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId,true)"
+                        	        onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");"/>
         
         
         
         
         }
         
+        
+         @if(a.getFileType == "QuoteStringTextArea"){
+        
+        
+        
+        
+                 <textarea rows="8" cols="100" type="text"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId,true)"
+                        	        onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");">@s.getAttributeValue(a)</textarea>
+        
+        
+        
+        
+        }
+        
+        
          
         @if(a.getFileType == "int"){
         
-        <input type="number"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)" onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').innerHTML = 'waiting...';">
+        <input type="number"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)"
+               	        onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");"/>
         
         }
         
@@ -112,14 +132,16 @@
         <a  onClick="javascript:document.getElementById('scenefile_file_at@s.getId@a.getId').style.display='none';document.getElementById('scenefile_text_at@s.getId@a.getId').style.display='block';">Variabel</a>
         </div>
                 <div id="scenefile_text_at@s.getId@a.getId" style="display:none;">
-                       <input type="text" value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)" onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').innerHTML = 'waiting...';">
+                       <input type="text" value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)"         	        onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");"/>
+                       
+
                       <a onClick="javascript:document.getElementById('scenefile_text_at@s.getId@a.getId').style.display='none';document.getElementById('scenefile_file_at@s.getId@a.getId').style.display='block';">Datei</a>
               
                </div>
         
         }
+                   <img id="status_sceneat@s.getId@a.getId" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
         
-        <span style="display:inline-block" id="status_sceneat@s.getId@a.getId">synced</span>
         <br/>
         
       
