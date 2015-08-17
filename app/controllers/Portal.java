@@ -81,14 +81,22 @@ public class Portal extends Controller {
 
 		session("currentportal", pid.toString());
 
+		Boolean oeffentlichespiele = true;
+		
+		
+		
+		if(Application.getLocalPortal().getContentHtmlParameter("general.includesites.Oeffentliche_Spiele") != null &&
+		   Application.getLocalPortal().getContentHtmlParameter("general.includesites.Oeffentliche_Spiele").equals("false")){
+				oeffentlichespiele = false;
+		}
+		
+		
 		if (pid == 1L) {
 
 			return redirect("https://quest-mill.com/geoquest/private.php");
 
 		} else if (pid == 61L
-				|| (Application.getLocalPortal().getContentHtmlParameter(
-						"general.includesites.Oeffentliche_Spiele")
-						.equals("false"))) {
+				|| !oeffentlichespiele) {
 
 			User u = getLocalUser(session());
 
