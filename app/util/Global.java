@@ -98,35 +98,10 @@ public class Global extends GlobalSettings {
 
 			}
 
-			if (!defaultportal.hasGameType("Lernort (BAG)")) {
+			
 
-				BAGLernortv2Factory factory = new BAGLernortv2Factory();
+		
 
-				defaultportal.addGameType(factory.addGameToDatabase());
-				defaultportal.update();
-				System.out.println("GameType erstellt: Lernort (BAG)");
-
-			}
-
-			if (!defaultportal.hasGameType("Wer Wird Millionär")) {
-
-				WerWirdMillionaerFactory factory = new WerWirdMillionaerFactory();
-
-				defaultportal.addGameType(factory.addGameToDatabase());
-				defaultportal.update();
-				System.out.println("GameType erstellt: Wer Wird Millionär");
-
-			}
-
-			if (!defaultportal.hasGameType("BAG Lernort")) {
-
-				BAGLernortFactory factory = new BAGLernortFactory();
-
-				defaultportal.addGameType(factory.addGameToDatabase());
-				defaultportal.update();
-				System.out.println("GameType erstellt: BAG Lernort");
-
-			}
 
 			// // AKKA ACTORS
 

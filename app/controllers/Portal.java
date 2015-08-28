@@ -18,6 +18,7 @@ import org.codehaus.jackson.node.ObjectNode;
 
 import play.api.libs.json.*;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Random;
@@ -197,6 +198,24 @@ public class Portal extends Controller {
 		String url = p.getTemplateServerURLDropSlash() + ""
 				+ p.getPathTo(routes.Portal.myGamesList(p.getId()));
 		return redirect(url);
+
+	}
+	
+	
+	
+	
+	public static Result paymentsuccessful() {
+		
+	
+		return ok(views.html.portal.payment_successful.render());
+
+	}
+	
+	
+	public static Result paymentfailed() {
+		
+		
+		return ok(views.html.portal.payment_failed.render());
 
 	}
 
@@ -736,6 +755,74 @@ public class Portal extends Controller {
 
 	}
 
+	
+	
+	@Restrict(@Group(Application.USER_ROLE))
+	public static Result givePremiumAccess(Long uid, int months) {
+
+		
+		if(!Application.getLocalUser().isAdminOnPortalOne()){
+		
+
+			return badRequest(views.html.norights
+					.render("Das kann nur ein Admin tun."));
+			
+		} else {
+		
+		if (User.find.where().eq("id", uid).findRowCount() != 1) {
+
+			return badRequest(views.html.norights
+					.render("Der User existiert nicht."));
+
+		} else {
+			
+			
+			
+
+			User usertoedit = User.find.byId(uid);
+			
+			
+			
+			if(usertoedit.getCurrentAccess() != null){
+				
+				usertoedit.getCurrentAccess().addMonths(months);
+				usertoedit.getCurrentAccess().update();
+			} else {
+			
+			String pn = "All Access";
+			Date then = new Date();
+			
+			
+			
+			 Calendar cal = Calendar.getInstance();
+		        cal.setTime(then);
+		       // int m = months+0;
+		        cal.add(Calendar.MONTH, months); //minus number would decrement the days
+		        then= cal.getTime();
+			
+			
+			PremiumAccess pa = new PremiumAccess(pn,then);
+			pa.save();
+			usertoedit.givePremiumAccess(pa);
+			usertoedit.update();
+			
+			}
+			
+			
+		}
+		
+		}
+		
+		
+		
+		
+		return redirect(routes.Portal
+				.myGamesListOnCurrentPortal());		
+	}
+	
+	
+	
+	
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result doAddGameTypeFromGame(Long pid, Long gid) {
 		session("currentportal", pid.toString());
@@ -1417,7 +1504,7 @@ public class Portal extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result userRightsonCurrentPortal(Long gid) {
+	public static Result userRightsonCurrentPortal() {
 
 		ProviderPortal myportal = Application.getLocalPortal();
 		if (Global.securityGuard.hasAdminRightsOnPortalX(
@@ -1898,7 +1985,7 @@ public class Portal extends Controller {
 
 		} else {
 
-			return redirect(routes.Portal.userRightsonCurrentPortal(peditid));
+			return redirect(routes.Portal.userRightsonCurrentPortal());
 
 		}
 
@@ -1939,7 +2026,7 @@ public class Portal extends Controller {
 					Global.updatePortals();
 
 					return redirect(routes.Portal
-							.userRightsonCurrentPortal(peditid));
+							.userRightsonCurrentPortal());
 
 				}
 			}

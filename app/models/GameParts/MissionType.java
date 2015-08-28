@@ -38,6 +38,10 @@ public class MissionType extends Model {
     private List<Content> defaultContent;
     
     
+    private String premiumcodes;
+
+    
+    
     public MissionType(String n, String x){
      
     	name = n;

@@ -26,6 +26,10 @@ public class HotspotType extends Model {
     private String image;
     private int radius;
     
+    
+    private String premiumcodes;
+
+    
     @ManyToMany
     private List<RuleType> possibleRuleTypes;
     

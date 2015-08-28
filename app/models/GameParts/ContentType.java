@@ -40,6 +40,9 @@ public class ContentType extends Model {
     @ManyToOne
     private ContentSet defaultContent;
     
+    
+    private String premiumcodes;
+
 
     public ContentType(String n, String xml){
      

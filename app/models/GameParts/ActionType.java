@@ -23,12 +23,17 @@ public class ActionType extends Model {
     private String name;
     private String xmltype;
     private boolean show;
+    
 
     private String symbol;
 
     @ManyToMany
     private List<AttributeType> attributeTypes;
     
+    
+    
+    
+    private String premiumcodes;
 
     public ActionType(String n, String xml){
     	
@@ -47,6 +52,30 @@ public class ActionType extends Model {
     	show = x;
     }
     
+    
+    
+    
+   public String getPremiumRequirement(){
+	   
+	   return premiumcodes;
+	   
+   }
+   
+   
+   public void setPremiumRequirement(String s){
+	   
+	   premiumcodes = s;
+	   
+   }
+    
+   
+   public void addPremiumRequirement(String s){
+	   
+	premiumcodes = premiumcodes + ","+s;   
+   
+   }
+   
+   
     public void setSymbol(String x){ symbol = x; }
     
     public void setAttributeType(AttributeType t){

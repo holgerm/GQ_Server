@@ -31,6 +31,10 @@ public class GameType extends Model {
     private boolean mapview;
     
     
+    private String premiumcodes;
+
+    
+    
     @ManyToMany
     private List<PartType> possiblePartTypes;
    
@@ -58,6 +62,9 @@ public class GameType extends Model {
 	public boolean multiple_only_scene_type;
     
     public boolean easy_editor;
+    
+    
+    public boolean show_only_hotspots_in_sidemenu;
     
     public GameType(String n){
      

@@ -52,6 +52,10 @@ public class User extends Model implements Subject {
 	public String firstName;
 	
 	public String lastName;
+	
+	 @ManyToMany
+	    @OrderBy("validuntil")
+	public List<PremiumAccess> premiumrights;
 
     @ManyToMany
     @OrderBy("datum")
@@ -133,6 +137,91 @@ public class User extends Model implements Subject {
         }
 
 
+    }
+    
+    
+    
+    public String getPremiumStatus(){
+    	
+    	String s = "Free";
+		Date now = new Date();
+
+    	for(PremiumAccess ps : premiumrights){
+    		
+    		if(ps.isValid() && ps.getName().equals("All Access")){
+    		s = ps.getName();
+    		}
+    	}
+    	
+    	return s;
+    	
+    }
+    
+    public void givePremiumAccess(PremiumAccess pa){
+    	
+    	premiumrights.add(pa);
+    	
+    	this.update();
+    	
+    	
+    }
+    
+    
+    
+    public PremiumAccess getCurrentAccess(){
+    	
+
+    	for(PremiumAccess ps : premiumrights){
+    		
+    		if(ps.isValid() && ps.getName().equals("All Access")){
+    		return ps;
+    		}
+    	}
+    	
+    return null;
+    }
+    
+    
+    
+    
+    public Boolean canAccess(String s){
+    	
+    	
+    	if(s == null || s == ""){ return true; } else {
+    	
+    	for(PremiumAccess ps : premiumrights){
+    		
+    		if(ps.isValid() && ps.getName().equals(s)){
+    		return true;
+    		}
+    	}
+    	
+    	return false;
+    	
+    	}
+    }
+    
+    public Boolean isAdminOnPortalOne(){
+    	
+    	Boolean b = false;
+    	
+    	
+    	for(ProviderUsers pu : portals){
+    		
+    		
+    		if(pu.getPortal().getId().equals(1L) && pu.getRights().equals("admin")){
+    			
+    			b = true;
+    			
+    		}
+    		
+    		
+    	}
+    	
+    	
+    	
+    	return b;
+    	
     }
 
 

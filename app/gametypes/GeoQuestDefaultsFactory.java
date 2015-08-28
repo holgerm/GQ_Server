@@ -154,6 +154,21 @@ public class GeoQuestDefaultsFactory {
 		
 		
 		
+		AttributeType gt_att9 = new AttributeType("Start Hotspot","startHotspot","hotspot");
+		gt_att9.save();
+		gt.setAttributeType(gt_att9);
+		
+
+		AttributeType gt_att10 = new AttributeType("An Ort des Benutzers transferieren","transferToUserPosition","boolean");
+		gt_att10.save();
+		gt_att10.setDefaultValue("false");
+		gt_att10.update();
+		gt.setAttributeType(gt_att10);
+		
+		AttributeType gt_att11 = new AttributeType("Transfer Hotspot","transferHotspot","hotspot");
+		gt_att11.save();
+		gt.setAttributeType(gt_att11);
+		
 
 		gt.update();
 
@@ -446,10 +461,22 @@ public class GeoQuestDefaultsFactory {
 		allActionTypes.add(at13);
 		hotspotActionTypes.add(at13);
 
-		ActionType at15 = new ActionType("Karte zentrieren auf", "CenterMap");
+		ActionType at15 = new ActionType("Karte zentrieren", "CenterMap");
 		at15.setSymbol(Global.SERVER_URL_2
 				+ "/assets/icons/actions/centermap.png");
 		at15.save();
+		
+		
+		AttributeType at15a0 = new AttributeType(
+				"Ort", "hotspot", "hotspot");
+
+		at15a0.save();
+
+		at15.setAttributeType(at15a0);
+		at15.update();
+		
+		
+		
 		AttributeType at15a1 = new AttributeType(
 				"Eigene Position einschließen", "position", "boolean");
 		at15a1.setDefaultValue("false");
@@ -508,6 +535,7 @@ public class GeoQuestDefaultsFactory {
 
 		ActionType at18 = new ActionType("Solange-Wie-Schleife", "Loop");
 		at18.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/while.png");
+		at18.setPremiumRequirement("All Access");
 		at18.save();
 		AttributeType at18a1 = new AttributeType("Solange Wie", "condition",
 				"condition");
@@ -536,6 +564,7 @@ public class GeoQuestDefaultsFactory {
 		allActionTypes.add(at18);
 		hotspotActionTypes.add(at18);
 		ActionType at22 = new ActionType("Von-Bis-Schleife", "Loop");
+		at22.setPremiumRequirement("All Access");
 		at22.save();
 		at22.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/while.png");
 		at22.save();
@@ -575,6 +604,7 @@ public class GeoQuestDefaultsFactory {
 		hotspotActionTypes.add(at22);
 		
 		ActionType at19 = new ActionType("Schleife unterbrechen", "Break");
+		at19.setPremiumRequirement("All Access");
 		at19.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/break.png");
 		at19.save();
 
@@ -636,13 +666,13 @@ public class GeoQuestDefaultsFactory {
 
 		// at20a6.save();
 
-		// at20.setAttributeType(at20a6);
-		// at20.update();
+//		 at20.setAttributeType(at20a6);
+	//	 at20.update();
 
 		// allActionTypes.add(at20);
-		// hotspotActionTypes.add(at20);
+		 //hotspotActionTypes.add(at20);
 
-		ActionType at21 = new ActionType("Routing hinzufügen", "AddRoute");
+		ActionType at21 = new ActionType("Routing anzeigen", "AddRoute");
 		at21.setSymbol(Global.SERVER_URL_2
 				+ "/assets/icons/actions/addroute.png");
 		at21.save();
@@ -663,14 +693,112 @@ public class GeoQuestDefaultsFactory {
 
 		allActionTypes.add(at21);
 		hotspotActionTypes.add(at21);
+		
+		
+		
+		ActionType at23 = new ActionType("Variable abspeichern", "SaveVar");
+		at23.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/savevar.png");
 
-		for (ActionType aat : allActionTypes) {
+		at23.save();
 
-			if (!aat.getXMLType().equals("next")) {
-				gt.addPossibleMenuItemActionType(aat);
-			}
+		AttributeType at23a1 = new AttributeType("Variable", "var", "String");
 
-		}
+		at23a1.save();
+
+		at23.setAttributeType(at23a1);
+		at23.update();
+
+
+		allActionTypes.add(at23);
+		hotspotActionTypes.add(at23);
+		
+		ActionType at24 = new ActionType("Variable laden", "LoadVar");
+		at24.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/loadvar.png");
+
+		at24.save();
+
+		AttributeType at24a1 = new AttributeType("Variable", "var", "String");
+
+		at24a1.save();
+
+		at24.setAttributeType(at24a1);
+		at24.update();
+
+
+		allActionTypes.add(at24);
+		hotspotActionTypes.add(at24);
+		
+		
+		
+		
+		
+		
+		ActionType at25 = new ActionType("Route löschen", "RemoveRoute");
+		at25.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/removeroute.png");
+
+		at25.save();
+
+		allActionTypes.add(at25);
+		hotspotActionTypes.add(at25);
+		
+		
+		
+		
+		ActionType at26 = new ActionType("Variablen-Ansicht anzeigen", "ShowVar");
+		at26.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/varoverlay.png");
+
+		at26.save();
+		
+
+		AttributeType at26a1 = new AttributeType("Variable", "var", "expression");
+		at26a1.save();
+		at26.setAttributeType(at26a1);
+		at26a1.update();
+
+			
+		AttributeType at26a2 = new AttributeType("Bezeichnung", "description", "String");
+
+		at26a2.save();
+
+		at26.setAttributeType(at26a2);
+		at26.update();
+
+		
+		
+		
+		AttributeType at26a3 = new AttributeType("Ausrichtung", "position",
+				"String");
+		at26a3.save();
+		at26a3.setDefaultValue("oben mittig");
+		at26a3.addPossibleValue("oben mittig");
+		at26a3.update();
+
+		at26.setAttributeType(at26a3);
+		
+		
+
+		allActionTypes.add(at26);
+		hotspotActionTypes.add(at26);
+		
+		
+		
+		ActionType at27 = new ActionType("Variablen-Ansicht ausblenden", "HideVar");
+		at27.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/varoverlay_hide.png");
+
+		at27.save();
+		
+
+		allActionTypes.add(at27);
+		hotspotActionTypes.add(at27);
+		
+
+		//for (ActionType aat : allActionTypes) {
+
+		//	if (!aat.getXMLType().equals("next")) {
+		//		gt.addPossibleMenuItemActionType(aat);
+		//	}
+
+		//}
 
 		// / HOTSPOTS
 
@@ -1418,7 +1546,7 @@ public class GeoQuestDefaultsFactory {
 
 		// MISSION TYPE: MapOSM
 
-		osmap = new MissionType("Karte (OpenStreetMap)", "MapOSM");
+		osmap = new MissionType("Karte", "MapOSM");
 		osmap.save();
 
 		mt.add(osmap);
@@ -1441,36 +1569,36 @@ public class GeoQuestDefaultsFactory {
 
 		osmap.update();
 
-		// MISSION TYPE: MapGoogle
-
-		googlemap = new MissionType("Karte (Google)", "MapGoogle");
-		googlemap.save();
-
-		mt.add(googlemap);
-
-		// SAVE MISSIONTYPE TO GAMETYPE
-		PartType pt6 = new PartType(googlemap);
-		pt6.save();
-
-		// ATTRIBIUTE
-
-		AttributeType att47 = new AttributeType("Map-Ansicht", "makind",
-				"String");
-		att47.setOptional(true);
-		att47.save();
-		att47.setDefaultValue("map");
-		att47.addPossibleValue("map");
-		att47.addPossibleValue("satellite");
-		att47.update();
-
-		osmap.setAttributeType(att47);
-
-		// Zoom-Stufe
-		googlemap.setAttributeType(att18);
-
-		googlemap.addPossibleRuleTypes(rt4);
-
-		googlemap.update();
+//		// MISSION TYPE: MapGoogle
+//
+//		googlemap = new MissionType("Karte (Google)", "MapGoogle");
+//		googlemap.save();
+//
+//		mt.add(googlemap);
+//
+//		// SAVE MISSIONTYPE TO GAMETYPE
+//		PartType pt6 = new PartType(googlemap);
+//		pt6.save();
+//
+//		// ATTRIBIUTE
+//
+//		AttributeType att47 = new AttributeType("Map-Ansicht", "makind",
+//				"String");
+//		att47.setOptional(true);
+//		att47.save();
+//		att47.setDefaultValue("map");
+//		att47.addPossibleValue("map");
+//		att47.addPossibleValue("satellite");
+//		att47.update();
+//
+//		osmap.setAttributeType(att47);
+//
+//		// Zoom-Stufe
+//		googlemap.setAttributeType(att18);
+//
+//		googlemap.addPossibleRuleTypes(rt4);
+//
+//		googlemap.update();
 
 		// MISSION TYPE: AudioRecord
 
@@ -1577,7 +1705,7 @@ public class GeoQuestDefaultsFactory {
 
 		// MISSION TYPE: TagReading
 
-		tagreading = new MissionType("Tag Scanner", "TagScanner");
+		tagreading = new MissionType("QR Tag Scanner", "TagScanner");
 		tagreading.save();
 
 		mt.add(tagreading);
@@ -1593,7 +1721,7 @@ public class GeoQuestDefaultsFactory {
 		tagreading_att26.save();
 		tagreading_att26.setDefaultValue("QR-Code");
 		tagreading_att26.addPossibleValue("QR-Code");
-		tagreading_att26.addPossibleValue("NFC-Tag");
+		tagreading_att26.setEditable(false);
 		tagreading_att26.update();
 
 		tagreading.setAttributeType(tagreading_att26);
@@ -1728,10 +1856,6 @@ public class GeoQuestDefaultsFactory {
 
 		videoplay.setAttributeType(att39);
 
-		AttributeType att40 = new AttributeType("Video-URL", "url", "String");
-		att40.save();
-
-		videoplay.setAttributeType(att40);
 
 		AttributeType att32 = new AttributeType("Kontrollierbar?",
 				"controllable", "boolean");
@@ -1948,7 +2072,7 @@ public class GeoQuestDefaultsFactory {
 		gt.addPossiblePartType(pt8);
 
 		// Karte (Google) [MapGoogle]
-		gt.addPossiblePartType(pt6);
+	//	gt.addPossiblePartType(pt6);
 
 		// Karte (OSM) [MapOSM]
 		gt.addPossiblePartType(pt5);

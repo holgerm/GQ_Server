@@ -187,7 +187,7 @@
 									        
 									          <select style="display:block; width:80%;" class="missionselector" id = "gameat@g.getId@a.getId" onchange="javascript:syncAttr('game',@g.getId,@a.getId)" >
              
-             <option ></option>
+             <option value="0" ></option>
               		@for(pm <- g.getAllMissions()){
               			   <option  value = "@pm.getId()" @if(g.getAttributeValue(a).equals(String.valueOf(pm.getId()))){ selected="selected" } >@pm.getName()</option>
               			
@@ -196,6 +196,25 @@
 									        
 									        
 									        }
+									        
+									               @if(a.getFileType == "hotspot" || a.getFileType == "hotspotstring"){
+									        
+									        
+									          <select id = "gameat@g.getId@a.getId" class="hotspotselector" onchange="javascript:syncAttr('game',@g.getId,@a.getId)" >
+             
+          
+             <option value="0" ></option>
+             
+             
+              		@for(pm <- g.getAllHotspots()){
+              			   <option  value = "@pm.getId()" @if(g.getAttributeValue(a).equals(String.valueOf(pm.getId()))){ selected="selected" } >@pm.getName()</option>
+              			
+              			
+              		}   </select>
+									        
+									        
+									        }
+									        
 									        
 									        
 									         @if(a.getFileType == "file"){

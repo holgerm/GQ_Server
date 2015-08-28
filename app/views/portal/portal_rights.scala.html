@@ -30,7 +30,9 @@
                     @for(a_user <- provider.getUsers()){
                             <tr>
 
-                                <td>@a_user.getUser.getName()</td>
+                                <td>@a_user.getUser.getName() @if(Application.getLocalUser().isAdminOnPortalOne()){( @a_user.getUser().getPremiumStatus()
+                                @if(a_user.getUser().getPremiumStatus().equals("All Access")){ until @a_user.getUser().getCurrentAccess().getValidUntil().format("dd.MM.yyyy") }
+                                	<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.givePremiumAccess(a_user.getUser.getId,1)">Add one months All Access</a> )}</td>
 
 
 
@@ -63,6 +65,10 @@
 
 
                                         }
+                                        
+                                        
+                                        
+                                       
 
 
 

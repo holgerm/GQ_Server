@@ -9,7 +9,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -35,7 +34,8 @@ public class AttributeType extends Model {
     private ObjectReference linkto;
     
 
-    
+    private String premiumcodes;
+
     
     private boolean optional;
     private String filetype;

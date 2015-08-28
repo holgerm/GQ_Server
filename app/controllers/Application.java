@@ -14,8 +14,7 @@ import com.avaje.ebean.config.dbplatform.H2Platform;
 import com.avaje.ebeaninternal.api.SpiEbeanServer;
 import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
 
-import models.ProviderPortal;
-import models.User;
+import models.*;
 import play.Routes;
 import play.data.Form;
 import play.mvc.*;
@@ -243,6 +242,19 @@ public class Application extends Controller {
 		final User localUser = User.findByAuthUserIdentity(currentAuthUser);
 		return localUser;
 	}
+	
+	
+	
+	public static User getLocalUser() {
+
+		return getLocalUser(session());
+	}
+	
+	
+	
+	
+	
+
 
 	public static ProviderPortal getCurrentPortal(final Session session) {
 
@@ -292,6 +304,12 @@ public class Application extends Controller {
 
 		}
 	}
+	
+	
+	
+	
+	
+
 
 	public static Result loginToPortalFromCache() {
 		return ok(login.render(MyUsernamePasswordAuthProvider.LOGIN_FORM));

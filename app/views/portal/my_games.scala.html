@@ -4,6 +4,13 @@
 
 @main(Application.getLocalPortal.getLanguageParameter("Meine_Spiele")) {
 
+<br/>
+<div class="alert alert-danger">
+  <strong>Achtung!</strong> Aktuell kann es auf Grund von Entwicklungsarbeiten zu kurzzeitigen Serverausfällen oder unerwartetem Verhalten kommen.
+</div>
+
+<br/>
+
 
     <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.uploadGame(Application.getLocalPortal().getId()))" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.speciallinks.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.speciallinks.attributes") !=""))>
     @Application.getLocalPortal.getLanguageParameter("Neues_Spiel_erstellen")</a>

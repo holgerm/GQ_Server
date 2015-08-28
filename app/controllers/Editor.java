@@ -2394,7 +2394,8 @@ public class Editor extends Controller {
 				if (resourceFile != null) {
 
 					String fileName = resourceFile.getFilename();
-					String destfilename = fileName.replace(" ", "_");
+					String destfilename = fileName.replaceAll(" ", "_");
+					destfilename = destfilename.replaceAll("[^a-zA-Z]", "_");  
 					File file = resourceFile.getFile();
 
 					int i = 0;

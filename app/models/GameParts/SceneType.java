@@ -30,6 +30,10 @@ public class SceneType extends Model {
     private String xmltype;
     private boolean show;
     
+    
+    private String premiumcodes;
+
+    
     @ManyToMany
     private List<PartType> possiblePartTypes;
     @ManyToMany

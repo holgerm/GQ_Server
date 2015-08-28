@@ -100,7 +100,7 @@ GET    /:pid/portal/:portal/gametypes/add/:gtid                               co
 GET    /:pid/portal/:portal/gametypes/remove/:gtid                            controllers.Portal.doDeleteGameTypeFromPortal(pid: Long, portal: Long, gtid: Long)
 
 GET    /:pid/portal/rights/:gid                                               controllers.Portal.userRightsonPortal(pid:Long,gid:Long)
-GET    /portal/rights/:gid                                                    controllers.Portal.userRightsonCurrentPortal(gid:Long)
+GET    /portal/rights                                                   		controllers.Portal.userRightsonCurrentPortal()
 
 
 GET    /:pid/portal/delete/:epid                                              controllers.Portal.doDeletePortal(pid: Long,epid: Long)
@@ -123,7 +123,11 @@ POST   /:pid/newPortal                                                        co
 GET    /:pid/updatetemplate                                                   controllers.Portal.updatePortalTemplate(pid: Long)
 
 
+# PREMIUM
 
+GET 	/premium/add/:months/months/touser/:uid								controllers.Portal.givePremiumAccess(uid: Long, months: Integer)
+GET		/premium/successful													controllers.Portal.paymentsuccessful()
+GET		/premium/failed													controllers.Portal.paymentfailed()
 
 # EDITOR
 GET    /:pid/editor/:gid                                                      controllers.Editor.getEditorRedirect(gid: Long,pid:Long)

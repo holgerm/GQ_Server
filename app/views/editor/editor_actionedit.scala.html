@@ -56,6 +56,9 @@
 									              		
 									              				<div id="action_@ac.getId"><h1>@ac.getName()</h1></div>
 									              				
+									              			@if(ac.getType.getPremiumRequirement() != null){	@ac.getType.getPremiumRequirement() 									              			@Application.getLocalUser().canAccess(ac.getType.getPremiumRequirement())
+									              			
+									              			}
 									              			
 									              				<span  style="cursor:pointer;"><a href="https://www.quest-mill.com/geoquest/index.php?content=@ac.getType().getNameEncoded()" target="_blank"><icon class="icon-question-sign" style="display:inline-block;"></icon> Anleitung</a></span>
 									              				<br/><br/>
@@ -368,7 +371,14 @@
 									        
 									          <select id = "actionat@ac.getId@a.getId" class="hotspotselector" onchange="javascript:syncAttr('action',@ac.getId,@a.getId)" >
              
+             
+             @if(ac.getType().getXMLType().equals("AddRoute")){
+             	  <option  value = "0" @if(ac.getAttributeValue(a).equals("0")){ selected="selected" } >GPS-Position</option>
+             	
+             } else {
              <option ></option>
+             }
+             
               		@for(pm <- g.getAllHotspots()){
               			   <option  value = "@pm.getId()" @if(ac.getAttributeValue(a).equals(String.valueOf(pm.getId()))){ selected="selected" } >@pm.getName()</option>
               			
