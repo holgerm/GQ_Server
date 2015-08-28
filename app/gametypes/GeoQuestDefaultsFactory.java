@@ -1936,6 +1936,14 @@ public class GeoQuestDefaultsFactory {
 
 		imagecapture.setAttributeType(att45);
 
+		AttributeType att46 = new AttributeType("Button Beschriftung", "buttontext",
+				"String");
+		att46.setOptional(true);
+		att46.setDefaultValue("Foto machen!");
+		att46.save();
+
+		imagecapture.setAttributeType(att46);
+
 		// RULES
 		imagecapture.addPossibleRuleTypes(rt4);
 		imagecapture.addPossibleRuleTypes(rt3);
