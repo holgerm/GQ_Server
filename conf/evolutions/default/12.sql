@@ -28,7 +28,7 @@ ALTER TABLE hotspot_type ADD COLUMN premiumcodes varchar(255);
 ALTER TABLE scene_type ADD COLUMN premiumcodes varchar(255);
 
 ALTER TABLE game_type ADD COLUMN show_only_hotspots_in_sidemenu  boolean;
-
+UPDATE game_type SET show_only_hotspots_in_sidemenu = 'FALSE';
 
 
 # --- !Downs
