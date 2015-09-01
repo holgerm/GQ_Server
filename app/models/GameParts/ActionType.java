@@ -26,6 +26,9 @@ public class ActionType extends Model {
     
 
     private String symbol;
+    
+    
+    private String category;
 
     @ManyToMany
     private List<AttributeType> attributeTypes;
@@ -52,6 +55,26 @@ public class ActionType extends Model {
     	show = x;
     }
     
+    
+    public String getCategory(){
+    	
+    	
+    	
+    	
+    	if(category == null){
+    		
+    		return "";
+    	} else {
+    	
+    return category;	
+    	}
+    
+    }
+    
+    
+    public void setCategory(String s){
+category = s;
+}
     
     
     

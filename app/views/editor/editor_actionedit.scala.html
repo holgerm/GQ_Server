@@ -34,8 +34,8 @@
 	
 									        				<div class="options">
 									        				
-									        				<i class="icon-resize-full" onClick="javascript:toggleFullscreen('actionedit_@ac.getId()','72%','40%','200px','5%','25px')"></i>
-									        				<i class="icon-remove" onClick="javascript:document.getElementById('actionedit_@ac.getId()').style.display = 'none';deactiveFullscreen('actionedit_@ac.getId()','72%','60%','200px','5%','25px')"></i>
+									        				<i class="icon-resize-full" onClick="javascript:toggleFullscreen('actionedit_@ac.getId()','90%','40%','200px','5%','25px')"></i>
+									        				<i class="icon-remove" onClick="javascript:document.getElementById('actionedit_@ac.getId()').style.display = 'none';deactiveFullscreen('actionedit_@ac.getId()','90%','60%','200px','5%','25px')"></i>
 									        				
 									        				</div>   	
               	        		
@@ -60,7 +60,7 @@
 									              			
 									              			}
 									              			
-									              				<span  style="cursor:pointer;"><a href="https://www.quest-mill.com/geoquest/index.php?content=@ac.getType().getNameEncoded()" target="_blank"><icon class="icon-question-sign" style="display:inline-block;"></icon> Anleitung</a></span>
+									              				<span  style="cursor:pointer;"><a href="https://www.quest-mill.com/geoquest/index.php?content=@ac.getType().getNameEncoded()@if(Application.getLocalPortal().getId() != 61L){&portal=@Application.getLocalPortal().getId()}" target="_blank"><icon class="icon-question-sign" style="display:inline-block;"></icon> Anleitung</a></span>
 									              				<br/><br/>
 									              				<div id="actionattributes_@ac.getId()" >
 									              				

@@ -52,12 +52,12 @@
 	 		
              
 	<div class="inneredit" id="ruleedit_h@m.getId()" name="ruleedit_h@m.getId()">
-			 				              				<div class="scrollable-content" style="overflow-y:auto; overflow-x:hidden; height:100%; width:100%;">
+			 				              				<div class="scrollable-content" id="rulescroll_h@m.getId()" style="overflow-y:scroll; overflow-x:scroll; height:100%; width:100%;">
 	
 									        				<div class="options">
 									        				
-									        				<i class="icon-resize-full" onClick="javascript:toggleFullscreen('ruleedit_h@m.getId()','72%','60%','200px','5%','25px')"></i>
-									        				<i class="icon-remove" onClick="javascript:document.getElementById('ruleedit_h@m.getId()').style.display = 'none';showPlayer();deactiveFullscreen('ruleedit_h@m.getId()','72%','60%','200px','5%','25px')"></i>
+									        				<i class="icon-resize-full" onClick="javascript:toggleFullscreen('ruleedit_h@m.getId()','90%','60%','200px','5%','25px')"></i>
+									        				<i class="icon-remove" onClick="javascript:document.getElementById('ruleedit_h@m.getId()').style.display = 'none';showPlayer();deactiveFullscreen('ruleedit_h@m.getId()','90%','60%','200px','5%','25px')"></i>
 									        				
 									        				</div>   	
               	        		
@@ -75,7 +75,7 @@
               		
               		@for(rt <- m.getType.getPossibleRuleTypes){
               			
-              				<div style="width:99%; white-space: nowrap; overflow-x:scroll; overflow-y:hidden; ">
+              				<div style="width:99%; white-space: nowrap;   ">
 								<div style="min-width:101% white-space: nowrap;">
               			
               			
@@ -120,6 +120,10 @@
               		
               		
               		
+              		
+              		
+              		@if(rt.getPossibleActionTypes().get(0).getCategory().equals("")){
+              		
               									
               		
               		<div style="display:inline-block; width:130px;">
@@ -151,6 +155,133 @@
               		
               		
               		</div>
+              		
+              		
+              		} else {
+              		
+              		
+              		
+              		
+              		
+              		
+              		 <div style="position:relative; top:-80px; width:500px;">
+              
+                      		          <div class="btn-group">
+					
+					
+					
+							
+					
+  <a class="btn dropdown-toggle" id="actiondropdown_rt@rt.getId()" style=" cursor:pointer;" data-toggle="dropdown" onClick="scrollDiv('actiondropdown_rt@rt.getId()');">
+    
+    <span class="icon-plus"></span>
+  </a>
+
+
+
+
+  <ul class="dropdown-menu" style=" float: right; top: -60px; left: 45px;">
+   
+   
+   
+   
+    <li class="dropdown-submenu">
+                  <a tabindex="-1" >Questverlauf</a>
+                  <ul class="dropdown-menu">
+                   @for(at <- rt.getPossibleActionTypes()){
+                   	
+                   	@if(at.getCategory().equals("page")){
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newRuleInHotspot(@m.getId,@rt.getId,@at.getId());">@at.getName</a></li>
+              			}
+              			
+              		}
+      				</ul>
+  </li>
+  
+   
+    <li class="dropdown-submenu">
+                  <a tabindex="-1" >Karte</a>
+                  <ul class="dropdown-menu">
+                   @for(at <- rt.getPossibleActionTypes()){
+                   	
+                   	@if(at.getCategory().equals("map")){
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newRuleInHotspot(@m.getId,@rt.getId,@at.getId());">@at.getName</a></li>
+              			}
+              			
+              		}
+      				</ul>
+  </li>
+   
+    <li class="dropdown-submenu">
+                  <a tabindex="-1" >Variablen</a>
+                  <ul class="dropdown-menu">
+                   @for(at <- rt.getPossibleActionTypes()){
+                   	
+                   	@if(at.getCategory().equals("var")){
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newRuleInHotspot(@m.getId,@rt.getId,@at.getId());">@at.getName</a></li>
+              			}
+              			
+              		}
+      				</ul>
+  </li>
+  
+   
+    <li class="dropdown-submenu">
+                  <a tabindex="-1" >Bedingt</a>
+                  <ul class="dropdown-menu">
+                   @for(at <- rt.getPossibleActionTypes()){
+                   	
+                   	@if(at.getCategory().equals("condition")){
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newRuleInHotspot(@m.getId,@rt.getId,@at.getId());">@at.getName</a></li>
+              			}
+              			
+              		}
+      				</ul>
+  </li>
+  
+   
+    <li class="dropdown-submenu">
+                  <a tabindex="-1" >Sonstiges</a>
+                  <ul class="dropdown-menu">
+                   @for(at <- rt.getPossibleActionTypes()){
+                   	
+                   	@if(at.getCategory().equals("other")){
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newRuleInHotspot(@m.getId,@rt.getId,@at.getId());">@at.getName</a></li>
+              			}
+              			
+              		}
+      				</ul>
+  </li>
+   
+   
+   
+
+   @for(at <- rt.getPossibleActionTypes()){
+   	                   	@if(at.getCategory().equals("")){
+   	
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newRuleInHotspot(@m.getId,@rt.getId,@at.getId());">@at.getName</a></li>
+              			}
+              			
+              		}
+   
+   
+  
+   
+   
+   
+   
+   
+   
+   
+  </ul>
+</div>
+              
+              </div>
+              
+              
+              		
+              		
+              		}
               		
               		
               		}

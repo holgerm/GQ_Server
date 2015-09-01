@@ -1028,6 +1028,15 @@ public class Editor extends Controller {
 					// Will it ever be thrown?
 				}
 
+				
+				if(name.equals("Hier Namen eingeben")){
+					
+					int i = g.getMissions().size()+1;
+					name = "Neue Seite ("+i+")";
+					
+				}
+				
+				
 				Mission nm = y.createMe(name);
 				nm.save();
 
@@ -1277,6 +1286,14 @@ public class Editor extends Controller {
 						.render("Der Szenentyp existiert nicht"));
 
 			} else {
+				
+				
+if(name.equals("Hier Namen eingeben")){
+					
+					int i = g.getMissions().size()+1;
+					name = "Neuer Ordner ("+i+")";
+					
+				}
 
 				SceneType y = SceneType.find.byId(stype);
 
@@ -1391,6 +1408,14 @@ public class Editor extends Controller {
 						.render("Der Szenentyp existiert nicht"));
 
 			} else {
+
+				
+if(name.equals("Hier Namen eingeben")){
+					
+					int i = g.getMissions().size()+1;
+					name = "Neuer Ordner ("+i+")";
+					
+				}
 
 				SceneType y = SceneType.find.byId(stype);
 
@@ -2450,7 +2475,7 @@ public class Editor extends Controller {
 
 								b.update();
 
-								help = "synced";
+								help = ""+atts.getId();
 
 							}
 
@@ -2471,7 +2496,7 @@ public class Editor extends Controller {
 
 								b.update();
 
-								help = "synced";
+								help = ""+atts.getId();
 
 							}
 
@@ -2492,7 +2517,7 @@ public class Editor extends Controller {
 
 								b.update();
 
-								help = "synced";
+								help = ""+atts.getId();
 
 							}
 
@@ -2513,7 +2538,7 @@ public class Editor extends Controller {
 
 								b.update();
 
-								help = "synced";
+								help = ""+atts.getId();
 
 							}
 
@@ -2547,7 +2572,7 @@ public class Editor extends Controller {
 
 									b.update();
 
-									help = "synced";
+									help = ""+atts.getId();
 
 								}
 
@@ -2570,6 +2595,47 @@ public class Editor extends Controller {
 
 		return ok(help);
 
+	}
+	
+	
+	
+	
+	
+	@Restrict(@Group(Application.USER_ROLE))
+	public static Result getFilePreview(Long gid, Long attr) {
+		
+		
+		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+
+			return badRequest(views.html.norights
+					.render("Das Spiel existiert nicht"));
+
+		} else {
+
+			if (Attribute.find.where().eq("id", attr).findRowCount() != 1) {
+
+				return badRequest(views.html.norights
+						.render("Die Action existiert nicht"));
+
+			} else {
+
+				
+				
+				Attribute a = Attribute.find.byId(attr);
+				
+				
+				
+				
+				
+				return ok(views.html.editor.editor_afilepreview.render(
+						Game.find.byId(gid),attr,a.getValue()));
+				
+				
+				
+			}
+
+		}
+	
 	}
 
 	// / EDITOR SETTERS: ATTRIBUTES

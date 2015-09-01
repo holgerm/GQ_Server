@@ -10,15 +10,84 @@
  }
  
  
+ 
+ 
+ 
+ 
+ 
+.menu{
+position:fixed; right:0px; height:100%; z-index:10; white-space:nowrap; overflow-x:hidden; overflow-y:scroll; z-index:20;
+	z-index:1000;
+}
+
+
+.main{
+	
+position:absolute; left:0px;  min-height:100%; 	z-index:998;
+}
+
+.menu.fadeout{
+	
+		 
+	  -webkit-transition: .2s;
+  -moz-transition: .2s;
+  -ms-transition: .2s;
+  -o-transition: .2s;
+  transition: .2s;
+	width:0%;
+	
+}
+
+.menu.fadein {
+  -webkit-transition: .2s;
+  -moz-transition: .2s;
+  -ms-transition: .2s;
+  -o-transition: .2s;
+  transition: .2s;
+  width:20%;
+}
+
+
+
+.main.menufadein{
+	 -webkit-transition: .2s;
+  -moz-transition: .2s;
+  -ms-transition: .2s;
+  -o-transition: .2s;
+  transition: .2s;
+	width:80% ;
+	
+}
+
+.main.menufadeout{
+	 -webkit-transition: .2s;
+  -moz-transition: .2s;
+  -ms-transition: .2s;
+  -o-transition: .2s;
+  transition: .2s;
+	width:100%;
+	
+}
+
+
+	 
+	 
+	 
+	 
+	 
+ 
+ 
  #background-chooser {
  z-index:9003;
-  position: absolute; bottom:10px; left:10px; background-color:#FFFFFF;
+  position: absolute; top:80px; right:10px; background-color:#FFFFFF;
    -webkit-border-radius: 9px;
     -moz-border-radius: 9px;
     border-radius: 9px;
     -webkit-box-shadow: 3px 3px 5px #222;
     -moz-box-shadow: 3px 3px 5px #222;
     box-shadow: 5px 5px 7px #111;
+    
+    display:none;
  
  }
  .missionoverviewjs .window { 
@@ -65,11 +134,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#999999', end
                 margin: 0;
                 width: 100%;
                 height: 100%;
-                z-index:9000;
+                z-index:996;
             }
             
             #background{
-            z-index:9002;
+            z-index:997;
               position:absolute;
               margin: 0;
                 width: 100%;
@@ -126,7 +195,7 @@ padding-top:5px;
                 bottom: 20%;
   
                 left: 5%;
-                width: 72%;
+                width: 90%;
               
                 
                 
@@ -144,25 +213,14 @@ padding-top:5px;
                 bottom: 10%;
      background: rgba(256, 256, 256, .9);
                 left: 5%;
-                width: 72%;
+                width: 90%;
+                
                  padding: 0 0.5em 0.5em 0.5em;
 	
 	}
 	 #missionview {
-	 
-	 width: 15%;
-	 
-                top:15%; height:75%; 
-                bottom: 10%;
-   background: rgba(256, 256, 256, .9);
-                right: 5%;
-                
-    -webkit-border-radius: 9px;
-    -moz-border-radius: 9px;
-    border-radius: 9px;
-    -webkit-box-shadow: 3px 3px 5px #222;
-    -moz-box-shadow: 3px 3px 5px #222;
-    box-shadow: 5px 5px 7px #111;
+	 width:100%;
+	 height:100%;
 	 }
 	 
 	#navbarbutton {
@@ -359,18 +417,10 @@ padding:10px;
 	 
 	
 	 #missionview {
-	 top:0%;
-	 left:0%;
+	
 	 width: 100%;
 	 height:100%;
-	  background: rgba(256, 256, 256, 1);
-	            display:none;
-    -webkit-border-radius: none;
-    -moz-border-radius: none;
-    border-radius: none;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
+	 
 	 }
 	 
 	 
@@ -510,11 +560,7 @@ moz-box-sizing: border-box;
 
             }
             
-            @@-moz-document url-prefix() {
-    #missionview {
-        width:15%;
-    }
-}
+        
             
             
             

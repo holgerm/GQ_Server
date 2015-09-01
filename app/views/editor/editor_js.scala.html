@@ -93,6 +93,7 @@ function hidePlayer(){
 function showMapView(){
 	
 	document.getElementById('background').style.display='none';
+	document.getElementById('background-chooser').style.display='block';
 	inmapview = 1;
 	hidePlayer();
 	
@@ -102,10 +103,36 @@ function showMapView(){
 function hideMapView(){
 	
 	document.getElementById('background').style.display='block';
+		document.getElementById('background-chooser').style.display='none';
+	
 	inmapview = 0;
 	showPlayer();
 	
 }
+
+
+
+ function scrollDiv(name) {
+        var scroller = document.getElementById(name);
+        
+        if(scroller != null){
+       scroller = scroller.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+     if(scroller.id.indexOf('scroll') === -1){
+     scroller = scroller.parentNode;
+     }
+       }
+       var   name2 = scroller.id;
+       
+       console.log($('#'+name).offset().left);
+       
+       
+       
+       var scrollAmount =  $('#'+name).offset().left - 200 -$('#'+name2).offset().left;
+            scroller.scrollLeft += scrollAmount;
+            
+            
+        
+    }
 
 
 function deleteActionFromRule(r,a){
@@ -1083,9 +1110,10 @@ xmlhttp.send();
 
 }
 
-function newActionInAttribute(type,ob,atr,z,rt,m){
+function newActionInAttribute(type,ob,atr,z,rt,m,at){
 
 
+ var at = at ||  document.getElementById('actiontype_'+type+''+ob+'_atr'+atr).value;
 
 var xmlhttp;
 if (window.XMLHttpRequest)
@@ -1119,7 +1147,7 @@ $.ajax({
   		
   		
 
-if(!m){
+if(m != ''){
   		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Action/"+xmlhttp.responseText+"/allinfo/"+rt+"/"+z;
   		
   		} else {
@@ -1149,7 +1177,6 @@ $.ajax({
 	}
     
     
- var at = document.getElementById('actiontype_'+type+''+ob+'_atr'+atr).value;
   
 xmlhttp.open("GET",'@Global.SERVER_URL_2/editor/@g.getId/'+type+'/'+ob+'/attribute/'+atr+'/add/action/'+at,true);
 xmlhttp.send();
@@ -1165,7 +1192,11 @@ xmlhttp.send();
 
 
 
-function newRuleInMission(m,rt){
+function newRuleInMission(m,rt,a){
+
+
+
+            var a = a || document.getElementById('actiontypert_'+rt+'_m'+m).value;
 
 
 var xmlhttp;
@@ -1209,7 +1240,6 @@ $.ajax({
             
             
             
-            var a = document.getElementById('actiontypert_'+rt+'_m'+m).value;
             
             
              document.getElementById('trigger_m'+m+'_'+rt).innerHTML = data;
@@ -1252,10 +1282,11 @@ xmlhttp.send();
 
 }
 
-function newRuleInHotspot(h,rt){
+function newRuleInHotspot(h,rt,a){
 
 
 
+            var a = a || document.getElementById('actiontypert_'+rt+'_h'+h).value;
 
 
 
@@ -1288,7 +1319,7 @@ $.ajax({
             
             
             
-            var a = document.getElementById('actiontypert_'+rt+'_h'+h).value;
+            
             
             
              document.getElementById('trigger_h'+h+'_'+rt).innerHTML = data;
@@ -1625,10 +1656,14 @@ alert("No file selected!");
         
         }
         
-            console.log(['xhr upload complete', e]);
+            console.log(['xhr upload complete'+xhr.responseText, e]);
             
             
-             updateElementsByName(type+''+hid+'fileattr'+attr);
+            
+            replaceDivContentWithURL(type+''+hid+'fileattr'+attr,'@Global.SERVER_URL_2/editor/@g.getId()/fragments/Attribute/Preview/'+xhr.responseText);
+            	
+            
+            
              
              
             setTimeout(function(){
@@ -1644,6 +1679,9 @@ document.getElementById(statusdiv).src = '@Global.SERVER_URL_2@routes.Assets.at(
             }
             
              updateElementsByName(type+''+hid+'fileattr'+attr); },10);
+             
+             
+             
              
 			
 			
@@ -1672,6 +1710,34 @@ xhr.send(formData);
 
 
 }
+
+
+
+
+
+
+function replaceDivContentWithURL(div,url){
+
+
+
+		
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById(div).innerHTML = data;
+           }
+
+});
+
+
+
+
+
+
+
+}
+
 
 function xmlify(){
 
@@ -3047,9 +3113,9 @@ callback();
 
 
 
-function addNewObject(){
+function addNewObject(object){
 
-var object = document.getElementById('game_newobject_type').value;
+var object = object || document.getElementById('game_newobject_type').value;
 
 if(object != 'none'){
 var b = object.split("_");
@@ -4731,7 +4797,7 @@ document.getElementById('navbarbutton').style.display='block';
  if(sizebefore > 979){
     
     	var div = document.getElementById(divid);
-		 div.style.width="72%";
+		 div.style.width="90%";
 		 div.style.height="75%";
 		 div.style.top="120px";
 		 div.style.left="5%";
@@ -4768,7 +4834,7 @@ document.getElementById('navbarbutton').style.display='block';
     	if(div.style.top == "0px"){
 
     	
-		 div.style.width="72%";
+		 div.style.width="90%";
 		 div.style.height="75%";
 		 div.style.top="120px";
 		 div.style.left="5%";

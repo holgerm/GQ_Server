@@ -235,6 +235,7 @@ public class GeoQuestDefaultsFactory {
 		ActionType at1 = new ActionType("Nächste Seite", "next");
 		at1.setSymbol(Global.SERVER_URL_2
 				+ "/assets/icons/actions/nextmission.png");
+		at1.setCategory("page");
 		at1.save();
 		
 		AttributeType at1a2 = new AttributeType("Rückkehr erlauben?", "allowReturn", "boolean");
@@ -248,6 +249,7 @@ public class GeoQuestDefaultsFactory {
 		allActionTypes.add(at1);
 
 		ActionType at2 = new ActionType("Letzte Seite", "last");
+		at2.setCategory("page");
 		at2.setSymbol(Global.SERVER_URL_2
 				+ "/assets/icons/actions/lastmission.png");
 		at2.save();
@@ -262,6 +264,7 @@ public class GeoQuestDefaultsFactory {
 		allActionTypes.add(at2);
 
 		ActionType at3 = new ActionType("Seite aufrufen", "StartMission");
+		at3.setCategory("page");
 		at3.setSymbol(Global.SERVER_URL_2
 				+ "/assets/icons/actions/callmission.png");
 		at3.save();
@@ -282,12 +285,14 @@ public class GeoQuestDefaultsFactory {
 		hotspotActionTypes.add(at3);
 
 		ActionType at4 = new ActionType("Quest beenden", "EndGame");
+		at4.setCategory("page");
 		at4.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/endgame.png");
 		at4.save();
 		allActionTypes.add(at4);
 		hotspotActionTypes.add(at4);
 
 		ActionType at5 = new ActionType("Vibrieren", "Vibrate");
+		at5.setCategory("other");
 		at5.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/vibrate.png");
 		at5.save();
 
@@ -296,6 +301,7 @@ public class GeoQuestDefaultsFactory {
 
 		ActionType at6 = new ActionType("Variable um 1 verringern",
 				"DecrementVariable");
+		at6.setCategory("var");
 		at6.setSymbol(Global.SERVER_URL_2
 				+ "/assets/icons/actions/decreasevar.png");
 		at6.save();
@@ -308,6 +314,7 @@ public class GeoQuestDefaultsFactory {
 
 		ActionType at7 = new ActionType("Variable um 1 erhöhen",
 				"IncrementVariable");
+		at7.setCategory("var");
 		at7.setSymbol(Global.SERVER_URL_2
 				+ "/assets/icons/actions/increasevar.png");
 		at7.save();
@@ -319,6 +326,7 @@ public class GeoQuestDefaultsFactory {
 		hotspotActionTypes.add(at7);
 
 		ActionType at8 = new ActionType("Audio-Datei abspielen", "PlayAudio");
+		at8.setCategory("other");
 		at8.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/sound.png");
 		at8.save();
 		AttributeType at8a1 = new AttributeType("Audio-Datei (*.mp3, *.ogg)",
@@ -343,6 +351,7 @@ public class GeoQuestDefaultsFactory {
 
 		ActionType at9 = new ActionType("Variable neuen Wert zuweisen",
 				"SetVariable");
+		at9.setCategory("var");
 		at9.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/setvar.png");
 		at9.save();
 		AttributeType at9a1 = new AttributeType("Variable", "var", "var");
@@ -356,6 +365,7 @@ public class GeoQuestDefaultsFactory {
 		hotspotActionTypes.add(at9);
 
 		ActionType at10 = new ActionType("Nachricht anzeigen", "ShowMessage");
+		at10.setCategory("other");
 		at10.setSymbol(Global.SERVER_URL_2
 				+ "/assets/icons/actions/message.png");
 		at10.save();
@@ -373,6 +383,7 @@ public class GeoQuestDefaultsFactory {
 
 		ActionType hotspotzustand = new ActionType("Hotspot-Zustand verändern",
 				"SetHotspotState");
+		hotspotzustand.setCategory("map");
 		hotspotzustand.setSymbol(Global.SERVER_URL_2
 				+ "/assets/icons/actions/hotspotactivity.png");
 		hotspotzustand.save();
@@ -413,6 +424,7 @@ public class GeoQuestDefaultsFactory {
 
 		ActionType at11 = new ActionType(
 				"Hotspot-Aktivität verändern (veraltet)", "SetHotspotActivity");
+		at11.setCategory("hidden");
 		at11.setSymbol(Global.SERVER_URL_2
 				+ "/assets/icons/actions/hotspotactivity.png");
 		at11.save();
@@ -432,6 +444,7 @@ public class GeoQuestDefaultsFactory {
 		ActionType at12 = new ActionType(
 				"Hotspot-Sichtbarkeit verändern (veraltet)",
 				"SetHotspotVisibility");
+		at12.setCategory("hidden");
 		at12.setSymbol(Global.SERVER_URL_2
 				+ "/assets/icons/actions/hotspotvisibility.png");
 		at12.save();
@@ -449,6 +462,7 @@ public class GeoQuestDefaultsFactory {
 		hotspotActionTypes.add(at12);
 
 		ActionType at13 = new ActionType("Score erhöhen", "AddToScore");
+		at13.setCategory("var");
 		at13.setSymbol(Global.SERVER_URL_2
 				+ "/assets/icons/actions/addxvar.png");
 		at13.save();
@@ -462,6 +476,7 @@ public class GeoQuestDefaultsFactory {
 		hotspotActionTypes.add(at13);
 
 		ActionType at15 = new ActionType("Karte zentrieren", "CenterMap");
+		at15.setCategory("map");
 		at15.setSymbol(Global.SERVER_URL_2
 				+ "/assets/icons/actions/centermap.png");
 		at15.save();
@@ -506,6 +521,7 @@ public class GeoQuestDefaultsFactory {
 		hotspotActionTypes.add(at15);
 
 		ActionType at17 = new ActionType("Wenn-Dann-Bedingung", "If");
+		at17.setCategory("condition");
 		at17.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/if.png");
 		at17.save();
 		AttributeType at17a1 = new AttributeType("Wenn", "condition",
@@ -534,6 +550,7 @@ public class GeoQuestDefaultsFactory {
 		hotspotActionTypes.add(at17);
 
 		ActionType at18 = new ActionType("Solange-Wie-Schleife", "Loop");
+		at18.setCategory("condition");
 		at18.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/while.png");
 		at18.setPremiumRequirement("All Access");
 		at18.save();
@@ -564,6 +581,7 @@ public class GeoQuestDefaultsFactory {
 		allActionTypes.add(at18);
 		hotspotActionTypes.add(at18);
 		ActionType at22 = new ActionType("Von-Bis-Schleife", "Loop");
+		at22.setCategory("condition");
 		at22.setPremiumRequirement("All Access");
 		at22.save();
 		at22.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/while.png");
@@ -604,6 +622,7 @@ public class GeoQuestDefaultsFactory {
 		hotspotActionTypes.add(at22);
 		
 		ActionType at19 = new ActionType("Schleife unterbrechen", "Break");
+		at19.setCategory("condition");
 		at19.setPremiumRequirement("All Access");
 		at19.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/break.png");
 		at19.save();
@@ -673,6 +692,7 @@ public class GeoQuestDefaultsFactory {
 		 //hotspotActionTypes.add(at20);
 
 		ActionType at21 = new ActionType("Routing anzeigen", "AddRoute");
+		at21.setCategory("map");
 		at21.setSymbol(Global.SERVER_URL_2
 				+ "/assets/icons/actions/addroute.png");
 		at21.save();
@@ -697,6 +717,7 @@ public class GeoQuestDefaultsFactory {
 		
 		
 		ActionType at23 = new ActionType("Variable abspeichern", "SaveVar");
+		at23.setCategory("var");
 		at23.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/savevar.png");
 
 		at23.save();
@@ -713,6 +734,7 @@ public class GeoQuestDefaultsFactory {
 		hotspotActionTypes.add(at23);
 		
 		ActionType at24 = new ActionType("Variable laden", "LoadVar");
+		at24.setCategory("var");
 		at24.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/loadvar.png");
 
 		at24.save();
@@ -734,6 +756,7 @@ public class GeoQuestDefaultsFactory {
 		
 		
 		ActionType at25 = new ActionType("Route löschen", "RemoveRoute");
+		at25.setCategory("map");
 		at25.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/removeroute.png");
 
 		at25.save();
@@ -745,6 +768,7 @@ public class GeoQuestDefaultsFactory {
 		
 		
 		ActionType at26 = new ActionType("Variablen-Ansicht anzeigen", "ShowVar");
+		at26.setCategory("var");
 		at26.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/varoverlay.png");
 
 		at26.save();
@@ -783,6 +807,7 @@ public class GeoQuestDefaultsFactory {
 		
 		
 		ActionType at27 = new ActionType("Variablen-Ansicht ausblenden", "HideVar");
+		at27.setCategory("var");
 		at27.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/varoverlay_hide.png");
 
 		at27.save();

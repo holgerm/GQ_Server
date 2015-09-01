@@ -8,8 +8,8 @@
  				              				<div class="scrollable-content" style="overflow:auto; height:100%; width:100%;">
  				
  					<div class="options">
- 					<i class="icon-resize-full" onClick="javascript:toggleFullscreen('missionedit@m.getId()','72%','75%','120px','5%','35px')"></i>
- 					<i class="icon-remove" onClick="javascript:document.getElementById('missionedit@m.getId()').style.display = 'none';hideInnerMissions('missionedit@m.getId()');deactiveFullscreen('missionedit@m.getId()','72%','75%','120px','5%','35px');"></i>
+ 					<i class="icon-resize-full" onClick="javascript:toggleFullscreen('missionedit@m.getId()','90%','75%','120px','5%','35px')"></i>
+ 					<i class="icon-remove" onClick="javascript:document.getElementById('missionedit@m.getId()').style.display = 'none';hideInnerMissions('missionedit@m.getId()');deactiveFullscreen('missionedit@m.getId()','90%','75%','120px','5%','35px');"></i>
  					
  					</div>
               				<input type="text" class="h2textfield" id="missionname@m.getId" value="@m.getName()"
@@ -24,8 +24,8 @@
               				<p>
               				 Optionen:<span style="cursor:pointer;" onClick="javascript:hideAddEditMissions();openMissionRule(@m.getId());"> <icon style="height:20px; width:20px; background-image:url('@Global.SERVER_URL_2/assets/icons/actions/default.png'); background-size:20px 20px; background-position:0px 24px; display:inline-block;"></icon> Ereignisse</span>
               				 <span style="cursor:pointer;" onClick="javascript:duplicateMissionInGame(@m.getId());"> <icon class="icon-share" style="display:inline-block;"></icon> Duplizieren</span>
-              				 <span  style="cursor:pointer;" onClick="javascript:startUnityPreview('@Global.SERVER_URL_2/editor/@g.getId/webxml/@m.getId');"><icon class="icon-play" style="display:inline-block;"></icon> Vorschau</span></p>
-              				 <span  style="cursor:pointer;"><a href="https://www.quest-mill.com/geoquest/index.php?content=@m.getType().getNameEncoded()" target="_blank"><icon class="icon-question-sign" style="display:inline-block;"></icon> Anleitung</a></span></p>
+              				 <span  style="cursor:pointer;" onClick="javascript:hideMapView(); hideAddEditMissions(); startUnityPreview('@Global.SERVER_URL_2/editor/@g.getId/webxml/@m.getId');"><icon class="icon-play" style="display:inline-block;"></icon> Vorschau</span></p>
+              				 <span  style="cursor:pointer;"><a href="https://www.quest-mill.com/geoquest/index.php?content=@m.getType().getNameEncoded()@if(Application.getLocalPortal().getId() != 61L){&portal=@Application.getLocalPortal().getId()}" target="_blank"><icon class="icon-question-sign" style="display:inline-block;"></icon> Anleitung</a></span></p>
               				
               				<br/>
               				
@@ -62,7 +62,7 @@
         </div>
         
        
-       <br/><div class="floatright"><i class="icon-plus-sign" onClick="javascript:document.getElementById('contentnew_@m.getId()').style.display='block';"></i>    </div>
+       <br/><div ><img style="cursor:pointer;" src="@Global.SERVER_URL_2/assets/icons/neuer_inhalt.png" width="120" onClick="javascript:document.getElementById('contentnew_@m.getId()').style.display='block';"></i>    </div>
      
       
        @if(m.showMultipleAchordions()){  
@@ -167,11 +167,13 @@
         
          @if(a.getFileType == "file"){
          	
-         			         		<div id="mission@m.getId()fileattr@a.getId()" name="mission@m.getId()fileattr@a.getId()" class="fileattr">
-        	         	@if(m.getAttributeValue(a) != ""){
-        	
-									         	<a href="@m.getAttributeValue(a)" target="_blank">@editor_athumbnail(m.getAttributeValue(a))</a>
-									        }
+         	
+         						<div id="mission@m.getId()fileattr@a.getId()" name="mission@m.getId()fileattr@a.getId()">
+         	
+        	         
+        	         
+        	         @editor_afilepreview(g,m.getAttributeId(a),m.getAttributeValue(a))
+        	         	
 									        </div> 	
 									        
 									        
@@ -198,7 +200,7 @@
                <br/>
   
      }
-     </div>
+   
        }
      @if(m.showMultipleAchordions()){  
       </div>

@@ -44,52 +44,12 @@
   </head>
     <body onLoad="connectionTester(); browserTester(); initmap(); @if(g.getType.hasOnlyOneScene()){ document.getElementById('background').style.display='none'; document.getElementById('tutorial').style.display='none'; document.getElementById('missionoverviewjs').style.display='none'; } @if(g.getHotspots != null){ @if(g.getHotspots.size() > 0){  document.getElementById('background').style.display='none'; document.getElementById('tutorial').style.display='none'; document.getElementById('missionoverviewjs').style.display='none';}}">
 
-             <div style="display:inline-block; cursor:pointer; position:absolute; bottom:0; right:0; z-index:10001;">
-          	 	<a id="xmlshow"  onClick="javascript:@if(g.hasFile()){LoadXML('xmlcontainer','@Global.SERVER_URL_2@routes.Portal.at(Application.getLocalPortal().getId()+"/editor/"+g.getId()+"/game.xml")');} hideAddEditMissions(); hidePlayer(); document.getElementById('xmlview').style.display = 'block';"onMouseOver="javascript:showLinkDescription('Erzeugtes XML anzeigen');" onMouseOut="javascript:showLinkDescription('');" >
-          			<img alt="Erzeugtes XML anzeigen" src="@Global.SERVER_URL_2@routes.Assets.at("icons/hiddencode.png")">
-          	 	</a>
-             </div> 
-                         
 
-
-
-<!--[if IE]>
-
-    <div class="iewarning_older" id="iewarning2" style="display:block" >
-   <br/><br/>
-   
-  <p id="h1iewarning">Achtung!</p>
-  <p>Die Benutzung von Internet Explorer wird von GeoQuest nicht unterstützt. </p>
-  <p>Bitte öffnen Sie diese Seite erneut in einem der unterstützten Browser:</p>
-  <table width="50%" border="0" align="center" cellpadding="0" cellspacing="0">
-    <tr>
-      <td> <a href="https://www.google.com/chrome" target="_blank"> 
-             <img src="@Global.SERVER_URL_2@routes.Assets.at("img/browsercompability/chrome.png")" />
-       
-       <br/>
-       Google Chrome</a></td>
-      <td><a href="https://www.mozilla.org/firefox" target="_blank">
-                <img src="@Global.SERVER_URL_2@routes.Assets.at("img/browsercompability/firefox.png")" />
-   <br/>
-   
-    Mozilla Firefox</a></td>
-    </tr>
-  </table>
-   
-    
-   
-   
-   
-   
-   
-    
-    </div>
-<![endif]-->
 
       @defining(Application.getLocalPortal()) { portal =>
 
 
-<div style="position:fixed; top:0px; height:80px; @if(portal.getId().equals(61L)){ background-position: -500px 900px; background-image:url('https://quest-mill.com/geoquest/bg_login.jpg'); } else { background-color:#FFFFFF;} width:100%; z-index:10000;">
+<div style="position:fixed; top:0px; height:80px; @if(portal.getId().equals(61L)){ background-position: -500px 900px; background-image:url('https://quest-mill.com/geoquest/bg_login.jpg'); } else { background-color:#FFFFFF;} width:100%; z-index:1000000000000;">
 
 
 <div class="options">
@@ -197,6 +157,64 @@
 
 </div>
 
+
+<img src="@Global.SERVER_URL_2/assets/icons/menu.png" style="z-index:1000000; position:fixed; top: 100px; right:0px; cursor:pointer;" class="showmenu"  width="40"/>
+
+	<div id="menu" class="menu" >
+			@editor_sidemenu(g)
+    	</div>
+    	
+    	
+    	
+    	<div id="main" class="main">
+    	
+
+    	<div id='map' class="map" ></div>
+
+
+             <div style="display:inline-block; cursor:pointer; position:absolute; bottom:0; right:0; z-index:10001;">
+          	 	<a id="xmlshow"  onClick="javascript:@if(g.hasFile()){LoadXML('xmlcontainer','@Global.SERVER_URL_2@routes.Portal.at(Application.getLocalPortal().getId()+"/editor/"+g.getId()+"/game.xml")');} hideAddEditMissions(); hidePlayer(); document.getElementById('xmlview').style.display = 'block';"onMouseOver="javascript:showLinkDescription('Erzeugtes XML anzeigen');" onMouseOut="javascript:showLinkDescription('');" >
+          			<img alt="Erzeugtes XML anzeigen" src="@Global.SERVER_URL_2@routes.Assets.at("icons/hiddencode.png")">
+          	 	</a>
+             </div> 
+                         
+
+
+
+<!--[if IE]>
+
+    <div class="iewarning_older" id="iewarning2" style="display:block" >
+   <br/><br/>
+   
+  <p id="h1iewarning">Achtung!</p>
+  <p>Die Benutzung von Internet Explorer wird von GeoQuest nicht unterstützt. </p>
+  <p>Bitte öffnen Sie diese Seite erneut in einem der unterstützten Browser:</p>
+  <table width="50%" border="0" align="center" cellpadding="0" cellspacing="0">
+    <tr>
+      <td> <a href="https://www.google.com/chrome" target="_blank"> 
+             <img src="@Global.SERVER_URL_2@routes.Assets.at("img/browsercompability/chrome.png")" />
+       
+       <br/>
+       Google Chrome</a></td>
+      <td><a href="https://www.mozilla.org/firefox" target="_blank">
+                <img src="@Global.SERVER_URL_2@routes.Assets.at("img/browsercompability/firefox.png")" />
+   <br/>
+   
+    Mozilla Firefox</a></td>
+    </tr>
+  </table>
+   
+    
+   
+   
+   
+   
+   
+    
+    </div>
+<![endif]-->
+
+
     <div class="iewarning" id="iewarning" style="display:none" >
    <br/><br/>
    
@@ -283,15 +301,12 @@ Wilkommen bei dieser kurzen Einführung zum GeoQuest Editor für mobile Android-
 @editor_missionoverview(g)
 
 <div id="background-chooser">
-<div style="padding:5px; display:inline-block; cursor:pointer;" onClick="javascript:showMapView();">
-<i class="icon-map-marker"></i>&nbsp; Kartenansicht </div> 
 
 <div style="padding:5px; display:inline-block; cursor:pointer;" onClick="javascript:hideMapView();">
-<i class="icon-remove-sign"></i>&nbsp; Standardansicht
+<i class="icon-remove-sign"></i>&nbsp; Kartenansicht verlassen
 </div>
 </div>
 }
-<div id='map' class="map" ></div>
 
 
 
@@ -345,12 +360,11 @@ Wilkommen bei dieser kurzen Einführung zum GeoQuest Editor für mobile Android-
               				
               				
               				
-              </div></div></div>
+           
 
 
-		<div id="sidemenucontainer">
-			@editor_sidemenu(g)
-    	</div>
+
+	
     
     <!-- Le javascript
     ================================================== -->
@@ -385,9 +399,101 @@ Wilkommen bei dieser kurzen Einführung zum GeoQuest Editor für mobile Android-
     @editor_js(g)   
    
     
-	
+	<script>
+
+var boxOne = document.getElementsByClassName('menu')[0];
+var boxTwo = document.getElementsByClassName('main')[0];
+
+
+
+
+
+
+var geoquest_menu_in=getCookie("geoquest_menu_in") || 'true';
+
+
+
+if ($(window).width() < 1139) {
+ boxOne.classList.remove('fadein');
+	    boxOne.classList.add('fadeout');
+		 boxTwo.classList.remove('menufadein');
+		 boxTwo.classList.add('menufadeout');
+} else {
+if(geoquest_menu_in == 'true'){
+	   document.getElementsByClassName('showmenu')[0].src = '@Global.SERVER_URL_2/assets/icons/back.png';
+    boxOne.classList.add('fadein');
+	 boxTwo.classList.add('menufadein');
+	 		 boxTwo.classList.remove('menufadeout');
+			 localStorage['geoquest_menu_in'] = 'true';
+} else if(geoquest_menu_in == 'false'){
+
+ boxOne.classList.remove('fadein');
+	    boxOne.classList.add('fadeout');
+		 boxTwo.classList.remove('menufadein');
+		 boxTwo.classList.add('menufadeout');
+}
+
+}
+
+
+   document.getElementsByClassName('showmenu')[0].onclick = function() {
+	   console.log(this.src);
+  if(this.src.indexOf('icons/menu.png') > -1) 
+  { 
+    this.src = '@Global.SERVER_URL_2/assets/icons/back.png';
+    boxOne.classList.add('fadein');
+	 boxTwo.classList.add('menufadein');
+	 		 boxTwo.classList.remove('menufadeout');
+			 setCookie("geoquest_menu_in","true",365) ;
+
+	 
+  } else {
+    this.src = '@Global.SERVER_URL_2/assets/icons/menu.png';
+    boxOne.classList.remove('fadein');
+	    boxOne.classList.add('fadeout');
+		 boxTwo.classList.remove('menufadein');
+		 boxTwo.classList.add('menufadeout');
+			 setCookie("geoquest_menu_in","false",365) ;
+
+
+    
+  }  
+}
+
+
+
+
+
+function setCookie(c_name,value,exdays)
+{
+var exdate=new Date();
+exdate.setDate(exdate.getDate() + exdays);
+var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
+document.cookie=c_name + "=" + c_value;
+}
+
+
+
+
+function getCookie(c_name)
+{
+var i,x,y,ARRcookies=document.cookie.split(";");
+for (i=0;i<ARRcookies.length;i++)
+{
+  x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+  y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+  x=x.replace(/^\s+|\s+$/g,"");
+  if (x==c_name)
+    {
+    return unescape(y);
+    }
+  }
+}
+
+
+</script>
     
 
-
+</div>
   </body>
 </html>

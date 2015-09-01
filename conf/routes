@@ -249,6 +249,8 @@ GET    /editor/:gid/fragments/Hotspot/:pid/ruleedit                           co
 GET    /editor/:gid/fragments/MenuItem/:pid/insidemenu                        controllers.Editor.getMenuItemInSideMenuForEditor(gid: Long, pid: Long)
 
 
+GET 	/editor/:gid/fragments/Attribute/Preview/:attr							controllers.Editor.getFilePreview(gid:Long,attr:Long)
+
 GET    /editor/:gid/fragments/Hotspot/:hid/popupcontent                       controllers.Editor.getHotspotPopupContent(gid: Long, hid: Long)
 
 

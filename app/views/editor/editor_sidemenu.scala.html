@@ -27,21 +27,22 @@
 
 		 				              				<div class="scrollable-content" style="overflow-y:auto; overflow-x:auto; height:100%; width:100%;">
 
-
+<div style="height:80px"></div>
 	<div class="options">
  					<i class="icon-remove" id="missionviewclose" onClick="javascript:document.getElementById('missionview').style.display = 'none';document.getElementById('missionviewbutton').style.display='block'; "></i></div>
               				
               				
-<div id="missionsreiter" style="position:fixed; padding:2px; background-color:#FFFFFF !important; z-index:100000000; text-align:left;">
-<i class="icon-tasks" onClick="javascript:document.getElementById('missionsonly').style.display='block'; document.getElementById('hotspotsonly').style.display='none'; document.getElementById('settingsonly').style.display='none'; document.getElementById('menuitemsonly').style.display='none'; "></i>
+<div id="missionsreiter" style="position:fixed; padding:2px; background-color:#FFFFFF !important; z-index:100000000; width: 100%; height: 60px; top: 80px; text-align:left;">
+<br/>
+<img src="@Global.SERVER_URL_2/assets/icons/pages.png" style="cursor:pointer; " width="30" onClick="javascript:document.getElementById('missionsonly').style.display='block'; document.getElementById('hotspotsonly').style.display='none'; document.getElementById('settingsonly').style.display='none'; document.getElementById('menuitemsonly').style.display='none'; "/>
 
-<i class="icon-map-marker" onClick="javascript:document.getElementById('missionsonly').style.display='none'; document.getElementById('hotspotsonly').style.display='block'; document.getElementById('settingsonly').style.display='none'; document.getElementById('menuitemsonly').style.display='none'; "></i>
-
-
-<i  style="display:none !important;" class="icon-tags" onClick="javascript:document.getElementById('missionsonly').style.display='none'; document.getElementById('menuitemsonly').style.display='block'; document.getElementById('settingsonly').style.display='none'; document.getElementById('hotspotsonly').style.display='none';  "></i>
+<img src="@Global.SERVER_URL_2/assets/icons/hotspots.png" style="cursor:pointer; margin-left:20px;" width="30" onClick="javascript:showMapView(); document.getElementById('missionsonly').style.display='none'; document.getElementById('hotspotsonly').style.display='block'; document.getElementById('settingsonly').style.display='none'; document.getElementById('menuitemsonly').style.display='none'; "/>
 
 
-<i class="icon-cog"  onClick="javascript:document.getElementById('missionsonly').style.display='none'; document.getElementById('hotspotsonly').style.display='none'; document.getElementById('settingsonly').style.display='block'; document.getElementById('menuitemsonly').style.display='none'; "></i>
+<img src="@Global.SERVER_URL_2/assets/icons/pages.png"  width="30"  style="display:none !important;" class="icon-tags" onClick="javascript:document.getElementById('missionsonly').style.display='none'; document.getElementById('menuitemsonly').style.display='block'; document.getElementById('settingsonly').style.display='none'; document.getElementById('hotspotsonly').style.display='none';  " />
+
+
+<img src="@Global.SERVER_URL_2/assets/icons/settings.png" style="cursor:pointer; margin-left:20px;" width="30" onClick="javascript:document.getElementById('missionsonly').style.display='none'; document.getElementById('hotspotsonly').style.display='none'; document.getElementById('settingsonly').style.display='block'; document.getElementById('menuitemsonly').style.display='none'; " />
 
 
 
@@ -60,8 +61,71 @@
              
 </div>
       <br/><br/>
-            <i id="newmissionplussign" class="icon-plus-sign" onClick="javascript:hideAddEditMissions(); hidePlayer(); document.getElementById('missionnew_new').style.display = 'block';"></i>    
          
+         <div >
+              
+                      		          <div class="btn-group">
+					
+					
+					
+							
+					
+  <a class="dropdown-toggle" id="actiondropdown_g@g.getId()" style=" cursor:pointer;" data-toggle="dropdown" ">
+    
+                <img src="@Global.SERVER_URL_2/assets/icons/neue_seite.png" width="120"  style="cursor:pointer;"/>
+
+  </a>
+
+
+
+
+  <ul class="dropdown-menu" >
+   
+   
+   
+      			@for(a_ptype <- g.getType.getPossiblePartTypes){
+             	@if(!a_ptype.isSceneType){
+             		
+             			@defining(a_ptype.getMissionType) { a_mtype =>
+               
+               
+               
+                             			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="addNewObject('mission_@a_mtype.getId()')">@a_mtype.getName()</a></li>
+               
+               
+               
+               }
+               }
+               }
+              			           			
+              				@if(g.getType.getPossibleMissionTypes.size() > 0 && g.getType.getPossibleSceneTypes.size() > 0){  <li>&nbsp;</li>   }    
+              				
+              @for(a_stype <- g.getType.getPossibleSceneTypes){
+               
+               @if(a_stype.getDefaultHotspots().isEmpty()){
+               	
+             <li><a tabindex="-1" style="cursor:pointer;" onClick="addNewObject('scene_@a_stype.getId()')"> <i class="@a_stype.getIcon()"></i>@a_stype.getName()</a></li>
+               	
+              
+               }
+               
+               }
+   
+   
+              			
+   
+  
+   
+   
+   
+   
+   
+   
+   
+  </ul>
+</div>
+              
+              </div>
          
            
          

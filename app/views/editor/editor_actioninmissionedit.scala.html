@@ -34,8 +34,8 @@
 	
 									        				<div class="options">
 									        				
-									        				<i class="icon-resize-full" onClick="javascript:toggleFullscreen('actionedit_@ac.getId()','72%','40%','200px','5%','25px')"></i>
-									        				<i class="icon-remove" onClick="javascript:document.getElementById('actionedit_@ac.getId()').style.display = 'none';deactiveFullscreen('actionedit_@ac.getId()','72%','60%','200px','5%','25px')"></i>
+									        				<i class="icon-resize-full" onClick="javascript:toggleFullscreen('actionedit_@ac.getId()','90%','40%','200px','5%','25px')"></i>
+									        				<i class="icon-remove" onClick="javascript:document.getElementById('actionedit_@ac.getId()').style.display = 'none';deactiveFullscreen('actionedit_@ac.getId()','90%','60%','200px','5%','25px')"></i>
 									        				
 									        				</div>   	
               	        		
@@ -83,7 +83,7 @@
 									              			
 									              				
 									              				
-									              				<span  style="cursor:pointer;"><a href="https://www.quest-mill.com/geoquest/index.php?content=@ac.getType().getNameEncoded()" target="_blank"><icon class="icon-question-sign" style="display:inline-block;"></icon> Anleitung</a></span>
+									              				<span  style="cursor:pointer;"><a href="https://www.quest-mill.com/geoquest/index.php?content=@ac.getType().getNameEncoded()@if(Application.getLocalPortal().getId() != 61L){&portal=@Application.getLocalPortal().getId()}" target="_blank"><icon class="icon-question-sign" style="display:inline-block;"></icon> Anleitung</a></span>
 									              				<br/><br/>
 									              				<div id="actionattributes_@ac.getId()" >
 									              				
@@ -459,7 +459,7 @@
 									        
 									        
 									        
-              				<div style="width:99%; height:170px; white-space: nowrap; overflow-x:scroll; overflow-y:hidden; ">
+              				<div style="width:99%; height:170px; white-space: nowrap;  ">
 								<div style="min-width:100%; white-space: nowrap;">
               	<div  style=" padding:10px;  display:inline-block; width:100px; cursor:pointer;"><div><img src="@Global.SERVER_URL_2/assets/icons/actions/default.png" style="height:70px; width:70px; position:relative; left:15px; " /><p style="width:100px; height:36px; font-size:10px; text-align:center; overflow:hidden; white-space:normal;">  @a.getName</p></div><p style="height:20px; overflow:hidden;">&nbsp;</p></div>
               			
@@ -500,6 +500,11 @@
               		
               		</div>
               		
+              		             	@defining(RuleType.find.byId(Long.valueOf(rt))){ rtv => 
+              		
+              		
+              		             	@if(rtv.getPossibleActionTypes().get(0).getCategory().equals("")){
+              		
 									              				
 							 <a class="btn" id="addaction_@rt.toString()_a@a.getId()_ac@ac.getId()btn" style=" position:relative; top:-70px; display:inline-block; cursor:pointer;" onClick="document.getElementById('addaction_@rt.toString()_a@a.getId()_ac@ac.getId()div').style.display='inline-block'; document.getElementById('addaction_@rt.toString()_a@a.getId()_ac@ac.getId()btn').style.display='none';">
     <span class="icon-plus"></span>
@@ -514,12 +519,11 @@
              
              
              @if(rt != "menuitem"){
-             	@defining(RuleType.find.byId(Long.valueOf(rt))){ rtv => 
               		@for(at <- rtv.getPossibleActionTypes){
               			   <option value = "@at.getId()">@at.getName()</option>
               			
               			
-              		} 
+              		
               		}
               		} else {
               		
@@ -541,10 +545,135 @@
               		
               			
               			
+              			} else {
               			
               			
               			
               			
+              			
+              			           
+              <div style="position:relative; top:-72px; width:500px;     display: inline-block;">
+              
+                      		          <div class="btn-group">
+					
+					
+					
+							
+					
+  <a class="btn dropdown-toggle" id="actiondropdown_ac@ac.getId()" style=" cursor:pointer;" data-toggle="dropdown" onClick="scrollDiv('actiondropdown_ac@ac.getId()');">
+    
+    <span class="icon-plus"></span>
+  </a>
+
+
+
+
+  <ul class="dropdown-menu" style=" float: right; top: -60px; left: 45px;">
+   
+   
+   
+   
+    <li class="dropdown-submenu">
+                  <a tabindex="-1" >Questverlauf</a>
+                  <ul class="dropdown-menu">
+                   @for(at <- rtv.getPossibleActionTypes()){
+                   	
+                   	@if(at.getCategory().equals("page")){
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newActionInAttribute('action',@ac.getId,@a.getId,@z+1,@if(rt != "menuitem"){@rt} else {'@rt'},'',@at.getId());">@at.getName</a></li>
+              			}
+              			
+              		}
+      				</ul>
+  </li>
+  
+   
+    <li class="dropdown-submenu">
+                  <a tabindex="-1" >Karte</a>
+                  <ul class="dropdown-menu">
+                   @for(at <- rtv.getPossibleActionTypes()){
+                   	
+                   	@if(at.getCategory().equals("map")){
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newActionInAttribute('action',@ac.getId,@a.getId,@z+1,@if(rt != "menuitem"){@rt} else {'@rt'},'',@at.getId());">@at.getName</a></li>
+              			}
+              			
+              		}
+      				</ul>
+  </li>
+   
+    <li class="dropdown-submenu">
+                  <a tabindex="-1" >Variablen</a>
+                  <ul class="dropdown-menu">
+                   @for(at <- rtv.getPossibleActionTypes()){
+                   	
+                   	@if(at.getCategory().equals("var")){
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newActionInAttribute('action',@ac.getId,@a.getId,@z+1,@if(rt != "menuitem"){@rt} else {'@rt'},'',@at.getId());">@at.getName</a></li>
+              			}
+              			
+              		}
+      				</ul>
+  </li>
+  
+   
+    <li class="dropdown-submenu">
+                  <a tabindex="-1" >Bedingt</a>
+                  <ul class="dropdown-menu">
+                   @for(at <- rtv.getPossibleActionTypes()){
+                   	
+                   	@if(at.getCategory().equals("condition")){
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newActionInAttribute('action',@ac.getId,@a.getId,@z+1,@if(rt != "menuitem"){@rt} else {'@rt'},'',@at.getId());">@at.getName</a></li>
+              			
+              		}
+              		}
+      				</ul>
+  </li>
+  
+   
+    <li class="dropdown-submenu">
+                  <a tabindex="-1" >Sonstiges</a>
+                  <ul class="dropdown-menu">
+                   @for(at <- rtv.getPossibleActionTypes()){
+                   	
+                   	@if(at.getCategory().equals("other")){
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newActionInAttribute('action',@ac.getId,@a.getId,@z+1,@if(rt != "menuitem"){@rt} else {'@rt'},'',@at.getId());">@at.getName</a></li>
+              			}
+              			
+              		}
+      				</ul>
+  </li>
+   
+   
+   
+
+   @for(at <- rtv.getPossibleActionTypes()){
+   	                   	@if(at.getCategory().equals("")){
+   	
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newActionInAttribute('action',@ac.getId,@a.getId,@z+1,@if(rt != "menuitem"){@rt} else {'@rt'},'',@at.getId());">@at.getName</a></li>
+              			}
+              			
+              		}
+   
+   
+  
+   
+   
+   
+   
+   
+   
+   
+  </ul>
+</div>
+              
+              </div>
+              			
+              			
+              			
+              			}
+              			
+              			
+              			
+              			
+              			}
               			
               			</div>
               			</div>
