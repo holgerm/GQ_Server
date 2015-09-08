@@ -16,6 +16,13 @@ import net.sf.ehcache.ObjectExistsException;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 
+
+import com.gargoylesoftware.htmlunit.*;
+
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.xml.XmlPage;
+
+
 import play.api.libs.json.*;
 
 import java.util.Calendar;
@@ -48,6 +55,7 @@ import security.MyUserPortalRights;
 import util.Global;
 
 import java.io.File;
+import java.net.URL;
 
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
@@ -871,10 +879,21 @@ public class Portal extends Controller {
 
 						gt.save();
 
-						if (form.onlyhotspot) {
+						if (form.makescene) {
+							
+							
+							if(form.onlyonehotspot){
 
 							gt.easy_editor = true;
 							gt.multiple_only_scene_type = true;
+							
+							}
+							
+							if(form.onlyhotspots){
+								
+								gt.show_only_hotspots_in_sidemenu = true;
+								
+							}
 
 							SceneType s = new SceneType(form.scenename);
 							s.save();
@@ -970,6 +989,43 @@ public class Portal extends Controller {
 			}
 		}
 
+	}
+	
+	
+	@Restrict(@Group(Application.USER_ROLE))
+	public static Result getRouting(String arguments) {
+		String  pagecontent = "ERROR";
+	
+	String url = "http://www.yournavigation.org/"+arguments;
+	
+	
+	  WebClient webClient = new WebClient();
+      try{
+	  WebRequest webRequest = new WebRequest(new URL(url));
+    webRequest.setCharset("utf-8");
+
+    webClient.setThrowExceptionOnFailingStatusCode(false);
+    webClient.setThrowExceptionOnScriptError(false);
+
+    webClient.setPrintContentOnFailingStatusCode(false);
+    webClient.setJavaScriptEnabled(false);
+    webClient.setRedirectEnabled(true);
+    webClient.setTimeout(20000);
+
+    XmlPage page = webClient.getPage(webRequest);
+    
+    
+    
+   pagecontent = page.getWebResponse().getContentAsString();
+      } catch (IOException ioe) {
+          System.out.println("IO Problem accessing page "+ ioe.getMessage());
+          
+          pagecontent = "Problem accessing page...";
+      }
+   
+   return ok(pagecontent);
+    
+    
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
@@ -2554,6 +2610,28 @@ public class Portal extends Controller {
 
 		return ok(i_file);
 	}
+	
+	
+	
+	public static Result 	getCrossdomain() {
+		response().setContentType("text/plain");
+		byte[] i_file = null;
+
+		try {
+			i_file = IOUtils.toByteArray(new FileInputStream(new File(
+					"public/crossdomain.xml")));
+		} catch (FileNotFoundException e) {
+			return ok("404: crossdomain file");
+		} catch (IOException e) {
+			return ok("404: crossdomain file");
+		}
+
+		return ok(i_file);
+	}
+	
+	
+	
+
 
 	public static Result at(String filename) {
 		response().setContentType("image");
@@ -2588,6 +2666,12 @@ public class Portal extends Controller {
 		return Application.getCurrentPortal(session());
 
 	}
+	
+	
+	
+
+	
+
 
 	/*
 	 * FORM HANDLER
@@ -2615,7 +2699,11 @@ public class Portal extends Controller {
 
 		public String scenename;
 
-		public boolean onlyhotspot;
+		public boolean makescene;
+
+		public boolean onlyhotspots;
+		public boolean onlyonehotspot;
+
 
 	}
 

@@ -40,6 +40,14 @@ GET    /testingtemplate                                                       co
 GET    /testmapping                                                           controllers.Application.getTestMapping
 
 
+
+
+
+# ROUTING
+
+
+GET /routes/*arguments														 controllers.Portal.getRouting(arguments)
+
 # LOGGED IN
 GET    /:pid/my                                                               controllers.Portal.myGamesList(pid: Long)
 GET    /my                                                                    controllers.Portal.myGamesListOnCurrentPortal()
@@ -49,6 +57,7 @@ GET    /:pid/mygames                                                          co
 
 
 ## GAME
+
 
 GET    /:pid/game/edit/:gid                                                   controllers.Portal.editGame(pid: Long,gid:Long)
 POST   /:pid/game/edit/:gid                                                   controllers.Portal.doEditGame(pid: Long,gid:Long)
@@ -270,6 +279,7 @@ GET    /editor/:gid/fragments/Mission/:mid/Action/:aid/allinfo/:rtype/:z      co
 GET    /editor/:gid/fragments/Action/:aid/allinfo/:rtype/:z                   controllers.Editor.getActionInfoForEditor(gid: Long, aid: Long,rtype:String,z:Integer)
 GET    /editor/:gid/fragments/Action/:aid/inrule/:rid                         controllers.Editor.getActionInRuleForEditor(gid: Long, aid: Long,rid: Long)
 
+GET    /editor/:gid/fragments/Mission/:mid/Rule/:rid/oftype/:rtype            controllers.Editor.getMissionRuleForEditor(gid: Long,rid: Long,rtype:Long,mid: Long)
 GET    /editor/:gid/fragments/Rule/:rid/oftype/:rtype                         controllers.Editor.getRuleForEditor(gid: Long,rid: Long,rtype:Long)
 GET    /editor/:gid/fragments/Rule/:rid/allactions                            controllers.Editor.getActionsForRuleForEditor(gid: Long,rid: Long)
 
@@ -439,10 +449,10 @@ GET    /:pid/qeeveetemplates/:x/:y                                            co
 
 
 # IF NOTHING ELSE
+GET    /crossdomain.xml                                                        		controllers.Portal.getCrossdomain()
 
 
 GET    /:pid                                                                  controllers.Application.portalindex(pid:Long)
 GET    /:pid/                                                                 controllers.Application.portalindex(pid:Long)
 
 
-GET    /:pid/*path                                                            controllers.Application.portalfourofour(pid:Long,path:String)

@@ -2073,15 +2073,25 @@ return null;
             for(int j=GameList.size()-1; j >= 0; j--){
                
            
-ProviderGames onepg = GameList.get(j);
+ProviderGames onepg = getGame(GameList.get(j).getGame());
             	
+
+
+
+
             	if(onepg.getGame() != null){
             		if(onepg.getGame().hasFile()){
+            			
+            			
             		if(!containing.contains(onepg.getGame().getId())){
-            	
-               if(onepg.getVisibility() == true){
 
-                   if(onepg.getPortal().getIdentifier().equals(getIdentifier())){
+                        if(onepg.getPortal().getIdentifier().equals(getIdentifier())){
+
+                        	
+                        	
+                        	
+                        	
+               if(onepg.getVisibility() == true){
 
                 	
                 		

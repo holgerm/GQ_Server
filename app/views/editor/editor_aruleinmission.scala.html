@@ -1,0 +1,193 @@
+@(g:Game,r:models.GameParts.Rule,rt:models.GameParts.RuleType,m:models.GameParts.Mission)
+
+@import util.Global;
+
+
+
+
+              		
+              		
+              		
+              		              		<div style="display:inline-block;" id="triggeractions_@r.getId">
+        @editor_actionsintrigger(g,r)
+              		</div>
+              		
+									              				
+									              				
+									              				
+              		
+              		<div style="display:inline-block;">
+              		
+              		
+              		
+     
+             
+             	<div>
+             	
+             	
+             	@if(rt.getPossibleActionTypes().get(0).getCategory().equals("")){
+             	
+               <a class="btn" id="addaction_@rt.getId()_r@r.getId()btn" style=" position:relative; top:-70px; display:inline-block; cursor:pointer;" onClick="document.getElementById('addaction_@rt.getId()_r@r.getId()div').style.display='inline-block'; document.getElementById('addaction_@rt.getId()_r@r.getId()btn').style.display='none';">
+    <span class="icon-plus"></span>
+  </a>
+					             		
+              		<div class="actionaddselect" style=" position:relative; top:-70px; display:none;" id="addaction_@rt.getId()_r@r.getId()div">
+             
+              		   <select id = "actiontype_@r.getId()" >
+             
+             
+             
+              		@for(at <- rt.getPossibleActionTypes()){
+              			   <option value = "@at.getId()">@at.getName()</option>
+              			
+              			
+              		}   </select><br/>
+              		
+              		<div id="rule_add_action_button_@r.getId()" class="btn btn-success" style="position:relative; bottom:50%;" onClick="newActionInRule(@r.getId,@rt.getId);  document.getElementById('addaction_@rt.getId()_r@r.getId()btn').style.display='inline-block'; document.getElementById('addaction_@rt.getId()_r@r.getId()div').style.display='none';">Hinzufügen</div>
+              <p style="height:20px; overflow:hidden;">&nbsp;</p>
+              
+              
+              
+    
+              
+              </div>
+              
+              
+              } else {
+              
+              
+              
+              <div style="position:relative; top:-80px; width:500px;">
+              
+                      		          <div class="btn-group">
+					
+					
+					
+							
+					
+  <a class="btn dropdown-toggle" id="actiondropdown_@r.getId()" style=" cursor:pointer;" data-toggle="dropdown" onClick="scrollDiv('actiondropdown_@r.getId()');">
+    
+    <span class="icon-plus"></span>
+  </a>
+
+
+
+
+  <ul class="dropdown-menu" style=" float: right; top: -60px; left: 45px;">
+   
+   
+   
+   
+    <li class="dropdown-submenu">
+                  <a tabindex="-1" >Questverlauf</a>
+                  <ul class="dropdown-menu">
+                   @for(at <- rt.getPossibleActionTypes()){
+                   	
+                   	@if(at.getCategory().equals("page")){
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newActionInRule(@r.getId,@rt.getId,@at.getId(),@m.getId());">@at.getName</a></li>
+              			}
+              			
+              		}
+      				</ul>
+  </li>
+  
+   
+    <li class="dropdown-submenu">
+                  <a tabindex="-1" >Karte</a>
+                  <ul class="dropdown-menu">
+                   @for(at <- rt.getPossibleActionTypes()){
+                   	
+                   	@if(at.getCategory().equals("map")){
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newActionInRule(@r.getId,@rt.getId,@at.getId(),@m.getId());">@at.getName</a></li>
+              			}
+              			
+              		}
+      				</ul>
+  </li>
+   
+    <li class="dropdown-submenu">
+                  <a tabindex="-1" >Variablen</a>
+                  <ul class="dropdown-menu">
+                   @for(at <- rt.getPossibleActionTypes()){
+                   	
+                   	@if(at.getCategory().equals("var")){
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newActionInRule(@r.getId,@rt.getId,@at.getId(),@m.getId());">@at.getName</a></li>
+              			}
+              			
+              		}
+      				</ul>
+  </li>
+  
+   
+    <li class="dropdown-submenu">
+                  <a tabindex="-1" >Bedingt</a>
+                  <ul class="dropdown-menu">
+                   @for(at <- rt.getPossibleActionTypes()){
+                   	
+                   	@if(at.getCategory().equals("condition")){
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newActionInRule(@r.getId,@rt.getId,@at.getId(),@m.getId());">@at.getName</a></li>
+              			}
+              			
+              		}
+      				</ul>
+  </li>
+  
+   
+    <li class="dropdown-submenu">
+                  <a tabindex="-1" >Sonstiges</a>
+                  <ul class="dropdown-menu">
+                   @for(at <- rt.getPossibleActionTypes()){
+                   	
+                   	@if(at.getCategory().equals("other")){
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newActionInRule(@r.getId,@rt.getId,@at.getId(),@m.getId());">@at.getName</a></li>
+              			}
+              			
+              		}
+      				</ul>
+  </li>
+   
+   
+   
+
+   @for(at <- rt.getPossibleActionTypes()){
+   	                   	@if(at.getCategory().equals("")){
+   	
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newActionInRule(@r.getId,@rt.getId,@at.getId(),@m.getId());">@at.getName</a></li>
+              			}
+              			
+              		}
+   
+   
+  
+   
+   
+   
+   
+   
+   
+   
+  </ul>
+</div>
+              
+              </div>
+              
+              }
+              
+              
+            
+              
+              
+              
+              </div>
+              		</div>
+              		
+              		
+              		
+              		
+              		
+              		
+              		
+              		
+              		
+      		
+              		

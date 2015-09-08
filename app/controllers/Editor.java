@@ -863,6 +863,58 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
+	public static Result getMissionRuleForEditor(Long gid, Long rid, Long rtype, Long mid) {
+
+		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+
+			return badRequest(views.html.norights
+					.render("Das Spiel existiert nicht"));
+
+		} else {
+
+			if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
+
+				return badRequest(views.html.norights
+						.render("Die Regel existiert nicht"));
+
+			} else {
+
+				if (RuleType.find.where().eq("id", rtype).findRowCount() != 1) {
+
+					return badRequest(views.html.norights
+							.render("Die Regel existiert nicht"));
+
+				} else {
+
+					
+
+					if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
+
+						return badRequest(views.html.norights
+								.render("Die Mission existiert nicht"));
+
+					} else {
+
+						
+					
+					
+					
+					return ok(views.html.editor.editor_aruleinmission.render(
+							Game.find.byId(gid), Rule.find.byId(rid),
+							RuleType.find.byId(rtype),Mission.find.byId(mid)));
+
+					
+					
+					}
+				}
+			}
+
+		}
+
+	}
+	
+	
+	@Restrict(@Group(Application.USER_ROLE))
 	public static Result getRuleForEditor(Long gid, Long rid, Long rtype) {
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {

@@ -38,9 +38,23 @@
              )
 
                  <br/>
+                 
+                 
+            @checkbox(
+                gametypeForm("makescene"),
+                '_label -> "Szene statt Standard-Inhalt"
+
+            )
+
 
             @checkbox(
-                gametypeForm("onlyhotspot"),
+                gametypeForm("onlyhotspots"),
+                '_label -> "Nur Hotspots in Editor"
+
+            )
+            
+            @checkbox(
+                gametypeForm("onlyonehotspot"),
                 '_label -> "Ein Hotspot pro Spiel?"
 
             )
