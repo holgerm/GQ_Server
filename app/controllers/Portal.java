@@ -992,13 +992,17 @@ public class Portal extends Controller {
 	}
 	
 	
-	@Restrict(@Group(Application.USER_ROLE))
 	public static Result getRouting(String arguments) {
 		String  pagecontent = "ERROR";
 	
+		arguments = arguments.replaceAll("-", "?");
+
+		arguments = arguments.replaceAll("_", "&");
+		
 	String url = "http://www.yournavigation.org/"+arguments;
 	
-	
+	System.out.println(url);
+
 	  WebClient webClient = new WebClient();
       try{
 	  WebRequest webRequest = new WebRequest(new URL(url));
