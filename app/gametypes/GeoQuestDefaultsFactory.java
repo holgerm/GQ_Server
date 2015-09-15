@@ -816,6 +816,86 @@ public class GeoQuestDefaultsFactory {
 		allActionTypes.add(at27);
 		hotspotActionTypes.add(at27);
 		
+		
+		
+		
+		ActionType at28 = new ActionType("Variable an Server senden", "SendVarToServer");
+		at28.setCategory("var");
+		at28.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/savevar.png");
+
+		at28.save();
+
+		
+		AttributeType at28a1 = new AttributeType("Variable", "var", "String");
+
+		at28a1.save();
+
+		at28.setAttributeType(at28a1);
+		at28.update();
+		
+		
+		AttributeType at28a2 = new AttributeType("IP-Adresse", "ip", "String");
+
+		at28a2.save();
+
+		at28.setAttributeType(at28a2);
+		at28.update();
+
+
+		allActionTypes.add(at28);
+		hotspotActionTypes.add(at28);
+		
+		
+		
+
+		ActionType at29 = new ActionType("Variable von Server laden", "SendVarToServer");
+		at29.setCategory("var");
+		at29.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/savevar.png");
+
+		at29.save();
+
+		
+		AttributeType at29a1 = new AttributeType("Variable", "var", "String");
+
+		at29a1.save();
+
+		at29.setAttributeType(at29a1);
+		at29.update();
+		
+		
+		AttributeType at29a2 = new AttributeType("IP-Adresse", "ip", "String");
+
+		at29a2.save();
+
+		at29.setAttributeType(at29a2);
+		at29.update();
+
+
+		allActionTypes.add(at29);
+		hotspotActionTypes.add(at29);
+		
+		
+		
+		
+		ActionType at30 = new ActionType("Quest starten", "StartQuest");
+		at30.setCategory("page");
+		at30.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/callmission.png");
+
+		at30.save();
+
+		
+		AttributeType at30a1 = new AttributeType("Quest", "quest", "int");
+
+		at30a1.save();
+
+		at30.setAttributeType(at30a1);
+		at30.update();
+	
+
+
+		allActionTypes.add(at30);
+		hotspotActionTypes.add(at30);
+		
 
 		//for (ActionType aat : allActionTypes) {
 

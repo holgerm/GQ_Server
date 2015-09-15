@@ -92,7 +92,19 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
+			
 			return ok(views.html.editor.editormain.render(Game.find.byId(gid)));
+			
+			}
 
 		}
 
@@ -118,6 +130,17 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
+			
 
 			if (Part.find.where().eq("id", pid).findRowCount() != 1) {
 
@@ -129,6 +152,7 @@ public class Editor extends Controller {
 				return ok(views.html.editor.editor_apartinsidemenu.render(
 						Game.find.byId(gid), Part.find.byId(pid)));
 
+			}
 			}
 
 		}
@@ -144,9 +168,20 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			return ok(views.html.editor.editor_sidemenu_missionlist
 					.render(Game.find.byId(gid)));
+			
+			}
 
 		}
 	}
@@ -167,9 +202,20 @@ public class Editor extends Controller {
 						.render("Das Menu-Item existiert nicht"));
 
 			} else {
+				
+
+				if (Global.securityGuard.hasWriteRightsOnGame(
+						Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+					return badRequest(views.html.norights
+							.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+				} else {
 
 				return ok(views.html.editor.editor_amenuiteminsidemenu.render(
 						Game.find.byId(gid), MenuItem.find.byId(pid)));
+				
+				}
 
 			}
 
@@ -192,9 +238,22 @@ public class Editor extends Controller {
 						.render("Der Hotspot existiert nicht"));
 
 			} else {
+				
+				
+
+				if (Global.securityGuard.hasWriteRightsOnGame(
+						Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+					return badRequest(views.html.norights
+							.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+				} else {
 
 				return ok(views.html.editor.editor_ahotspotinsidemenu.render(
 						Game.find.byId(gid), Hotspot.find.byId(pid)));
+				
+				
+				}
 
 			}
 
@@ -211,6 +270,15 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Hotspot.find.where().eq("id", pid).findRowCount() != 1) {
 
@@ -222,6 +290,8 @@ public class Editor extends Controller {
 				return ok(views.html.editor.editor_rulesinhotspot.render(
 						Game.find.byId(gid), Hotspot.find.byId(pid)));
 
+			}
+			
 			}
 
 		}
@@ -237,6 +307,15 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Mission.find.where().eq("id", pid).findRowCount() != 1) {
 
@@ -249,7 +328,7 @@ public class Editor extends Controller {
 						Game.find.byId(gid), Mission.find.byId(pid)));
 
 			}
-
+			}
 		}
 
 	}
@@ -264,6 +343,15 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Hotspot.find.where().eq("id", pid).findRowCount() != 1) {
 
@@ -275,6 +363,7 @@ public class Editor extends Controller {
 				return ok(views.html.editor.leaflet_addmarker.render(
 						Game.find.byId(gid), Hotspot.find.byId(pid), last));
 
+			}
 			}
 
 		}
@@ -291,6 +380,14 @@ public class Editor extends Controller {
 
 		} else {
 
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 			if (Part.find.where().eq("id", pid).findRowCount() != 1) {
 
 				return badRequest(views.html.norights
@@ -301,6 +398,7 @@ public class Editor extends Controller {
 				return ok(views.html.editor.editor_allmissioninfo.render(
 						Game.find.byId(gid), Part.find.byId(pid).getMission()));
 
+			}
 			}
 
 		}
@@ -316,6 +414,15 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Mission.find.where().eq("id", pid).findRowCount() != 1) {
 
@@ -327,6 +434,7 @@ public class Editor extends Controller {
 				return ok(views.html.editor.editor_allmissioninfo.render(
 						Game.find.byId(gid), Mission.find.byId(pid)));
 
+			}
 			}
 
 		}
@@ -342,6 +450,16 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Part.find.where().eq("id", pid).findRowCount() != 1) {
 
@@ -353,6 +471,7 @@ public class Editor extends Controller {
 				return ok(views.html.editor.editor_allsceneinfo.render(
 						Game.find.byId(gid), Part.find.byId(pid).getScene()));
 
+			}
 			}
 
 		}
@@ -368,6 +487,15 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Hotspot.find.where().eq("id", hid).findRowCount() != 1) {
 
@@ -379,6 +507,7 @@ public class Editor extends Controller {
 				return ok(views.html.editor.editor_ahotspotpopup.render(
 						Game.find.byId(gid), Hotspot.find.byId(hid)));
 
+			}
 			}
 
 		}
@@ -394,6 +523,15 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Part.find.where().eq("id", pid).findRowCount() != 1) {
 
@@ -414,6 +552,7 @@ public class Editor extends Controller {
 				}
 
 			}
+			}
 
 		}
 
@@ -428,6 +567,15 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Scene.find.where().eq("id", pid).findRowCount() != 1) {
 
@@ -448,6 +596,7 @@ public class Editor extends Controller {
 				}
 
 			}
+			}
 
 		}
 	}
@@ -462,6 +611,15 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
@@ -484,6 +642,7 @@ public class Editor extends Controller {
 				}
 
 			}
+			}
 
 		}
 
@@ -499,6 +658,15 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
@@ -520,6 +688,7 @@ public class Editor extends Controller {
 				}
 
 			}
+			}
 
 		}
 
@@ -534,9 +703,20 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			return ok(views.html.editor.editor_missionselector.render(
 					Game.find.byId(gid), v));
+			
+			}
 
 		}
 
@@ -552,6 +732,16 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
@@ -575,6 +765,8 @@ public class Editor extends Controller {
 				}
 
 			}
+			
+			}
 
 		}
 
@@ -590,6 +782,16 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Content.find.where().eq("id", scid).findRowCount() != 1) {
 
@@ -613,6 +815,7 @@ public class Editor extends Controller {
 				}
 
 			}
+			}
 
 		}
 
@@ -627,6 +830,16 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
@@ -638,6 +851,8 @@ public class Editor extends Controller {
 				return ok(views.html.editor.editor_contentlistinmission.render(
 						Game.find.byId(gid), Mission.find.byId(mid)));
 
+			}
+			
 			}
 
 		}
@@ -654,6 +869,15 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
@@ -676,6 +900,8 @@ public class Editor extends Controller {
 				}
 
 			}
+			
+			}
 
 		}
 
@@ -690,6 +916,15 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Content.find.where().eq("id", cid).findRowCount() != 1) {
 
@@ -701,6 +936,8 @@ public class Editor extends Controller {
 				return ok(views.html.editor.editor_contentedit.render(
 						Game.find.byId(gid), Content.find.byId(cid)));
 
+			}
+			
 			}
 
 		}
@@ -717,6 +954,15 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Action.find.where().eq("id", cid).findRowCount() != 1) {
 
@@ -738,6 +984,7 @@ public class Editor extends Controller {
 
 				}
 			}
+			}
 
 		}
 
@@ -753,6 +1000,15 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Action.find.where().eq("id", cid).findRowCount() != 1) {
 
@@ -764,6 +1020,8 @@ public class Editor extends Controller {
 				return ok(views.html.editor.editor_actionedit.render(
 						Game.find.byId(gid), Action.find.byId(cid), rtype, z));
 
+			}
+			
 			}
 
 		}
@@ -779,6 +1037,16 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Action.find.where().eq("id", cid).findRowCount() != 1) {
 
@@ -800,6 +1068,8 @@ public class Editor extends Controller {
 
 				}
 			}
+			
+			}
 
 		}
 
@@ -815,6 +1085,16 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Action.find.where().eq("id", aid).findRowCount() != 1) {
 
@@ -856,6 +1136,8 @@ public class Editor extends Controller {
 						}
 					}
 				}
+				
+			}
 
 			}
 		}
@@ -871,6 +1153,16 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
 
@@ -908,6 +1200,8 @@ public class Editor extends Controller {
 					}
 				}
 			}
+			
+			}
 
 		}
 
@@ -923,6 +1217,16 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
 
@@ -944,6 +1248,8 @@ public class Editor extends Controller {
 
 				}
 			}
+			
+			}
 
 		}
 
@@ -958,6 +1264,15 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
 
@@ -969,6 +1284,8 @@ public class Editor extends Controller {
 				return ok(views.html.editor.editor_actionsintrigger.render(
 						Game.find.byId(gid), Rule.find.byId(rid)));
 
+			}
+			
 			}
 
 		}
@@ -984,8 +1301,20 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 			return ok(views.html.editor.leafletMapfunction.render(Game.find
 					.byId(gid)));
+			
+			}
 
 		}
 
@@ -1000,7 +1329,18 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 			return ok(views.html.editor.geosearch.render(Game.find.byId(gid)));
+			}
 
 		}
 
@@ -1016,6 +1356,15 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Scene.find.where().eq("id", sid).findRowCount() != 1) {
 
@@ -1048,6 +1397,8 @@ public class Editor extends Controller {
 				}
 
 			}
+			
+			}
 
 		}
 
@@ -1062,6 +1413,15 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -1100,6 +1460,8 @@ public class Editor extends Controller {
 
 				return ok(String.valueOf(z.getId()));
 			}
+			
+			}
 
 		}
 
@@ -1114,6 +1476,15 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -1125,6 +1496,8 @@ public class Editor extends Controller {
 			g.update();
 
 			return ok(String.valueOf(z.getId()));
+			
+			}
 
 		}
 
@@ -1143,6 +1516,15 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -1167,6 +1549,8 @@ public class Editor extends Controller {
 
 				return ok(String.valueOf(z.getId()));
 			}
+			
+			}
 
 		}
 
@@ -1181,6 +1565,16 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -1201,6 +1595,8 @@ public class Editor extends Controller {
 				return ok(String.valueOf(nm.getId()));
 
 			}
+			
+			}
 
 		}
 
@@ -1209,12 +1605,26 @@ public class Editor extends Controller {
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result duplicateSubRuleInRule(Long gid, Long rid, Long srid) {
 
+		
+
+		if (Global.securityGuard.hasWriteRightsOnGame(
+				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+			return badRequest(views.html.norights
+					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+		} else {
+		
+		
 		if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
 
 			return badRequest(views.html.norights
 					.render("Die Hauptregel existiert nicht"));
 
 		} else {
+			
+			
+			
 
 			Rule r = Rule.find.byId(rid);
 
@@ -1237,6 +1647,8 @@ public class Editor extends Controller {
 
 			return redirect(routes.Editor.getEditor(gid));
 
+			
+		}
 		}
 
 	}
@@ -1253,6 +1665,16 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -1278,7 +1700,7 @@ public class Editor extends Controller {
 			}
 
 			return redirect(routes.Editor.getEditor(gid));
-
+			}
 		}
 
 	}
@@ -1293,6 +1715,16 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -1315,6 +1747,7 @@ public class Editor extends Controller {
 				return ok(String.valueOf(nm.getId()));
 
 			}
+			}
 
 		}
 
@@ -1329,6 +1762,16 @@ public class Editor extends Controller {
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -1360,6 +1803,8 @@ if(name.equals("Hier Namen eingeben")){
 				return ok(String.valueOf(z.getId()));
 
 			}
+			
+			}
 
 		}
 
@@ -1377,6 +1822,16 @@ if(name.equals("Hier Namen eingeben")){
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
+			
 
 			Game g = Game.find.byId(gid);
 
@@ -1400,6 +1855,8 @@ if(name.equals("Hier Namen eingeben")){
 				return ok(views.html.gteditor.gteditor_newscene.render(s, gt,
 						log));
 
+			}
+			
 			}
 
 		}
@@ -1451,6 +1908,17 @@ if(name.equals("Hier Namen eingeben")){
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -1482,6 +1950,9 @@ if(name.equals("Hier Namen eingeben")){
 
 				return ok(String.valueOf(z.getId()));
 			}
+			
+			
+			}
 
 		}
 
@@ -1497,6 +1968,16 @@ if(name.equals("Hier Namen eingeben")){
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -1527,6 +2008,9 @@ if(name.equals("Hier Namen eingeben")){
 
 				}
 			}
+			
+			
+			}
 
 		}
 
@@ -1541,6 +2025,16 @@ if(name.equals("Hier Namen eingeben")){
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -1577,6 +2071,8 @@ if(name.equals("Hier Namen eingeben")){
 				}
 
 			}
+			
+			}
 
 		}
 
@@ -1592,6 +2088,16 @@ if(name.equals("Hier Namen eingeben")){
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -1627,6 +2133,8 @@ if(name.equals("Hier Namen eingeben")){
 				}
 
 			}
+			
+			}
 
 		}
 
@@ -1642,6 +2150,18 @@ if(name.equals("Hier Namen eingeben")){
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
+			
 
 			if (ActionType.find.where().eq("id", atype).findRowCount() != 1) {
 
@@ -1705,6 +2225,7 @@ if(name.equals("Hier Namen eingeben")){
 
 			}
 
+			}
 		}
 
 	}
@@ -1718,6 +2239,16 @@ if(name.equals("Hier Namen eingeben")){
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -1741,6 +2272,8 @@ if(name.equals("Hier Namen eingeben")){
 				r.update();
 
 			}
+			
+			}
 
 		}
 
@@ -1759,6 +2292,16 @@ if(name.equals("Hier Namen eingeben")){
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -1794,6 +2337,9 @@ if(name.equals("Hier Namen eingeben")){
 				}
 
 			}
+			
+			
+			}
 
 		}
 
@@ -1810,6 +2356,16 @@ if(name.equals("Hier Namen eingeben")){
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -1858,6 +2414,8 @@ if(name.equals("Hier Namen eingeben")){
 			return redirect(routes.Editor.getEditor(gid));
 
 		}
+			
+		}
 
 	}
 
@@ -1871,6 +2429,16 @@ if(name.equals("Hier Namen eingeben")){
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -1901,6 +2469,8 @@ if(name.equals("Hier Namen eingeben")){
 				}
 
 			}
+			
+			}
 		}
 
 		return ok("synced");
@@ -1916,6 +2486,16 @@ if(name.equals("Hier Namen eingeben")){
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -1949,6 +2529,8 @@ if(name.equals("Hier Namen eingeben")){
 				}
 
 			}
+			
+			}
 		}
 
 		return ok("synced");
@@ -1964,6 +2546,16 @@ if(name.equals("Hier Namen eingeben")){
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -2003,7 +2595,7 @@ if(name.equals("Hier Namen eingeben")){
 
 				}
 			}
-
+			}
 		}
 
 	}
@@ -2017,6 +2609,16 @@ if(name.equals("Hier Namen eingeben")){
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -2038,6 +2640,8 @@ if(name.equals("Hier Namen eingeben")){
 
 			return redirect(routes.Editor.getEditor(gid));
 
+			
+			}
 		}
 
 	}
@@ -2051,6 +2655,16 @@ if(name.equals("Hier Namen eingeben")){
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -2082,6 +2696,8 @@ if(name.equals("Hier Namen eingeben")){
 
 			return redirect(routes.Editor.getEditor(gid));
 
+			
+			}
 		}
 
 	}
@@ -2094,6 +2710,16 @@ if(name.equals("Hier Namen eingeben")){
 			return ok("Das Spiel existiert nicht");
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -2137,6 +2763,7 @@ if(name.equals("Hier Namen eingeben")){
 
 			}
 
+			}
 		}
 
 	}
@@ -2150,6 +2777,16 @@ if(name.equals("Hier Namen eingeben")){
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -2189,7 +2826,7 @@ if(name.equals("Hier Namen eingeben")){
 
 				}
 			}
-
+			}
 		}
 
 	}
@@ -2204,6 +2841,16 @@ if(name.equals("Hier Namen eingeben")){
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -2234,7 +2881,7 @@ if(name.equals("Hier Namen eingeben")){
 
 				}
 			}
-
+			}
 		}
 
 	}
@@ -2244,6 +2891,16 @@ if(name.equals("Hier Namen eingeben")){
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result setSceneName(Long gid, Long sid, String name) {
 
+		
+
+		if (Global.securityGuard.hasWriteRightsOnGame(
+				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+			return badRequest(views.html.norights
+					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+		} else {
+		
 		String help = "Error!";
 
 		if (Scene.find.where().eq("id", sid).findRowCount() != 1) {
@@ -2261,6 +2918,8 @@ if(name.equals("Hier Namen eingeben")){
 		}
 
 		return ok(help);
+		
+		}
 
 	}
 
@@ -2273,12 +2932,24 @@ if(name.equals("Hier Namen eingeben")){
 
 			help = "Game " + gid + "not found";
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game c = Game.find.byId(gid);
 			c.setName(name);
 			c.update();
 
 			help = "synced";
+			
+			}
 
 		}
 
@@ -2289,6 +2960,16 @@ if(name.equals("Hier Namen eingeben")){
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result setHotspotName(Long gid, Long cid, String name) {
 
+
+		if (Global.securityGuard.hasWriteRightsOnGame(
+				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+			return badRequest(views.html.norights
+					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+		} else {
+		
+		
 		String help = "Error!";
 
 		if (Hotspot.find.where().eq("id", cid).findRowCount() != 1) {
@@ -2306,12 +2987,23 @@ if(name.equals("Hier Namen eingeben")){
 		}
 
 		return ok(help);
+		
+		}
 
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result setMenuItemName(Long gid, Long cid, String name) {
 
+		
+
+		if (Global.securityGuard.hasWriteRightsOnGame(
+				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+			return badRequest(views.html.norights
+					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+		} else {
 		String help = "Error!";
 
 		if (MenuItem.find.where().eq("id", cid).findRowCount() != 1) {
@@ -2329,12 +3021,22 @@ if(name.equals("Hier Namen eingeben")){
 		}
 
 		return ok(help);
+		
+		}
 
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result setContentName(Long gid, Long cid, String name) {
 
+
+		if (Global.securityGuard.hasWriteRightsOnGame(
+				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+			return badRequest(views.html.norights
+					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+		} else {
 		String help = "Error!";
 
 		if (Content.find.where().eq("id", cid).findRowCount() != 1) {
@@ -2352,12 +3054,21 @@ if(name.equals("Hier Namen eingeben")){
 		}
 
 		return ok(help);
+		}
 
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result setContentValue(Long gid, Long cid, String name) {
 
+
+		if (Global.securityGuard.hasWriteRightsOnGame(
+				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+			return badRequest(views.html.norights
+					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+		} else {
 		String help = "Error!";
 
 		if (Content.find.where().eq("id", cid).findRowCount() != 1) {
@@ -2375,6 +3086,7 @@ if(name.equals("Hier Namen eingeben")){
 		}
 
 		return ok(help);
+		}
 
 	}
 
@@ -2382,6 +3094,15 @@ if(name.equals("Hier Namen eingeben")){
 	public static Result setHotspotCoords(Long gid, Long hid, String lon,
 			String lat) {
 
+		
+
+		if (Global.securityGuard.hasWriteRightsOnGame(
+				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+			return badRequest(views.html.norights
+					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+		} else {
 		String help = "Error!";
 
 		if (Hotspot.find.where().eq("id", hid).findRowCount() != 1) {
@@ -2401,12 +3122,21 @@ if(name.equals("Hier Namen eingeben")){
 		}
 
 		return ok(help);
+		}
 
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result setMissionName(Long gid, Long mid, String name) {
 
+
+		if (Global.securityGuard.hasWriteRightsOnGame(
+				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+			return badRequest(views.html.norights
+					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+		} else {
 		String help = "Error!";
 
 		if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
@@ -2431,7 +3161,7 @@ if(name.equals("Hier Namen eingeben")){
 		}
 
 		return ok(help);
-
+		}
 	}
 
 	// / EDITOR SETTERS: UPLOADS
@@ -2440,6 +3170,16 @@ if(name.equals("Hier Namen eingeben")){
 	public static Result uploadAttributeFile(Long gid, String type, Long hid,
 			Long cid) {
 
+		
+		
+
+		if (Global.securityGuard.hasWriteRightsOnGame(
+				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+			return badRequest(views.html.norights
+					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+		} else {
 		String help = "Error!";
 
 		if (AttributeType.find.where().eq("id", cid).findRowCount() != 1) {
@@ -2646,7 +3386,7 @@ if(name.equals("Hier Namen eingeben")){
 		}
 
 		return ok(help);
-
+		}
 	}
 	
 	
@@ -2663,6 +3403,16 @@ if(name.equals("Hier Namen eingeben")){
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Attribute.find.where().eq("id", attr).findRowCount() != 1) {
 
@@ -2685,7 +3435,7 @@ if(name.equals("Hier Namen eingeben")){
 				
 				
 			}
-
+			}
 		}
 	
 	}
@@ -2702,6 +3452,15 @@ if(name.equals("Hier Namen eingeben")){
 			return ok("Game not found");
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -2726,6 +3485,7 @@ if(name.equals("Hier Namen eingeben")){
 				}
 
 			}
+			}
 		}
 
 		return ok(help);
@@ -2743,6 +3503,15 @@ if(name.equals("Hier Namen eingeben")){
 			return ok("Game not found");
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Content.find.where().eq("id", cid).findRowCount() != 1) {
 
@@ -2774,6 +3543,7 @@ if(name.equals("Hier Namen eingeben")){
 
 				}
 			}
+			}
 		}
 
 		return ok(help);
@@ -2791,6 +3561,15 @@ if(name.equals("Hier Namen eingeben")){
 			return ok("Game not found");
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
@@ -2822,6 +3601,7 @@ if(name.equals("Hier Namen eingeben")){
 
 				}
 			}
+			}
 		}
 
 		return ok(help);
@@ -2839,6 +3619,15 @@ if(name.equals("Hier Namen eingeben")){
 			return ok("Game not found");
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Hotspot.find.where().eq("id", mid).findRowCount() != 1) {
 
@@ -2870,6 +3659,7 @@ if(name.equals("Hier Namen eingeben")){
 
 				}
 			}
+			}
 		}
 
 		return ok(help);
@@ -2888,6 +3678,14 @@ if(name.equals("Hier Namen eingeben")){
 
 		} else {
 
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 			if (Action.find.where().eq("id", mid).findRowCount() != 1) {
 
 				return ok("Content not found");
@@ -2918,6 +3716,7 @@ if(name.equals("Hier Namen eingeben")){
 
 				}
 			}
+			}
 		}
 
 		return ok(help);
@@ -2935,6 +3734,14 @@ if(name.equals("Hier Namen eingeben")){
 			return ok("Game not found");
 
 		} else {
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Scene.find.where().eq("id", mid).findRowCount() != 1) {
 
@@ -3005,6 +3812,7 @@ if(name.equals("Hier Namen eingeben")){
 
 				}
 			}
+			}
 		}
 
 		return ok(help);
@@ -3022,6 +3830,15 @@ if(name.equals("Hier Namen eingeben")){
 			return ok("Game not found");
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (MenuItem.find.where().eq("id", mid).findRowCount() != 1) {
 
@@ -3071,6 +3888,7 @@ if(name.equals("Hier Namen eingeben")){
 				c.update();
 
 			}
+			}
 		}
 
 		return ok(help);
@@ -3088,6 +3906,15 @@ if(name.equals("Hier Namen eingeben")){
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 			
 
 			ProviderPortal p = Application.getLocalPortal();
@@ -3156,6 +3983,7 @@ if(name.equals("Hier Namen eingeben")){
 			}
 			return ok("synced");
 			
+			}
 
 		}
 
@@ -3170,6 +3998,16 @@ if(name.equals("Hier Namen eingeben")){
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
@@ -3184,6 +4022,8 @@ if(name.equals("Hier Namen eingeben")){
 
 				return ok(result);
 			}
+			
+			}
 		}
 
 	}
@@ -3197,6 +4037,9 @@ if(name.equals("Hier Namen eingeben")){
 					.render("Das Spiel existiert nicht"));
 
 		} else {
+			
+			
+			
 
 			Game g = Game.find.byId(gid);
 
@@ -3243,6 +4086,15 @@ if(name.equals("Hier Namen eingeben")){
 			return badRequest("Game not found");
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -3266,6 +4118,7 @@ if(name.equals("Hier Namen eingeben")){
 						.render(Game.find.byId(gid)));
 
 			}
+			}
 		}
 
 	}
@@ -3281,6 +4134,15 @@ if(name.equals("Hier Namen eingeben")){
 			return ok("Game not found");
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -3299,6 +4161,7 @@ if(name.equals("Hier Namen eingeben")){
 				return ok("synced");
 
 			}
+			}
 		}
 
 	}
@@ -3312,6 +4175,15 @@ if(name.equals("Hier Namen eingeben")){
 			return ok("Game not found");
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -3330,6 +4202,7 @@ if(name.equals("Hier Namen eingeben")){
 				return ok("synced");
 
 			}
+			}
 		}
 
 	}
@@ -3343,6 +4216,15 @@ if(name.equals("Hier Namen eingeben")){
 			return ok("Game not found");
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -3361,6 +4243,7 @@ if(name.equals("Hier Namen eingeben")){
 				return ok("synced");
 
 			}
+			}
 		}
 
 	}
@@ -3374,6 +4257,15 @@ if(name.equals("Hier Namen eingeben")){
 			return ok("Game not found");
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -3400,6 +4292,7 @@ if(name.equals("Hier Namen eingeben")){
 
 				}
 			}
+			}
 		}
 
 	}
@@ -3414,6 +4307,15 @@ if(name.equals("Hier Namen eingeben")){
 			return ok("Game not found");
 
 		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -3432,6 +4334,7 @@ if(name.equals("Hier Namen eingeben")){
 				return ok("synced");
 
 			}
+			}
 		}
 	}
 
@@ -3444,6 +4347,14 @@ if(name.equals("Hier Namen eingeben")){
 			return ok("Game not found");
 
 		} else {
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
 
 			Game g = Game.find.byId(gid);
 
@@ -3471,6 +4382,7 @@ if(name.equals("Hier Namen eingeben")){
 					return ok("synced");
 
 				}
+			}
 			}
 		}
 
