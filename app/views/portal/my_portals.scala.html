@@ -2,14 +2,14 @@
 
 @import util.Global
 
-@main("Meine Portale") {
+@main(Application.getLanguage("Meine Portale")) {
 
 
-    <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.addPortal(Application.getLocalPortal().getId())" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.speciallinks.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.speciallinks.attributes") !=""))>Ein neues Portal eröffnen</a>
+    <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.addPortal(Application.getLocalPortal().getId())" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.speciallinks.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.speciallinks.attributes") !=""))>@Application.getLanguage("Ein neues Portal eröffnen")</a>
 
 
     @if(providerList.isEmpty() == true){
-                Du bist nicht auf Portalen angemeldet.
+               @Application.getLanguage("Du bist nicht auf Portalen angemeldet.")
             } else {
 
                 <div class="container" style="margin-top: 10px">
@@ -17,8 +17,8 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Name</th>
-                                <th class="no-sort">Optionen</th>
+                                <th>@Application.getLanguage("Name")</th>
+                                <th class="no-sort">@Application.getLanguage("Optionen")</th>
                             </tr>
                         </thead>
 
@@ -35,16 +35,16 @@
 	
 	
 	@if(!a_provider.getId().equals(Global.defaultportal.getId())){
-                                <a href="javascript:confirm('Wirklich löschen?')?window.location.href = '@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doDeletePortal(Application.getLocalPortal().getId(),a_provider.getId())':void(0);">Löschen</a>
+                                <a href="javascript:confirm('@Application.getLanguage("Wirklich löschen?")')?window.location.href = '@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doDeletePortal(Application.getLocalPortal().getId(),a_provider.getId())':void(0);">@Application.getLanguage("Löschen")</a>
 
-                                | <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.editPortal(Application.getLocalPortal().getId(),a_provider.getId())">Editieren</a>
+                                | <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.editPortal(Application.getLocalPortal().getId(),a_provider.getId())">@Application.getLanguage("Editieren")</a>
 
-                                | }<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.userRightsonPortal(Application.getLocalPortal().getId(),a_provider.getId())">User-Rechte</a>
+                                | }<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.userRightsonPortal(Application.getLocalPortal().getId(),a_provider.getId())">@Application.getLanguage("User-Rechte")</a>
 
-                                | <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.gameTypesonPortal(a_provider.getId(),Application.getLocalPortal().getId())">Spieltypen</a>
+                                | <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.gameTypesonPortal(a_provider.getId(),Application.getLocalPortal().getId())">@Application.getLanguage("Spieltypen")</a>
 
                                 | 
-                                }<a href="@Application.getPortalById(a_provider.getId()).getTemplateServerURLDropSlash@Application.getPortalById(a_provider.getId()).getPathTo(routes.Portal.portalNewsstream(a_provider.getId()))">Aufrufen</a>
+                                }<a href="@Application.getPortalById(a_provider.getId()).getTemplateServerURLDropSlash@Application.getPortalById(a_provider.getId()).getPathTo(routes.Portal.portalNewsstream(a_provider.getId()))">@Application.getLanguage("Aufrufen")</a>
 
 
 

@@ -20,8 +20,8 @@ L.Control.GeoSearch = L.Control.extend({
 
     _config: {
         country: '',
-        searchLabel: 'Wo ist der Ort den du suchst?',
-        notFoundMessage: 'Sorry, die Adresse wurde nicht gefunden.',
+        searchLabel: '@Application.getLanguage("Wo ist der Ort den du suchst?")',
+        notFoundMessage: '@Application.getLanguage("Sorry, die Adresse wurde nicht gefunden.")',
         messageHideDelay: 3000,
         zoomLevel: 18
     },
@@ -197,7 +197,7 @@ var Icontoset = L.icon({
              document.getElementById('hotspotsnew_lat').value = location.Y;
     document.getElementById('hotspotsnew_long').value = location.X;
     positionmarker = this._positionMarker;
-			this._positionMarker.bindPopup("<h1>Hier erstellen:</h1>  <p><label>Hotspot-Typ:</label>	<select id = \"game_newhotspot_type\" >  @if(g.getType.getPossibleHotspotTypes.size() > 0){     @for(a_hstype <- g.getType.getPossibleHotspotTypes){              				  <option value=\"hotspot_@a_hstype.getId()\"><i class=\"icon-map-marker\"></i>@a_hstype.getName()</option>         		   }          				  }	             @for(a_stype <- g.getType.getPossibleSceneTypes){                           @if(a_stype.getDefaultHotspots.size()>0){              <option value=\"scene_@a_stype.getId()\">                @a_stype.getName()</option>               }                              }</select>          <div class=\"btn btn-success\" onClick=\"setHotspotFromSearch(location.Y,location.X)\">Setzen</div>").openPopup();
+			this._positionMarker.bindPopup("<h1>@Application.getLanguage("Hier erstellen:")</h1>  <p><label>@Application.getLanguage("Hotspot-Typ"):</label>	<select id = \"game_newhotspot_type\" >  @if(g.getType.getPossibleHotspotTypes.size() > 0){     @for(a_hstype <- g.getType.getPossibleHotspotTypes){              				  <option value=\"hotspot_@a_hstype.getId()\"><i class=\"icon-map-marker\"></i>@Application.getLanguage(a_hstype.getName())</option>         		   }          				  }	             @for(a_stype <- g.getType.getPossibleSceneTypes){                           @if(a_stype.getDefaultHotspots.size()>0){              <option value=\"scene_@a_stype.getId()\">                @Application.getLanguage(a_stype.getName())</option>               }                              }</select>          <div class=\"btn btn-success\" onClick=\"setHotspotFromSearch(location.Y,location.X)\">@Application.getLanguage("Setzen")</div>").openPopup();
 
 
 this._positionMarker.on('add', function(event){

@@ -53,7 +53,7 @@
 
 
 <div id="missionsonly">
-              <h3>Seiten</h3>
+              <h3>@Application.getLanguage("Seiten")</h3>
 
 <div id="missionlist">
 
@@ -72,7 +72,7 @@
 					
   <a class="dropdown-toggle" id="actiondropdown_g@g.getId()" style=" cursor:pointer;" data-toggle="dropdown" ">
     
-                <img src="@Global.SERVER_URL_2/assets/icons/neue_seite.png" width="120"  style="cursor:pointer;"/>
+                <img src="@Global.SERVER_URL_2/assets/icons/@Application.getLanguage("neue_seite.png")" width="120"  style="cursor:pointer;"/>
 
   </a>
 
@@ -90,7 +90,7 @@
                
                
                
-                             			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="addNewObject('mission_@a_mtype.getId()')">@a_mtype.getName()</a></li>
+                             			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="addNewObject('mission_@a_mtype.getId()')">@Application.getLanguage(a_mtype.getName())</a></li>
                
                
                
@@ -104,7 +104,7 @@
                
                @if(a_stype.getDefaultHotspots().isEmpty()){
                	
-             <li><a tabindex="-1" style="cursor:pointer;" onClick="addNewObject('scene_@a_stype.getId()')"> <i class="@a_stype.getIcon()"></i>@a_stype.getName()</a></li>
+             <li><a tabindex="-1" style="cursor:pointer;" onClick="addNewObject('scene_@a_stype.getId()')"> <i class="@a_stype.getIcon()"></i>@Application.getLanguage(a_stype.getName())</a></li>
                	
               
                }
@@ -138,7 +138,7 @@
 
 
 <div id="hotspotsonly" style="display:none;">
-              <h3>Hotspots</h3>
+              <h3>@Application.getLanguage("Hotspots")</h3>
 
 <div id="hotspotlist">
 
@@ -163,7 +163,7 @@
 
 
 <div id="menuitemsonly" style="display:none;">
-              <h3>Menü-Items</h3>
+              <h3>@Application.getLanguage("Menü-Einträge")</h3>
 
 <div id="menuitemlist">
 
@@ -190,7 +190,7 @@
 
 
 <div id="settingsonly" style="display:none;">
-              <h3>Einstellungen</h3>
+              <h3>@Application.getLanguage("Einstellungen")</h3>
               
         
               
@@ -200,7 +200,7 @@
 									        				@if(a.isEditable){
 									        				
 									        				 
-       @a.getName
+       @Application.getLanguage(a.getName)
        <br/>
           
 									        @if(a.getFileType == "String"){
@@ -284,7 +284,7 @@
 									         @if(a.getFileType == "file"){
 									         	
 									         	
-									         	<a href="@g.getAttributeValue(a)" target="_blank">Aktuelle Datei anzeigen</a>
+									         	<a href="@g.getAttributeValue(a)" target="_blank">@Application.getLanguage("Aktuelle Datei anzeigen")</a>
 									         	
 									        <br/>
 									        <input style="display:block; width:80%;" type="file"/ id="upload@a.getId" onchange="javascript:uploadFile('game',@g.getId,@a.getId)" >

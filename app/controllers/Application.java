@@ -358,8 +358,8 @@ public class Application extends Controller {
 			}
 			
 			
-			
 			code = language+"_"+code;
+
 
 		}
 		
@@ -450,6 +450,7 @@ public class Application extends Controller {
 			// signup
 
 			return UsernamePasswordAuthProvider.handleSignup(ctx());
+			
 		}
 
 	}

@@ -41,14 +41,14 @@
 									        				
 									        				<br/>
 									        				
-									        				<h4>Einstellungen</h4>
+									        				<h4>@Application.getLanguage("Einstellungen")</h4>
 									        				
 									        				@for(a <- c.getAllAttributes){
 									        				
 									        				@if(a.isEditable){
 									        				
 									        				 <div style="width:80%">
-       @a.getName
+       @Application.getLanguage(a.getName)
         <div class="floatright">
         
         
@@ -62,7 +62,7 @@
 								             
 								             <option ></option>
 								              		@for(pm <- a.getPossibleValues()){
-								              			   <option  value = "@pm" @if(c.getAttributeValue(a).equals(pm)){ selected="selected" } >@pm</option>
+								              			   <option  value = "@pm" @if(c.getAttributeValue(a).equals(pm)){ selected="selected" } >@Application.getLanguage(pm)</option>
 								              			
 								              			
 								              		}   </select>
@@ -117,11 +117,11 @@
          	<div id="contentfile_file_at@c.getId@a.getId">
 				<input type="file"/ id="contentfileat@c.getId@a.getId" onchange="javascript:uploadFile('content',@c.getId,@a.getId)" >
         
-        <a  onClick="javascript:document.getElementById('contentfile_file_at@c.getId@a.getId').style.display='none';document.getElementById('contentfile_text_at@c.getId@a.getId').style.display='block';">Variabel</a>
+        <a  onClick="javascript:document.getElementById('contentfile_file_at@c.getId@a.getId').style.display='none';document.getElementById('contentfile_text_at@c.getId@a.getId').style.display='block';">@Application.getLanguage("Variabel")</a>
         </div>
                 <div id="contentfile_text_at@c.getId@a.getId" style="display:none;">
 									        <input type="text"/ value="@c.getAttributeValue(a)" id="contentat@c.getId@a.getId" onchange="javascript:syncAttr('content',@c.getId,@a.getId)" onkeydown="document.getElementById('status_contentat@c.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
-                      <a onClick="javascript:document.getElementById('contentfile_text_at@c.getId@a.getId').style.display='none';document.getElementById('contentfile_file_at@c.getId@a.getId').style.display='block';">Datei</a>
+                      <a onClick="javascript:document.getElementById('contentfile_text_at@c.getId@a.getId').style.display='none';document.getElementById('contentfile_file_at@c.getId@a.getId').style.display='block';">@Application.getLanguage("Datei")</a>
               
                </div>
         

@@ -12,7 +12,7 @@
       
              @if(g.getType.getPossibleHotspotTypes.size() > 1){
           <p>
-             <label>Hotspottyp</label>
+             <label>@Application.getLanguage("Hotspottyp")</label>
              
              
              
@@ -20,7 +20,7 @@
              @for(a_htype <- g.getType.getPossibleHotspotTypes){
              
                
-               <option value = "@a_htype.getId()">@a_htype.getName()</option>
+               <option value = "@a_htype.getId()">@Application.getLanguage(a_htype.getName())</option>
              
                }
              </select>
@@ -34,14 +34,14 @@
           }
           
             <p>
-             <label>Longitude</label>
+             <label>@Application.getLanguage("Longitude")</label>
             <input type="text" id="hotspotnew_long" />
             
           </p>
           
           
             <p>
-             <label>Latitude</label>
+             <label>@Application.getLanguage("Latitude")</label>
             <input type="text" id="hotspotnew_lat" />
             
           </p>
@@ -51,6 +51,6 @@
           
        </fieldset>
        <br/>
-       <div class="btn btn-success" onClick="newHotspotInGame()">Hinzufügen</div>
+       <div class="btn btn-success" onClick="newHotspotInGame()">@Application.getLanguage("Hinzufügen")</div>
               	</div>
               	

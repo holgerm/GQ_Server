@@ -5,7 +5,7 @@
 
 	
 									              	
-									              				<div id="action_@ac.getId" style=" padding:10px;  display:inline-block; width:100px; cursor:pointer;"><div onClick="javascript:document.getElementById('actionedit_@ac.getId()').style.display='block';"><img src="@if(ac.getType.getSymbol != null){ @ac.getType.getSymbol} else { @Global.SERVER_URL_2/assets/icons/actions/default.png }" style="height:70px; width:70px; position:relative; left:15px; " /><p style="width:100px; height:36px; font-size:10px; text-align:center; overflow:hidden; white-space:normal;">@ac.getName()</p></div><p style="height:20px; overflow:hidden;"><i onClick="deleteActionFromMenuItem(@parent.getId,@ac.getId)" class="icon-minus-sign"></i></p></div>
+									              				<div id="action_@ac.getId" style=" padding:10px;  display:inline-block; width:100px; cursor:pointer;"><div onClick="javascript:document.getElementById('actionedit_@ac.getId()').style.display='block';"><img src="@if(ac.getType.getSymbol != null){ @ac.getType.getSymbol} else { @Global.SERVER_URL_2/assets/icons/actions/default.png }" style="height:70px; width:70px; position:relative; left:15px; " /><p style="width:100px; height:36px; font-size:10px; text-align:center; overflow:hidden; white-space:normal;">@Application.getLanguage(ac.getName())</p></div><p style="height:20px; overflow:hidden;"><i onClick="deleteActionFromMenuItem(@parent.getId,@ac.getId)" class="icon-minus-sign"></i></p></div>
 									              				<div id="actionarrow_@ac.getId" style=" display:inline-block; width:30px;"><img style="position:relative; top:-70px;" src="@Global.SERVER_URL_2/assets/icons/next.png"></div>
 									              				
 																		        		

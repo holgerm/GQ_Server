@@ -45,11 +45,42 @@
     <body onLoad="connectionTester(); browserTester(); initmap(); @if(g.getType.hasOnlyOneScene()){ document.getElementById('background').style.display='none'; document.getElementById('tutorial').style.display='none'; document.getElementById('missionoverviewjs').style.display='none'; } @if(g.getHotspots != null){ @if(g.getHotspots.size() > 0){  document.getElementById('background').style.display='none'; document.getElementById('tutorial').style.display='none'; document.getElementById('missionoverviewjs').style.display='none';}}">
 
 
+<div id="language" style="position:absolute; z-index:9999999; top:0px; left:3px;">
+
+<script type="text/javascript">
+    function SetLanguage(l)
+    {
+
+
+
+	var url ="@Global.SERVER_URL_2/setLanguage/"+l;
+$.ajax({
+url: url,
+dataType: 'html',
+success: function(data){
+
+    document.location.reload();
+    
+   }
+   
+   });
+   
+   }
+
+</script>
+<span>
+<img style="cursor:pointer;" onClick="javascript:SetLanguage('de');" alt="Deutsch" src="@Global.SERVER_URL_2@routes.Assets.at("img/flags/de.png")" width="20" />
+</span><span><img style="cursor:pointer;" onClick="javascript:SetLanguage('en');" alt="English" src="@Global.SERVER_URL_2@routes.Assets.at("img/flags/en.jpg")" width="20" />
+</span>
+
+
+</div>
+
 
       @defining(Application.getLocalPortal()) { portal =>
 
 
-<div style="position:fixed; top:0px; height:80px; @if(portal.getId().equals(61L)){ background-position: -500px 900px; background-image:url('https://quest-mill.com/geoquest/bg_login.jpg'); } else { background-color:#FFFFFF;} width:100%; z-index:1000000000000;">
+<div style="position:fixed; top:0px; height:80px; @if(portal.getId().equals(61L)){ background-position: -500px 900px; background-image:url('https://quest-mill.com/geoquest/bg_login.jpg'); } else { background-color:#FFFFFF;} width:100%; z-index:1000000;">
 
 
 <div class="options">
@@ -108,9 +139,9 @@
           
           
           
-          <input type="text" class="h2textfield" id="gamename" @if(Application.getLocalPortal().getId().equals(Global.defaultportal.getId())){ style="position:relative; top:0px; left:100px;" } else { @if(Application.getLocalPortal.logoExists()){ style="position:relative; top:0px; left:100px;" } else{ style="position:relative; top:19px; left:100px;" }}  value="@g.getName()"
+          <input type="text" class="h2textfield" id="gamename" @if(Application.getLocalPortal().getId().equals(61L)){ style="position:relative; top:19px; left:100px;" } else { @if(Application.getLocalPortal.logoExists()){ style="position:relative; top:0px; left:100px;" } else{ style="position:relative; top:19px; left:100px;" }}  value="@g.getName()"
               				onchange="javascript:syncGameName()" onkeydown="document.getElementById('status_gamename').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
-                <img @if( !Application.getLocalPortal().getId().equals(Global.defaultportal.getId())){  @if(Application.getLocalPortal.logoExists()){ style="position:relative; top:0px; left:100px;" } else { style="position:relative; top:19px;  left:100px;" } } else {  style="position:relative; left:100px;" } id="status_gamename" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
+                <img @if( !Application.getLocalPortal().getId().equals(61L)){  @if(Application.getLocalPortal.logoExists()){ style="position:relative; top:0px; left:100px;" } else { style="position:relative; top:19px;  left:100px;" } } else {  style="position:relative; top:19px; left:100px;" } id="status_gamename" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
         
         
         
@@ -122,11 +153,11 @@
                   
                   
                        		<div style="display:inline-block; padding-right:1px;"> 
-                       			<img alt="Speichern" style="cursor:pointer;" onClick="javascript:xmlify();" onMouseOver="javascript:showLinkDescription('Veröffentlichen');" onMouseOut="javascript:showLinkDescription('');" src="@Global.SERVER_URL_2@routes.Assets.at("icons/publish.png")">
+                       			<img alt="@Application.getLanguage("Speichern")" style="cursor:pointer;" onClick="javascript:xmlify();" onMouseOver="javascript:showLinkDescription('@Application.getLanguage("Veröffentlichen")');" onMouseOut="javascript:showLinkDescription('');" src="@Global.SERVER_URL_2@routes.Assets.at("icons/publish.png")">
                        		</div> 
 
-             <div style="display:inline-block;"> <a id="mapboundsbutton" target="_blank" onClick="javascript:document.getElementById('background').style.display='none'; zoomToMapBounds();" style="cursor:pointer;"><img onMouseOver="javascript:showLinkDescription('Karte auf Hotspots zentrieren');" onMouseOut="javascript:showLinkDescription('');" alt="Karte auf Hotspots zentrieren" src="@Global.SERVER_URL_2@routes.Assets.at("icons/home.png")"></a></div> 
-             <div style="display:inline-block;"> <a id="hideallbutton" target="_blank" onClick="javascript:hideAddEditMissions();" style="cursor:pointer;"><img onMouseOver="javascript:showLinkDescription('Alle Fenster schließen');" onMouseOut="javascript:showLinkDescription('');" alt="Alle Fenster schließen" src="@Global.SERVER_URL_2@routes.Assets.at("icons/desktop.png")"></a></div> 
+             <div style="display:inline-block;"> <a id="mapboundsbutton" target="_blank" onClick="javascript:document.getElementById('background').style.display='none'; zoomToMapBounds();" style="cursor:pointer;"><img onMouseOver="javascript:showLinkDescription('@Application.getLanguage("Karte auf Hotspots zentrieren")');" onMouseOut="javascript:showLinkDescription('');" alt="@Application.getLanguage("Karte auf Hotspots zentrieren")" src="@Global.SERVER_URL_2@routes.Assets.at("icons/home.png")"></a></div> 
+             <div style="display:inline-block;"> <a id="hideallbutton" target="_blank" onClick="javascript:hideAddEditMissions();" style="cursor:pointer;"><img onMouseOver="javascript:showLinkDescription('@Application.getLanguage("Alle Fenster schließen")');" onMouseOut="javascript:showLinkDescription('');" alt="@Application.getLanguage("Alle Fenster schließen")" src="@Global.SERVER_URL_2@routes.Assets.at("icons/desktop.png")"></a></div> 
      
      
      <span style="position:absolute; bottom:0px; right:0%; white-space:nowrap;" id="xmlstatus">&nbsp;</span>
@@ -173,8 +204,8 @@
 
 
              <div style="display:inline-block; cursor:pointer; position:absolute; bottom:0; right:0; z-index:10001;">
-          	 	<a id="xmlshow"  onClick="javascript:@if(g.hasFile()){LoadXML('xmlcontainer','@Global.SERVER_URL_2@routes.Portal.at(Application.getLocalPortal().getId()+"/editor/"+g.getId()+"/game.xml")');} hideAddEditMissions(); hidePlayer(); document.getElementById('xmlview').style.display = 'block';"onMouseOver="javascript:showLinkDescription('Erzeugtes XML anzeigen');" onMouseOut="javascript:showLinkDescription('');" >
-          			<img alt="Erzeugtes XML anzeigen" src="@Global.SERVER_URL_2@routes.Assets.at("icons/hiddencode.png")">
+          	 	<a id="xmlshow"  onClick="javascript:@if(g.hasFile()){LoadXML('xmlcontainer','@Global.SERVER_URL_2@routes.Portal.at(Application.getLocalPortal().getId()+"/editor/"+g.getId()+"/game.xml")');} hideAddEditMissions(); hidePlayer(); document.getElementById('xmlview').style.display = 'block';"onMouseOver="javascript:showLinkDescription('@Application.getLanguage("Erzeugtes XML anzeigen")');" onMouseOut="javascript:showLinkDescription('');" >
+          			<img alt="@Application.getLanguage("Erzeugtes XML anzeigen")" src="@Global.SERVER_URL_2@routes.Assets.at("icons/hiddencode.png")">
           	 	</a>
              </div> 
                          
@@ -186,16 +217,11 @@
     <div class="iewarning_older" id="iewarning2" style="display:block" >
    <br/><br/>
    
-  <p id="h1iewarning">Achtung!</p>
-  <p>Die Benutzung von Internet Explorer wird von GeoQuest nicht unterstützt. </p>
-  <p>Bitte öffnen Sie diese Seite erneut in einem der unterstützten Browser:</p>
+  <p id="h1iewarning">@Application.getLanguage("Achtung!")</p>
+  @Application.getLanguage("<p>Die Benutzung von Internet Explorer wird von GeoQuest nicht unterstützt. </p><p>Bitte öffnen Sie diese Seite erneut in einem der unterstützten Browser:</p>")
   <table width="50%" border="0" align="center" cellpadding="0" cellspacing="0">
     <tr>
-      <td> <a href="https://www.google.com/chrome" target="_blank"> 
-             <img src="@Global.SERVER_URL_2@routes.Assets.at("img/browsercompability/chrome.png")" />
-       
-       <br/>
-       Google Chrome</a></td>
+     
       <td><a href="https://www.mozilla.org/firefox" target="_blank">
                 <img src="@Global.SERVER_URL_2@routes.Assets.at("img/browsercompability/firefox.png")" />
    <br/>
@@ -218,16 +244,12 @@
     <div class="iewarning" id="iewarning" style="display:none" >
    <br/><br/>
    
-  <p id="h1iewarning">Achtung!</p>
-  <p>Die Benutzung von Internet Explorer wird von GeoQuest nicht unterstützt. </p>
-  <p>Bitte öffnen Sie diese Seite erneut in einem der unterstützten Browser:</p>
+  <p id="h1iewarning"> @Application.getLanguage("Achtung!")</p>
+  @Application.getLanguage("<p>Die Benutzung von Internet Explorer wird von GeoQuest nicht unterstützt. </p><p>Bitte öffnen Sie diese Seite erneut in einem der unterstützten Browser:</p>")
+
   <table width="50%" border="0" align="center" cellpadding="0" cellspacing="0">
     <tr>
-      <td> <a href="https://www.google.com/chrome" target="_blank"> 
-             <img src="@Global.SERVER_URL_2@routes.Assets.at("img/browsercompability/chrome.png")" />
-       
-       <br/>
-       Google Chrome</a></td>
+     
       <td><a href="https://www.mozilla.org/firefox" target="_blank">
                 <img src="@Global.SERVER_URL_2@routes.Assets.at("img/browsercompability/firefox.png")" />
    <br/>
@@ -254,7 +276,7 @@
 
 <div id="playersettings" style="position:absolute; top:100px; left:40px; height:480px; width: 140px; padding:10px; background-color:#cccccc;  ">
 
-<h4>Display-Größe</h4>
+<h4> @Application.getLanguage("Display-Größe")</h4>
 
 <p style="cursor:pointer;" onClick="document.getElementById('unityPlayer').style.width='281px'; document.getElementById('vardebug').style.left='481px'; document.getElementById('consoledebug').style.left='641px';">iPhone 5/6</p>
 <p style="cursor:pointer;" onClick="document.getElementById('unityPlayer').style.width='333px'; document.getElementById('vardebug').style.left='533px'; document.getElementById('consoledebug').style.left='693px';">iPhone 4</p>
@@ -263,8 +285,8 @@
 
 <br/>
 
-<h4>Hilfe</h4>
-<p> Durch Klicken in den Player und ein darauf folgendes gleichzeitiges Drücken der Tasten "G","E","O" und "Q" kann der Player zurückgesetzt werden.</p>
+<h4> @Application.getLanguage("Hilfe")</h4>
+<p> @Application.getLanguage("Die GPS-Position kann durch die Pfeiltasten simuliert werden. <br/><br/>Durch Klicken in den Player und ein darauf folgendes gleichzeitiges Drücken der Tasten 'G','E','O' und 'Q' kann der Player zurückgesetzt werden.")</p>
 
 </div>
 	<div id="unityPlayerBG" style="position:absolute; top:100px; left: 200px; width: 375px; height: 500px; background-color:#FFF; margin: 0px auto;">&nbsp;
@@ -277,12 +299,12 @@
 				</div>
 			</div>
 <div id="vardebug" style=" overflow-y:scroll; position:absolute; top:100px; left:575px; height:480px; width: 140px; padding:10px; background-color:#cccccc;  ">
-<h4>Variablen</h4>
+<h4> @Application.getLanguage("Variablen")</h4>
 <div id="showvars"></div>
 
 </div>
 	<div id="consoledebug" style="overflow-y:scroll; position:absolute; top:100px; left:735px; height:480px; width: 250px; padding:10px; background-color:#c3c3c3;  ">
-<h4>Log</h4>
+<h4> @Application.getLanguage("Log")</h4>
 <div id="showlog"></div>
 
 </div>
@@ -303,7 +325,7 @@ Wilkommen bei dieser kurzen Einführung zum GeoQuest Editor für mobile Android-
 <div id="background-chooser">
 
 <div style="padding:5px; display:inline-block; cursor:pointer;" onClick="javascript:hideMapView();">
-<i class="icon-remove-sign"></i>&nbsp; Kartenansicht verlassen
+<i class="icon-remove-sign"></i>&nbsp; @Application.getLanguage("Kartenansicht verlassen")
 </div>
 </div>
 }

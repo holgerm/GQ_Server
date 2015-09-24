@@ -1549,20 +1549,7 @@ if(x != null){
         		
         		return x;
         		
-        	} else {
-        		
-        		if(code.equals("Oeffentliche_Spiele")){ return "Öffentliche Spiele"; }
-        		if(code.equals("Meine_Spiele")){ return "Meine Spiele"; }
-        		if(code.equals("Newsstream")){ return "Newsstream"; }
-        		if(code.equals("Neues_Spiel_erstellen")){ return "Neues Spiel erstellen"; }
-        		if(code.equals("Spielname")){ return "Spielname"; }
-        		if(code.equals("Spieltyp")){ return "Spieltyp"; }
-        		if(code.equals("Du_hast_keine_Spiele")){ return "Du hast bisher keine Spiele auf diesem Portal."; }
-        		if(code.equals("hat_ein_neues_Spiel_erstellt")){ return "hat ein neues Spiel erstellt"; }
-        		
-        		
-        		
-        	}
+        	} 
         	
         	
         	}

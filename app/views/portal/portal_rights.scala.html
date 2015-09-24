@@ -3,7 +3,7 @@
     @import helper._
     @import helpers._
 
-@main("User-Rechte") {
+@main(Application.getLanguage("User-Rechte")) {
 
 
     @defining(Application.getLocalUser(session())) { user =>
@@ -11,16 +11,16 @@
 
 
             @if(provider.getUsers().isEmpty() == true){
-                Keine User
+                @Application.getLanguage("Keine User")
             } else {
 
                 <div class="gq_container" style="margin-top: 10px">
                     <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Rechte</th>
-                                <th class="no-sort">Optionen</th>
+                                <th>@Application.getLanguage("Name")</th>
+                                <th>@Application.getLanguage("Rechte")</th>
+                                <th class="no-sort">@Application.getLanguage("Optionen")</th>
                             </tr>
                         </thead>
 
@@ -31,16 +31,16 @@
                             <tr>
 
                                 <td>@a_user.getUser.getName() @if(Application.getLocalUser().isAdminOnPortalOne()){( @a_user.getUser().getPremiumStatus()
-                                @if(a_user.getUser().getPremiumStatus().equals("All Access")){ until @a_user.getUser().getCurrentAccess().getValidUntil().format("dd.MM.yyyy") }
-                                	<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.givePremiumAccess(a_user.getUser.getId,1)">Add one months All Access</a> )}</td>
+                                @if(a_user.getUser().getPremiumStatus().equals("All Access")){ @Application.getLanguage("bis") @a_user.getUser().getCurrentAccess().getValidUntil().format(Application.getLanguage("dd.MM.yyyy")) }
+                                	<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.givePremiumAccess(a_user.getUser.getId,1)">@Application.getLanguage("Einen Monat All Access hinzufügen")</a> )}</td>
 
 
 
                                         @if(a_user.getRights() == "admin"){
 
-                                            <td>Admin</td>
+                                            <td>@Application.getLanguage("Administrator")</td>
                                             <td>
-                                                @if(a_user.getUser.getId != user.getId){<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doEditUserRightsOnPortal(Application.getLocalPortal.getId(),provider.getId(),a_user.getUser.getId,"user")">Auf User reduzieren</a>  - <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doDeleteUserRightsOnPortal(Application.getLocalPortal.getId(),provider.getId(),a_user.getUser.getId)">Alle Rechte entziehen</a>}
+                                                @if(a_user.getUser.getId != user.getId){<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doEditUserRightsOnPortal(Application.getLocalPortal.getId(),provider.getId(),a_user.getUser.getId,"user")">@Application.getLanguage("Auf Benutzer reduzieren")</a>  - <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doDeleteUserRightsOnPortal(Application.getLocalPortal.getId(),provider.getId(),a_user.getUser.getId)">@Application.getLanguage("Alle Rechte entziehen")</a>}
                                               </td>
 
                                         } else {
@@ -49,15 +49,15 @@
                                             @if(a_user.getRights() == "user"){
 
 
-                                                <td>User</td>
+                                                <td>@Application.getLanguage("Benutzer")</td>
                                                 <td>
-                                                @if(a_user.getUser.getId != user.getId){<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doEditUserRightsOnPortal(Application.getLocalPortal.getId(),provider.getId(),a_user.getUser.getId,"admin")">Admin-Rechte geben</a>  - <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doDeleteUserRightsOnPortal(Application.getLocalPortal.getId(),provider.getId(),a_user.getUser.getId)">Alle Rechte entziehen</a>}
+                                                @if(a_user.getUser.getId != user.getId){<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doEditUserRightsOnPortal(Application.getLocalPortal.getId(),provider.getId(),a_user.getUser.getId,"admin")">@Application.getLanguage("Admin-Rechte geben")</a>  - <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doDeleteUserRightsOnPortal(Application.getLocalPortal.getId(),provider.getId(),a_user.getUser.getId)">@Application.getLanguage("Alle Rechte entziehen")</a>}
                                                   </td>
                                             } else {
 
-                                                <td><i>Unverified</i></td>
+                                                <td><i>@Application.getLanguage("Nicht verifiziert")</i></td>
                                                 <td>
-                                                    @if(a_user.getUser.getId != user.getId){<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doEditUserRightsOnPortal(Application.getLocalPortal.getId(),provider.getId(),a_user.getUser.getId,"user")">User-Rechte geben</a>  - <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doEditUserRightsOnPortal(Application.getLocalPortal.getId(),provider.getId(),a_user.getUser.getId,"admin")">Admin-Rechte geben</a> - <a href="javascript:confirm('Antrag wirklich ablehnen?')?window.location.href = '@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doDeleteUserRightsOnPortal(Application.getLocalPortal.getId(),provider.getId(),a_user.getUser.getId)':void(0);">Antrag ablehnen</a>}
+                                                    @if(a_user.getUser.getId != user.getId){<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doEditUserRightsOnPortal(Application.getLocalPortal.getId(),provider.getId(),a_user.getUser.getId,"user")">@Application.getLanguage("User-Rechte geben")</a>  - <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doEditUserRightsOnPortal(Application.getLocalPortal.getId(),provider.getId(),a_user.getUser.getId,"admin")">@Application.getLanguage("Admin-Rechte geben")</a> - <a href="javascript:confirm('@Application.getLanguage("Antrag wirklich ablehnen?")')?window.location.href = '@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doDeleteUserRightsOnPortal(Application.getLocalPortal.getId(),provider.getId(),a_user.getUser.getId)':void(0);">@Application.getLanguage("Antrag ablehnen")</a>}
                                                  </td>
 
                                             }

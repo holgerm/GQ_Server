@@ -5,7 +5,7 @@
 
 @import helper.twitterBootstrap._
 
-@main(Messages("playauthenticate.login.title"),"login") {
+@main(Application.getLanguage("Einloggen"),"login") {
 
 
       @* Display proprietary login form *@
@@ -13,7 +13,7 @@
     	
         @if(loginForm.hasGlobalErrors) { 
           <p class="error">
-            <span class="label label-important">@loginForm.globalError.message</span>
+            <span class="label label-important">@Application.getLanguage(loginForm.globalError.message)</span>
           </p>
         }
         
@@ -22,12 +22,12 @@
         @inputPassword(
           loginForm("password"),
           '_showConstraints -> false,
-          '_label -> Messages("playauthenticate.login.password.placeholder")
+          '_label -> Application.getLanguage("Passwort")
         )
           
-        <input type="submit" value="@Messages("playauthenticate.login.now")" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes") !=""))><br/>
+        <input type="submit" value="@Application.getLanguage("Einloggen")" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes") !=""))><br/>
         <br/>
-        <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Signup.forgotPassword(Application.getLocalPortal().getId())">@Messages("playauthenticate.login.forgot.password")</a>
+        <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Signup.forgotPassword(Application.getLocalPortal().getId())">@Application.getLanguage("Passwort vergessen")?</a>
 
     	}
 

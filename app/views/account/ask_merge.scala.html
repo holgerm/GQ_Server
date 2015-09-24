@@ -15,7 +15,7 @@
 
             @if(acceptForm.hasGlobalErrors) { 
                 <p class="error">
-		            <span class="label label-important">@acceptForm.globalError.message</span>
+		            <span class="label label-important">@Application.getLanguage(acceptForm.globalError.message)</span>
 		        </p>
             }
 	   

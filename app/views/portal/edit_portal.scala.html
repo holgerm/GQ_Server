@@ -4,7 +4,7 @@
     @import helpers._
 @import helper.twitterBootstrap._
 
-@main("Editieren ("+portal.getName+"//"+portal.getId+")","edit_portal") {
+@main(Application.getLanguage("Editieren")+" ("+portal.getName+"//"+portal.getId+")","edit_portal") {
 
 
 
@@ -29,14 +29,14 @@
   @if(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.tabs.type") =="button-group"){
 
     <div class="btn-group inline">
-    <li onclick="javascript:showDiv('generalinfo'); hideDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('layout');" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes") !=""))>Allgemein    </li>
-    <li onclick="javascript:showDiv('verschluesselung'); hideDiv('erweitert'); hideDiv('generalinfo'); hideDiv('layout');" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes") !=""))>Verschlüsselung </li>
-    <li onclick="javascript:showDiv('layout'); hideDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('generalinfo');" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes") !=""))>Layout </li>
-    <li onclick="javascript:showDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('generalinfo'); hideDiv('layout');" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes") !=""))>Erweitert</li>
+    <li onclick="javascript:showDiv('generalinfo'); hideDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('layout');" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes") !=""))>@Application.getLanguage("Allgemein")    </li>
+    <li onclick="javascript:showDiv('verschluesselung'); hideDiv('erweitert'); hideDiv('generalinfo'); hideDiv('layout');" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes") !=""))>@Application.getLanguage("Verschlüsselung") </li>
+    <li onclick="javascript:showDiv('layout'); hideDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('generalinfo');" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes") !=""))>@Application.getLanguage("Layout") </li>
+    <li onclick="javascript:showDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('generalinfo'); hideDiv('layout');" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes") !=""))>@Application.getLanguage("Erweitert")</li>
 
    </div>
     <span>
-        <input type="submit" value="Abspeichern" class="btn btn-primary")>
+        <input type="submit" value="@Application.getLanguage("Abspeichern")" class="btn btn-primary")>
 
     </span>
 
@@ -45,11 +45,11 @@
   } else {
 
       <ul @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes") !=""))>
-      <li><a href="javascript:showDiv('generalinfo'); hideDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('layout');">Allgemein</a>    </li>
-      <li><a href="javascript:showDiv('verschluesselung'); hideDiv('erweitert'); hideDiv('generalinfo'); hideDiv('layout');">Verschlüsselung</a>   </li>
-      <li><a href="javascript:showDiv('layout'); hideDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('generalinfo');">Layout</a>   </li>
-      <li><a href="javascript:showDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('generalinfo'); hideDiv('layout');">Erweitert</a>   </li>
-      <li></li><div style="display:inline-block; padding-left:50px;">    <input type="submit" value="Abspeichern" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes") !=""))>
+      <li><a href="javascript:showDiv('generalinfo'); hideDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('layout');">@Application.getLanguage("Allgemein")</a>    </li>
+      <li><a href="javascript:showDiv('verschluesselung'); hideDiv('erweitert'); hideDiv('generalinfo'); hideDiv('layout');">@Application.getLanguage("Verschlüsselung")</a>   </li>
+      <li><a href="javascript:showDiv('layout'); hideDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('generalinfo');">@Application.getLanguage("Layout")</a>   </li>
+      <li><a href="javascript:showDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('generalinfo'); hideDiv('layout');">@Application.getLanguage("Erweitert")</a>   </li>
+      <li></li><div style="display:inline-block; padding-left:50px;">    <input type="submit" value="@Application.getLanguage("Abspeichern")" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes") !=""))>
 
       </div>   </li>        </ul>
 
@@ -62,14 +62,14 @@
     
     @if(errormessage != ""){
     			<p class="error">
-		            <span class="label label-important">@errormessage</span>
+		            <span class="label label-important">@Application.getLanguage(errormessage)</span>
 		        </p>
             }
     	
 
     @if(uploadForm.hasGlobalErrors) {
         <p class="error">
-            <span class="label label-important">@uploadForm.globalError.message</span>
+            <span class="label label-important">@Application.getLanguage(uploadForm.globalError.message)</span>
         </p>
     }
 
@@ -77,21 +77,21 @@
     <div id="generalinfo" name="generalinfo"  style="display:block;">
         @inputText(
             uploadForm("name"),
-            '_label -> "Portalname"
+            '_label -> Application.getLanguage("Portalname")
         )
 
         <br/>
 
         @checkbox(
             uploadForm("autoverify"),
-            '_label -> "User automatisch zulassen"
+            '_label -> Application.getLanguage("User automatisch zulassen")
 
         )
 
         <br/>
         @textarea(
             uploadForm("htmlurl"),
-            '_label -> "Template URL"
+            '_label -> Application.getLanguage("Template URL")
         )
         <br/>
 
@@ -108,38 +108,38 @@
 
         @inputText(
             uploadForm("formname"),
-            '_label -> "HTML-Formular-Name mit Login-Feldern"
+            '_label -> Application.getLanguage("HTML-Formular-Name mit Login-Feldern")
         )
         <br/>
 
         @inputText(
             uploadForm("userfield"),
-            '_label -> "HTML-Usernamefeld-Name"
+            '_label -> Application.getLanguage("HTML-Usernamefeld-Name")
         )
         <br/>
         @inputText(
             uploadForm("user"),
             '_showConstraints -> false,
-            '_label -> "Username"
+            '_label -> Application.getLanguage("Username")
         )
         <br/>
         @inputText(
             uploadForm("pwfield"),
-            '_label -> "HTML-Passwortfeld-Name"
+            '_label -> Application.getLanguage("HTML-Passwortfeld-Name")
         )
         <br/>
 
        @inputPassword(
                                     uploadForm("password"),
                                     '_showConstraints -> false,
-                                    '_label -> "Passwort (wird nur neu gesetzt, wenn neue Eingabe gemacht wird)"
+                                    '_label -> Application.getLanguage("Passwort (wird nur neu gesetzt, wenn neue Eingabe gemacht wird)")
                                 )
 
         <br/>
 
         @inputText(
             uploadForm("submitbutton"),
-            '_label -> "HTML-Submitbutton-Name"
+            '_label -> Application.getLanguage("HTML-Submitbutton-Name")
         )
 
 
@@ -147,7 +147,7 @@
 
         @textarea(
             uploadForm("afterloginurl"),
-            '_label -> "Nach erfolgreichem Einloggen URL aufrufen:"
+            '_label -> Application.getLanguage("Nach erfolgreichem Einloggen URL aufrufen:")
         )
 
 
@@ -161,19 +161,19 @@
 
         @textarea(
             uploadForm("mappingurl"),
-            '_label -> "Mapping-Datei-URL:"
+            '_label -> Application.getLanguage("Mapping-Datei-URL:")
         )
         <br/>
 
         @textarea(
             uploadForm("customserverurl"),
-            '_label -> "Eigene Server-URL (Redirecter-URL):"
+            '_label -> Application.getLanguage("Eigene Server-URL (Redirecter-URL):")
         )
         <br/>
 
         @textarea(
             uploadForm("posturl"),
-            '_label -> "Blog-Connector-URL:"
+            '_label -> Application.getLanguage("Blog-Connector-URL:")
         )
 
     </div>
@@ -184,7 +184,7 @@
 
 
             <div class="clearfix  " id="color_field">
-                <label for="color">Standard-Farbe:</label>
+                <label for="color">@Application.getLanguage("Standard-Farbe"):</label>
                 <div class="input">
 
                     <input type="color" id="color" name="color" value="@uploadForm("color").value" >
@@ -196,7 +196,7 @@
             <br/>
 
             <div class="clearfix  " id="color_field">
-                <label for="color_2">Komplementär-Farbe:</label>
+                <label for="color_2">@Application.getLanguage("Komplementär-Farbe"):</label>
                 <div class="input">
 
                     <input type="color" id="color_2" name="color_2" value="@uploadForm("color_2").value" >
@@ -209,7 +209,7 @@
             <br/>
 
             <div class="clearfix  " id="color_field">
-                <label for="color_3">Verlaufs-Farbe:</label>
+                <label for="color_3">@Application.getLanguage("Verlaufs-Farbe"):</label>
                 <div class="input">
 
                     <input type="color" id="color_3" name="color_3" value="@uploadForm("color_3").value" >
@@ -222,7 +222,7 @@
             <br/>
 
             <div class="clearfix  " id="color_field">
-                <label for="color_4">Hintergrund-Farbe:</label>
+                <label for="color_4">@Application.getLanguage("Hintergrund-Farbe"):</label>
                 <div class="input">
 
                     <input type="color" id="color_4" name="color_4" value="@uploadForm("color_4").value" >
@@ -235,7 +235,7 @@
             <br/>
 
             <div class="clearfix  " id="color_field">
-                <label for="color_5">Link-Farbe:</label>
+                <label for="color_5">@Application.getLanguage("Link-Farbe"):</label>
                 <div class="input">
 
                     <input type="color" id="color_5" name="color_5" value="@uploadForm("color_5").value" >
@@ -248,13 +248,13 @@
             <br/>
 
 
-            @inputFile(uploadForm("logo"), '_display -> "Attachment", '_label -> "Logo-Datei (*.jpg,*.png)" )
+            @inputFile(uploadForm("logo"), '_display -> "Attachment", '_label -> Application.getLanguage("Logo-Datei (*.jpg,*.png)") )
 
             <br/>
 
             @textarea(
                 uploadForm("addcss"),
-                '_label -> "CSS (wird in Header eingefügt):"
+                '_label -> Application.getLanguage("CSS (wird in Header eingefügt):")
             )
 
 

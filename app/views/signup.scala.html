@@ -14,20 +14,20 @@
     	
             @if(signupForm.hasGlobalErrors) { 
                 <p class="error">
-		            <span class="label label-important">@signupForm.globalError.message</span>
+		            <span class="label label-important">@Application.getLanguage(signupForm.globalError.message)</span>
 		        </p>
             }
             
              @inputText(
                 signupForm("name"),
-                '_label -> Messages("playauthenticate.signup.name")
+                '_label -> Application.getLanguage("Vor- und Nachname")
              )
              
              @_emailPartial(signupForm)
              
              @_passwordPartial(signupForm)
 
-            <input type="submit" value="@Messages("playauthenticate.signup.now")" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes") !=""))>
+            <input type="submit" value="@Application.getLanguage("Account erstellen")" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes") !=""))>
     	}
 
 

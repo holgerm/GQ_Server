@@ -19,7 +19,7 @@
         	<br />
               				<p class="missionviewtext">
               				
-              				<em>@s.getType.getName      @if(s.getHotspots.size <2){ 
+              				<em>@Application.getLanguage(s.getType.getName)      @if(s.getHotspots.size <2){ 
               				
               				
 @for(hs <- s.getHotspots){
@@ -36,9 +36,9 @@
               				
               				
               				<p>
-              				 Optionen:<a href="@Global.SERVER_URL_2/editor/@g.getId()/duplicate/scene/@s.getId()"> <icon class="icon-share" style="display:inline-block;"></icon> Duplizieren</a>
+              				 @Application.getLanguage("Optionen"):<a href="@Global.SERVER_URL_2/editor/@g.getId()/duplicate/scene/@s.getId()"> <icon class="icon-share" style="display:inline-block;"></icon> @Application.getLanguage("Duplizieren")</a>
               				 @if(s.getFirstMission() != null){
-              				<span  style="cursor:pointer;" onClick="javascript:startUnityPreview('@Global.SERVER_URL_2/editor/@g.getId/webxml/@s.getFirstMission().getId()');"><icon class="icon-play" style="display:inline-block;"></icon> Vorschau</span></p>
+              				<span  style="cursor:pointer;" onClick="javascript:startUnityPreview('@Global.SERVER_URL_2/editor/@g.getId/webxml/@s.getFirstMission().getId()');"><icon class="icon-play" style="display:inline-block;"></icon> @Application.getLanguage("Vorschau")</span></p>
               			}
               				<br/>
               				
@@ -79,7 +79,7 @@
   <div class="accordion-group">
     <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne@s.getId">
-       Missionen
+       @Application.getLanguage("Seiten")
       </a>
     </div>
     <div id="collapseOne@s.getId" class="accordion-body collapse in">
@@ -89,7 +89,7 @@
        
        } else {
        
-       <h3>Missionen</h3>
+       <h3>@Application.getLanguage("Seiten")</h3>
        
        }
        
@@ -154,14 +154,14 @@
     <div class="accordion-group">
     <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo@s.getId">
-       Hotspots
+       @Application.getLanguage("Hotspots")
       </a>
     </div>
     <div id="collapseTwo@s.getId" class="accordion-body collapse">
       <div class="accordion-inner">
        
      } else {
-     <h2>Hotspots</h2>
+     <h2>@Application.getLanguage("Hotspots")</h2>
      
      }
      
@@ -208,7 +208,7 @@
   <div class="accordion-group">
     <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree@s.getId">
-        Einstellungen für Untermissionen
+        @Application.getLanguage("Einstellungen für Unterseiten")
       </a>
     </div>
     <div id="collapseThree@s.getId" class="accordion-body collapse">
@@ -221,7 +221,7 @@
 									        				@if(a.isEditable){
 									        				
 									        				 <div style="width:80%">
-       @a.getName() 
+       @Application.getLanguage(a.getName()) 
 <br/>        
         
      
@@ -237,7 +237,7 @@
 								             
 								             <option ></option>
 								              		@for(pm <- a.getPossibleValues()){
-								              			   <option  value = "@pm" @if(s.getAttributeValue(a).equals(pm)){ selected="selected" } >@pm</option>
+								              			   <option  value = "@pm" @if(s.getAttributeValue(a).equals(pm)){ selected="selected" } >@Application.getLanguage(pm)</option>
 								              			
 								              			
 								              		}   </select>
@@ -305,11 +305,11 @@
          	<div id="scenefile_file_at@s.getId@a.getId" style="inline-block">
         <input type="file"/ id="scenefileat@s.getId@a.getId" onchange="javascript:uploadFile('scene',@s.getId,@a.getId)" >
         
-        <a  onClick="javascript:document.getElementById('scenefile_file_at@s.getId@a.getId').style.display='none';document.getElementById('scenefile_text_at@s.getId@a.getId').style.display='inline-block';">Variabel</a>
+        <a  onClick="javascript:document.getElementById('scenefile_file_at@s.getId@a.getId').style.display='none';document.getElementById('scenefile_text_at@s.getId@a.getId').style.display='inline-block';">@Application.getLanguage("Variabel")</a>
         </div>
                 <div id="scenefile_text_at@s.getId@a.getId" style="display:none;">
                        <input type="text" value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)" onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
-                      <a onClick="javascript:document.getElementById('scenefile_text_at@s.getId@a.getId').style.display='none';document.getElementById('scenefile_file_at@s.getId@a.getId').style.display='inline-block';">Datei</a>
+                      <a onClick="javascript:document.getElementById('scenefile_text_at@s.getId@a.getId').style.display='none';document.getElementById('scenefile_file_at@s.getId@a.getId').style.display='inline-block';">@Application.getLanguage("Datei")</a>
               
                </div>
         

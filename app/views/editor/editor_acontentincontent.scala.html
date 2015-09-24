@@ -6,7 +6,7 @@
         	
         	<div id="content@sc.getId()_incontent@c.getId()listitem">
         	
-        <span id="listcontentname@sc.getId" class="onclicklink" onClick="document.getElementById('contentedit@sc.getId').style.display = 'block';">@sc.getType.getName</span>
+        <span id="listcontentname@sc.getId" class="onclicklink" onClick="document.getElementById('contentedit@sc.getId').style.display = 'block';">@Application.getLanguage(sc.getType.getName)</span>
         <div class="floatright"><i onClick="javascript:deleteContentFromContent(@c.getId,@sc.getId)" class="icon-minus-sign"></i> </div>
    		
    		<input type="text" id="contentvaluename2_@sc.getId"
