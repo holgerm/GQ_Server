@@ -280,6 +280,10 @@ public class Application extends Controller {
 		}
 
 	}
+	
+	
+	
+
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result profile(Long pid) {
@@ -303,6 +307,78 @@ public class Application extends Controller {
 			return ok(login.render(MyUsernamePasswordAuthProvider.LOGIN_FORM));
 
 		}
+	}
+	
+	
+	
+	
+	public static Result setLanguage(String language) {
+		session("geoquest_language", language);
+		return ok(language);
+	}
+	
+	
+	
+	
+	public static String getLanguage(String code){
+		
+		
+		
+		String translation = code;
+    	
+    	String language = session("geoquest_language");
+
+		if (language == null) {
+			
+			
+			if(getLocalPortal().getContentHtmlParameter("general.defaultlanguage") != null){
+				
+				language = getLocalPortal().getContentHtmlParameter("general.defaultlanguage");
+				
+			} else {
+			
+			language = "de";
+			}
+		}
+    	
+		
+		if(!language.equals("de")){
+		    			
+			
+			
+			if(language.equals("en")){
+				
+				if(Global.en_Translation.containsKey(code)){
+					
+					translation = Global.en_Translation.get(code);
+					
+				}
+				
+				
+			}
+			
+			
+			
+			code = language+"_"+code;
+
+		}
+		
+
+		
+		if(getLocalPortal().getLanguageParameter(code) != null){
+			
+			translation = getLocalPortal().getLanguageParameter(code);
+			
+		}
+		
+		
+		
+		
+		return translation;
+		
+		
+		
+		
 	}
 	
 	

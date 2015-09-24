@@ -11,17 +11,17 @@
                     <i class="icon-user"></i> @user.name
                 </a>
                 <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="drop1">
-                    <li role="presentation"><a role="menuitem" href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.profile(Application.getLocalPortal.getId()))">@Messages("playauthenticate.navigation.profile")</a></li>
+                    <li role="presentation"><a role="menuitem" href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.profile(Application.getLocalPortal.getId()))">@Application.getLanguage("Profil")</a></li>
                     <li role="presentation"><a role="menuitem" href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Account.link(Application.getLocalPortal.getId()))">@Messages("playauthenticate.navigation.link_more")</a></li>
                     <li class="divider"></li>
-                    <li role="presentation"><a role="menuitem" href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.dologout(Application.getLocalPortal.getId()))"><i class="icon-off"></i> @Messages("playauthenticate.navigation.logout")</a></li>
+                    <li role="presentation"><a role="menuitem" href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.dologout(Application.getLocalPortal.getId()))"><i class="icon-off"></i> @Application.getLanguage("Abmelden")</a></li>
                 </ul>
             </div>
         }
     }{
         <div class="btn-group">
-            <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.login(Application.getLocalPortal.getId()))" class="btn btn-primary  @("disabled".when(nav == "login"))">Einloggen</a>
-            <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.signup(Application.getLocalPortal().getId()))" class="btn btn-success  @("disabled".when(nav == "signup"))">Registrieren</a>
+            <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.login(Application.getLocalPortal.getId()))" class="btn btn-primary  @("disabled".when(nav == "login"))">@Application.getLanguage("Einloggen")</a>
+            <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.signup(Application.getLocalPortal().getId()))" class="btn btn-success  @("disabled".when(nav == "signup"))">@Application.getLanguage("Registrieren")</a>
 
         </div>
     }

@@ -40,7 +40,7 @@ GET    /testingtemplate                                                       co
 GET    /testmapping                                                           controllers.Application.getTestMapping
 
 
-
+GET		/setLanguage/:l														  controllers.Application.setLanguage(l: String)
 
 
 # ROUTING

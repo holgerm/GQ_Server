@@ -1,7 +1,9 @@
 package util;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import models.ProviderPortal;
@@ -15,13 +17,11 @@ import com.feth.play.module.pa.exceptions.AuthException;
 import controllers.routes;
 import controllers.Portal;
 import gametypes.*;
-
 import play.Application;
 import play.GlobalSettings;
 import play.mvc.Call;
 import scala.concurrent.duration.Duration;
 import security.MyUserPortalRights;
-
 import play.libs.Akka;
 import akka.actor.ActorSystem;
 import akka.actor.ActorRef;
@@ -29,7 +29,6 @@ import akka.actor.UntypedActorFactory;
 import akka.actor.UntypedActor;
 import akka.actor.Props;
 import akka.actor.ActorRefFactory;
-
 import akka.util.*;
 
 public class Global extends GlobalSettings {
@@ -54,6 +53,12 @@ public class Global extends GlobalSettings {
 		}
 	}
 	
+	
+	
+	public static Map<String,String> en_Translation;
+	public static Map<String,String> fr_Translation;
+	public static Map<String,String> es_Translation;
+
 
 	public static ProviderPortal defaultportal;
 	public static MyUserPortalRights securityGuard;
@@ -97,7 +102,17 @@ public class Global extends GlobalSettings {
 				System.out.println("GameType erstellt: beliebiges Spiel");
 
 			}
-
+			
+			
+			// LANGUAGE MAP INIT
+			
+			en_Translation =  new HashMap();
+			fr_Translation =  new HashMap();
+			es_Translation =  new HashMap();
+			
+			TranslationFactory trfactory = new TranslationFactory();
+			
+			trfactory.buildTranslationMaps();
 			
 
 		

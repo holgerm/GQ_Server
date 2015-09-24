@@ -10,14 +10,14 @@
                 <a class="btn btn-primary" href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.profile(Application.getLocalPortal.getId()))">
                     <i class="icon-user"></i>
                 </a>
-            <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.dologout(Application.getLocalPortal.getId()))" class="btn btn-success" ><i class="icon-off"></i> @Messages("playauthenticate.navigation.logout")</a>
+            <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.dologout(Application.getLocalPortal.getId()))" class="btn btn-success" ><i class="icon-off"></i> @Application.getLanguage("Abmelden")</a>
                 
             </div>
         }
     }{
         <div class="btn-group">
-            <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.login(Application.getLocalPortal.getId()))" class="btn btn-primary  @("disabled".when(nav == "login"))">Einloggen</a>
-            <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.signup(Application.getLocalPortal().getId()))" class="btn btn-success  @("disabled".when(nav == "signup"))">Registrieren</a>
+            <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.login(Application.getLocalPortal.getId()))" class="btn btn-primary  @("disabled".when(nav == "login"))">@Application.getLanguage("Einloggen")</a>
+            <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.signup(Application.getLocalPortal().getId()))" class="btn btn-success  @("disabled".when(nav == "signup"))">@Application.getLanguage("Registrieren")</a>
 
         </div>
     }

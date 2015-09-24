@@ -26,9 +26,9 @@
 				
 				
 				            @if(Global.securityGuard.hasAnyRightsOnPortal(user)==true){
-				                Eingeloggt als: <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.profile(Application.getLocalPortal().getId()))">@user.getName()</a> (<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.dologout(Application.getLocalPortal.getId()))">Ausloggen</a>)
+				                @Application.getLanguage("Eingeloggt als"): <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.profile(Application.getLocalPortal().getId()))">@user.getName()</a> (<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.dologout(Application.getLocalPortal.getId()))"> @Application.getLanguage("Abmelden")</a>)
 				                @if(Global.securityGuard.hasMinVerifiedRightsOnPortal(user)==false){
-				                    <i> Für dieses Portal unbestätigt </i>
+				                    <i>  @Application.getLanguage("Für dieses Portal unbestätigt") </i>
 				                }
 				
 				            }

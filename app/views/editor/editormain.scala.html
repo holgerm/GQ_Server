@@ -108,9 +108,9 @@
           
           
           
-          <input @if(!Application.getLocalPortal().getId().equals(Global.defaultportal.getId())){ style="position:relative; top:19px; left:100px;" } else {  style="position:relative; left:100px;" } type="text" class="h2textfield" id="gamename" value="@g.getName()"
+          <input type="text" class="h2textfield" id="gamename" @if(Application.getLocalPortal().getId().equals(Global.defaultportal.getId())){ style="position:relative; top:0px; left:100px;" } else { @if(Application.getLocalPortal.logoExists()){ style="position:relative; top:0px; left:100px;" } else{ style="position:relative; top:19px; left:100px;" }}  value="@g.getName()"
               				onchange="javascript:syncGameName()" onkeydown="document.getElementById('status_gamename').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
-                <img @if( !Application.getLocalPortal().getId().equals(Global.defaultportal.getId())){ style="position:relative; top:19px;  left:100px;" } else {  style="position:relative; left:100px;" } id="status_gamename" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
+                <img @if( !Application.getLocalPortal().getId().equals(Global.defaultportal.getId())){  @if(Application.getLocalPortal.logoExists()){ style="position:relative; top:0px; left:100px;" } else { style="position:relative; top:19px;  left:100px;" } } else {  style="position:relative; left:100px;" } id="status_gamename" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
         
         
         

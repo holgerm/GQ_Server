@@ -29,6 +29,7 @@ import java.util.*;
 
     import com.gargoylesoftware.htmlunit.*;
 
+import controllers.Application;
     import scala.Char;
 import util.Global;
 
@@ -1501,10 +1502,48 @@ return null;
         
         
         
+      
         public String getLanguageParameter(String code){
 
         	
+        	
+        	
         	String x = getContentHtmlParameter("general.language."+code);
+
+if(x != null){
+        		
+        		return x;
+        	
+} else {
+        	
+        	if(code.equals("Öffentliche Spiele")){
+            	
+        			code = "Oeffentliche_Spiele";
+        			
+        	} else if(code.equals("Meine Spiele")){
+    			code = "Meine_Spiele";
+
+        
+        		
+        	} else if(code.equals("Neues Spiel erstellen")){
+
+    			code = "Neues_Spiel_erstellen";
+
+        	
+        		
+        	} else if(code.equals("Du hast bisher keine Spiele auf diesem Portal.")){
+    			code = "Du_hast_keine_Spiele";
+
+        		
+        	} else if(code.equals("hat ein neues Spiel erstellt")){
+    			code = "hat_ein_neues_Spiel_erstellt";
+
+        
+        	} 
+        	
+        	
+        	
+        	x = getContentHtmlParameter("general.language."+code);
         	
         	if(x != null){
         		
@@ -1524,6 +1563,13 @@ return null;
         		
         		
         	}
+        	
+        	
+        	}
+        	
+        	
+        	
+        
         	
         	return null;
         	
