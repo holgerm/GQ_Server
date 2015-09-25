@@ -21,6 +21,7 @@ import play.mvc.*;
 import play.mvc.Http.Response;
 import play.mvc.Http.Session;
 import play.mvc.Result;
+import play.i18n.Lang;
 import providers.MyUsernamePasswordAuthProvider;
 import providers.MyUsernamePasswordAuthProvider.MyLogin;
 import providers.MyUsernamePasswordAuthProvider.MySignup;
@@ -340,6 +341,36 @@ public class Application extends Controller {
 	
 	
 	
+	 public static String getLanguageCode(){
+		
+		
+		
+
+    	
+    	String language = session("geoquest_language");
+
+		if (language == null) {
+			
+			
+			if(getLocalPortal().getContentHtmlParameter("general.defaultlanguage") != null){
+				
+				language = getLocalPortal().getContentHtmlParameter("general.defaultlanguage");
+				
+			} else {
+				
+				//Lang lang = Lang.preferred();
+				language = "de";
+				Lang lang = Lang.preferred(request().acceptLanguages());
+				language = lang.code();
+				
+			}
+		}
+		
+		
+		return language;
+		
+	}
+	
 	public static String getLanguage(String code){
 		
 		
@@ -357,10 +388,13 @@ public class Application extends Controller {
 				
 			} else {
 				
-				//Lang lang = Lang.preferred(request().acceptLanguages());
+				//Lang lang = Lang.preferred();
 				language = "de";
-				
-			
+				Lang lang = Lang.preferred(request().acceptLanguages());
+				language = lang.code();
+				if(Application.getLocalUser() != null){
+				System.out.println(Application.getLocalUser().getId()+": "+language);
+				}
 			}
 		}
     	

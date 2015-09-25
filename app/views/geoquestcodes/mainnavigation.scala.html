@@ -9,38 +9,11 @@
 
 
 
-@if(Application.getLocalPortal.getId() == 61L || Application.getLocalPortal.getId() == 141L){
 
 
-
-<script type="text/javascript">
-    function SetLanguage(l)
-    {
+<img src="https://quest-mill.com/geoquest/setlanguage.php?lang=@Application.getLanguageCode()" style="display:none" />
 
 
-
-	var url ="@Global.SERVER_URL_2/setLanguage/"+l;
-$.ajax({
-url: url,
-dataType: 'html',
-success: function(data){
-
-    document.location.reload();
-    
-   }
-   
-   });
-   
-   }
-
-</script>
-
-<img style="cursor:pointer;" onClick="javascript:SetLanguage('de');" alt="Deutsch" src="@Global.SERVER_URL_2@routes.Assets.at("img/flags/de.png")" width="30" />
-<img style="cursor:pointer;" onClick="javascript:SetLanguage('en');" alt="English" src="@Global.SERVER_URL_2@routes.Assets.at("img/flags/en.jpg")" width="30" />
-
-
-<br/><br/>
-}
 
 
 @if(Application.getLocalPortal.getId() != 61L){

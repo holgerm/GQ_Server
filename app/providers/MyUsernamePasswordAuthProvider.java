@@ -242,9 +242,33 @@ public class MyUsernamePasswordAuthProvider
 				Portal.getLocalPortal().getId(), token).absoluteURL(
 				ctx.request(), isSecure);
 
+		
+		
+String langCode = "xxxx";
+		
+		if(ctx.request().cookies().get("PLAY_LANG") != null){ 
+			langCode = ctx.request().cookies().get("PLAY_LANG").value();
+		}
+		
+		
+		if(langCode == "xxxx" ){
+		
 		final Lang lang = Lang.preferred(ctx.request().acceptLanguages());
-		final String langCode = lang.code();
+		langCode = lang.code();
 
+		
+		}
+		
+		
+		if(langCode == "xxxx"){
+			
+			langCode = "en";
+			
+		}
+		
+		
+		
+		
 		final String html = getEmailTemplate(
 				"views.html.account.signup.email.verify_email", langCode, url,
 				token, user.getName(), user.getEmail());
@@ -292,9 +316,31 @@ public class MyUsernamePasswordAuthProvider
 				Portal.getLocalPortal().getId(), token).absoluteURL(
 				ctx.request(), isSecure);
 
-		final Lang lang = Lang.preferred(ctx.request().acceptLanguages());
-		final String langCode = lang.code();
 
+		String langCode = "xxxx";
+		
+		if(ctx.request().cookies().get("PLAY_LANG") != null){ 
+			langCode = ctx.request().cookies().get("PLAY_LANG").value();
+		}
+		
+		
+		if(langCode == "xxxx" ){
+		
+		final Lang lang = Lang.preferred(ctx.request().acceptLanguages());
+		langCode = lang.code();
+
+		
+		}
+		
+		
+		if(langCode == "xxxx"){
+			
+			langCode = "en";
+			
+		}
+		
+		
+		
 		final String html = getEmailTemplate(
 				"views.html.account.email.password_reset", langCode, url,
 				token, user.name, user.email);
@@ -374,8 +420,27 @@ public class MyUsernamePasswordAuthProvider
 				Portal.getLocalPortal().getId(), token).absoluteURL(
 				ctx.request(), isSecure);
 
+String langCode = "xxxx";
+		
+		if(ctx.request().cookies().get("PLAY_LANG") != null){ 
+			langCode = ctx.request().cookies().get("PLAY_LANG").value();
+		}
+		
+		
+		if(langCode == "xxxx" ){
+		
 		final Lang lang = Lang.preferred(ctx.request().acceptLanguages());
-		final String langCode = lang.code();
+		langCode = lang.code();
+
+		
+		}
+		
+		
+		if(langCode == "xxxx"){
+			
+			langCode = "en";
+			
+		}
 
 		final String html = getEmailTemplate(
 				"views.html.account.email.verify_email", langCode, url, token,

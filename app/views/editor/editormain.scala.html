@@ -51,16 +51,16 @@
     function SetLanguage(l)
     {
 
-
-
 	var url ="@Global.SERVER_URL_2/setLanguage/"+l;
 $.ajax({
 url: url,
 dataType: 'html',
 success: function(data){
 
+
     document.location.reload();
     
+       
    }
    
    });
@@ -68,6 +68,7 @@ success: function(data){
    }
 
 </script>
+<img src="https://quest-mill.com/geoquest/setlanguage.php?lang=@Application.getLanguageCode()" style="display:none" />
 <span>
 <img style="cursor:pointer;" onClick="javascript:SetLanguage('de');" alt="Deutsch" src="@Global.SERVER_URL_2@routes.Assets.at("img/flags/de.png")" width="20" />
 </span><span><img style="cursor:pointer;" onClick="javascript:SetLanguage('en');" alt="English" src="@Global.SERVER_URL_2@routes.Assets.at("img/flags/en.jpg")" width="20" />
