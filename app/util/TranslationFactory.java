@@ -408,6 +408,10 @@ public class TranslationFactory {
 		addTranslation("Audio-Datei abspielen","Play audio file");
 		addTranslation("Nachricht anzeigen","Display message");
 		
+		addTranslation("Variable an Server senden","Send Variable to server");
+		addTranslation("Variable von Server laden","Load Variable from server");
+		addTranslation("Quest starten","Start quest");
+
 		
 		// RULE TRIGGER
 		
