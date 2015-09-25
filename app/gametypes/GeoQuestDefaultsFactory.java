@@ -1224,7 +1224,7 @@ public class GeoQuestDefaultsFactory {
 				"String");
 		frage_att1.setOptional(false);
 		frage_att1.save();
-		frage_att1.setDefaultValue("Frage?");
+		frage_att1.setDefaultValue("???");
 		frage_att1.update();
 
 		frage.setAttributeType(frage_att1);
@@ -1242,7 +1242,7 @@ public class GeoQuestDefaultsFactory {
 				"Feedback bei Wiederholung", "loopText", "String");
 		frage_att4.setOptional(false);
 		frage_att4.save();
-		frage_att4.setDefaultValue("Falsche Antwort!");
+		frage_att4.setDefaultValue("X");
 		frage_att4.update();
 
 		frage.setAttributeType(frage_att4);
@@ -1306,19 +1306,19 @@ public class GeoQuestDefaultsFactory {
 		standardfrage.save();
 
 		Content fragetext = new Content("Text", ct6);
-		fragetext.setContent("Fragetext?");
+		fragetext.setContent("???");
 		fragetext.save();
 
 		standardfrage.addSubContent(fragetext);
 
 		Content antwort1 = new Content("A", ct1);
-		antwort1.setContent("Antwort 1");
+		antwort1.setContent("A");
 		antwort1.save();
 
 		standardfrage.addSubContent(antwort1);
 
 		Content antwort2 = new Content("B", ct1);
-		antwort2.setContent("Antwort 2");
+		antwort2.setContent("B");
 		antwort2.save();
 
 		standardfrage.addSubContent(antwort2);
@@ -1458,19 +1458,19 @@ public class GeoQuestDefaultsFactory {
 		standardmenu.save();
 
 		Content heading = new Content("Text", ct6);
-		heading.setContent("Überschrift");
+		heading.setContent("...");
 		heading.save();
 
 		standardmenu.addSubContent(heading);
 
 		Content item1 = new Content("A", ct111);
-		item1.setContent("Eintrag 1");
+		item1.setContent("A");
 		item1.save();
 
 		standardmenu.addSubContent(item1);
 
 		Content item2 = new Content("B", ct111);
-		item2.setContent("Eintrag 2");
+		item2.setContent("B");
 		item2.save();
 
 		standardmenu.addSubContent(item2);
@@ -1520,7 +1520,7 @@ public class GeoQuestDefaultsFactory {
 		AttributeType textimage_att4 = new AttributeType(
 				"Beenden-Button-Beschriftung", "endbuttontext", "String");
 		textimage_att4.setOptional(true);
-		textimage_att4.setDefaultValue("Weiter");
+		textimage_att4.setDefaultValue(">");
 		textimage_att4.save();
 
 		textimage.setAttributeType(textimage_att4);
@@ -1575,7 +1575,7 @@ public class GeoQuestDefaultsFactory {
 		AttributeType att12 = new AttributeType("Weiter-Button-Beschriftung",
 				"nextdialogbuttontext", "String");
 		att12.setOptional(true);
-		att12.setDefaultValue("Weiter");
+		att12.setDefaultValue(">");
 		att12.save();
 
 		npctalk.setAttributeType(att12);
@@ -1583,7 +1583,7 @@ public class GeoQuestDefaultsFactory {
 		AttributeType att13 = new AttributeType("Beenden-Button-Beschriftung",
 				"endbuttontext", "String");
 		att13.setOptional(true);
-		att13.setDefaultValue("Weiter");
+		att13.setDefaultValue(">");
 		att13.save();
 
 		npctalk.setAttributeType(att13);
@@ -1728,7 +1728,7 @@ public class GeoQuestDefaultsFactory {
 
 		AttributeType att19 = new AttributeType("Aufgabenbeschreibung", "task",
 				"String");
-		att19.setDefaultValue("Nimm eine Audiodatei auf!");
+		att19.setDefaultValue("");
 		att19.setOptional(true);
 		att19.save();
 
@@ -1755,14 +1755,14 @@ public class GeoQuestDefaultsFactory {
 
 		AttributeType att21 = new AttributeType("Fragetext", "question",
 				"String");
-		att21.setDefaultValue("Fragetext?");
+		att21.setDefaultValue("???");
 		att21.save();
 
 		textquestion.setAttributeType(att21);
 
 		AttributeType att22 = new AttributeType(
 				"Antwortfeld, wenn keine Antwort", "prompt", "String");
-		att22.setDefaultValue("Antwort hier eingeben …");
+		att22.setDefaultValue("…");
 		att22.save();
 
 		textquestion.setAttributeType(att22);
@@ -1801,7 +1801,7 @@ public class GeoQuestDefaultsFactory {
 		// DEFAULT
 
 		Content c4 = new Content("Antwort", ct5);
-		c4.setContent("Richtige Antwort");
+		c4.setContent("");
 		c4.save();
 
 		textquestion.addDefaultContent(c4);
@@ -2002,7 +2002,7 @@ public class GeoQuestDefaultsFactory {
 
 		AttributeType webpage_att1 = new AttributeType(
 				"Beenden-Button-Beschriftung", "endbuttontext", "String");
-		webpage_att1.setDefaultValue("Weiter");
+		webpage_att1.setDefaultValue(">");
 		webpage_att1.save();
 
 		webpage.setAttributeType(webpage_att1);
@@ -2036,7 +2036,7 @@ public class GeoQuestDefaultsFactory {
 		AttributeType att45 = new AttributeType("Aufgabentext", "task",
 				"String");
 		att45.setOptional(true);
-		att45.setDefaultValue("Deine Aufgabe: Nimm ein Bild auf!");
+		att45.setDefaultValue("");
 		att45.save();
 
 		imagecapture.setAttributeType(att45);
@@ -2044,7 +2044,7 @@ public class GeoQuestDefaultsFactory {
 		AttributeType att46 = new AttributeType("Button Beschriftung", "buttontext",
 				"String");
 		att46.setOptional(true);
-		att46.setDefaultValue("Foto machen!");
+		att46.setDefaultValue("");
 		att46.save();
 
 		imagecapture.setAttributeType(att46);

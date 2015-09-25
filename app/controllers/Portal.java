@@ -1155,7 +1155,7 @@ public class Portal extends Controller {
 
 				User currentuser = getLocalUser(session());
 
-				Game g = mygame.copyMe(" Kopie");
+				Game g = mygame.copyMe(" "+Application.getLanguage(("Kopie")));
 				g.save();
 				System.out.println("Game created.");
 				g.addOwner(currentuser);

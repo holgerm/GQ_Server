@@ -37,7 +37,6 @@ public class TranslationFactory {
 		addTranslation("Meine Portale","My Portals");
 		addTranslation("Registrierung mit GQ-Account","Signup with GQ Account");
 		addTranslation("Abmelden","Logout");
-	
 		
 		addTranslation("Eingeloggt als","Logged in as");
 		addTranslation("Für dieses Portal unbestätigt", "Unverified for this portal");
@@ -48,7 +47,8 @@ public class TranslationFactory {
 		addTranslation("Aktuell kann es auf Grund von Entwicklungsarbeiten zu kurzzeitigen Serverausfällen oder unerwartetem Verhalten kommen.",
 				"Due to development works there may be short server outages or unintended behaviour.");
 		addTranslation("Neues Spiel erstellen","Create new game");
-
+		addTranslation("Kopie","Copy");
+		
 		addTranslation("Editor aufrufen","Open editor");
 		addTranslation("Letztes Update","Last Update");
 		addTranslation("Name","Name");
@@ -265,6 +265,7 @@ public class TranslationFactory {
 		
 		
 		addTranslation("Seiten","Pages");
+		addTranslation("Neue Seite","New Page");
 		addTranslation("neue_seite.png","new_page.png");
 		addTranslation("Hotspots","Hotspots");
 		addTranslation("Menü-Einträge","Menu Entries");
@@ -505,8 +506,15 @@ public class TranslationFactory {
 		addTranslation("inaktiv","inactive");
 		addTranslation("sichtbar","visible");
 		addTranslation("unsichtbar","invisible");
-		
+		addTranslation("oben mittig","upper center");
 
+		// Datatables - please keep "_MENU_" etc unchanged in translation
+		
+		addTranslation("Zeige _MENU_ Einträge pro Seite","Showing _MENU_ entries per page");
+		addTranslation("Suche: ","Search: ");
+		addTranslation("Zeige _START_ bis _END_ von _TOTAL_ Quests","Showing _START_ to _END_ of _TOTAL_ quests");
+		addTranslation("Vorherige","Previous");
+		addTranslation("Nächste","Next");
 
 		
 		

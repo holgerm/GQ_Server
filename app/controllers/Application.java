@@ -32,6 +32,9 @@ import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.providers.password.UsernamePasswordAuthProvider;
 import com.feth.play.module.pa.user.AuthUser;
 
+
+
+
 public class Application extends Controller {
 
 	public static final String FLASH_MESSAGE_KEY = "message";
@@ -70,6 +73,19 @@ public class Application extends Controller {
 	public static Result getUserRoleByPortal(Long pid) {
 
 		return ok(views.html.string_getuserrole.render());
+
+	}
+	
+	
+	public static Result getDatatables() {
+
+		return ok(views.html.dt_geoquest.render());
+
+	}
+	
+	public static Result getDatatablesJquery() {
+
+		return ok(views.html.dt_Jquery.render());
 
 	}
 
@@ -313,7 +329,11 @@ public class Application extends Controller {
 	
 	
 	public static Result setLanguage(String language) {
+	
+		
+		
 		session("geoquest_language", language);
+		Controller.changeLang(language);
 		return ok(language);
 	}
 	
@@ -336,8 +356,11 @@ public class Application extends Controller {
 				language = getLocalPortal().getContentHtmlParameter("general.defaultlanguage");
 				
 			} else {
+				
+				//Lang lang = Lang.preferred(request().acceptLanguages());
+				language = "de";
+				
 			
-			language = "de";
 			}
 		}
     	

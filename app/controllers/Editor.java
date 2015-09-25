@@ -1444,7 +1444,7 @@ public class Editor extends Controller {
 				if(name.equals("Hier Namen eingeben")){
 					
 					int i = g.getMissions().size()+1;
-					name = "Neue Seite ("+i+")";
+					name = Application.getLanguage("Neue Seite")+" ("+i+")";
 					
 				}
 				

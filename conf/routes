@@ -35,6 +35,11 @@ GET    /gqplayer/*file                                                        co
 
 
 
+GET		/dataTables/geoquest.js												controllers.Application.getDatatables()
+GET		/dataTables/jquery.js												controllers.Application.getDatatablesJquery()
+
+
+
 GET    /defaulttemplate                                                       controllers.Application.getDefaultTemplate
 GET    /testingtemplate                                                       controllers.Application.getTestingTemplate
 GET    /testmapping                                                           controllers.Application.getTestMapping
