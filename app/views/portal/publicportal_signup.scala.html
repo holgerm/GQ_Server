@@ -1,3 +1,5 @@
+@import util.Global
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -217,9 +219,53 @@ a:active {
 <br/><br/><br/>
 
 </div>
+<div id="language" style=" position:absolute;
+    top: 660px;
+    left: 50%;
+  
+  
+    margin-top: -50px; /*set to a negative number 1/2 of your height*/
+    margin-left: -150px; /*set to a negative number 1/2 of your width*/
+     border-radius: 15px;
+ 
+    width: 300px;
+    height: 100px; 
+      z-index:1001;
+    text-align:center;">
 
+<script type="text/javascript">
+    function SetLanguage(l)
+    {
+
+	var url ="@Global.SERVER_URL_2/setLanguage/"+l;
+$.ajax({
+url: url,
+dataType: 'html',
+success: function(data){
+
+
+    document.location.reload();
+    
+       
+   }
+   
+   });
+   
+   }
+
+</script>
+<img src="https://quest-mill.com/geoquest/setlanguage.php?lang=@Application.getLanguageCode()" style="display:none" />
+<span>
+<img style="cursor:pointer;" onClick="javascript:SetLanguage('de');" alt="Deutsch" src="@Global.SERVER_URL_2@routes.Assets.at("img/flags/de.png")" width="20" />
+</span><span><img style="cursor:pointer;" onClick="javascript:SetLanguage('en');" alt="English" src="@Global.SERVER_URL_2@routes.Assets.at("img/flags/en.jpg")" width="20" />
+</span>
+
+
+</div>
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="http://code.jquery.com/jquery-2.0.0.js"></script>
+
 </body>
 </html>

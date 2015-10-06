@@ -253,6 +253,102 @@ function updateVariables(vars){
 
 function unitydebug(vars){
 	console.log(vars);
+	
+	if(vars.indexOf("Quest beendet") > -1){
+	if("@Application.getLanguageCode()" == "en"){
+	vars = vars.replace("Quest beendet","Quest ended");
+	}
+	}
+	
+if(vars.indexOf("Kein Mikrofon verbunden") > -1){
+	if("@Application.getLanguageCode()" == "en"){
+	vars = vars.replace("Kein Mikrofon verbunden","No microphone found");
+	}
+	}	
+	
+	if(vars.indexOf("Audio-Datei (nur mobile):") > -1){
+	if("@Application.getLanguageCode()" == "en"){
+	vars = vars.replace("Audio-Datei (nur mobile):","Audio file (preview only on mobile):");
+	}
+	}	
+	
+	
+		if(vars.indexOf("Eine Route muss aus zwei nicht-identischen Orten bestehen.") > -1){
+	if("@Application.getLanguageCode()" == "en"){
+	vars = vars.replace("Eine Route muss aus zwei nicht-identischen Orten bestehen.",
+						"A route has to consist of two non-identical places.");
+	}
+	}	
+	
+		if(vars.indexOf("Eine Route muss mindestens einen festen Hotspot beinhalten.") > -1){
+	if("@Application.getLanguageCode()" == "en"){
+	vars = vars.replace("Eine Route muss mindestens einen festen Hotspot beinhalten.",
+						"A route has to have at least one constant hotspot.");
+	}
+	}	
+	
+	
+	
+		if(vars.indexOf("Die Map muss mindestens einmal vorher geöffnet worden sein.") > -1){
+	if("@Application.getLanguageCode()" == "en"){
+	vars = vars.replace("Die Map muss mindestens einmal vorher geöffnet worden sein.",
+						"Map Action: The map has to be opened at least once before.");
+	}
+	}
+	
+		if(vars.indexOf("Audio-Datei muss im <b>MP3-Format</b> vorliegen.") > -1){
+	if("@Application.getLanguageCode()" == "en"){
+	vars = vars.replace("Audio-Datei muss im <b>MP3-Format</b> vorliegen.",
+						"Audio format has to be <b>MP3</b>");
+	}
+	}
+	
+		if(vars.indexOf("QR CODE gescannt:") > -1){
+	if("@Application.getLanguageCode()" == "en"){
+	vars = vars.replace("QR CODE gescannt:",
+						"QR CODE scanned:");
+	}
+	}
+	
+		if(vars.indexOf("WebView kann nur auf mobilen Geräten angezeigt werden. Rufe direkt den Beenden-Trigger der Seite auf.") > -1){
+	if("@Application.getLanguageCode()" == "en"){
+	vars = vars.replace("WebView kann nur auf mobilen Geräten angezeigt werden. Rufe direkt den Beenden-Trigger der Seite auf.",
+						"Web View can only be displayed on mobile devices. Triggering End of page directly.");
+	}
+	}	
+	
+	
+	
+	
+	
+	if(vars.indexOf("konnte nicht gefunden werden.") > -1){
+	if("@Application.getLanguageCode()" == "en"){
+	vars = vars.replace("konnte nicht gefunden werden.",
+						"was not found.");
+	}
+	}
+	
+	
+	
+		if(vars.indexOf("wurde nicht gefunden.") > -1){
+	if("@Application.getLanguageCode()" == "en"){
+	vars = vars.replace("wurde nicht gefunden.",
+						"was not found.");
+	}
+	}
+	
+		if(vars.indexOf("Variable") > -1){
+	if("@Application.getLanguageCode()" == "en"){
+	vars = vars.replace("Variable",
+						"Variable");
+	}
+	}
+	
+	
+	
+	
+	
+	
 	var objDiv = document.getElementById("showlog");
 	objDiv.innerHTML += ""+vars;
 	objDiv.scrollTop = objDiv.scrollHeight;
