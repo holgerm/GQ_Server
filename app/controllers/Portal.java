@@ -80,6 +80,11 @@ public class Portal extends Controller {
 	public static final String ADMIN_ROLE = "admin";
 	public static final String UNVERIFIED_ROLE = "unverified";
 
+	
+	
+	public static long lastdate;
+
+	
 	/*
 	 * RESULT PAGES
 	 * 
@@ -176,6 +181,10 @@ public class Portal extends Controller {
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result myGamesList(Long pid) {
 
+		
+		lastdate = System.currentTimeMillis();
+		
+		
 		session("currentportal", pid.toString());
 
 		ProviderPortal p = Application.getLocalPortal();
@@ -185,6 +194,8 @@ public class Portal extends Controller {
 			p = ProviderPortal.find.byId(pid);
 
 		}
+		
+		sayTime("Mygames #1");
 
 		User u = getLocalUser(session());
 
@@ -194,10 +205,31 @@ public class Portal extends Controller {
 					.render("Du benötigst mindestens User-Rechte, um diese Seite aufrufen zu können."));
 
 		} else {
+			sayTime("Mygames #2");
 
-			return ok(views.html.portal.my_games.render(u.getGamesOnPortal(p)));
+			
+			Set<GameRights> s = u.getGamesOnPortal(p);
+			sayTime("Mygames #3");
+
+			return ok(views.html.portal.my_games.render(s));
 
 		}
+	}
+	
+	
+	
+	public static void sayTime(String prefix){
+		
+		
+		
+		
+		System.out.println(prefix+": "+(System.currentTimeMillis()-lastdate));
+		
+		
+		
+		lastdate = System.currentTimeMillis();
+		
+	
 	}
 
 	public static Result myGamesListOnCurrentPortal() {

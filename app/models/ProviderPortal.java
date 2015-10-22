@@ -2321,6 +2321,8 @@ ProviderGames onepg = getGame(GameList.get(j).getGame());
         	
             if(!(TemplateServerURL.equals(""))){
             	if((!TemplateServerURL.contains(Global.SERVER_URL))){
+            		
+            		System.out.println("Rearranging path string");
         	if(z.startsWith("/"+String.valueOf(id))){
         		
         		String y = String.valueOf(z.subSequence(String.valueOf(id).length()+1, z.length()));

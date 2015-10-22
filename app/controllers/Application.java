@@ -44,6 +44,11 @@ public class Application extends Controller {
 	public static final String ADMIN_ROLE = "admin";
 	public static final String UNVERIFIED_ROLE = "unverified";
 
+	
+	
+	
+	
+	
 	public static Result index() {
 
 		session("currentportal", Global.defaultportal.getId().toString());
@@ -392,9 +397,7 @@ public class Application extends Controller {
 				language = "de";
 				Lang lang = Lang.preferred(request().acceptLanguages());
 				language = lang.code();
-				if(Application.getLocalUser() != null){
-				System.out.println(Application.getLocalUser().getId()+": "+language);
-				}
+				
 			}
 		}
     	

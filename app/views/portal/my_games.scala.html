@@ -4,6 +4,10 @@
 
 @main(Application.getLanguage("Meine Spiele")) {
 
+
+
+@Portal.sayTime("Mygames #4")
+
 <br/>
 <div class="alert alert-danger" style="display:none;">
   <strong>@Application.getLanguage("Achtung!")</strong>@Application.getLanguage("Aktuell kann es auf Grund von Entwicklungsarbeiten zu kurzzeitigen Serverausfällen oder unerwartetem Verhalten kommen.")
@@ -39,6 +43,26 @@
 
                     <tbody>
 
+@Portal.sayTime("Mygames #5")
+
+
+
+@defining((Application.getLanguage("dd.MM.yyyy HH:mm"),
+	Application.getLanguage("Download"),
+	Application.getLanguage("Noch keine XML-Daten"),
+	Application.getLanguage("Editor aufrufen"),
+	Application.getLanguage("Administration"),
+	Application.getLanguage("Duplizieren"),
+	Application.getLanguage("Wirklich löschen?"),
+	Application.getLanguage("Löschen"),
+	Application.getLanguage("Keine Rechte"),
+	Application.getLanguage("In Spieltyp umwandeln"))
+	
+	) { case (pre_date, pre_download, pre_nochkeinedaten, pre_editoraufrufen, pre_admin, pre_duplizieren,pre_reallydelete, pre_delete , pre_keinerechte ,pre_inspieltyp) =>
+
+
+
+
 
                     @for(a_game <- gamesList){
 
@@ -46,44 +70,51 @@
                            
                             <td>@a_game.getGame().getName()</td>
                             <td>                            
-                            @a_game.getGame().getLastUpdate().format(Application.getLanguage("dd.MM.yyyy HH:mm")) </td>
+                            @a_game.getGame().getLastUpdate().format(pre_date) </td>
                              <td>                            
                          @Application.getLanguage(a_game.getGame().getType().getName()) </td>
+                         
+                         
                             <td class="center">
                               @if(a_game.getGame().hasFile()){
                             
-                            <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Editor.getXMLForClient(a_game.getGame().getId())">@Application.getLanguage("Download")</a>
-                           } else { @Application.getLanguage("Noch keine XML-Daten") }
+                            <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Editor.getXMLForClient(a_game.getGame().getId())">@pre_download</a>
+                           } else { @pre_nochkeinedaten }
                            
                            
                             </td>
+                            
+                            
                             <td class="center"> @if(a_game.getRights() == "write"){
                            
                             	
                             	
                             	
  					 @if(!a_game.getGame().hasGameType()){
- 					 	| @Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), a_game.getGame())
+ 					 	| 
 
                                 <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.editGame(Application.getLocalPortal().getId(),a_game.getGame().getId()))">@Application.getLanguage("Editdieren")</a>
 
 
 						} else {
 						
-						  <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Editor.getEditor(a_game.getGame().getId()))">@Application.getLanguage("Editor aufrufen")</a>
+						  <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Editor.getEditor(a_game.getGame().getId()))">@pre_editoraufrufen</a>
 						  }
+						  
+						  
 
-                                | <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.gameRightsonPortal(Application.getLocalPortal().getId(),a_game.getGame().getId()))">@Application.getLanguage("Administration")</a>
+                                | <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.gameRightsonPortal(Application.getLocalPortal().getId(),a_game.getGame().getId()))">@pre_admin</a>
 								
-								 | <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.doCopyGame(Application.getLocalPortal().getId(),a_game.getGame().getId()))">@Application.getLanguage("Duplizieren")</a>
+								 | <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.doCopyGame(Application.getLocalPortal().getId(),a_game.getGame().getId()))">@pre_duplizieren</a>
 								
-								 	@defining(Application.getLocalPortal.getTemplateServerURLDropSlash){ url1 =>
                             	
-                            	@defining(Application.getLocalPortal.getPathTo(routes.Portal.doDeleteGame(Application.getLocalPortal().getId(),a_game.getGame().getId()))){ url2 =>
-                        | <a href="javascript:confirm('@Application.getLanguage("Wirklich löschen?")')?window.location.href = '@url1@url2':void(0);">@Application.getLanguage("Löschen")</a>
-                        }
-                        }
+                            	
+                        | <a href="javascript:confirm('@pre_reallydelete')?window.location.href = '@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.doDeleteGame(Application.getLocalPortal().getId(),a_game.getGame().getId()))':void(0);">@pre_delete</a>
+                        
+                        
+                        
+                        
+                     
                      
 @defining(Application.getLocalUser(session())) { user =>
 
@@ -91,7 +122,7 @@
 
 @if(Global.securityGuard.hasAdminRightsOnPortal(user)==true){
 	
-| <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.addGameTypeFromGame(Application.getLocalPortal().getId(),a_game.getGame().getId()))">@Application.getLanguage("In Spieltyp umwandeln")</a>
+| <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.addGameTypeFromGame(Application.getLocalPortal().getId(),a_game.getGame().getId()))">@pre_inspieltyp</a>
                             	
                             	 }
                             	 
@@ -103,7 +134,7 @@
                             	
 
                             } else {
-		@Application.getLanguage("Keine Rechte")
+		@pre_keinerechte
                             } </td>
                             
                              <td>
@@ -136,6 +167,12 @@
 
 
                     }
+
+
+
+}
+
+@Portal.sayTime("Mygames #6")
 
                     </tbody>
                 </table>

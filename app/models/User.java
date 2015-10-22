@@ -276,21 +276,6 @@ public class User extends Model implements Subject {
 
         }
 
-        for(ProviderGames aprovidergame: p.getPublicGamesList()){
-
-            boolean contained = false;
-
-            for(GameRights acontainedgr: onPortal){
-                if(acontainedgr.getGame().getId().equals(aprovidergame.getGame().getId())){
-                    contained = true;
-                }
-
-            }
-
-           
-        }
-
-
         return onPortal;
 
     }
