@@ -1,16 +1,17 @@
 package controllers;
 
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
-import be.objectify.deadbolt.java.actions.SubjectPresent;
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
-import com.avaje.ebean.Ebean;
-import com.feth.play.module.pa.PlayAuthenticate;
-import com.feth.play.module.pa.user.AuthUser;
-
-import controllers.Portal.UploadedGame;
-import flexjson.JSONSerializer;
-import models.*;
+import models.Game;
+import models.ProviderPortal;
+import models.ProviderUsers;
 import models.GameParts.Action;
 import models.GameParts.ActionType;
 import models.GameParts.Attribute;
@@ -25,61 +26,23 @@ import models.GameParts.MenuItem;
 import models.GameParts.Mission;
 import models.GameParts.MissionType;
 import models.GameParts.Part;
-import models.GameParts.PartType;
 import models.GameParts.Rule;
 import models.GameParts.RuleType;
 import models.GameParts.Scene;
 import models.GameParts.SceneType;
-import net.sf.ehcache.ObjectExistsException;
-
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.node.ObjectNode;
-
-import play.api.libs.json.*;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Random;
-import java.io.IOException;
-import java.util.ArrayList;
 
 import org.apache.commons.io.FileUtils;
 
-import play.data.Form;
-import play.data.format.Formats.NonEmpty;
-import play.data.validation.Constraints.MinLength;
-import play.data.validation.Constraints.Required;
-import play.db.ebean.Model;
-import play.i18n.Messages;
-import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.BodyParser.Xml;
 import play.mvc.Controller;
-import play.mvc.Result;
-import play.mvc.Http.Session;
-import providers.MyUsernamePasswordAuthProvider;
-import providers.MyUsernamePasswordAuthUser;
-import security.MyUserPortalRights;
-import util.Global;
-
-import java.io.File;
-
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
-
-import java.util.List;
-import java.util.Set;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.net.MalformedURLException;
-import java.io.UnsupportedEncodingException;
-
-import javax.management.modelmbean.RequiredModelMBean;
-
-import static play.data.Form.form;
+import play.mvc.Result;
+import providers.MyUsernamePasswordAuthProvider;
+import util.Global;
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
 
 public class Editor extends Controller {
 
@@ -1191,7 +1154,7 @@ public class Editor extends Controller {
 					
 					
 					
-					return ok(views.html.editor.editor_aruleinmission.render(
+							return ok(views.html.editor.editor_aruleinmission.render(
 							Game.find.byId(gid), Rule.find.byId(rid),
 							RuleType.find.byId(rtype),Mission.find.byId(mid)));
 
@@ -3429,7 +3392,7 @@ if(name.equals("Hier Namen eingeben")){
 				
 				
 				
-				return ok(views.html.editor.editor_afilepreview.render(
+					return ok(views.html.editor.editor_afilepreview.render(
 						Game.find.byId(gid),attr,a.getValue()));
 				
 				
