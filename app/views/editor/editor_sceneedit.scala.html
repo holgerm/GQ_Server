@@ -266,6 +266,19 @@
         
         
         }
+
+         @if(a.getFileType == "QuoteStringTextArea"){
+        
+        
+        
+        
+                 <textarea rows="8" cols="100" type="text"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId,true)"
+                        	        onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");">@s.getAttributeValue(a)</textarea>
+        
+        
+        
+        
+        }
         
          
         @if(a.getFileType == "int"){

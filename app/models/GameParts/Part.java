@@ -260,21 +260,21 @@ if(is_scene){
 
 
 
-	public Part migrateTo(SceneType sceneType, Map<Mission, Mission> missionbinder, Map<Hotspot, Hotspot> hotspotbinder) {
-			if(isScene()){
-				
-				Part p =  new Part(getScene().migrateTo(sceneType,missionbinder,hotspotbinder));
-				p.save();
-				
-				return p;
-				
-				
-			} else {
-				
-				return null;
-				
-			}
-	}
+//	public Part migrateTo(SceneType sceneType, Map<Mission, Mission> missionbinder, Map<Hotspot, Hotspot> hotspotbinder) {
+//			if(isScene()){
+//				
+//				Part p =  new Part(getScene().migrateTo(sceneType,missionbinder,hotspotbinder));
+//				p.save();
+//				
+//				return p;
+//				
+//				
+//			} else {
+//				
+//				return null;
+//				
+//			}
+//	}
 
 
 	public Part migrateTo(MissionType missionType, Map<Mission, Mission> missionbinder) {

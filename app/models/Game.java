@@ -2383,7 +2383,7 @@ public class Game extends Model {
 					if (npt.getName().equals(old.getName())) {
 
 						done = true;
-						Scene nss = p.getScene().migrateTo(npt, missionbinder,
+						Scene nss = p.getScene().migrateTo(npt, gt, missionbinder,
 								hotspotbinder);
 						nss.save();
 						Part ns = new Part(nss);

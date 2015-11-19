@@ -841,7 +841,7 @@ public class Scene extends Model {
 		name = n;
 	}
 
-	public Scene migrateTo(SceneType sceneType,
+	public Scene migrateTo(SceneType sceneType, GameType gameType,
 			Map<Mission, Mission> missionbinder,
 			Map<Hotspot, Hotspot> hotspotbinder) {
 
@@ -868,7 +868,7 @@ public class Scene extends Model {
 						if (npt.getName().equals(old.getName())) {
 
 							done = true;
-							Scene nss = p.getScene().migrateTo(npt,
+							Scene nss = p.getScene().migrateTo(npt, gameType,
 									missionbinder, hotspotbinder);
 							nss.save();
 							Part ns = new Part(nss);
@@ -892,7 +892,7 @@ public class Scene extends Model {
 
 				MissionType old = p.getMission().getType();
 
-				for (PartType npt : type.getPossiblePartTypes()) {
+				for (PartType npt : gameType.getPossiblePartTypes()) {
 
 					if (!npt.isSceneType()) {
 
@@ -914,7 +914,7 @@ public class Scene extends Model {
 				if (done == false) {
 
 					System.out.println("Didn't find MissionType "
-							+ old.getName());
+							+ old.getXMLType());
 				}
 
 			}
