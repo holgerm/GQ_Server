@@ -1,5 +1,6 @@
 package controllers;
 
+import models.ProviderUsers;
 import models.User;
 import be.objectify.deadbolt.java.actions.Restrict;
 import be.objectify.deadbolt.java.actions.Group;
@@ -87,6 +88,8 @@ public class Account extends Controller {
 	public static Result verifyEmail(Long pid) {
         session("currentportal",pid.toString());
 
+        boolean sendMail = false;
+        
         com.feth.play.module.pa.controllers.Authenticate.noCache(response());
 		final User user = Application.getLocalUser(session());
 		if (user.emailValidated) {
@@ -99,12 +102,98 @@ public class Account extends Controller {
 					user.email));
 			MyUsernamePasswordAuthProvider.getProvider()
 					.sendVerifyEmailMailingAfterSignup(user, ctx());
+			sendMail = true;
 		} else {
 			flash(Application.FLASH_MESSAGE_KEY, Messages.get(
 					"playauthenticate.verify_email.error.set_email_first",
 					user.email));
 		}
+		
+		
+		
+		if(sendMail && !Application.getLocalPortal().autoVerifyUsers){
+
+		for(ProviderUsers au: Application.getLocalPortal().getUsers()){
+		
+			if(au.getRights().equals("admin")){
+				
+				System.out.println("trying to send an email to admin: "+au.getUser().getName());
+		final MyUsernamePasswordAuthProvider provider = MyUsernamePasswordAuthProvider
+				.getProvider();
+		String text = "Auf Geoquest Portal "+pid+" hat sich ein neuer User mit dem Namen '"+Application.getLocalUser().getName()+"' und der Email "+Application.getLocalUser().getEmail()+" registiert. Bitte kümmere dich um Freischaltung oder Ablehnung.";
+		
+		
+		String html = "Auf Geoquest Portal "+pid+" hat sich ein neuer User mit dem Namen '"+Application.getLocalUser().getName()+"' und der Email "+Application.getLocalUser().getEmail()+" registiert. <br/><br/>Bitte kümmere dich um Freischaltung oder Ablehnung.";
+		provider.sendEmailToUser(au.getUser(), "Neuer Benutzer: "+Application.getLocalUser().getName(), text,html);
+			
+			}
+		
+		}
+		
+		
+		}
+		
+		
+		
 		return redirect(routes.Application.profile(pid));
+	}
+	
+	
+	
+	
+	
+	public static Result reverifyEmail(Long pid, Long uid) {
+        session("currentportal",pid.toString());
+
+        boolean sendMail = false;
+        
+        com.feth.play.module.pa.controllers.Authenticate.noCache(response());
+		final User user = User.find.byId(uid);
+		if(user != null){
+		if (user.emailValidated) {
+			// E-Mail has been validated already
+			flash(Application.FLASH_MESSAGE_KEY,
+					Messages.get("playauthenticate.verify_email.error.already_validated"));
+		} else if (user.email != null && !user.email.trim().isEmpty()) {
+			flash(Application.FLASH_MESSAGE_KEY, Messages.get(
+					"playauthenticate.verify_email.message.instructions_sent",
+					user.email));
+			MyUsernamePasswordAuthProvider.getProvider()
+					.sendVerifyEmailMailingAfterSignup(user, ctx());
+			sendMail = true;
+		} else {
+			flash(Application.FLASH_MESSAGE_KEY, Messages.get(
+					"playauthenticate.verify_email.error.set_email_first",
+					user.email));
+		}
+		
+		
+		
+		if(sendMail && !Application.getLocalPortal().autoVerifyUsers){
+
+		for(ProviderUsers au: Application.getLocalPortal().getUsers()){
+		
+			if(au.getRights().equals("admin")){
+				
+				System.out.println("trying to send an email to admin: "+au.getUser().getName());
+		final MyUsernamePasswordAuthProvider provider = MyUsernamePasswordAuthProvider
+				.getProvider();
+		String text = "Auf Geoquest Portal "+pid+" hat sich ein neuer User mit dem Namen '"+Application.getLocalUser().getName()+"' und der Email "+Application.getLocalUser().getEmail()+" registiert. Bitte kümmere dich um Freischaltung oder Ablehnung.";
+		
+		
+		String html = "Auf Geoquest Portal "+pid+" hat sich ein neuer User mit dem Namen '"+Application.getLocalUser().getName()+"' und der Email "+Application.getLocalUser().getEmail()+" registiert. <br/><br/>Bitte kümmere dich um Freischaltung oder Ablehnung.";
+		provider.sendEmailToUser(au.getUser(), "Neuer Benutzer: "+Application.getLocalUser().getName(), text,html);
+			
+			}
+		
+		}
+		
+		
+		}
+		
+		}
+		
+		return redirect(routes.Application.login(pid));
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))

@@ -5,43 +5,10 @@
 @main(Messages("playauthenticate.profile.title"),"profile") {
     
     <p>
-    Your name is @localUser.name and your email address is @localUser.email!
-    <i>
-    @if(!localUser.emailValidated) {
-      (<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Account.verifyEmail(Application.getLocalPortal().getId()))">unverified - click to verify</a>)
-    } else {
-      (verified)
-    }</i>
-    <br />
-    Your first name is @localUser.firstName and your last name is @localUser.lastName
-    <br/>
-    @defining(localUser.getProviders()) { providers =>
-        @if(providers.size() > 0) {
-        @if(providers.size() ==1) {
-            @Messages("playauthenticate.profile.providers_one")
-        } else {
-            @Messages("playauthenticate.profile.providers_many",providers.size().toString())
-        }
-        @for(p <- providers) {
-            @_providerIcon(p)
-
-        }
-        <br/>
-        }
-    }
-    
-    <br/>
-    @currentAuth() { auth =>
-        @Messages("playauthenticate.profile.logged") @_providerIcon(auth.getProvider())<br/>
-        @if(auth.expires() != -1){
-            @Messages("playauthenticate.profile.session", auth.getId(), Application.formatTimestamp(auth.expires()))
-        } else {
-            @Messages("playauthenticate.profile.session_endless", auth.getId())
-        }
-    }
-    <br/>
-    <ul>
-    	<li><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Account.changePassword(Application.getLocalPortal().getId()))">@Messages("playauthenticate.profile.password_change")</a></li>
-    </ul>
+    Name: @localUser.name <br/>
+    E-Mail: @localUser.email
+  <br/><br/>
+  <a class="btn" href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Account.changePassword(Application.getLocalPortal().getId()))">@Messages("playauthenticate.profile.password_change")</a>
+   
     </p>
 }

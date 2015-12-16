@@ -26,7 +26,21 @@
              @_emailPartial(signupForm)
              
              @_passwordPartial(signupForm)
+             
+             @checkbox(
+                signupForm("acceptedagbs"),
+                             '_label -> ""
+             
+            )
+            Ich akzeptiere die <u><span style="cursor:pointer; color:#0000FF;" onClick="javascript:window.open('@Application.getLocalPortal.getTemplateServerURLDropSlash/@Application.getLocalPortal().getId()/pagbs', 'MsgWindow', 'width=400, height=500');">AGBs</span></u>
+              <br/><br/>
+             @checkbox(
+                signupForm("acceptedprivacy"),
+                '_label -> ""
 
+            )
+            Ich akzeptiere die <u><span style="cursor:pointer; color:#0000FF;" onClick="javascript:window.open('@Application.getLocalPortal.getTemplateServerURLDropSlash/@Application.getLocalPortal().getId()/pprivacyagreement', 'MsgWindow', 'width=400, height=500');">Datenschutzvereinbarung</span></u>
+<br/><br/>
             <input type="submit" value="@Application.getLanguage("Account erstellen")" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes") !=""))>
     	}
 

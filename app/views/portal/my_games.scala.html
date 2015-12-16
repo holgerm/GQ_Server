@@ -70,7 +70,8 @@
                            
                             <td>@a_game.getGame().getName()</td>
                             <td>                            
-                            @a_game.getGame().getLastUpdate().format(pre_date) </td>
+                            @a_game.getGame().getLastUpdate().format(pre_date) 
+                            (@controllers.Portal.getNameOfLastReleaseUser(a_game.getGame()))</td>
                              <td>                            
                          @Application.getLanguage(a_game.getGame().getType().getName()) </td>
                          

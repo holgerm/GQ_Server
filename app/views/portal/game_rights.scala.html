@@ -78,7 +78,18 @@
                                                <td>@Application.getLanguage("Schreibrechte")</td>
 
                                             <td>
-                                                   @if(a_game.getUser.getId != user.getId){<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doEditUserRightsOnGame(Application.getLocalPortal.getId(),game.getId(),a_game.getUser.getId,"read")">@Application.getLanguage("Auf Leserechte reduzieren")</a>  - <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doDeleteUserRightsOnGame(Application.getLocalPortal.getId(),game.getId(),a_game.getUser.getId)">@Application.getLanguage("Alle Rechte entziehen")</a>}
+                                                   @if(a_game.getUser.getId() != user.getId){
+                                                   	<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doEditUserRightsOnGame(Application.getLocalPortal.getId(),game.getId(),a_game.getUser.getId,"read")">@Application.getLanguage("Auf Leserechte reduzieren")</a>  - <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doDeleteUserRightsOnGame(Application.getLocalPortal.getId(),game.getId(),a_game.getUser.getId)">@Application.getLanguage("Alle Rechte entziehen")</a>
+                                                   } else {
+                                                   
+                                                   
+                                                   @if(a_game.getGame().getAmountOfUsers() >= 2){
+                                                   	<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doEditUserRightsOnGame(Application.getLocalPortal.getId(),game.getId(),a_game.getUser.getId,"read")">@Application.getLanguage("Auf Leserechte reduzieren")</a>  - <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doDeleteUserRightsOnGame(Application.getLocalPortal.getId(),game.getId(),a_game.getUser.getId)">@Application.getLanguage("Alle Rechte entziehen")</a>
+                                                   } else {
+                                                   
+                                                   @Application.getLanguage("Du musst erst einem anderen User Schreibrechte an dem Spiel geben")
+                                                }
+                                                   }
                                             </td>
 
                                         } else {

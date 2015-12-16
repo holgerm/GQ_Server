@@ -16,12 +16,9 @@ import net.sf.ehcache.ObjectExistsException;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 
-
 import com.gargoylesoftware.htmlunit.*;
-
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.xml.XmlPage;
-
 
 import play.api.libs.json.*;
 
@@ -1286,7 +1283,32 @@ public class Portal extends Controller {
 				} else {
 
 					User usertoedit = User.find.byId(uid);
-
+					
+					boolean b = true;
+					
+					if(usertoedit.getId() == Application.getLocalUser().getId()){
+						b = false;
+						
+						
+						
+						
+						if(mygame.getAmountOfUsers() >= 2){
+							
+							b = true;
+							
+						}
+						
+						
+					}
+					
+					if(b){
+					
+						if(mygame.userlastupdated == usertoedit.getId() && !rights.equals("write")){
+							
+							mygame.setPublishOnAllPortals(false);
+							
+						}
+						
 					if (mygame.existsUser(usertoedit)) {
 
 						// EDIT
@@ -1303,13 +1325,24 @@ public class Portal extends Controller {
 						Global.updatePortals();
 
 					}
+					}
 
-					mygame.save();
+					mygame.update();
 
 					Set<User> leer = new HashSet<User>();
 
+					if(usertoedit.getId() == Application.getLocalUser().getId() && !rights.equals("write")){
+
+						return redirect(routes.Portal
+								.myGamesList(pid));
+						
+					} else {
+					
 					return redirect(routes.Portal
 							.gameRightsOnCurrentPortal(gid));
+					
+					
+					}
 
 				}
 			}
@@ -1349,12 +1382,51 @@ public class Portal extends Controller {
 					User usertoedit = User.find.byId(uid);
 
 					if (mygame.existsUser(usertoedit)) {
+						
+						
+						
+						
+						
+						boolean b = true;
+						
+						if(usertoedit.getId() == Application.getLocalUser().getId()){
+							b = false;
+							
+							
+							
+							
+							if(mygame.getAmountOfUsers() >= 2){
+								
+								b = true;
+								
+							}
+							
+							
+						}
+						
+						
+						
+						if(b){
+						
 
 						// DELTE
 
 						mygame.deleteUser(usertoedit);
 
+						
+						
+
+						if(mygame.userlastupdated == usertoedit.getId()){
+							
+							mygame.setPublishOnAllPortals(false);
+							
+						}
+						
+						
 						Global.updatePortals();
+						
+						
+						}
 
 					}
 
@@ -1362,8 +1434,20 @@ public class Portal extends Controller {
 
 					Set<User> leer = new HashSet<User>();
 
+					
+					
+					if(usertoedit.getId() == Application.getLocalUser().getId()){
+
+						return redirect(routes.Portal
+								.myGamesList(pid));
+						
+					} else {
+					
 					return redirect(routes.Portal
 							.gameRightsOnCurrentPortal(gid));
+					
+					
+					}
 
 				}
 			}
@@ -1655,7 +1739,19 @@ public class Portal extends Controller {
 				formobject.color_3 = myportal.getGradientColor();
 				formobject.color_4 = myportal.getNavbarColor();
 				formobject.color_5 = myportal.getLinkColor();
-
+				formobject.privacyagreement = myportal.privacyagreement;
+				formobject.privacyagreementversion = myportal.privacyagreementversion;
+				formobject.imprint = myportal.imprint;
+				formobject.agbs = myportal.agbs;
+				formobject.agbsversion = myportal.agbsversion;
+				formobject.portalprivacyagreement = myportal.portalprivacyagreement;
+				if(myportal.portalprivacyagreementversion != null)
+				formobject.portalprivacyagreementversion = myportal.portalprivacyagreementversion;
+				formobject.portalimprint = myportal.portalimprint;
+				formobject.portalagbs = myportal.portalagbs;
+				if(myportal.portalagbsversion != null)
+				formobject.portalagbsversion = myportal.portalagbsversion;
+				
 				Form<PostedPortal> fillForm = form(PostedPortal.class);
 				fillForm = fillForm.fill(formobject);
 
@@ -2002,6 +2098,18 @@ public class Portal extends Controller {
 				}
 				myportal.setLinkColor(c5);
 
+				
+				myportal.portalagbs = form.portalagbs;
+				myportal.portalagbsversion = form.portalagbsversion;
+				myportal.portalprivacyagreement = form.portalprivacyagreement;
+				myportal.portalprivacyagreementversion = form.portalprivacyagreementversion;
+				myportal.portalimprint = form.portalimprint;
+				
+				myportal.agbs = form.agbs;
+				myportal.agbsversion = form.agbsversion;
+				myportal.privacyagreement = form.privacyagreement;
+				myportal.privacyagreementversion = form.privacyagreementversion;
+				myportal.imprint = form.imprint;
 				myportal.setTemplateFormField(form.pwfield);
 				myportal.setTemplateForm(form.formname);
 				myportal.setTemplateAfterLoginURL(form.afterloginurl);
@@ -2541,6 +2649,147 @@ public class Portal extends Controller {
 		return ok(views.html.template.render());
 
 	}
+	
+	
+	
+	
+	public static Result getAGBs(Long pid) {
+
+		
+		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
+			return badRequest(views.html.norights
+					.render("Das Portal existiert nicht"));
+		
+		} 
+		
+		return ok(views.html.portal.agbs.render(ProviderPortal.find.byId(pid)));
+
+	}
+	
+	
+	
+	
+	public static Result getPortalAGBs(Long pid) {
+
+		
+		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
+			return badRequest(views.html.norights
+					.render("Das Portal existiert nicht"));
+		
+		} 
+		
+		return ok(views.html.portal.portalagbs.render(ProviderPortal.find.byId(pid)));
+
+	}
+	
+	
+	public static Result getAGBVersion(Long pid) {
+
+		
+		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
+			return badRequest(views.html.norights
+					.render("Das Portal existiert nicht"));
+		
+		} 
+		
+		return ok(views.html.portal.agbsversion.render(ProviderPortal.find.byId(pid)));
+
+	}
+	
+	
+	public static Result getPrivacyAgreementVersion(Long pid) {
+
+		
+		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
+			return badRequest(views.html.norights
+					.render("Das Portal existiert nicht"));
+		
+		} 
+		
+		return ok(views.html.portal.privacyversion.render(ProviderPortal.find.byId(pid)));
+
+	}
+	
+	
+	public static Result getPrivacyAgreement(Long pid) {
+
+		
+		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
+			return badRequest(views.html.norights
+					.render("Das Portal existiert nicht"));
+		
+		} 
+		
+		return ok(views.html.portal.privacy.render(ProviderPortal.find.byId(pid)));
+
+	}
+	
+	
+	public static Result getPortalPrivacyAgreement(Long pid) {
+
+		
+		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
+			return badRequest(views.html.norights
+					.render("Das Portal existiert nicht"));
+		
+		} 
+		
+		return ok(views.html.portal.portalprivacy.render(ProviderPortal.find.byId(pid)));
+
+	}
+	
+	
+	
+	
+	public static String getNameOfLastReleaseUser(Game g){
+		
+		
+		if(g.userlastupdated != null && g.userlastupdated != 0){
+		
+		if(User.find.byId(g.userlastupdated) != null){
+			
+		return	User.find.byId(g.userlastupdated).name;
+			
+		} else {
+			
+			return "Benutzer gelöscht";
+			
+		}
+		
+		} else {
+			
+			return "Kein Benutzer";
+			
+		}
+		
+		
+		
+	}
+	
+	public static String getNameOfLastReleaseUser(){
+		
+	
+			return "Kein Benutzer";
+		
+		
+		
+		
+	}
+	
+	
+	
+	public static Result getImprint(Long pid) {
+
+		
+		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
+			return badRequest(views.html.norights
+					.render("Das Portal existiert nicht"));
+		
+		} 
+		
+		return ok(views.html.portal.imprint.render(ProviderPortal.find.byId(pid)));
+
+	}
 
 	/*
 	 * HELPER FUNCTIONS
@@ -2587,6 +2836,9 @@ public class Portal extends Controller {
 		}
 
 	}
+	
+	
+	
 
 	public static Result getGameFileForPortal(Long portal, Long game) {
 
@@ -2630,6 +2882,10 @@ public class Portal extends Controller {
 			return ok(new File(mygame.getFile()).length() + "");
 		}
 	}
+	
+	
+	
+	
 
 	public static Result getGQPlayer(String filename) {
 		response().setContentType("image");
@@ -2782,6 +3038,18 @@ public class Portal extends Controller {
 		public String color_3;
 		public String color_4;
 		public String color_5;
+		
+		public String portalagbs;
+		public String portalimprint;
+		public String portalprivacyagreement;
+		public int portalagbsversion;
+		public int portalprivacyagreementversion;
+		
+		public String agbs;
+		public String imprint;
+		public String privacyagreement;
+		public int agbsversion;
+		public int privacyagreementversion;
 
 	}
 

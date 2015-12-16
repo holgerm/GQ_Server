@@ -78,6 +78,36 @@ success: function(data){
 </div>
 
 
+
+<div id="xmlifyAccept" name="xmlifyAccept" style="display:none; position:fixed; top:0px; left:0px; width:100%; height:100%; z-index:99999999;">
+
+<div id="xmlifyAcceptBG" name="xmlifyAcceptBG" onClick="javascript:document.getElementById('xmlifyAccept').style.display='none';" style="position:fixed; top:0px; left:0px; width:100%; height:100%;  background-color:#000000; opacity:0.9;">
+</div>
+
+<div id="xmlifyAcceptText" name="xmlifyAcceptText" style="position:absolute; width: 300px;
+  height: 300px;
+  overflow: auto;
+  margin: auto;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0; background-color:#ffffff; padding:10px; z-index:999999991;">
+  <h1>Veröffentlichen</h1>
+  Bist du sicher, dass du diese Quest veröffentlichen möchtest?
+  <br/>
+Mit dem Veröffentlichen akzeptierst du die <u><span style="cursor:pointer; color:#0000FF;" onClick="javascript:window.open('@Application.getLocalPortal.getTemplateServerURLDropSlash/@Application.getLocalPortal().getId()/pagbs', 'MsgWindow', 'width=400, height=500');">AGBs</span></u> und
+<u><span style="cursor:pointer; color:#0000FF;" onClick="javascript:window.open('@Application.getLocalPortal.getTemplateServerURLDropSlash/@Application.getLocalPortal().getId()/pprivacyagreement', 'MsgWindow', 'width=400, height=500');">Datenschutzvereinbarung</span></u>.
+<br/><br/>
+<div class="btn" onClick="javascript:document.getElementById('xmlifyAccept').style.display='none'; xmlify();">
+Veröffentlichen
+</div>
+<div class="btn" onClick="javascript:document.getElementById('xmlifyAccept').style.display='none';">
+Abbrechen
+</div>
+
+</div>
+
+</div>
+
+
       @defining(Application.getLocalPortal()) { portal =>
 
 
@@ -154,7 +184,7 @@ success: function(data){
                   
                   
                        		<div style="display:inline-block; padding-right:1px;"> 
-                       			<img alt="@Application.getLanguage("Speichern")" style="cursor:pointer;" onClick="javascript:xmlify();" onMouseOver="javascript:showLinkDescription('@Application.getLanguage("Veröffentlichen")');" onMouseOut="javascript:showLinkDescription('');" src="@Global.SERVER_URL_2@routes.Assets.at("icons/publish.png")">
+                       			<img alt="@Application.getLanguage("Speichern")" style="cursor:pointer;" onClick="javascript:document.getElementById('xmlifyAccept').style.display='block';" onMouseOver="javascript:showLinkDescription('@Application.getLanguage("Veröffentlichen")');" onMouseOut="javascript:showLinkDescription('');" src="@Global.SERVER_URL_2@routes.Assets.at("icons/publish.png")">
                        		</div> 
 
              <div style="display:inline-block;"> <a id="mapboundsbutton" target="_blank" onClick="javascript:document.getElementById('background').style.display='none'; zoomToMapBounds();" style="cursor:pointer;"><img onMouseOver="javascript:showLinkDescription('@Application.getLanguage("Karte auf Hotspots zentrieren")');" onMouseOut="javascript:showLinkDescription('');" alt="@Application.getLanguage("Karte auf Hotspots zentrieren")" src="@Global.SERVER_URL_2@routes.Assets.at("icons/home.png")"></a></div> 

@@ -1,5 +1,6 @@
 package controllers;
 
+import models.ProviderUsers;
 import models.TokenAction;
 import models.TokenAction.Type;
 import models.User;
@@ -42,7 +43,7 @@ public class Signup extends Controller {
 	private static final Form<PasswordReset> PASSWORD_RESET_FORM = form(PasswordReset.class);
 
 	public static Result unverified(Long pid) {
-		com.feth.play.module.pa.controllers.Authenticate.noCache(response());
+		//com.feth.play.module.pa.controllers.Authenticate.noCache(response());
 		
 		
 		if(pid == 61L){
@@ -226,9 +227,30 @@ public class Signup extends Controller {
 			return badRequest(no_token_or_invalid.render());
 		}
 		final String email = ta.targetUser.email;
+		
+	
+		for(ProviderUsers au: Application.getLocalPortal().userList){
+			
+			if(au.getRights().equals("admin")){
+				System.out.println("trying to send an email to admin: "+au.getUser().getName());
+		final MyUsernamePasswordAuthProvider provider = MyUsernamePasswordAuthProvider
+				.getProvider();
+		String text = "Auf deinem Geoquest Portal "+pid+" wurde ein neuer User mit dem Namen '"+ta.targetUser.getName()+"' und der E-Mail "+ta.targetUser.getEmail()+" erstellt. Solltest nur du die Berechtigung haben, diesen User freizuschalten, kümmere dich bitte darum.";
+		
+		
+		String html = "Auf deinem Geoquest Portal "+pid+" wurde ein neuer User mit dem Namen '"+ta.targetUser.getName()+"' und der E-Mail "+ta.targetUser.getEmail()+" erstellt.<br/><br/> Solltest nur du die Berechtigung haben, diesen User freizuschalten, kümmere dich bitte darum.";
+		provider.sendEmailToUser(au.getUser(), "Neuer User auf Portal "+pid+": "+ta.targetUser.getName(), text,html);
+			}
+		
+		}
+		
 		User.verify(ta.targetUser);
 		flash(Application.FLASH_MESSAGE_KEY,
 				Messages.get("playauthenticate.verify_email.success", email));
+		
+		
+		
+		
 		if (Application.getLocalUser(session()) != null) {
 			return redirect(routes.Application.index());
 		} else {

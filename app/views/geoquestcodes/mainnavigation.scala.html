@@ -90,7 +90,12 @@
 }
 }
 
+<li @Html(liattributes.when(liattributes !=""))>   
+<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.profile(Application.getLocalPortal.getId()))">@Application.getLanguage("Profil")</a>
+</li>
+
 @if(Application.getLocalPortal.getId() == 61L || (Application.getLocalPortal.getParameter(a_html.getId(),"showlogout") == "true")){
+<br/>
 <li @Html(liattributes.when(liattributes !=""))>   
           <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.dologout(Application.getLocalPortal.getId()))" >@Application.getLanguage("Abmelden")</a>
 </li>

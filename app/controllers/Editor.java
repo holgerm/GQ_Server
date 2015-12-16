@@ -3916,6 +3916,7 @@ if(name.equals("Hier Namen eingeben")){
 			}
 			
 			Game g = Game.find.byId(gid);
+			g.userlastupdated = Application.getLocalUser().getId();
 			g.createXML();
 			
 			} else {

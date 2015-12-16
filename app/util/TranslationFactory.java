@@ -128,6 +128,10 @@ public class TranslationFactory {
 		addTranslation("CSS (wird in Header eingefügt):","CSS (is added to <head>)");
 		
 		
+		addTranslation("Impressum:","Imprint:");
+		addTranslation("AGBs:","Terms and Conditions:");
+		addTranslation("Datenschutz-Vereinbarung:","Privacy agreement:");
+		
 		
 		// GAME RIGHTS
 		

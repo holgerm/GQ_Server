@@ -101,10 +101,22 @@ public class MyUsernamePasswordAuthProvider
 		@Required
 		public String name;
 
+		public boolean acceptedagbs;
+		public boolean acceptedprivacy;
+		
 		public String validate() {
+			
+			
+			if(acceptedagbs && acceptedprivacy){
+			
 			if (password == null || !password.equals(repeatPassword)) {
 				return Messages
 						.get("playauthenticate.password.signup.error.passwords_not_same");
+			}
+			} else {
+				
+			return "Du musst die AGBs und Datenschutzvereinbarung akzeptieren.";
+			
 			}
 			return null;
 		}

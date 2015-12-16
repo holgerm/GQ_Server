@@ -91,6 +91,8 @@ public class Game extends Model {
 
 	public User owner;
 	public boolean publish;
+	
+	public Long userlastupdated;
 
 	private int version;
 
@@ -196,6 +198,9 @@ public class Game extends Model {
 
 	}
 
+	
+	
+	
 	public void editUser(User u, String newright) {
 
 		Set<GameRights> todelete = new HashSet<GameRights>();
@@ -661,6 +666,27 @@ public class Game extends Model {
 
 	}
 
+	
+	
+
+	@JSON(include = false)
+	public int getAmountOfUsers() {
+		
+		int i = 0;
+	for(GameRights gr : rights){
+		
+		if(gr.getRights().equals("write")){
+			
+			
+			i++;
+			
+		}
+		
+	}
+		return i;
+	}
+	
+	
 	@JSON(include = false)
 	public String getPortalBackLink() {
 
@@ -2218,6 +2244,23 @@ public class Game extends Model {
 	public void setPublish(boolean b) {
 		publish = b;
 
+	}
+	
+	
+	
+	public void setPublishOnAllPortals(boolean b){
+		
+		
+		
+		
+		for(ProviderGames pg : portals){
+			
+			pg.setVisibility(b);
+			pg.update();
+			
+		}
+		
+	
 	}
 
 	@JSON(include = true)

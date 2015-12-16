@@ -29,10 +29,11 @@
   @if(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.tabs.type") =="button-group"){
 
     <div class="btn-group inline">
-    <li onclick="javascript:showDiv('generalinfo'); hideDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('layout');" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes") !=""))>@Application.getLanguage("Allgemein")    </li>
-    <li onclick="javascript:showDiv('verschluesselung'); hideDiv('erweitert'); hideDiv('generalinfo'); hideDiv('layout');" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes") !=""))>@Application.getLanguage("Verschlüsselung") </li>
-    <li onclick="javascript:showDiv('layout'); hideDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('generalinfo');" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes") !=""))>@Application.getLanguage("Layout") </li>
-    <li onclick="javascript:showDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('generalinfo'); hideDiv('layout');" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes") !=""))>@Application.getLanguage("Erweitert")</li>
+    <li onclick="javascript:showDiv('generalinfo'); hideDiv('rechtliches'); hideDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('layout');" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes") !=""))>@Application.getLanguage("Allgemein")    </li>
+    <li onclick="javascript:showDiv('verschluesselung'); hideDiv('rechtliches'); hideDiv('erweitert'); hideDiv('generalinfo'); hideDiv('layout');" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes") !=""))>@Application.getLanguage("Verschlüsselung") </li>
+    <li onclick="javascript:showDiv('layout'); hideDiv('rechtliches'); hideDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('generalinfo');" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes") !=""))>@Application.getLanguage("Layout") </li>
+    <li onclick="javascript:showDiv('rechtliches'); hideDiv('layout'); hideDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('generalinfo');" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes") !=""))>@Application.getLanguage("Rechtliches") </li>
+    <li onclick="javascript:showDiv('erweitert'); hideDiv('rechtliches'); hideDiv('verschluesselung'); hideDiv('generalinfo'); hideDiv('layout');" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes") !=""))>@Application.getLanguage("Erweitert")</li>
 
    </div>
     <span>
@@ -45,10 +46,11 @@
   } else {
 
       <ul @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.navtabs.attributes") !=""))>
-      <li><a href="javascript:showDiv('generalinfo'); hideDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('layout');">@Application.getLanguage("Allgemein")</a>    </li>
-      <li><a href="javascript:showDiv('verschluesselung'); hideDiv('erweitert'); hideDiv('generalinfo'); hideDiv('layout');">@Application.getLanguage("Verschlüsselung")</a>   </li>
-      <li><a href="javascript:showDiv('layout'); hideDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('generalinfo');">@Application.getLanguage("Layout")</a>   </li>
-      <li><a href="javascript:showDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('generalinfo'); hideDiv('layout');">@Application.getLanguage("Erweitert")</a>   </li>
+      <li><a href="javascript:showDiv('generalinfo'); hideDiv('rechtliches'); hideDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('layout');">@Application.getLanguage("Allgemein")</a>    </li>
+      <li><a href="javascript:showDiv('verschluesselung'); hideDiv('rechtliches'); hideDiv('erweitert'); hideDiv('generalinfo'); hideDiv('layout');">@Application.getLanguage("Verschlüsselung")</a>   </li>
+      <li><a href="javascript:showDiv('layout'); hideDiv('rechtliches'); hideDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('generalinfo');">@Application.getLanguage("Layout")</a>   </li>
+       <li><a href="javascript:showDiv('rechtliches'); hideDiv('layout'); hideDiv('erweitert'); hideDiv('verschluesselung'); hideDiv('generalinfo');">@Application.getLanguage("Rechtliches")</a>   </li>
+      <li><a href="javascript:showDiv('erweitert'); hideDiv('rechtliches'); hideDiv('verschluesselung'); hideDiv('generalinfo'); hideDiv('layout');">@Application.getLanguage("Erweitert")</a>   </li>
       <li></li><div style="display:inline-block; padding-left:50px;">    <input type="submit" value="@Application.getLanguage("Abspeichern")" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes") !=""))>
 
       </div>   </li>        </ul>
@@ -175,6 +177,66 @@
             uploadForm("posturl"),
             '_label -> Application.getLanguage("Blog-Connector-URL:")
         )
+
+    </div>
+    
+    
+     <div id="rechtliches" style="display:none;">
+
+
+   @textarea(
+            uploadForm("portalimprint"),
+            '_label -> Application.getLanguage("Portal Impressum:")
+        )
+        <br/>
+        
+
+        @textarea(
+            uploadForm("portalagbs"),
+            '_label -> Application.getLanguage("Portal AGBs:")
+        )
+        <br/>
+       <label for="portalagbsversion"> @Application.getLanguage("Portal AGBs") @Application.getLanguage("Version"):</label>
+        <input type="number" name="portalagbsversion" id="portalagbsversion" value="@uploadForm("portalagbsversion").value">
+        <br/>
+
+        @textarea(
+            uploadForm("portalprivacyagreement"),
+            '_label -> Application.getLanguage("Portal Datenschutz-Vereinbarung:")
+        )
+        <br/>
+        <label for="portalprivacyagreementversion"> @Application.getLanguage("Portal Datenschutz-Vereinbarung") @Application.getLanguage("Version"):</label>
+        <input type="number" name="portalprivacyagreementversion" id="portalprivacyagreementversion" value="@uploadForm("portalprivacyagreementversion").value">
+        <br/>
+
+
+
+
+
+        @textarea(
+            uploadForm("imprint"),
+            '_label -> Application.getLanguage("App Impressum:")
+        )
+        <br/>
+        
+
+        @textarea(
+            uploadForm("agbs"),
+            '_label -> Application.getLanguage("App AGBs:")
+        )
+        <br/>
+       <label for="agbsversion"> @Application.getLanguage("App AGBs") @Application.getLanguage("Version"):</label>
+        <input type="number" name="agbsversion" id="agbsversion" value="@uploadForm("agbsversion").value">
+        <br/>
+
+        @textarea(
+            uploadForm("privacyagreement"),
+            '_label -> Application.getLanguage("App Datenschutz-Vereinbarung:")
+        )
+        <br/>
+        <label for="privacyagreementversion"> @Application.getLanguage("App Datenschutz-Vereinbarung") @Application.getLanguage("Version"):</label>
+        <input type="number" name="privacyagreementversion" id="privacyagreementversion" value="@uploadForm("privacyagreementversion").value">
+        <br/>
 
     </div>
 

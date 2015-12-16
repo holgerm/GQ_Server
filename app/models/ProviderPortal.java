@@ -79,7 +79,41 @@ import util.Global;
         @Lob
         public String AdditionalCSS;
 
-
+        
+        @Lob
+        public String portalimprint;
+        
+        @Lob
+        public String portalagbs;
+        
+        public Integer portalagbsversion;
+        
+        @Lob
+        public String portalprivacyagreement;
+        
+        public Integer portalprivacyagreementversion;
+        
+        
+        
+        @Lob
+        public String imprint;
+        
+        @Lob
+        public String agbs;
+        
+        public Integer agbsversion;
+        
+        @Lob
+        public String privacyagreement;
+        
+        public Integer privacyagreementversion;
+        
+        
+        
+        
+        
+        
+        
         public String designpreset;
         public String defaultcolor;
 
@@ -155,6 +189,9 @@ import util.Global;
             defaultcolor = "#ffccff";
             autoVerifyUsers = true;
 
+            agbsversion = 0;
+            privacyagreementversion = 0;
+            
             designpreset = "default";
             color2 = "#ffccff";
             color3 = "#ffccff";
@@ -187,6 +224,9 @@ import util.Global;
             autoVerifyUsers = true;
             TemplateMappingURL = "";
 
+            agbsversion = 0;
+            privacyagreementversion = 0;
+            
             designpreset = "default";
             color2 = "#ffccff";
             color3 = "#ffccff";
@@ -230,7 +270,8 @@ import util.Global;
             TemplatePostURL = purl;
             AdditionalCSS = acss;
             defaultcolor = clr;
-
+            agbsversion = 0;
+            privacyagreementversion = 0;
             designpreset = dpr;
             color2 = c2;
             color3 = c3;
