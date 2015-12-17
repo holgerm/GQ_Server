@@ -448,6 +448,90 @@ $.ajax({
 
 
 
+function toggleDevices(){
+
+
+if(document.getElementById('testOnDevice').style.display == "none"){
+document.getElementById('testOnDevice').style.display='block';
+ } else {
+ document.getElementById('testOnDevice').style.display='none'; 
+  }
+
+
+}
+
+
+
+function addDevice(){
+
+
+
+
+var code = document.getElementById('devicecode').value;
+
+	var url ="@Global.SERVER_URL_2/profile/@Application.getLocalUser().getId()/devices/pair/"+code;
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+
+document.getElementById('devicecode').value = "";
+document.getElementById('devicecode').placeholder = data;
+
+							var url2 ="@Global.SERVER_URL_2/editor/devices";
+						$.ajax({
+						  url: url2,
+						  dataType: 'html',
+						  success: function(data2){
+						  
+						  
+						  
+						  document.getElementById("alldevices").innerHTML = data2;
+
+           }
+
+});
+
+
+
+
+
+
+
+
+           }
+
+});
+
+
+
+
+
+}
+
+
+
+
+function pushToDevice(device){
+
+	var url ="@Global.SERVER_URL_2/device/"+device+"/push/@g.getId";
+$.ajax({
+  url: url,
+  dataType: 'html',
+  success: function(data){
+            document.getElementById('testOnDevice').style.display='none'; 
+
+
+           }
+
+});
+
+
+
+
+
+}
+
 
 
 

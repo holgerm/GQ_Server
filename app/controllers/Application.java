@@ -3,6 +3,7 @@ package controllers;
 import java.awt.Color;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import play.Logger;
 import util.Global;
@@ -20,7 +21,6 @@ import play.data.Form;
 import play.mvc.*;
 import play.mvc.Http.Response;
 import play.mvc.Http.Session;
-import play.mvc.Result;
 import play.i18n.Lang;
 import providers.MyUsernamePasswordAuthProvider;
 import providers.MyUsernamePasswordAuthProvider.MyLogin;
@@ -105,6 +105,182 @@ public class Application extends Controller {
 		return i;
 
 	}
+	
+	
+	
+
+	public static Result createDevice(String name, String deviceid) {
+
+		
+		
+		
+
+if(	Device.find.where().eq("deviceid", deviceid).findRowCount() != 1){
+		
+	Device d = new Device(name, deviceid);
+	d.save();
+String s =	d.generateCode();
+	d.update();
+	return ok(s);
+		
+		
+	} else {
+		
+		Device d = Device.find.where().eq("deviceid",deviceid).findUnique();
+		
+		
+		return ok(d.code);
+	}
+
+	}
+	
+	
+	
+	
+	public static Result addDeviceByCode(Long uid, String code){
+		
+		
+		
+		
+		if (User.find.where().eq("id", uid).findRowCount() == 1) {
+
+			User u2 =User.find.byId(uid);
+		
+		
+	if(	Device.find.where().eq("code", code).findRowCount() != 1){
+		
+		
+		return ok("Code not found");
+		
+	} else {
+		
+		Device d = Device.find.where().eq("code",code).findUnique();
+		
+	
+		
+		if(!u2.paireddevices.contains(d)){
+		u2.paireddevices.add(d);
+		System.out.println(u2.paireddevices.size());
+		u2.update();
+	
+		
+		return ok(d.name);
+		} else {
+			
+			return ok("Device is already in list");
+
+			
+		}
+}	
+		
+		} else {
+			return ok("User not found");
+
+			
+			
+		}
+		
+	}
+	
+	
+	
+	public static Result pushQuestToDevice(Long did, Long gid){
+		
+		
+		if(	Device.find.where().eq("id", did).findRowCount() != 1){
+			
+			
+			return ok("DEVICE NOT FOUND");
+			
+		} else {
+			
+			Device d = Device.find.where().eq("id",did).findUnique();
+			
+			
+			
+			if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+
+				return badRequest(views.html.norights
+						.render("Das Spiel existiert nicht"));
+
+			} else {
+				
+
+				if (Global.securityGuard.hasWriteRightsOnGame(
+						Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+					return badRequest(views.html.norights
+							.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+				} else {
+				
+
+				
+				Game g = Game.find.byId(gid);
+				String s = g.createTestXML();
+				d.quest = s;
+				d.questpush = gid;
+				d.update();
+				return ok("ok");
+				
+				
+				}
+			}
+			
+		
+			
+			
+	}
+		
+		
+		
+	}
+	
+	
+	
+public static Result getQuestPushes(String deviceid){
+		
+		
+if(	Device.find.where().eq("deviceid", deviceid).findRowCount() != 1){
+		
+		
+		return ok("BAD REQUEST");
+		
+	} else {
+		
+		Device d = Device.find.where().eq("deviceid",deviceid).findUnique();
+		
+	
+		
+		if(d.questpush== 0L){
+		
+		return ok("");
+		} else {
+			
+			
+			
+		
+			
+			
+			Long l = d.questpush;
+			
+			
+			
+			return ok(""+l);
+		
+
+			
+		}
+}	
+		
+		
+		
+	}
+	
+	
+	
+	
+	
 
 	public static Result portalfourofour(Long pid, String path) {
 

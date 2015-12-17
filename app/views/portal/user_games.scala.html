@@ -1,12 +1,11 @@
-@(gamesList: Set[GameRights])
+@(u: User, gamesList: Set[GameRights])
 
 @import util.Global
 
-@main(Application.getLanguage("Meine Spiele")) {
+@main(u.name +"'s "+ Application.getLanguage("Spiele")) {
 
 
 
-@Portal.sayTime("Mygames #4")
 
 <br/>
 <div class="alert alert-danger" style="display:none;">
@@ -15,14 +14,12 @@
 
 <br/>
 
-
-    <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.uploadGame(Application.getLocalPortal().getId()))" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.speciallinks.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.speciallinks.attributes") !=""))>
-    @Application.getLanguage("Neues Spiel erstellen")</a>
+<a href="mailto:@u.getEmail()">Eine E-Mail senden</a>
 
 
     @if(gamesList.isEmpty() == true){
                 <br/>
-                @Application.getLocalPortal.getLanguageParameter("Du_hast_keine_Spiele")
+            @u.name  hat keine Spiele
                 <br/>
                 
             } else {
@@ -33,10 +30,21 @@
                             <th>@Application.getLanguage("Name")</th>
                             <th class="date-sort">@Application.getLanguage("Letztes Update")</th>
                             <th>@Application.getLanguage("Spieltyp")</th>
+                                                                                    @if(Application.getLocalPortal().getUser(Application.getLocalUser()).getRights() == "admin"){
+                            
                             <th class="no-sort">@Application.getLanguage("Veröffentlicht")</th>
+                            
                             <th class="no-sort">@Application.getLanguage("Optionen")</th>
                             
+                            
+                            
+                            
                                                         <th>@Application.getLanguage("Info")</th>
+                                                        } else {
+                                                        
+                                  <th class="no-sort"></th>
+                                                        
+                                                        }
                             
                         </tr>
                     </thead>
@@ -71,8 +79,12 @@
                             <td>@a_game.getGame().getName()</td>
                             <td>                            
                             @a_game.getGame().getLastUpdate().format(pre_date) 
-                                (
-                            @if(a_game.getGame().userlastupdated != null && a_game.getGame().userlastupdated != 0){
+                            
+                            
+                            
+                            
+                            (
+                           @if(a_game.getGame().userlastupdated != null && a_game.getGame().userlastupdated != 0){
                           <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.userGamesList(a_game.getGame().userlastupdated,Application.getLocalPortal.getId())"> 
                             }
                             @controllers.Portal.getNameOfLastReleaseUser(a_game.getGame())
@@ -81,9 +93,12 @@
                             </a>
                             }
                             )</td>
-                             <td>                            
+                             <td>          
+                                               
                          @Application.getLanguage(a_game.getGame().getType().getName()) </td>
+                     
                          
+                        @if(Application.getLocalPortal().getUser(Application.getLocalUser()).getRights() == "admin"){
                          
                             <td class="center">
                              
@@ -101,88 +116,51 @@
                            
                            
                             </td>
+                            }
                             
                             
-                            <td class="center"> @if(a_game.getRights() == "write"){
+                            <td class="center"> 
                            
+                                                                                  @if(Application.getLocalPortal().getUser(Application.getLocalUser()).getRights() == "admin"){
                             	
-                            	
-                            	
- 					 @if(!a_game.getGame().hasGameType()){
- 					 	| 
-
-                                <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.editGame(Application.getLocalPortal().getId(),a_game.getGame().getId()))">@Application.getLanguage("Editdieren")</a>
-
-
-						} else {
-						
-						  <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Editor.getEditor(a_game.getGame().getId()))">@pre_editoraufrufen</a>
-						  }
-						  
-						  
-
-                                | <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.gameRightsonPortal(Application.getLocalPortal().getId(),a_game.getGame().getId()))">@pre_admin</a>
-								
-								 | <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.doCopyGame(Application.getLocalPortal().getId(),a_game.getGame().getId()))">@pre_duplizieren</a>
-								
-                            	
-                            	
-                        | <a href="javascript:confirm('@pre_reallydelete')?window.location.href = '@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.doDeleteGame(Application.getLocalPortal().getId(),a_game.getGame().getId()))':void(0);">@pre_delete</a>
-                        
-                        
-                        
-                        
-                     
-                     
-@defining(Application.getLocalUser(session())) { user =>
-
-
-
-@if(Global.securityGuard.hasAdminRightsOnPortal(user)==true){
-	
-| <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.addGameTypeFromGame(Application.getLocalPortal().getId(),a_game.getGame().getId()))">@pre_inspieltyp</a>
-                            	
-                            	 }
-                            	 
-                            	
-                            	
-                            	
-                            	
-                            	}
+                       @if(Application.getLocalPortal().getGame(a_game.getGame()).getVisibility() == true){
+                       	
+                       	Veröffentlichung zurückziehen | 
+                       	
+                       	}
+                       	
+                      
                             	
 
-                            } else {
-		@pre_keinerechte
-                            } 
+                            }  
                              @if(a_game.getGame().hasFile()){
                             
-                          | <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Editor.getXMLForClient(a_game.getGame().getId())">@pre_download</a>
+                                                   @if(Application.getLocalPortal().getGame(a_game.getGame()).getVisibility() == true){
+                            
+                          <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Editor.getXMLForClient(a_game.getGame().getId())">@pre_download</a>
+                         
+                         } else {
+                         
+                         
+                         @if(a_game.getGame().getUser(Application.getLocalUser()).getRights() == "read" || a_game.getGame().getUser(Application.getLocalUser()).getRights() == "write"){
+                         	                          <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Editor.getXMLForClient(a_game.getGame().getId())">@pre_download</a>
+                         	
+                         }
+                         
+                         }
+                         
                            } 
                             </td>
                             
+                            
+                            
+                            
+                                                        @if(Application.getLocalPortal().getUser(Application.getLocalUser()).getRights() == "admin"){
+                            
                              <td>
-                            
-                            
-
-@if(!Application.getLocalPortal.hasGameType(a_game.getGame().getType)){ 
-	
-	
-	@if(a_game.getRights() == "write"){
-		<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.gameRightsonPortal(Application.getLocalPortal().getId(),a_game.getGame().getId())">
-		
-		}
-	
-	
-	<img src="@Global.SERVER_URL_2@routes.Assets.at("img/symbols/alert.png")" />
-	
-	@if(a_game.getRights() == "write"){
-		</a>
-		}
-	
-	 }
-                            
-                            
-                            @a_game.getGame().getId()</td>
+                             @a_game.getGame().getId()</td>
+                             
+                             }
                         </tr>
 
 

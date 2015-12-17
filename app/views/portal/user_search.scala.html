@@ -1,0 +1,103 @@
+@(userFound: Set[User],userForm:Form[_])
+
+    @import helper._
+    @import helpers._
+    
+	@import util.Global
+	
+
+@main(Application.getLanguage("User-Suche")) {
+
+
+
+
+
+
+    @helpers.form(routes.Portal.userSearchForm(Application.getLocalPortal().getId())) {
+
+        @if(userForm.hasGlobalErrors) {
+            <p class="error">
+                <span class="label label-important">@Application.getLanguage(userForm.globalError.message)</span>
+            </p>
+        }
+
+
+        <div class="row">
+            <div class="col-md-6">
+
+        @inputText(
+            userForm("email"),
+            '_label -> Application.getLanguage("Suche nach E-Mail-Adresse")
+        )
+               </div>
+            <div class="col-md-6">
+
+        @inputText(
+            userForm("name"),
+            '_label -> Application.getLanguage("Suche nach Name")
+        )
+            </div>
+            </div>
+
+        <input type="submit" value="@Application.getLanguage("Suche starten")" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes") !=""))><br/>
+
+
+    }
+
+
+
+
+        @if(userFound == null){
+           @Application.getLanguage("Keine User gefunden.")
+        } else {
+        
+       @if(userFound.isEmpty() == true){
+                   @Application.getLanguage("Keine User gefunden.")
+        
+        } else {
+        
+        
+        
+           <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
+                    <thead>
+                        <tr>
+                            <th>@Application.getLanguage("Name")</th>
+                           </tr>
+                    </thead>
+
+                    <tbody>
+
+ 
+
+
+            @for(a_user <- userFound){
+
+                @if(a_user.getId != Application.getLocalUser().getId()){
+<tr>
+                    <td>
+                    <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.userGamesList(a_user.getId(),Application.getLocalPortal.getId())"> 
+                    @a_user.getName()
+                    </a>
+                    </td>
+
+                 </tr>
+
+                    }
+
+
+
+
+
+            }
+            
+
+            </tbody>
+            </table>
+            }
+
+        }
+        }
+        
+        
+
+

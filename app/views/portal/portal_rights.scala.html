@@ -30,7 +30,7 @@
                     @for(a_user <- provider.getUsers()){
                             <tr>
 
-                                <td>@a_user.getUser.getName() @if(Application.getLocalUser().isAdminOnPortalOne()){( @a_user.getUser().getPremiumStatus()
+                                <td><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.userGamesList(a_user.getUser().getId(),Application.getLocalPortal.getId())"> @a_user.getUser.getName() </a> [ <a href="mailto:@a_user.getUser.getEmail()"> @a_user.getUser.getEmail()</a> ] @if(Application.getLocalUser().isAdminOnPortalOne()){( @a_user.getUser().getPremiumStatus()
                                 @if(a_user.getUser().getPremiumStatus().equals("All Access")){ @Application.getLanguage("bis") @a_user.getUser().getCurrentAccess().getValidUntil().format(Application.getLanguage("dd.MM.yyyy")) }
                                 	<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.givePremiumAccess(a_user.getUser.getId,1)">@Application.getLanguage("Einen Monat All Access hinzufügen")</a> )}</td>
 
@@ -58,6 +58,8 @@
                                                 <td><i>@Application.getLanguage("Nicht verifiziert")</i></td>
                                                 <td>
                                                     @if(a_user.getUser.getId != user.getId){<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doEditUserRightsOnPortal(Application.getLocalPortal.getId(),provider.getId(),a_user.getUser.getId,"user")">@Application.getLanguage("User-Rechte geben")</a>  - <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doEditUserRightsOnPortal(Application.getLocalPortal.getId(),provider.getId(),a_user.getUser.getId,"admin")">@Application.getLanguage("Admin-Rechte geben")</a> - <a href="javascript:confirm('@Application.getLanguage("Antrag wirklich ablehnen?")')?window.location.href = '@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doDeleteUserRightsOnPortal(Application.getLocalPortal.getId(),provider.getId(),a_user.getUser.getId)':void(0);">@Application.getLanguage("Antrag ablehnen")</a>}
+                                                
+                                                
                                                  </td>
 
                                             }

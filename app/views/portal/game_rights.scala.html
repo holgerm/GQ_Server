@@ -67,9 +67,11 @@
 
 
                     @for(a_game <- gamesList){
+                    	
+                    	@if(a_game.getRights() == "read" || a_game.getRights() == "write"){
 
                         <tr>
-                            <td>@a_game.getUser().getName()</td>
+                            <td> <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.userGamesList(a_game.getUser().getId(),Application.getLocalPortal.getId())"> @a_game.getUser().getName()</a>  [ <a href="mailto:@a_game.getUser.getEmail()"> @a_game.getUser.getEmail() </a> ]</td>
 
 
 
@@ -120,6 +122,8 @@
 
 
                         </tr>
+                        
+                        }
 
 
 
@@ -183,30 +187,49 @@
            @Application.getLanguage("Keine User gefunden.")
         } else {
 
-            <ul>
+            <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
+                    <thead>
+                        <tr>
+                            <th>@Application.getLanguage("Name")</th>
+                                                        <th class="no-sort">@Application.getLanguage("Optionen")</th>
+                            
+                           </tr>
+                    </thead>
+
+                    <tbody>
+
+ 
 
 
             @for(a_user <- userFound){
 
                 @if(a_user.getId != user.getId){
 
-                    <li>@a_user.getName()
+                    <tr>
+                    <td>
+                    <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.userGamesList(a_user.getId(),Application.getLocalPortal.getId())"> 
+                    @a_user.getName()
+                    </a>
+                    </td>
 
+<td>
                         <a href="@routes.Portal.doEditUserRightsOnGame(Application.getLocalPortal.getId(),game.getId(),a_user.getId,"read").absoluteURL()">+@Application.getLanguage("Leserechte")</a>
 
-                        <a href="@routes.Portal.doEditUserRightsOnGame(Application.getLocalPortal.getId(),game.getId(),a_user.getId,"write").absoluteURL()">+@Application.getLanguage("Lese/Schreibrechte")</a> )
-
+                        <a href="@routes.Portal.doEditUserRightsOnGame(Application.getLocalPortal.getId(),game.getId(),a_user.getId,"write").absoluteURL()">+@Application.getLanguage("Lese/Schreibrechte")</a> 
+</td>
+</tr>
 
                     }
 
 
 
 
-            </li>
+        
 
             }
 
-            </ul>
+           </tbody>
+           </table>
 
         }
 

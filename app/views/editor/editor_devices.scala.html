@@ -1,0 +1,9 @@
+	@for(a_device <- Application.getLocalUser().paireddevices){
+        
+        
+        
+        
+     <div style="cursor:pointer;" onClick="javascript: pushToDevice(@a_device.getId())"> @a_device.name</div>
+        <br/>
+        
+        }

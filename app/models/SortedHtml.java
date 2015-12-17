@@ -12,9 +12,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-
 @Entity
-public class SortedHtml extends Model {
+public class Device extends Model {
 
     @Id
     private Long id;
@@ -31,7 +30,7 @@ public class SortedHtml extends Model {
    private Set<TemplateParameter> parameterlist;
 
 
-    public SortedHtml(String s, Integer i, String parameters){
+    public Device(String s, Integer i, String parameters){
         wort = s;
         zahl = i;
        computeParameters(parameters);
@@ -164,8 +163,22 @@ public class SortedHtml extends Model {
 
 
 
-    public static final Finder<Long, SortedHtml> find = new Finder<Long, SortedHtml>(
-            Long.class, SortedHtml.class);
+    public static final Finder<Long, Device> find = new Finder<Long, Device>(
+            Long.class, Device.class);
+
+
+
+
+}
+
+
+
+
+
+
+
+    public static final Finder<Long, Device> find = new Finder<Long, Device>(
+            Long.class, Device.class);
 
 
 

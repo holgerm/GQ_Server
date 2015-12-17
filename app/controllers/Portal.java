@@ -215,6 +215,84 @@ public class Portal extends Controller {
 	
 	
 	
+	
+
+	@Restrict(@Group(Application.USER_ROLE))
+	public static Result userGamesList(Long uid, Long pid) {
+
+		
+		lastdate = System.currentTimeMillis();
+		
+		
+		session("currentportal", pid.toString());
+
+		ProviderPortal p = Application.getLocalPortal();
+
+		if (ProviderPortal.find.where().eq("id", pid).findRowCount() == 1) {
+
+			p = ProviderPortal.find.byId(pid);
+
+		}
+		
+		sayTime("Mygames #1");
+
+		User u = getLocalUser(session());
+
+		if (Global.securityGuard.hasAdminRightsOnPortal(u) == false) {
+
+			
+			
+			if (User.find.where().eq("id", uid).findRowCount() == 1) {
+
+			User u2 =User.find.byId(uid);
+
+			
+			
+			
+			Set<GameRights> s = u2.getPublicGamesOnPortal(p);
+			sayTime("Mygames #3");
+
+			return ok(views.html.portal.user_games.render(u2,s));
+			} else {
+				
+				return badRequest(views.html.norights
+						.render("Der User existiert nicht."));
+			
+			}
+
+		} else {
+			sayTime("Mygames #2");
+
+			
+
+			if (User.find.where().eq("id", uid).findRowCount() == 1) {
+
+				User u2 =User.find.byId(uid);
+
+				
+				
+				
+				Set<GameRights> s = u2.getGamesOnPortal(p);
+				sayTime("Mygames #3");
+
+				return ok(views.html.portal.user_games.render(u2,s));
+				
+			} else {
+				
+				return badRequest(views.html.norights
+						.render("Der User existiert nicht."));
+
+				
+				
+			}
+			
+	
+
+		}
+	}
+	
+	
+	
 	public static void sayTime(String prefix){
 		
 		
@@ -457,6 +535,65 @@ public class Portal extends Controller {
 
 	}
 
+	@Restrict(@Group(Application.USER_ROLE))
+	public static Result userSearchForm(Long pid) {
+
+		session("currentportal", pid.toString());
+
+	
+			ProviderPortal p = getLocalPortal();
+			
+				Set<User> leer = new HashSet<User>();
+
+				final Form<UserSearch> filledForm = USER_SEARCH_FORM
+						.bindFromRequest();
+				UserSearch form = filledForm.get();
+
+				if (!form.name.isEmpty()) {
+
+					leer.addAll(p.searchForUserByName(form.name));
+
+				}
+
+				if (!form.email.isEmpty()) {
+
+					leer.addAll(p.searchForUserByEmail(form.email));
+
+				}
+
+			
+				return ok(views.html.portal.user_search.render(leer, filledForm));
+
+			
+
+	
+	}
+	
+	
+	@Restrict(@Group(Application.USER_ROLE))
+	public static Result userSearch(Long pid) {
+
+		
+	
+		session("currentportal", pid.toString());
+
+	
+			ProviderPortal p = getLocalPortal();
+			
+				Set<User> leer = new HashSet<User>();
+
+			
+				return ok(views.html.portal.user_search.render(leer, USER_SEARCH_FORM));
+
+			
+
+	
+	}
+	
+	
+	
+	
+	
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result gameRightsonPortalUserSearch(Long pid, Long gid) {
 

@@ -57,6 +57,18 @@ GET    /testmapping                                                           co
 GET		/setLanguage/:l														  controllers.Application.setLanguage(l: String)
 
 
+
+
+
+GET	/devices/pair/:name/:deviceid											controllers.Application.createDevice(name: String, deviceid: String)
+GET /profile/:uid/devices/pair/:code														controllers.Application.addDeviceByCode(uid:Long,code: String)
+GET /device/:did/push/:gid														controllers.Application.pushQuestToDevice(did:Long,gid:Long)
+GET /device/:did/update														controllers.Application.getQuestPushes(did:String)
+GET	/editor/devices															controllers.Editor.getDevicesForEditor()
+
+GET	/device/:did/getxml														controllers.Editor.getTestXMLForClient(did:String)
+
+
 # ROUTING
 
 
@@ -68,6 +80,14 @@ GET    /my                                                                    co
 
 GET    /:pid/mygames                                                          controllers.Portal.myGamesList(pid: Long)
 
+
+
+GET		/:pid/profile/:uid/games											controllers.Portal.userGamesList(uid: Long, pid: Long)
+
+
+
+GET  /:pid/search/user														controllers.Portal.userSearch(pid:Long)
+GET  /:pid/search/user/results														controllers.Portal.userSearchForm(pid:Long)
 
 
 ## GAME

@@ -57,6 +57,11 @@ public class User extends Model implements Subject {
 	    @OrderBy("validuntil")
 	public List<PremiumAccess> premiumrights;
 
+	 
+	 @ManyToMany
+	public List<Device> paireddevices;
+	 
+	 
     @ManyToMany
     @OrderBy("datum")
     private List<NewsstreamItem> Newsstream;
@@ -266,6 +271,41 @@ public class User extends Model implements Subject {
 
 
             if(p.existsGame(agameright.getGame()) == true){
+                onPortal.add(agameright);
+            } else {
+            	
+            	//System.out.println("I have a GameRight that is not on this portal:"+agameright.getGame().getId());
+            	
+            }
+
+
+        }
+
+        return onPortal;
+
+    }
+    
+    
+    
+    
+    
+    
+    
+    public Set<GameRights> getPublicGamesOnPortal(ProviderPortal p){
+
+    	
+
+    	
+        Set<GameRights> onPortal = new HashSet<GameRights>();
+
+
+        for(GameRights agameright: games){
+
+        	
+       
+        	
+
+            if(p.existsGame(agameright.getGame()) == true && p.getGame(agameright.getGame()).getVisibility()){
                 onPortal.add(agameright);
             } else {
             	

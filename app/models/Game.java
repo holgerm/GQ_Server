@@ -76,6 +76,8 @@ public class Game extends Model {
 	public Long id;
 	public String name;
 	public String zip;
+	
+	
 	@Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date lastUpdate;
 
@@ -1092,6 +1094,64 @@ public class Game extends Model {
 
 			ioe.printStackTrace();
 		}
+
+	}
+	
+	
+	
+	
+	
+	
+	public String createTestXML() {
+
+		String xmlString = createXMLForWeb(getFirstMission());
+		String sid = String.valueOf(id);
+
+		try {
+
+			File theDir3 = new File("public/uploads/"
+					+ Application.getLocalPortal().getId());
+			if (!theDir3.exists())
+				theDir3.mkdir();
+
+			File theDir2 = new File("public/uploads/"
+					+ Application.getLocalPortal().getId() + "/editor");
+			if (!theDir2.exists())
+				theDir2.mkdir();
+			
+			
+			File theDir4 = new File("public/uploads/"
+					+ Application.getLocalPortal().getId() + "/editor/test");
+			if (!theDir4.exists())
+				theDir4.mkdir();
+
+			File theDir = new File("public/uploads/"
+					+ Application.getLocalPortal().getId() + "/editor/test/" + sid
+					+ "/");
+			if (!theDir.exists())
+				theDir.mkdir();
+
+			File f = new File("public/uploads/"
+					+ Application.getLocalPortal().getId() + "/editor/test/" + sid
+					+ "/", "game.xml");
+
+			String xmlFilePath = f.getAbsolutePath();
+
+			Files.write(Paths.get(xmlFilePath), xmlString.getBytes());
+
+			String zip2 = xmlFilePath;
+			this.update();
+
+			System.out.println("File saved!");
+			
+			return zip2;
+
+		} catch (IOException ioe) {
+
+			ioe.printStackTrace();
+		}
+		
+		return "error";
 
 	}
 

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import models.Device;
 import models.Game;
 import models.ProviderPortal;
 import models.ProviderUsers;
@@ -904,6 +905,17 @@ public class Editor extends Controller {
 			}
 
 		}
+
+	}
+	
+	
+	
+	
+	@Restrict(@Group(Application.USER_ROLE))
+	public static Result getDevicesForEditor() {
+
+				return ok(views.html.editor.editor_devices.render());
+
 
 	}
 
@@ -4040,6 +4052,77 @@ if(name.equals("Hier Namen eingeben")){
 		}
 
 	}
+	
+	
+	
+	
+	@BodyParser.Of(Xml.class)
+	public static Result getTestXMLForClient(String deviceid) {
+
+		
+		
+		if(	Device.find.where().eq("deviceid", deviceid).findRowCount() != 1){
+			
+			
+			return ok("<error>Invalid device id</error>");
+			
+		} else {
+			
+			Device d = Device.find.where().eq("deviceid",deviceid).findUnique();
+			
+		
+			
+			if(d.quest== ""){
+			
+			return ok("");
+			} else {
+			
+				
+
+			File gameXMLFile = new File(d.quest);
+
+			if (!gameXMLFile.exists() || !gameXMLFile.canRead()) {
+				return ok("<error>No Pages defined</error>");
+			}
+
+		
+
+			if ("game.xml".equals(gameXMLFile.getName())) {
+				// Mission m = g.getFirstMission();
+				// String result = g.createXMLForWeb(m); // return file instead
+
+				response().setContentType("text/xml");
+				response().setHeader("Content-disposition",
+						"attachment; filename=game.xml");
+				response().setHeader("Content-Length",
+						gameXMLFile.length() + "");
+
+				
+				d.questpush = 0L;
+				d.update();
+				
+				return ok(gameXMLFile);
+				
+				
+			} else {
+				return ok("<error>No Pages defined</error>");
+			}
+
+			
+			}
+		}
+		}
+
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result movePartInGame(Long gid, Long pid, String direction) {

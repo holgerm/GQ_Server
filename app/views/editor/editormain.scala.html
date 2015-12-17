@@ -45,6 +45,33 @@
     <body onLoad="connectionTester(); browserTester(); initmap(); @if(g.getType.hasOnlyOneScene()){ document.getElementById('background').style.display='none'; document.getElementById('tutorial').style.display='none'; document.getElementById('missionoverviewjs').style.display='none'; } @if(g.getHotspots != null){ @if(g.getHotspots.size() > 0){  document.getElementById('background').style.display='none'; document.getElementById('tutorial').style.display='none'; document.getElementById('missionoverviewjs').style.display='none';}}">
 
 
+
+   <div id="testOnDevice" class="pull-right" style="      display: none;
+    width: 200px;
+    min-height: 200px;
+    z-index: 99999999;
+    background-color: #CCCCCC;
+    position: absolute;
+    right: 150px;
+    padding: 10px;
+    top: 80px;">
+
+
+<div id="alldevices">
+            	@editor_devices()
+        </div>
+        
+        <br/>
+        <h4>Ein Gerät verbinden</h4>
+        <input style="width: 180px;" type="text"  id="devicecode" placeholder="Pairing-Code eingeben"/>
+            <div class="btn" onClick="javascript:addDevice();">
+            Verbinden
+            </div>  			
+        
+        </div>
+        
+        
+
 <div id="language" style="position:absolute; z-index:9999999; top:0px; left:3px;">
 
 <script type="text/javascript">
@@ -176,11 +203,17 @@ Abbrechen
         
         
         
+        
+        
+        
+        
          <div class="pull-right" style="height:50px; " id="xmlifylink"">
         
      
      
-                  
+                 		 <div style="display:inline-block; padding-right:1px; height: 40px;"> 
+                       			<img style="height: 40px;" height=40" alt="@Application.getLanguage("Testen")" style="cursor:pointer;" onClick="javascript:toggleDevices();" onMouseOver="javascript:showLinkDescription('@Application.getLanguage("Auf Gerät testen")');" onMouseOut="javascript:showLinkDescription('');" src="@Global.SERVER_URL_2@routes.Assets.at("icons/actions/loadvar.png")">
+                       		</div> 
                   
                   
                        		<div style="display:inline-block; padding-right:1px;"> 
@@ -214,10 +247,13 @@ Abbrechen
     
     </div>
     
+    
+   
 
 
 
 </div>
+
 
 
 <img src="@Global.SERVER_URL_2/assets/icons/menu.png" style="z-index:1000000; position:fixed; top: 100px; right:0px; cursor:pointer;" class="showmenu"  width="40"/>
