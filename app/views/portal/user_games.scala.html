@@ -17,6 +17,34 @@
 <a href="mailto:@u.getEmail()">Eine E-Mail senden</a>
 
 
+
+
+<script>
+
+
+function resetVisibility(x){
+
+
+
+
+		var url ="@Global.SERVER_URL_2/@Application.getLocalPortal().getId()/"+x+"/resetvisibility";
+	$.ajax({
+	  url: url,
+	  dataType: 'html',
+	  success: function(data){
+
+					location.reload();
+
+	           }
+
+	});
+	
+	}
+
+
+
+</script>
+
     @if(gamesList.isEmpty() == true){
                 <br/>
             @u.name  hat keine Spiele
@@ -125,9 +153,11 @@
                             	
                        @if(Application.getLocalPortal().getGame(a_game.getGame()).getVisibility() == true){
                        	
-                       	Veröffentlichung zurückziehen | 
+                      <div style="text-decoration: underline; cursor:pointer;" onClick="javascript:resetVisibility(@a_game.getGame().getId());"> Veröffentlichung zurückziehen</div> | 
                        	
                        	}
+                       	
+                       	<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.doCopyGame(Application.getLocalPortal().getId(),a_game.getGame().getId()))">@pre_duplizieren</a>
                        	
                       
                             	

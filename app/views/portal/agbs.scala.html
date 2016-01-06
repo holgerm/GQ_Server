@@ -1,2 +1,4 @@
 @(portal: ProviderPortal)
-@portal.agbs
+@if(portal != null && portal.agbs != null){
+@Html(portal.agbs)
+}

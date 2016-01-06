@@ -123,8 +123,8 @@
 
                                 | <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.gameRightsonPortal(Application.getLocalPortal().getId(),a_game.getGame().getId()))">@pre_admin</a>
 								
-								 | <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.doCopyGame(Application.getLocalPortal().getId(),a_game.getGame().getId()))">@pre_duplizieren</a>
 								
+                            	                            						| <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.doCopyGame(Application.getLocalPortal().getId(),a_game.getGame().getId()))">@pre_duplizieren</a>
                             	
                             	
                         | <a href="javascript:confirm('@pre_reallydelete')?window.location.href = '@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.doDeleteGame(Application.getLocalPortal().getId(),a_game.getGame().getId()))':void(0);">@pre_delete</a>
@@ -152,7 +152,14 @@
                             	
 
                             } else {
+                            
+                            
+                            
+                            @if(a_game.getRights() == "read"){
+                            							 <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.doCopyGame(Application.getLocalPortal().getId(),a_game.getGame().getId()))">@pre_duplizieren</a>
+                 } else {           
 		@pre_keinerechte
+		}
                             } 
                              @if(a_game.getGame().hasFile()){
                             

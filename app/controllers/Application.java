@@ -251,7 +251,10 @@ if(	Device.find.where().eq("deviceid", deviceid).findRowCount() != 1){
 		Device d = Device.find.where().eq("deviceid",deviceid).findUnique();
 		
 	
-		
+		if(d.questpush == null){
+			return ok("");
+
+		} else 
 		if(d.questpush== 0L){
 		
 		return ok("");

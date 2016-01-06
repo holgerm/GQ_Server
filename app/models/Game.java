@@ -2425,14 +2425,21 @@ public class Game extends Model {
 
 		} else if (or.getObjectType().equals("Attribute")) {
 
+			
+			
+			System.out.println("Searching for Attribute: " + or.getObjectId());
+
 			List<Attribute> allattr = s.getAllSubAttributes();
 
 			for (Attribute at : allattr) {
+				System.out.println("found: " + at.getParentId());
 
 				if (at != null) {
 					if (or.getObjectId().equals(at.getParentId())) {
 
 						x = new ObjectReference(at);
+						
+						System.out.println("success!");
 
 					}
 				}

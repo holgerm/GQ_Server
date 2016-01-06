@@ -677,6 +677,9 @@ public class Scene extends Model {
 			if (!ap.isScene()) {
 
 				Mission am = ap.getMission();
+				
+				
+				System.out.println("searching in page "+am.getName()+" ("+am.getType().getXMLType()+")");
 				for (AttributeType att : am.getAllAttributes()) {
 
 					if (am.getAttribute(att) != null) {
@@ -684,14 +687,19 @@ public class Scene extends Model {
 						allsubs.add(am.getAttribute(att));
 
 					}
+					
+				}
 
 					// Contents
 
 					for (Content ac : am.getContents()) {
+						System.out.println("searching in content "+ac.getName()+" ("+ac.getType().getXMLType()+")");
 
 						for (AttributeType att1 : ac.getAllAttributes()) {
 
 							if (ac.getAttribute(att1) != null) {
+								System.out.println("Attr:"+ac.getAttribute(att1).getName()+"="+ac.getAttributeValue(att1));
+
 
 								allsubs.add(ac.getAttribute(att1));
 
@@ -731,7 +739,7 @@ public class Scene extends Model {
 
 					}
 
-				}
+				
 
 			}
 

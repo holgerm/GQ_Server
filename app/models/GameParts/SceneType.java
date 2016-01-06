@@ -128,6 +128,8 @@ canSeeHotspots = true;
     			String[] split2 = split1[1].split("\\)");
     			
     			
+    			List<String> possibleValues = new ArrayList<String>();
+    			String defaultvalue = "";
     			String type = "";
     			Integer sort = sortstart;
     			String field = split2[0];
@@ -154,11 +156,48 @@ canSeeHotspots = true;
     			}
     			
     			
+    			if(split3.length > 3){
+    				
+    				
+    				
+    				
+    				
+        	String defaultvalues = 	split3[3];
+        			if(defaultvalues.contains(";")){
+        				
+            			String[] split4 = defaultvalues.split(";");
+            			
+            			
+            			for (int j=0; j<split4.length; j++) {
+            			possibleValues.add(split4[j]);
+            			
+            			}
+        			
+        			}
+        			
+
+    				
+    			}
     			
-    			
-    			
+    			if(split3.length > 4){
+    				
+    				
+    				
+    				
+    				
+   	        	 defaultvalue = 	split3[4];
+   	        		
+   			
+   			
+   			
+   			
+   			
+   			}
     			
     			}
+    			
+    			
+    		
     			log = log + "->> Füge Feld hinzu: "+ field;
 
     			try{
@@ -169,6 +208,11 @@ canSeeHotspots = true;
     					ObjectReference or = new ObjectReference(aa);
     					or.save();
     					att01.setLink(or);
+    					for(String p : possibleValues){
+    					att01.addPossibleValue(p);
+    					
+    					}
+    					att01.setDefaultValue(defaultvalue);
     					att01.update();
     					
     					

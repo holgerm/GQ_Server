@@ -155,6 +155,8 @@ POST   /:pid/portal/edit/:epid                                                co
 
 GET    /:pid/:gid/migrate                                                     controllers.Portal.migrateGame(pid:Long,gid:Long)
 GET    /:pid/:gid/setvisibility/:value                                        controllers.Portal.setGameVisibility(pid:Long,gid: Long,value: String)
+GET    /:pid/:gid/resetvisibility                                        	controllers.Portal.resetGameVisibility(pid:Long,gid: Long)
+
 GET    /:pid/portal/editrights/:gid/:uid/:right                               controllers.Portal.doEditUserRightsOnPortal(pid:Long,gid:Long,uid:Long,right:String)
 
 GET    /:pid/portal/deleterights/:gid/:uid                                    controllers.Portal.doDeleteUserRightsOnPortal(pid:Long,gid:Long,uid:Long)

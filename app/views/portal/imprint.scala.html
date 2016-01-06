@@ -1,2 +1,4 @@
 @(portal: ProviderPortal)
-@portal.imprint
+@if(portal != null && portal.portalprivacyagreement != null){
+@Html(portal.imprint)
+}

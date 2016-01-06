@@ -686,6 +686,49 @@ public class Portal extends Controller {
 		return ok(help);
 
 	}
+	
+	
+	
+	
+	
+	@Restrict(@Group(Application.USER_ROLE))
+	public static Result resetGameVisibility(Long pid, Long gid) {
+
+		session("currentportal", pid.toString());
+
+		
+		
+		ProviderPortal p = getLocalPortal();
+
+		
+		
+		
+		String help = "Error!";
+
+		
+		if(Application.getLocalPortal().getUser(Application.getLocalUser()).getRights().equals("admin")){
+				
+				if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+		
+					help = "Game " + gid + "not found";
+				} else {
+		
+					Game c = Game.find.byId(gid);
+		
+					
+		
+						p.getGame(c).setVisibility(false);
+		
+					
+					p.getGame(c).update();
+		
+					help = "synced";
+		
+				}
+		}
+		return ok(help);
+
+	}
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result doDeleteGame(Long pid, Long game) {
@@ -908,18 +951,18 @@ public class Portal extends Controller {
 							.getLocalPortal()
 							.getContentHtmlParameter(
 									"general.games.directotoeditor")
-							.equals("true")) {
-						return redirect(routes.Editor.getEditor(g.getId()));
+							.equals("false")) {
+						return redirect(routes.Portal.myGamesList(pid));
 
 					} else {
+						return redirect(routes.Editor.getEditor(g.getId()));
 
-						return redirect(routes.Portal.myGamesList(pid));
 
 					}
 
 				} else {
 
-					return redirect(routes.Portal.myGamesListOnCurrentPortal());
+					return redirect(routes.Editor.getEditor(g.getId()));
 
 				}
 
@@ -1044,6 +1087,58 @@ public class Portal extends Controller {
 						GameType gt = new GameType(form.name);
 
 						gt.save();
+						
+						
+						
+						for (AttributeType a : g.getType()
+								.getAttributeTypes()) {
+
+							AttributeType gt_att5 = new AttributeType(
+									a.getName(), a.getXMLType(),
+									a.getFileType());
+							gt_att5.save();
+
+							gt_att5.setDefaultValue(g.getAttributeValue(a));
+							gt_att5.update();
+
+							gt.setAttributeType(gt_att5);
+							gt.update();
+
+						}
+
+						for (PartType pt : g.getType()
+								.getPossiblePartTypes()) {
+
+							gt.addPossiblePartType(pt);
+							gt.update();
+
+						}
+
+						for (ActionType mi : g.getType()
+								.getPossibleMenuItemActionTypes()) {
+
+							gt.addPossibleMenuItemActionType(mi);
+							gt.update();
+
+						}
+
+						for (HotspotType ht : g.getType()
+								.getPossibleHotspotTypes()) {
+
+							gt.addPossibleHotspotType(ht);
+							gt.update();
+
+						}
+
+						for (SceneType st : g.getType()
+								.getPossibleSceneTypes()) {
+
+							gt.addPossibleSceneType(st);
+							gt.update();
+
+						}
+						
+						
 
 						if (form.makescene) {
 							
@@ -1069,13 +1164,18 @@ public class Portal extends Controller {
 							gt.addPossibleSceneType(s);
 							gt.update();
 
-							gt.setOnlySceneType(s);
-
-							gt.update();
-
-							gt.editor_only_scene_type = s;
-
-							gt.update();
+							
+						Game	g1 = gt.createMe(form.scenename);
+							g1.save();
+					Scene sce =		s.createMe(form.scenename, g1);
+					sce.save();
+					
+					//sce.redoLinking(g1);
+					
+					Part p1 = new Part(sce);
+					p1.save();
+					gt.addDefaultPart(p1);
+					gt.update();
 
 						} else {
 
@@ -1089,53 +1189,7 @@ public class Portal extends Controller {
 
 							}
 
-							for (AttributeType a : g.getType()
-									.getAttributeTypes()) {
-
-								AttributeType gt_att5 = new AttributeType(
-										a.getName(), a.getXMLType(),
-										a.getFileType());
-								gt_att5.save();
-
-								gt_att5.setDefaultValue(g.getAttributeValue(a));
-								gt_att5.update();
-
-								gt.setAttributeType(gt_att5);
-								gt.update();
-
-							}
-
-							for (PartType pt : g.getType()
-									.getPossiblePartTypes()) {
-
-								gt.addPossiblePartType(pt);
-								gt.update();
-
-							}
-
-							for (ActionType mi : g.getType()
-									.getPossibleMenuItemActionTypes()) {
-
-								gt.addPossibleMenuItemActionType(mi);
-								gt.update();
-
-							}
-
-							for (HotspotType ht : g.getType()
-									.getPossibleHotspotTypes()) {
-
-								gt.addPossibleHotspotType(ht);
-								gt.update();
-
-							}
-
-							for (SceneType st : g.getType()
-									.getPossibleSceneTypes()) {
-
-								gt.addPossibleSceneType(st);
-								gt.update();
-
-							}
+							
 
 							gt.update();
 						}
@@ -1319,7 +1373,13 @@ public class Portal extends Controller {
 
 			} else {
 
+				
+				
+				ProviderPortal p = ProviderPortal.find.byId(pid);
 				User currentuser = getLocalUser(session());
+
+				
+				
 
 				Game g = mygame.copyMe(" "+Application.getLanguage(("Kopie")));
 				g.save();
@@ -1383,6 +1443,9 @@ public class Portal extends Controller {
 
 				System.out.println("Done");
 
+				
+				
+				
 				return redirect(routes.Portal.myGamesListOnCurrentPortal());
 
 			}
@@ -2353,6 +2416,20 @@ public class Portal extends Controller {
 							.render("Der User existiert nicht"));
 
 				} else {
+					
+					
+				for(ProviderGames pg :	myportal.getGameList()){
+					
+					
+					if(pg.getGame().userlastupdated == uid){
+					
+				pg.setVisibility(false);
+				pg.update();
+					}
+					
+				}
+					
+					
 
 					User usertoedit = User.find.byId(uid);
 

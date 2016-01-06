@@ -36,25 +36,13 @@
           
           
           
-          
-          <a class="brand" href="@Global.SERVER_URL_2">
-          
-                    <div style="  cursor:pointer;  z-index:10000000; width:200px;  height:50px; position:absolute; top:10px; height:50px;" onClick="javascript:window.location.href = '%%_GEOQUEST_SERVER_URL_%%/%%_GEOQUEST_PORTAL_ID_%%';" > </div>	
-          
-									<object style="display:inline-block; position:relative; top:5px; height:50px; width:300px; " data="@routes.Assets.at("img/qeeveelogo.svg")" type="image/svg+xml">
-									<img src="@Global.SERVER_URL_2@routes.Assets.at("img/qeeveelogo.png")" alt="">
-</object>
-									
-          
-          <div class="bottomcontent"> <div class="pull-right">%%_GEOQUEST_USER_INFO_%%{%template:=bootstrap-buttongroups%}</div>
-           </div>
-          <div class="nav-collapse collapse">
+          <span class="nav-collapse collapse">
             <ul class="nav">
-              <li>%%_GEOQUEST_NAV_LI_%%{%authlinks:=hide%}</li>
+              <li>%%_GEOQUEST_NAV_LI_%%{%CookieImg:=hide%}</li>
               
              
             </ul>
-          </div><!--/.nav-collapse -->
+          </span><!--/.nav-collapse -->
         </div>
       </div>
     </div>

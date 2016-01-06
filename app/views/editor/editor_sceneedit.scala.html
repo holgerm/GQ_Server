@@ -237,7 +237,7 @@
 								             
 								             <option ></option>
 								              		@for(pm <- a.getPossibleValues()){
-								              			   <option  value = "@pm" @if(s.getAttributeValue(a).equals(pm)){ selected="selected" } >@Application.getLanguage(pm)</option>
+								              			   <option  value = "@pm" @if(s.getAttributeValue(a) != null && s.getAttributeValue(a).equals(pm)){ selected="selected" } >@Application.getLanguage(pm)</option>
 								              			
 								              			
 								              		}   </select>
