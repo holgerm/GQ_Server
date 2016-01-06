@@ -677,9 +677,9 @@ public class Scene extends Model {
 			if (!ap.isScene()) {
 
 				Mission am = ap.getMission();
-				
-				
-				System.out.println("searching in page "+am.getName()+" ("+am.getType().getXMLType()+")");
+
+				System.out.println("searching in page " + am.getName() + " ("
+						+ am.getType().getXMLType() + ")");
 				for (AttributeType att : am.getAllAttributes()) {
 
 					if (am.getAttribute(att) != null) {
@@ -687,35 +687,35 @@ public class Scene extends Model {
 						allsubs.add(am.getAttribute(att));
 
 					}
-					
+
 				}
 
-					// Contents
+				// Contents
 
-					for (Content ac : am.getContents()) {
-						System.out.println("searching in content "+ac.getName()+" ("+ac.getType().getXMLType()+")");
+				for (Content ac : am.getContents()) {
+					System.out.println("searching in content " + ac.getName()
+							+ " (" + ac.getType().getXMLType() + ")");
 
-						for (AttributeType att1 : ac.getAllAttributes()) {
+					for (AttributeType att1 : ac.getAllAttributes()) {
 
-							if (ac.getAttribute(att1) != null) {
-								System.out.println("Attr:"+ac.getAttribute(att1).getName()+"="+ac.getAttributeValue(att1));
+						if (ac.getAttribute(att1) != null) {
+							System.out.println("Attr:"
+									+ ac.getAttribute(att1).getName() + "="
+									+ ac.getAttributeValue(att1));
 
-
-								allsubs.add(ac.getAttribute(att1));
-
-							}
+							allsubs.add(ac.getAttribute(att1));
 
 						}
 
-						for (Content asc : ac.getSubContents()) {
+					}
 
-							for (AttributeType att2 : asc.getAllAttributes()) {
+					for (Content asc : ac.getSubContents()) {
 
-								if (asc.getAttribute(att2) != null) {
+						for (AttributeType att2 : asc.getAllAttributes()) {
 
-									allsubs.add(asc.getAttribute(att2));
+							if (asc.getAttribute(att2) != null) {
 
-								}
+								allsubs.add(asc.getAttribute(att2));
 
 							}
 
@@ -723,23 +723,23 @@ public class Scene extends Model {
 
 					}
 
-					// Rules
+				}
 
-					for (Rule ar : am.getRules()) {
+				// Rules
 
-						for (Rule asr : ar.getSubRules()) {
+				for (Rule ar : am.getRules()) {
 
-							for (Action asrac : asr.getActions()) {
+					for (Rule asr : ar.getSubRules()) {
 
-								allsubs.addAll(asrac.getAllSubAttributes());
+						for (Action asrac : asr.getActions()) {
 
-							}
+							allsubs.addAll(asrac.getAllSubAttributes());
 
 						}
 
 					}
 
-				
+				}
 
 			}
 
@@ -793,36 +793,43 @@ public class Scene extends Model {
 
 	}
 
+	/**
+	 * TODO implement a generic implementation of this method for all uses (in many different quest elements)
+	 * @param at
+	 * @return
+	 */
 	public String getAttributeValue(AttributeType at) {
 
 		String x = at.getDefaultValue();
+
+		System.out.print("ATTRIBUTE: " + at.getName());
+		System.out.print("ATTRIBUTE VALUE: " + x);
+		System.out.print("# ATTRIBUTES: " + attributes.size());
 
 		for (Attribute aa : attributes) {
 
 			if (aa.getXMLType().equals(at.getXMLType())) {
 
-				if (aa.getType().getFileType().equals("QuoteString") || aa.getType().getFileType().equals("QuoteStringTextArea")) {
+				if (aa.getType().getFileType().equals("QuoteString")
+						|| aa.getType().getFileType()
+								.equals("QuoteStringTextArea")) {
 
 					if (aa.getValue() != null) {
-						
-						 x =  aa.getValue().substring(1, aa.getValue().length() - 1);
+
+						x = aa.getValue().substring(1,
+								aa.getValue().length() - 1);
 
 						x = x.replace("<br>", "\n");
 
-					} else {
-						x = "";
-
 					}
 				} else {
-
-					x = aa.getValue();
-
+					if (aa.getValue() != null)
+						x = aa.getValue();
 				}
-
 			}
-
 		}
 
+		System.out.print("ATTRIBUTE VALUE finally: " + x);
 		return x;
 
 	}

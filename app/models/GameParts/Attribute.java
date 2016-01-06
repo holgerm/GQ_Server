@@ -374,6 +374,8 @@ public boolean hasLink(){
 		atr.setAbstractValue(abstractValue);
 		atr.setParent(this);
 		atr.save();
+		atr.setLink(linkto);
+		atr.update();
 		
 		if(subactions != null){
 		for(Action aa:subactions.getRules()){
