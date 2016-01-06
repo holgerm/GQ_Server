@@ -258,11 +258,26 @@
          @if(a.getFileType == "QuoteString"){
         
         
+           @if(a.hasPossibleValues()){
+								        	
+								        	
+											<select id = "sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)" >
+								             
+								             <option ></option>
+								              		@for(pm <- a.getPossibleValues()){
+								              			   <option  value = "@pm" @if(s.getAttributeValue(a) != null && s.getAttributeValue(a).equals(pm)){ selected="selected" } >@Application.getLanguage(pm)</option>
+								              			
+								              			
+								              		}   </select>
+								        	
+								        	
+								        } else {
+        
         
         
         <input type="text"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId,true)" onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
         
-        
+        }
         
         
         }
