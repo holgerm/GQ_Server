@@ -12,10 +12,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-@Entity
-public class Device extends Model {
 
-    @Id
+@Entity
+public class SortedHtml extends Model {
+
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
+	@Id
     private Long id;
 
 
@@ -30,7 +37,7 @@ public class Device extends Model {
    private Set<TemplateParameter> parameterlist;
 
 
-    public Device(String s, Integer i, String parameters){
+    public SortedHtml(String s, Integer i, String parameters){
         wort = s;
         zahl = i;
        computeParameters(parameters);
@@ -163,22 +170,8 @@ public class Device extends Model {
 
 
 
-    public static final Finder<Long, Device> find = new Finder<Long, Device>(
-            Long.class, Device.class);
-
-
-
-
-}
-
-
-
-
-
-
-
-    public static final Finder<Long, Device> find = new Finder<Long, Device>(
-            Long.class, Device.class);
+    public static final Finder<Long, SortedHtml> find = new Finder<Long, SortedHtml>(
+            Long.class, SortedHtml.class);
 
 
 
