@@ -387,6 +387,48 @@ public class Scene extends Model {
 		}
 
 	}
+	
+	public boolean listAttributeContainsKey(String list, String key,boolean quotes){
+		System.out.println("'"+list+"' contains"+key+"?");
+
+		
+		if(quotes){
+		list = list.substring(1, list.length()-1);
+		}
+		
+		if(list != null && list != ""){
+		
+			if(list.contains(", ")){
+	
+			String[] split = list.split(", ");
+			
+			for(String s : split){
+				
+				if(s.equals(key)){
+					
+					return true;
+					
+				}
+				
+				
+			}
+			
+			} else {
+				
+				System.out.println("single");
+				
+				if(list.contains(key)){
+					System.out.println("true");
+					return true;
+					
+				}
+				
+			}
+		}
+		
+		return false;
+		
+	}
 
 	public static final Finder<Long, Scene> find = new Finder<Long, Scene>(
 			Long.class, Scene.class);

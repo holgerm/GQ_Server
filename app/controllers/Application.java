@@ -281,6 +281,76 @@ if(	Device.find.where().eq("deviceid", deviceid).findRowCount() != 1){
 	}
 	
 	
+
+
+public boolean listAttributeContainsKey(String list, String key){
+	
+	
+	
+	
+
+	String[] split = list.split(", ");
+	
+	for(String s : split){
+		
+		if(s.equals(key)){
+			
+			return true;
+			
+		}
+		
+		
+	}
+	
+	
+	return false;
+	
+}
+
+
+
+
+
+public String removeKeyInList(String list, String key){
+	
+	
+		
+		String newList = "";
+		String[] split = list.split(", ");
+		
+		int i = 0;
+		for(String s : split){
+			i++;
+			if(!s.equals(key)){
+				newList+= s;
+			}
+			
+			if(i < split.length){
+				newList+=", ";
+			}
+			
+		}
+		return newList;
+		
+	
+	
+	
+}
+public String addKeyInList(String list, String key){
+
+	if(!listAttributeContainsKey(list,key)){
+
+	
+if(list.length() > 0){
+	list += ", ";
+}
+list += key;
+	}
+return list;
+
+}
+
+
 	
 	
 	

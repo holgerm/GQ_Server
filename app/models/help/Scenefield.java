@@ -35,6 +35,7 @@ public class Scenefield {
 		switch (type) {
 		case "QuoteString":
 		case "QuoteStringTextArea":
+		case "QuoteStringList":
 			defaultValue = "\"\"";
 			break;
 		case "String":
@@ -52,7 +53,9 @@ public class Scenefield {
 
 		if (parts.length > 3) {
 			defaultValue = parts[3];
-
+			if (type.endsWith("StringList")) {
+				defaultValue = defaultValue.replaceAll(";", ", ");
+			}
 			if (type.startsWith("QuoteString")) {
 				defaultValue = "\"" + defaultValue + "\"";
 			}

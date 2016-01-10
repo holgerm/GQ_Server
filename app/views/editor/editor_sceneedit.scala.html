@@ -237,7 +237,7 @@
 								             
 								             <option ></option>
 								              		@for(pm <- a.getPossibleValues()){
-								              			   <option  value = "@pm" @if(s.getAttributeValue(a) != null && s.getAttributeValue(a).equals(pm)){ selected="selected" } >@Application.getLanguage(pm)</option>
+								              			   <option  value = "@pm" @if(s.getAttributeValue(a).equals(pm)){ selected="selected" } >@Application.getLanguage(pm)</option>
 								              			
 								              			
 								              		}   </select>
@@ -252,7 +252,30 @@
         }
         
         }
-        
+        @if(a.getFileType == "StringList"){
+        	
+        	        <input type="hidden" value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId"  >
+        	
+        	
+          		@for(pm <- a.getPossibleValues()){
+          	        <input type="checkbox"/ @if(s.listAttributeContainsKey(s.getAttributeValue(a),pm,false)){ checked = "checked" } onchange="javascript:toggleKeyInList('sceneat@s.getId@a.getId','@pm',false); syncAttr('scene',@s.getId,@a.getId); document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';" >@pm &nbsp;
+          	}
+          	
+          	
+          	}
+          	
+          	@a.getFileType
+          	 @if(a.getFileType == "QuoteStringList"){
+        	
+        	        <input type="hidden" value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId"  >
+        	
+        	
+          		@for(pm <- a.getPossibleValues()){
+          	        <input type="checkbox"/ @if(s.listAttributeContainsKey(s.getAttributeValue(a),pm,true)){ checked = "checked" } onchange="javascript:toggleKeyInList('sceneat@s.getId@a.getId','@pm',true); syncAttr('scene',@s.getId,@a.getId); document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';" >@pm &nbsp;
+          	}
+          	
+          	
+          	}
         
         
          @if(a.getFileType == "QuoteString"){

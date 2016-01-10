@@ -462,6 +462,75 @@ document.getElementById('testOnDevice').style.display='block';
 
 
 
+function toggleKeyInList(listobject,key,quotes){
+
+
+var input = document.getElementById(listobject);
+
+
+
+if(quotes == true){
+
+input.value = input.value.substr(1, input.value.length);
+input.value = input.value.substr(0, input.value.length-1);
+
+}
+
+
+
+if(input.value.indexOf(key) > -1){
+
+
+
+
+var newList = "";
+var keys = input.value.split(", ");
+
+var arrayLength = keys.length;
+for (var i = 0; i < arrayLength; i++) {
+if(keys[i] != key){
+
+if(newList.length > 0){
+newList = newList+", ";
+}
+newList = newList+""+keys[i];
+
+}
+
+}
+
+if(quotes == true){
+
+newList ='"'+newList+'"';
+
+}
+
+input.value = newList;
+
+} else {
+
+
+
+if(input.value.length > 0){
+
+input.value = input.value+", ";
+}
+input.value = input.value+""+key;
+
+if(quotes == true){
+
+input.value = '"'+input.value+'"';
+
+}
+
+
+}
+
+
+
+}
+
+
 function addDevice(){
 
 
@@ -2429,7 +2498,7 @@ fieldparent.value = field.value;
 }
 }
 
-} else if(field.type == 'text' || field.type == 'color'){
+} else if(field.type == 'text' || field.type == 'color' || field.type == 'hidden'){
 
 
 if(field.value != ""){value = field.value; field.setAttribute("placeholder",field.value); field.setAttribute("value",field.value); }
