@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# TODO: check if env var $GQ_SERVER_PLAY_BASE_DIR is set
-
 echo "Starting GeoQuest Server ..."
 
 #TODO: Check that Java 1.7 is available and set it active.
@@ -14,11 +12,11 @@ export GQ_EDITOR_MODE_INSECURE
 
 # check wether $GQ_SERVER_PLAY_BASE_DIR is set:
 if [ -z ${GQ_SERVER_PLAY_BASE_DIR+valueIfSet} ]; then
-	echo "ERROR: This script assume that you have set the environment variable GQ_SERVER_PLAY_BASE_DIR pointing to the application directory."
+	echo "ERROR: This script assumes that you have set the environment variable GQ_SERVER_PLAY_BASE_DIR pointing to the application directory."
 	echo "  exiting."
 	exit -1
 else
-	echo "  your geoquest play project home is $GQ_SERVER_PLAY_BASE_DIR"
+	echo " your geoquest play project home is $GQ_SERVER_PLAY_BASE_DIR"
 fi
 
 pushd $GQ_SERVER_PLAY_BASE_DIR > /dev/null
@@ -29,7 +27,7 @@ if [ ! -f $APP_CONF ]; then
 	echo "ERROR: application config file $APP_CONF not found. Exiting ..."
 	exit -1
 else
-	echo "  application config file is: $APP_CONF "
+	echo " application config file is: $APP_CONF "
 fi
 
 
@@ -39,18 +37,27 @@ if [ -f "RUNNING_PID" ]; then
 	kill `cat RUNNING_PID`
 fi 
 
+#extract additional parameter:
+# TODO allow multiple additional parameters
+if [ $# -gt 1 ]; then
+	ADDITIONAL_PARAM=$2 
+	echo "  using additonal parameter: $ADDITIONAL_PARAM"
+else
+	ADDITIONAL_PARAM=""
+	echo "  no addtitonal parameter given."
+fi
+
 # DO it:
 if [ $# -gt 0 ] && [ $1 = "run" ]; then
 	echo "  running play ..."
-	play -Dconfig.file=$APP_CONF run
+	play -Dconfig.file=$APP_CONF $ADDITIONAL_PARAM run
 elif [ $# -gt 0 ] && [ $1 = "debug" ]; then
 	echo "  running play in debug mode ..."
-	play debug -Dconfig.file=$APP_CONF run
+	play debug -Dconfig.file=$APP_CONF $ADDITIONAL_PARAM run
 else
 	echo "  starting play ..."
-	play -Dconfig.file=$APP_CONF start
+	play -Dconfig.file=$APP_CONF $ADDITIONAL_PARAM start
 fi
-
 
 # Afterwards:
 echo "back from play."
