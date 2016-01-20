@@ -128,10 +128,6 @@ public class TranslationFactory {
 		addTranslation("CSS (wird in Header eingefügt):","CSS (is added to <head>)");
 		
 		
-		addTranslation("Impressum:","Imprint:");
-		addTranslation("AGBs:","Terms and Conditions:");
-		addTranslation("Datenschutz-Vereinbarung:","Privacy agreement:");
-		
 		
 		// GAME RIGHTS
 		
@@ -510,7 +506,7 @@ public class TranslationFactory {
 		addTranslation("inaktiv","inactive");
 		addTranslation("sichtbar","visible");
 		addTranslation("unsichtbar","invisible");
-		addTranslation("oben mittig","upper center");
+		
 
 		// Datatables - please keep "_MENU_" etc unchanged in translation
 		

@@ -16,13 +16,7 @@ import java.util.Set;
 @Entity
 public class SortedHtml extends Model {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
-
-	@Id
+    @Id
     private Long id;
 
 
