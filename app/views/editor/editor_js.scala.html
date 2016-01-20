@@ -1359,7 +1359,12 @@ xmlhttp.send();
 
 }
 
-function newActionInAttribute(type,ob,atr,z,rt,m,at){
+function newActionInAttribute(type,ob,atr,z,rt,m,at) { 
+
+// type: type of the object containing the attribute
+// ob: ID of the object containing the attribute atr
+// atr: id of the attribute
+// rt: rule type for this action 
 
 
  var at = at ||  document.getElementById('actiontype_'+type+''+ob+'_atr'+atr).value;
@@ -1396,7 +1401,7 @@ $.ajax({
   		
   		
 
-if(m != ''){
+if(m == ''){
   		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Action/"+xmlhttp.responseText+"/allinfo/"+rt+"/"+z;
   		
   		} else {
