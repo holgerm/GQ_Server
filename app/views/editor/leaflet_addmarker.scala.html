@@ -30,6 +30,7 @@ popups[@hs.getId()].offset = new L.Point(@hs.getMarkerAnchorHeight(g),@hs.getMar
 updatePopupContent(@hs.getId());
 
 // add a marker in the given location, attach some popup content to it and open the popup
+	hotspotIDs.push(@hs.getId);
 	marker[@hs.getId] =  L.marker([@hs.getLatitude,@hs.getLongitude], {draggable: true,icon: Icon@hs.getId}).addTo(map)
    .on('dragend', function(event){
     var marker = event.target;

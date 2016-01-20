@@ -8,6 +8,8 @@ var map;
  var popups = new Array();
   var circle = new Array();
    var marker = new Array();
+   // collect used IDs of bubbled markers :
+   var hotspotIDs = new Array();
 
  
 
@@ -40,14 +42,10 @@ map.locate({setView: true, maxZoom: 16});
 map.on('popupclose', function(e){
 
 
-
-
 counter = 0;
-@for(hs <- g.getAllHotspots){
 
-
-updatePopupContent(@hs.getId());
-
+for(var hotspotID in hotspotIDs) {
+	updatePopupContent(hotspotIDs[hotspotID]);
 }
 
 
