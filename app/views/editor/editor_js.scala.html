@@ -2111,7 +2111,9 @@ xmlhttp.onreadystatechange=function()
   if (xmlhttp.readyState==4 && xmlhttp.status==200)
     {
     
-   
+   		if (type == "hotspot") {
+   		  		updateElementsByClass("hotspotselector");
+   		}
     
     
       if(document.getElementById(statusdiv).tagName == "IMG"){ 
@@ -3277,17 +3279,50 @@ var noop = function(){}; // do nothing.
    callback = callback || noop;
   
    
-   
+   console.log("updateElementsByClass(" + which + ")");
    if(which == "missionselector"){
 	   
 	    var c = getElementsByClassName(which);
+	    
 	    c.forEach(function(entry) {
+	    	var value = entry.options[entry.selectedIndex].value;
 	    	
-	    	
-	    	var value = entry.options[entry.selectedIndex].value
+	    	if (value == null || value == "") { 
+	    		value = 0;
+	    	}
 	    	
 		 var url ="@Global.SERVER_URL_2/editor/@g.getId()/fragments/missionselector/"+value;
 		   console.log("updating missionselectors: "+url);
+
+		  $.ajax({
+			  url: url,
+			  dataType: 'html',
+			  success: function(data3){
+			  				    	   
+				    	entry.innerHTML = data3;
+
+			}
+			   
+			});
+	   
+	    });
+	   
+   } else    
+   if(which == "hotspotselector"){
+	   
+	    var c = getElementsByClassName(which);
+	    
+	    console.log("found hotspot selectors: " + c.length);
+	    
+	    c.forEach(function(entry) {
+	    	var value = entry.options[entry.selectedIndex].value;
+	    	
+	    	if (value == null || value == "") { 
+	    		value = 0;
+	    	}
+	    	
+		 var url ="@Global.SERVER_URL_2/editor/@g.getId()/fragments/hotspotselector/"+value;
+		   console.log("updating hotspotselectors: "+url);
 
 		  $.ajax({
 			  url: url,
@@ -3616,7 +3651,7 @@ xmlhttp.onreadystatechange=function(){
   	{
   		
   		console.log("got hotspot response");
-  		
+  		updateElementsByClass("hotspotselector");
   		
   		var newhid = xmlhttp.responseText;
   		
@@ -4645,7 +4680,7 @@ xmlhttp.onreadystatechange=function()
   		 console.log(xmlhttp.responseText);
   		window.location.reload(false); 
   		
-  		
+  		updateElementsByClass("hotspotselector");
   		/*
 		 * SIDEMENU
 		 */ 

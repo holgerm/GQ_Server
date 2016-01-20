@@ -297,6 +297,7 @@ GET    /editor/:gid/fragments/MenuItem/:pid/insidemenu                        co
 GET 	/editor/:gid/fragments/Attribute/Preview/:attr							controllers.Editor.getFilePreview(gid:Long,attr:Long)
 
 GET    /editor/:gid/fragments/Hotspot/:hid/popupcontent                       controllers.Editor.getHotspotPopupContent(gid: Long, hid: Long)
+GET    /editor/:gid/fragments/hotspotselector/:selectedValue                  controllers.Editor.getHotspotSelectorForEditor(gid: Long, selectedValue : String)
 
 
 GET    /editor/:gid/fragments/Mission/:mid/Content/:cid/newcontentincontent   controllers.Editor.getNewContentInContentForEditor(gid: Long, cid: Long, mid:Long)

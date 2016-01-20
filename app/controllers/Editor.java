@@ -687,6 +687,34 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
+	public static Result getHotspotSelectorForEditor(Long gid, String selectedValue) {
+
+		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+
+			return badRequest(views.html.norights
+					.render("Das Spiel existiert nicht"));
+
+		} else {
+			
+
+			if (Global.securityGuard.hasWriteRightsOnGame(
+					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+
+				return badRequest(views.html.norights
+						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+			} else {
+
+			return ok(views.html.editor.editor_hotspotselector.render(
+					Game.find.byId(gid), selectedValue));
+			
+			}
+
+		}
+
+	}
+
+	@Restrict(@Group(Application.USER_ROLE))
 	public static Result getContentListItemForEditor(Long gid, Long cid,
 			Long mid) {
 

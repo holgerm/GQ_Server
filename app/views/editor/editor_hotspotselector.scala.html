@@ -1,0 +1,8 @@
+@(g:Game,sel:String)
+
+@import models.GameParts._
+
+             <option ></option>
+              		@for(curHotspot <- g.getAllHotspots()){
+              			   <option  value = "@curHotspot.getId()" @if(sel.equals(String.valueOf(curHotspot.getId()))){ selected="selected" } >@curHotspot.getName()</option>
+              		} 
