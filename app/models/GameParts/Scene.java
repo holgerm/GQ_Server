@@ -387,47 +387,46 @@ public class Scene extends Model {
 		}
 
 	}
-	
-	public boolean listAttributeContainsKey(String list, String key,boolean quotes){
-		System.out.println("'"+list+"' contains"+key+"?");
 
-		
-		if(quotes){
-		list = list.substring(1, list.length()-1);
+	public boolean listAttributeContainsKey(String list, String key,
+			boolean quotes) {
+		System.out.println("'" + list + "' contains" + key + "?");
+
+		if (quotes) {
+			list = list.substring(1, list.length() - 1);
 		}
-		
-		if(list != null && list != ""){
-		
-			if(list.contains(", ")){
-	
-			String[] split = list.split(", ");
-			
-			for(String s : split){
-				
-				if(s.equals(key)){
-					
-					return true;
-					
+
+		if (list != null && list != "") {
+
+			if (list.contains(", ")) {
+
+				String[] split = list.split(", ");
+
+				for (String s : split) {
+
+					if (s.equals(key)) {
+
+						return true;
+
+					}
+
 				}
-				
-				
-			}
-			
+
 			} else {
-				
+
 				System.out.println("single");
-				
-				if(list.contains(key)){
+
+				if (list.contains(key)) {
 					System.out.println("true");
 					return true;
-					
+
 				}
-				
+
 			}
 		}
-		
+
 		return false;
-		
+
 	}
 
 	public static final Finder<Long, Scene> find = new Finder<Long, Scene>(
@@ -836,7 +835,9 @@ public class Scene extends Model {
 	}
 
 	/**
-	 * TODO implement a generic implementation of this method for all uses (in many different quest elements)
+	 * TODO implement a generic implementation of this method for all uses (in
+	 * many different quest elements)
+	 * 
 	 * @param at
 	 * @return
 	 */
@@ -849,24 +850,21 @@ public class Scene extends Model {
 		System.out.print("# ATTRIBUTES: " + attributes.size());
 
 		for (Attribute aa : attributes) {
+			if (aa.getValue() == null)
+				continue;
 
 			if (aa.getXMLType().equals(at.getXMLType())) {
+
+				x = aa.getValue();
 
 				if (aa.getType().getFileType().equals("QuoteString")
 						|| aa.getType().getFileType()
 								.equals("QuoteStringTextArea")) {
-
-					if (aa.getValue() != null) {
-
-						x = aa.getValue().substring(1,
-								aa.getValue().length() - 1);
-
+					if (x.length() >= 2 && x.charAt(0) == ('"')
+							&& x.charAt(x.length() - 1) == '"') {
+						x = x.substring(1, x.length() - 1);
 						x = x.replace("<br>", "\n");
-
 					}
-				} else {
-					if (aa.getValue() != null)
-						x = aa.getValue();
 				}
 			}
 		}
