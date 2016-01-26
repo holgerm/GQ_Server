@@ -187,20 +187,11 @@ public class Signup extends Controller {
 				flash(Application.FLASH_MESSAGE_KEY,
 						Messages.get("playauthenticate.reset_password.message.no_password_account"));
 			}
-			final boolean login = MyUsernamePasswordAuthProvider.getProvider()
-					.isLoginAfterPasswordReset();
-			if (login) {
-				// automatically log in
-				flash(Application.FLASH_MESSAGE_KEY,
-						Messages.get("playauthenticate.reset_password.message.success.auto_login"));
-
-				return PlayAuthenticate.loginAndRedirect(ctx(),
-						new MyLoginUsernamePasswordAuthUser(u.email));
-			} else {
+		
 				// send the user to the login page
 				flash(Application.FLASH_MESSAGE_KEY,
 						Messages.get("playauthenticate.reset_password.message.success.manual_login"));
-			}
+			
 			return redirect(routes.Application.login(pid));
 		}
 	}
