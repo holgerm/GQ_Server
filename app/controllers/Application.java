@@ -33,9 +33,6 @@ import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.providers.password.UsernamePasswordAuthProvider;
 import com.feth.play.module.pa.user.AuthUser;
 
-
-
-
 public class Application extends Controller {
 
 	public static final String FLASH_MESSAGE_KEY = "message";
@@ -44,11 +41,6 @@ public class Application extends Controller {
 	public static final String ADMIN_ROLE = "admin";
 	public static final String UNVERIFIED_ROLE = "unverified";
 
-	
-	
-	
-	
-	
 	public static Result index() {
 
 		session("currentportal", Global.defaultportal.getId().toString());
@@ -81,14 +73,13 @@ public class Application extends Controller {
 		return ok(views.html.string_getuserrole.render());
 
 	}
-	
-	
+
 	public static Result getDatatables() {
 
 		return ok(views.html.dt_geoquest.render());
 
 	}
-	
+
 	public static Result getDatatablesJquery() {
 
 		return ok(views.html.dt_Jquery.render());
@@ -105,255 +96,180 @@ public class Application extends Controller {
 		return i;
 
 	}
-	
-	
-	
 
 	public static Result createDevice(String name, String deviceid) {
 
-		
-		
-		
+		if (Device.find.where().eq("deviceid", deviceid).findRowCount() != 1) {
 
-if(	Device.find.where().eq("deviceid", deviceid).findRowCount() != 1){
-		
-	Device d = new Device(name, deviceid);
-	d.save();
-String s =	d.generateCode();
-	d.update();
-	return ok(s);
-		
-		
-	} else {
-		
-		Device d = Device.find.where().eq("deviceid",deviceid).findUnique();
-		
-		
-		return ok(d.code);
-	}
+			Device d = new Device(name, deviceid);
+			d.save();
+			String s = d.generateCode();
+			d.update();
+			return ok(s);
+
+		} else {
+
+			Device d = Device.find.where().eq("deviceid", deviceid)
+					.findUnique();
+
+			return ok(d.code);
+		}
 
 	}
-	
-	
-	
-	
-	public static Result addDeviceByCode(Long uid, String code){
-		
-		
-		
-		
+
+	public static Result addDeviceByCode(Long uid, String code) {
+
 		if (User.find.where().eq("id", uid).findRowCount() == 1) {
 
-			User u2 =User.find.byId(uid);
-		
-		
-	if(	Device.find.where().eq("code", code).findRowCount() != 1){
-		
-		
-		return ok("Code not found");
-		
-	} else {
-		
-		Device d = Device.find.where().eq("code",code).findUnique();
-		
-	
-		
-		if(!u2.paireddevices.contains(d)){
-		u2.paireddevices.add(d);
-		System.out.println(u2.paireddevices.size());
-		u2.update();
-	
-		
-		return ok(d.name);
-		} else {
-			
-			return ok("Device is already in list");
+			User u2 = User.find.byId(uid);
 
-			
-		}
-}	
-		
+			if (Device.find.where().eq("code", code).findRowCount() != 1) {
+
+				return ok("Code not found");
+
+			} else {
+
+				Device d = Device.find.where().eq("code", code).findUnique();
+
+				if (!u2.paireddevices.contains(d)) {
+					u2.paireddevices.add(d);
+					System.out.println(u2.paireddevices.size());
+					u2.update();
+
+					return ok(d.name);
+				} else {
+
+					return ok("Device is already in list");
+
+				}
+			}
+
 		} else {
 			return ok("User not found");
 
-			
-			
 		}
-		
+
 	}
-	
-	
-	
-	public static Result pushQuestToDevice(Long did, Long gid){
-		
-		
-		if(	Device.find.where().eq("id", did).findRowCount() != 1){
-			
-			
+
+	public static Result pushQuestToDevice(Long did, Long gid) {
+
+		if (Device.find.where().eq("id", did).findRowCount() != 1) {
+
 			return ok("DEVICE NOT FOUND");
-			
+
 		} else {
-			
-			Device d = Device.find.where().eq("id",did).findUnique();
-			
-			
-			
+
+			Device d = Device.find.where().eq("id", did).findUnique();
+
 			if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
 				return badRequest(views.html.norights
 						.render("Das Spiel existiert nicht"));
 
 			} else {
-				
 
 				if (Global.securityGuard.hasWriteRightsOnGame(
-						Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+						Application.getLocalUser(session()),
+						Game.find.byId(gid)) == false) {
 
 					return badRequest(views.html.norights
 							.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 				} else {
-				
 
-				
-				Game g = Game.find.byId(gid);
-				String s = g.createTestXML();
-				d.quest = s;
-				d.questpush = gid;
-				d.update();
-				return ok("ok");
-				
-				
+					Game g = Game.find.byId(gid);
+					String s = g.createTestXML();
+					d.quest = s;
+					d.questpush = gid;
+					d.update();
+					return ok("ok");
+
 				}
 			}
-			
-		
-			
-			
-	}
-		
-		
-		
-	}
-	
-	
-	
-public static Result getQuestPushes(String deviceid){
-		
-		
-if(	Device.find.where().eq("deviceid", deviceid).findRowCount() != 1){
-		
-		
-		return ok("BAD REQUEST");
-		
-	} else {
-		
-		Device d = Device.find.where().eq("deviceid",deviceid).findUnique();
-		
-	
-		if(d.questpush == null){
-			return ok("");
 
-		} else 
-		if(d.questpush== 0L){
-		
-		return ok("");
+		}
+
+	}
+
+	public static Result getQuestPushes(String deviceid) {
+
+		if (Device.find.where().eq("deviceid", deviceid).findRowCount() != 1) {
+
+			return ok("BAD REQUEST");
+
 		} else {
-			
-			
-			
-		
-			
-			
-			Long l = d.questpush;
-			
-			
-			
-			return ok(""+l);
-		
 
-			
+			Device d = Device.find.where().eq("deviceid", deviceid)
+					.findUnique();
+
+			if (d.questpush == null) {
+				return ok("");
+
+			} else if (d.questpush == 0L) {
+
+				return ok("");
+			} else {
+
+				Long l = d.questpush;
+
+				return ok("" + l);
+
+			}
 		}
-}	
-		
-		
-		
+
 	}
-	
-	
 
+	public boolean listAttributeContainsKey(String list, String key) {
 
-public boolean listAttributeContainsKey(String list, String key){
-	
-	
-	
-	
+		String[] split = list.split(", ");
 
-	String[] split = list.split(", ");
-	
-	for(String s : split){
-		
-		if(s.equals(key)){
-			
-			return true;
-			
+		for (String s : split) {
+
+			if (s.equals(key)) {
+
+				return true;
+
+			}
+
 		}
-		
-		
+
+		return false;
+
 	}
-	
-	
-	return false;
-	
-}
 
+	public String removeKeyInList(String list, String key) {
 
-
-
-
-public String removeKeyInList(String list, String key){
-	
-	
-		
 		String newList = "";
 		String[] split = list.split(", ");
-		
+
 		int i = 0;
-		for(String s : split){
+		for (String s : split) {
 			i++;
-			if(!s.equals(key)){
-				newList+= s;
+			if (!s.equals(key)) {
+				newList += s;
 			}
-			
-			if(i < split.length){
-				newList+=", ";
+
+			if (i < split.length) {
+				newList += ", ";
 			}
-			
+
 		}
 		return newList;
-		
-	
-	
-	
-}
-public String addKeyInList(String list, String key){
 
-	if(!listAttributeContainsKey(list,key)){
-
-	
-if(list.length() > 0){
-	list += ", ";
-}
-list += key;
 	}
-return list;
 
-}
+	public String addKeyInList(String list, String key) {
 
+		if (!listAttributeContainsKey(list, key)) {
 
-	
-	
-	
+			if (list.length() > 0) {
+				list += ", ";
+			}
+			list += key;
+		}
+		return list;
+
+	}
 
 	public static Result portalfourofour(Long pid, String path) {
 
@@ -513,19 +429,11 @@ return list;
 		final User localUser = User.findByAuthUserIdentity(currentAuthUser);
 		return localUser;
 	}
-	
-	
-	
+
 	public static User getLocalUser() {
 
 		return getLocalUser(session());
 	}
-	
-	
-	
-	
-	
-
 
 	public static ProviderPortal getCurrentPortal(final Session session) {
 
@@ -551,14 +459,14 @@ return list;
 		}
 
 	}
-	
-	
-	
 
-
-	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result profile(Long pid) {
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
+
 		final User localUser = getLocalUser(session());
 		return ok(profile.render(localUser));
 	}
@@ -579,122 +487,89 @@ return list;
 
 		}
 	}
-	
-	
-	
-	
+
 	public static Result setLanguage(String language) {
-	
-		
-		
+
 		session("geoquest_language", language);
 		Controller.changeLang(language);
 		return ok(language);
 	}
-	
-	
-	
-	
-	 public static String getLanguageCode(){
-		
-		
-		
 
-    	
-    	String language = session("geoquest_language");
+	public static String getLanguageCode() {
+
+		String language = session("geoquest_language");
 
 		if (language == null) {
-			
-			
-			if(getLocalPortal().getContentHtmlParameter("general.defaultlanguage") != null){
-				
-				language = getLocalPortal().getContentHtmlParameter("general.defaultlanguage");
-				
+
+			if (getLocalPortal().getContentHtmlParameter(
+					"general.defaultlanguage") != null) {
+
+				language = getLocalPortal().getContentHtmlParameter(
+						"general.defaultlanguage");
+
 			} else {
-				
-				//Lang lang = Lang.preferred();
+
+				// Lang lang = Lang.preferred();
 				language = "de";
 				Lang lang = Lang.preferred(request().acceptLanguages());
 				language = lang.code();
-				
+
 			}
 		}
-		
-		
+
 		return language;
-		
+
 	}
-	
-	public static String getLanguage(String code){
-		
-		
-		
+
+	public static String getLanguage(String code) {
+
 		String translation = code;
-    	
-    	String language = session("geoquest_language");
+
+		String language = session("geoquest_language");
 
 		if (language == null) {
-			
-			
-			if(getLocalPortal().getContentHtmlParameter("general.defaultlanguage") != null){
-				
-				language = getLocalPortal().getContentHtmlParameter("general.defaultlanguage");
-				
+
+			if (getLocalPortal().getContentHtmlParameter(
+					"general.defaultlanguage") != null) {
+
+				language = getLocalPortal().getContentHtmlParameter(
+						"general.defaultlanguage");
+
 			} else {
-				
-				//Lang lang = Lang.preferred();
+
+				// Lang lang = Lang.preferred();
 				language = "de";
 				Lang lang = Lang.preferred(request().acceptLanguages());
 				language = lang.code();
-				
+
 			}
 		}
-    	
-		
-		if(!language.equals("de")){
-		    			
-			
-			
-			if(language.equals("en")){
-				
-				if(Global.en_Translation.containsKey(code)){
-					
+
+		if (!language.equals("de")) {
+
+			if (language.equals("en")) {
+
+				if (Global.en_Translation.containsKey(code)) {
+
 					translation = Global.en_Translation.get(code);
-					
+
 				}
-				
-				
+
 			}
-			
-			
-			code = language+"_"+code;
 
+			code = language + "_" + code;
 
 		}
-		
 
-		
-		if(getLocalPortal().getLanguageParameter(code) != null){
-			
+		if (getLocalPortal().getLanguageParameter(code) != null) {
+
 			translation = getLocalPortal().getLanguageParameter(code);
-			
-		}
-		
-		
-		
-		
-		return translation;
-		
-		
-		
-		
-	}
-	
-	
-	
-	
-	
 
+		}
+
+		return translation;
+
+	}
 
 	public static Result loginToPortalFromCache() {
 		return ok(login.render(MyUsernamePasswordAuthProvider.LOGIN_FORM));
@@ -759,7 +634,7 @@ return list;
 			// signup
 
 			return UsernamePasswordAuthProvider.handleSignup(ctx());
-			
+
 		}
 
 	}

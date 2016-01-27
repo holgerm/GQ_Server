@@ -77,11 +77,8 @@ public class Portal extends Controller {
 	public static final String ADMIN_ROLE = "admin";
 	public static final String UNVERIFIED_ROLE = "unverified";
 
-	
-	
 	public static long lastdate;
 
-	
 	/*
 	 * RESULT PAGES
 	 * 
@@ -93,21 +90,22 @@ public class Portal extends Controller {
 		session("currentportal", pid.toString());
 
 		Boolean oeffentlichespiele = true;
-		
-		
-		
-		if(Application.getLocalPortal().getContentHtmlParameter("general.includesites.Oeffentliche_Spiele") != null &&
-		   Application.getLocalPortal().getContentHtmlParameter("general.includesites.Oeffentliche_Spiele").equals("false")){
-				oeffentlichespiele = false;
+
+		if (Application.getLocalPortal().getContentHtmlParameter(
+				"general.includesites.Oeffentliche_Spiele") != null
+				&& Application
+						.getLocalPortal()
+						.getContentHtmlParameter(
+								"general.includesites.Oeffentliche_Spiele")
+						.equals("false")) {
+			oeffentlichespiele = false;
 		}
-		
-		
+
 		if (pid == 1L) {
 
 			return redirect("https://quest-mill.com/geoquest/private.php");
 
-		} else if (pid == 61L
-				|| !oeffentlichespiele) {
+		} else if (pid == 61L || !oeffentlichespiele) {
 
 			User u = getLocalUser(session());
 
@@ -175,14 +173,15 @@ public class Portal extends Controller {
 	 * RESULTS
 	 */
 
-	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result myGamesList(Long pid) {
 
-		
 		lastdate = System.currentTimeMillis();
-		
-		
+
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		ProviderPortal p = Application.getLocalPortal();
 
@@ -191,7 +190,7 @@ public class Portal extends Controller {
 			p = ProviderPortal.find.byId(pid);
 
 		}
-		
+
 		sayTime("Mygames #1");
 
 		User u = getLocalUser(session());
@@ -204,7 +203,6 @@ public class Portal extends Controller {
 		} else {
 			sayTime("Mygames #2");
 
-			
 			Set<GameRights> s = u.getGamesOnPortal(p);
 			sayTime("Mygames #3");
 
@@ -212,19 +210,16 @@ public class Portal extends Controller {
 
 		}
 	}
-	
-	
-	
-	
 
-	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result userGamesList(Long uid, Long pid) {
 
-		
 		lastdate = System.currentTimeMillis();
-		
-		
+
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		ProviderPortal p = Application.getLocalPortal();
 
@@ -233,78 +228,57 @@ public class Portal extends Controller {
 			p = ProviderPortal.find.byId(pid);
 
 		}
-		
+
 		sayTime("Mygames #1");
 
 		User u = getLocalUser(session());
 
 		if (Global.securityGuard.hasAdminRightsOnPortal(u) == false) {
 
-			
-			
 			if (User.find.where().eq("id", uid).findRowCount() == 1) {
 
-			User u2 =User.find.byId(uid);
+				User u2 = User.find.byId(uid);
 
-			
-			
-			
-			Set<GameRights> s = u2.getPublicGamesOnPortal(p);
-			sayTime("Mygames #3");
+				Set<GameRights> s = u2.getPublicGamesOnPortal(p);
+				sayTime("Mygames #3");
 
-			return ok(views.html.portal.user_games.render(u2,s));
+				return ok(views.html.portal.user_games.render(u2, s));
 			} else {
-				
+
 				return badRequest(views.html.norights
 						.render("Der User existiert nicht."));
-			
+
 			}
 
 		} else {
 			sayTime("Mygames #2");
 
-			
-
 			if (User.find.where().eq("id", uid).findRowCount() == 1) {
 
-				User u2 =User.find.byId(uid);
+				User u2 = User.find.byId(uid);
 
-				
-				
-				
 				Set<GameRights> s = u2.getGamesOnPortal(p);
 				sayTime("Mygames #3");
 
-				return ok(views.html.portal.user_games.render(u2,s));
-				
+				return ok(views.html.portal.user_games.render(u2, s));
+
 			} else {
-				
+
 				return badRequest(views.html.norights
 						.render("Der User existiert nicht."));
 
-				
-				
 			}
-			
-	
 
 		}
 	}
-	
-	
-	
-	public static void sayTime(String prefix){
-		
-		
-		
-		
-		System.out.println(prefix+": "+(System.currentTimeMillis()-lastdate));
-		
-		
-		
+
+	public static void sayTime(String prefix) {
+
+		System.out.println(prefix + ": "
+				+ (System.currentTimeMillis() - lastdate));
+
 		lastdate = System.currentTimeMillis();
-		
-	
+
 	}
 
 	public static Result myGamesListOnCurrentPortal() {
@@ -315,21 +289,15 @@ public class Portal extends Controller {
 		return redirect(url);
 
 	}
-	
-	
-	
-	
+
 	public static Result paymentsuccessful() {
-		
-	
+
 		return ok(views.html.portal.payment_successful.render());
 
 	}
-	
-	
+
 	public static Result paymentfailed() {
-		
-		
+
 		return ok(views.html.portal.payment_failed.render());
 
 	}
@@ -349,10 +317,13 @@ public class Portal extends Controller {
 
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result myGamesList61() {
 		Long pid = Long.valueOf(61);
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		ProviderPortal p = Application.getLocalPortal();
 
@@ -370,10 +341,13 @@ public class Portal extends Controller {
 		}
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result uploadGame(Long pid) {
 
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		if (Global.securityGuard
 				.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
@@ -388,10 +362,13 @@ public class Portal extends Controller {
 		}
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result addGameTypeFromGame(Long pid, Long gid) {
 
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		if (Global.securityGuard
 				.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
@@ -416,10 +393,13 @@ public class Portal extends Controller {
 		}
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result editGame(Long pid, Long game) {
 
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		if (Game.find.where().eq("id", game).findRowCount() != 1) {
 
@@ -454,17 +434,19 @@ public class Portal extends Controller {
 
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
 	public static Result getConnectionTest() {
 
 		return ok(views.html.connection.render());
 
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result gameRightsonPortal(Long pid, Long gid) {
 
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
@@ -535,69 +517,60 @@ public class Portal extends Controller {
 
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result userSearchForm(Long pid) {
 
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
-	
-			ProviderPortal p = getLocalPortal();
-			
-				Set<User> leer = new HashSet<User>();
+		ProviderPortal p = getLocalPortal();
 
-				final Form<UserSearch> filledForm = USER_SEARCH_FORM
-						.bindFromRequest();
-				UserSearch form = filledForm.get();
+		Set<User> leer = new HashSet<User>();
 
-				if (!form.name.isEmpty()) {
+		final Form<UserSearch> filledForm = USER_SEARCH_FORM.bindFromRequest();
+		UserSearch form = filledForm.get();
 
-					leer.addAll(p.searchForUserByName(form.name));
+		if (!form.name.isEmpty()) {
 
-				}
+			leer.addAll(p.searchForUserByName(form.name));
 
-				if (!form.email.isEmpty()) {
+		}
 
-					leer.addAll(p.searchForUserByEmail(form.email));
+		if (!form.email.isEmpty()) {
 
-				}
+			leer.addAll(p.searchForUserByEmail(form.email));
 
-			
-				return ok(views.html.portal.user_search.render(leer, filledForm));
+		}
 
-			
+		return ok(views.html.portal.user_search.render(leer, filledForm));
 
-	
 	}
-	
-	
-	@Restrict(@Group(Application.USER_ROLE))
+
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result userSearch(Long pid) {
 
-		
-	
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
-	
-			ProviderPortal p = getLocalPortal();
-			
-				Set<User> leer = new HashSet<User>();
+		ProviderPortal p = getLocalPortal();
 
-			
-				return ok(views.html.portal.user_search.render(leer, USER_SEARCH_FORM));
+		Set<User> leer = new HashSet<User>();
 
-			
+		return ok(views.html.portal.user_search.render(leer, USER_SEARCH_FORM));
 
-	
 	}
-	
-	
-	
-	
-	
-	@Restrict(@Group(Application.USER_ROLE))
+
+//	@Restrict(@Group(Application.USER_ROLE))
 	public static Result gameRightsonPortalUserSearch(Long pid, Long gid) {
 
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
@@ -652,10 +625,13 @@ public class Portal extends Controller {
 	 * These are used to compute the Post objects of Forms.
 	 */
 
-	@Restrict(@Group(Application.USER_ROLE))
+//	@Restrict(@Group(Application.USER_ROLE))
 	public static Result setGameVisibility(Long pid, Long gid, String value) {
 
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		ProviderPortal p = getLocalPortal();
 
@@ -686,54 +662,48 @@ public class Portal extends Controller {
 		return ok(help);
 
 	}
-	
-	
-	
-	
-	
-	@Restrict(@Group(Application.USER_ROLE))
+
+//	@Restrict(@Group(Application.USER_ROLE))
 	public static Result resetGameVisibility(Long pid, Long gid) {
 
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
-		
-		
 		ProviderPortal p = getLocalPortal();
 
-		
-		
-		
 		String help = "Error!";
 
-		
-		if(Application.getLocalPortal().getUser(Application.getLocalUser()).getRights().equals("admin")){
-				
-				if (Game.find.where().eq("id", gid).findRowCount() != 1) {
-		
-					help = "Game " + gid + "not found";
-				} else {
-		
-					Game c = Game.find.byId(gid);
-		
-					
-		
-						p.getGame(c).setVisibility(false);
-		
-					
-					p.getGame(c).update();
-		
-					help = "synced";
-		
-				}
+		if (Application.getLocalPortal().getUser(Application.getLocalUser())
+				.getRights().equals("admin")) {
+
+			if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+
+				help = "Game " + gid + "not found";
+			} else {
+
+				Game c = Game.find.byId(gid);
+
+				p.getGame(c).setVisibility(false);
+
+				p.getGame(c).update();
+
+				help = "synced";
+
+			}
 		}
 		return ok(help);
 
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+//	@Restrict(@Group(Application.USER_ROLE))
 	public static Result doDeleteGame(Long pid, Long game) {
 
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		if (Game.find.where().eq("id", game).findRowCount() != 1) {
 
@@ -782,9 +752,13 @@ public class Portal extends Controller {
 
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+//	@Restrict(@Group(Application.USER_ROLE))
 	public static Result doUploadGame(Long pid) {
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
+
 		Game g;
 		if (Global.securityGuard
 				.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
@@ -957,7 +931,6 @@ public class Portal extends Controller {
 					} else {
 						return redirect(routes.Editor.getEditor(g.getId()));
 
-
 					}
 
 				} else {
@@ -972,77 +945,62 @@ public class Portal extends Controller {
 
 	}
 
-	
-	
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result givePremiumAccess(Long uid, int months) {
 
-		
-		if(!Application.getLocalUser().isAdminOnPortalOne()){
-		
+		if (!Application.getLocalUser().isAdminOnPortalOne()) {
 
 			return badRequest(views.html.norights
 					.render("Das kann nur ein Admin tun."));
-			
-		} else {
-		
-		if (User.find.where().eq("id", uid).findRowCount() != 1) {
-
-			return badRequest(views.html.norights
-					.render("Der User existiert nicht."));
 
 		} else {
-			
-			
-			
 
-			User usertoedit = User.find.byId(uid);
-			
-			
-			
-			if(usertoedit.getCurrentAccess() != null){
-				
-				usertoedit.getCurrentAccess().addMonths(months);
-				usertoedit.getCurrentAccess().update();
+			if (User.find.where().eq("id", uid).findRowCount() != 1) {
+
+				return badRequest(views.html.norights
+						.render("Der User existiert nicht."));
+
 			} else {
-			
-			String pn = "All Access";
-			Date then = new Date();
-			
-			
-			
-			 Calendar cal = Calendar.getInstance();
-		        cal.setTime(then);
-		       // int m = months+0;
-		        cal.add(Calendar.MONTH, months); //minus number would decrement the days
-		        then= cal.getTime();
-			
-			
-			PremiumAccess pa = new PremiumAccess(pn,then);
-			pa.save();
-			usertoedit.givePremiumAccess(pa);
-			usertoedit.update();
-			
+
+				User usertoedit = User.find.byId(uid);
+
+				if (usertoedit.getCurrentAccess() != null) {
+
+					usertoedit.getCurrentAccess().addMonths(months);
+					usertoedit.getCurrentAccess().update();
+				} else {
+
+					String pn = "All Access";
+					Date then = new Date();
+
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(then);
+					// int m = months+0;
+					cal.add(Calendar.MONTH, months); // minus number would
+														// decrement the days
+					then = cal.getTime();
+
+					PremiumAccess pa = new PremiumAccess(pn, then);
+					pa.save();
+					usertoedit.givePremiumAccess(pa);
+					usertoedit.update();
+
+				}
+
 			}
-			
-			
+
 		}
-		
-		}
-		
-		
-		
-		
-		return redirect(routes.Portal
-				.myGamesListOnCurrentPortal());		
+
+		return redirect(routes.Portal.myGamesListOnCurrentPortal());
 	}
-	
-	
-	
-	
-	@Restrict(@Group(Application.USER_ROLE))
+
+//	@Restrict(@Group(Application.USER_ROLE))
 	public static Result doAddGameTypeFromGame(Long pid, Long gid) {
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
+
 		if (Global.securityGuard
 				.hasAdminRightsOnPortal(getLocalUser(session())) == false) {
 
@@ -1087,11 +1045,8 @@ public class Portal extends Controller {
 						GameType gt = new GameType(form.name);
 
 						gt.save();
-						
-						
-						
-						for (AttributeType a : g.getType()
-								.getAttributeTypes()) {
+
+						for (AttributeType a : g.getType().getAttributeTypes()) {
 
 							AttributeType gt_att5 = new AttributeType(
 									a.getName(), a.getXMLType(),
@@ -1106,8 +1061,7 @@ public class Portal extends Controller {
 
 						}
 
-						for (PartType pt : g.getType()
-								.getPossiblePartTypes()) {
+						for (PartType pt : g.getType().getPossiblePartTypes()) {
 
 							gt.addPossiblePartType(pt);
 							gt.update();
@@ -1130,30 +1084,26 @@ public class Portal extends Controller {
 
 						}
 
-						for (SceneType st : g.getType()
-								.getPossibleSceneTypes()) {
+						for (SceneType st : g.getType().getPossibleSceneTypes()) {
 
 							gt.addPossibleSceneType(st);
 							gt.update();
 
 						}
-						
-						
 
 						if (form.makescene) {
-							
-							
-							if(form.onlyonehotspot){
 
-							gt.easy_editor = true;
-							gt.multiple_only_scene_type = true;
-							
+							if (form.onlyonehotspot) {
+
+								gt.easy_editor = true;
+								gt.multiple_only_scene_type = true;
+
 							}
-							
-							if(form.onlyhotspots){
-								
+
+							if (form.onlyhotspots) {
+
 								gt.show_only_hotspots_in_sidemenu = true;
-								
+
 							}
 
 							SceneType s = new SceneType(form.scenename);
@@ -1164,18 +1114,17 @@ public class Portal extends Controller {
 							gt.addPossibleSceneType(s);
 							gt.update();
 
-							
-						Game	g1 = gt.createMe(form.scenename);
+							Game g1 = gt.createMe(form.scenename);
 							g1.save();
-					Scene sce =		s.createMe(form.scenename, g1);
-					sce.save();
-					
-					//sce.redoLinking(g1);
-					
-					Part p1 = new Part(sce);
-					p1.save();
-					gt.addDefaultPart(p1);
-					gt.update();
+							Scene sce = s.createMe(form.scenename, g1);
+							sce.save();
+
+							// sce.redoLinking(g1);
+
+							Part p1 = new Part(sce);
+							p1.save();
+							gt.addDefaultPart(p1);
+							gt.update();
 
 						} else {
 
@@ -1188,8 +1137,6 @@ public class Portal extends Controller {
 								gt.addDefaultHotspot(h);
 
 							}
-
-							
 
 							gt.update();
 						}
@@ -1210,51 +1157,50 @@ public class Portal extends Controller {
 		}
 
 	}
-	
-	
+
 	public static Result getRouting(String arguments) {
-		String  pagecontent = "ERROR";
-	
+		String pagecontent = "ERROR";
+
 		arguments = arguments.replaceAll("-", "?");
 
 		arguments = arguments.replaceAll("_", "&");
-		
-	String url = "http://www.yournavigation.org/"+arguments;
-	
-	System.out.println(url);
 
-	  WebClient webClient = new WebClient();
-      try{
-	  WebRequest webRequest = new WebRequest(new URL(url));
-    webRequest.setCharset("utf-8");
+		String url = "http://www.yournavigation.org/" + arguments;
 
-    webClient.setThrowExceptionOnFailingStatusCode(false);
-    webClient.setThrowExceptionOnScriptError(false);
+		System.out.println(url);
 
-    webClient.setPrintContentOnFailingStatusCode(false);
-    webClient.setJavaScriptEnabled(false);
-    webClient.setRedirectEnabled(true);
-    webClient.setTimeout(20000);
+		WebClient webClient = new WebClient();
+		try {
+			WebRequest webRequest = new WebRequest(new URL(url));
+			webRequest.setCharset("utf-8");
 
-    XmlPage page = webClient.getPage(webRequest);
-    
-    
-    
-   pagecontent = page.getWebResponse().getContentAsString();
-      } catch (IOException ioe) {
-          System.out.println("IO Problem accessing page "+ ioe.getMessage());
-          
-          pagecontent = "Problem accessing page...";
-      }
-   
-   return ok(pagecontent);
-    
-    
+			webClient.setThrowExceptionOnFailingStatusCode(false);
+			webClient.setThrowExceptionOnScriptError(false);
+
+			webClient.setPrintContentOnFailingStatusCode(false);
+			webClient.setJavaScriptEnabled(false);
+			webClient.setRedirectEnabled(true);
+			webClient.setTimeout(20000);
+
+			XmlPage page = webClient.getPage(webRequest);
+
+			pagecontent = page.getWebResponse().getContentAsString();
+		} catch (IOException ioe) {
+			System.out.println("IO Problem accessing page " + ioe.getMessage());
+
+			pagecontent = "Problem accessing page...";
+		}
+
+		return ok(pagecontent);
+
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+//	@Restrict(@Group(Application.USER_ROLE))
 	public static Result doEditGame(Long pid, Long game) {
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		if (Game.find.where().eq("id", game).findRowCount() != 1) {
 
@@ -1353,9 +1299,12 @@ public class Portal extends Controller {
 		}
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+//	@Restrict(@Group(Application.USER_ROLE))
 	public static Result doCopyGame(Long pid, Long game) {
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		if (Game.find.where().eq("id", game).findRowCount() != 1) {
 
@@ -1373,15 +1322,11 @@ public class Portal extends Controller {
 
 			} else {
 
-				
-				
 				ProviderPortal p = ProviderPortal.find.byId(pid);
 				User currentuser = getLocalUser(session());
 
-				
-				
-
-				Game g = mygame.copyMe(" "+Application.getLanguage(("Kopie")));
+				Game g = mygame
+						.copyMe(" " + Application.getLanguage(("Kopie")));
 				g.save();
 				System.out.println("Game created.");
 				g.addOwner(currentuser);
@@ -1443,20 +1388,20 @@ public class Portal extends Controller {
 
 				System.out.println("Done");
 
-				
-				
-				
 				return redirect(routes.Portal.myGamesListOnCurrentPortal());
 
 			}
 		}
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+//	@Restrict(@Group(Application.USER_ROLE))
 	public static Result doEditUserRightsOnGame(Long pid, Long gid, Long uid,
 			String rights) {
 
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		ProviderPortal p = getLocalPortal();
 
@@ -1483,65 +1428,62 @@ public class Portal extends Controller {
 				} else {
 
 					User usertoedit = User.find.byId(uid);
-					
+
 					boolean b = true;
-					
-					if(usertoedit.getId() == Application.getLocalUser().getId()){
+
+					if (usertoedit.getId() == Application.getLocalUser()
+							.getId()) {
 						b = false;
-						
-						
-						
-						
-						if(mygame.getAmountOfUsers() >= 2){
-							
+
+						if (mygame.getAmountOfUsers() >= 2) {
+
 							b = true;
-							
+
 						}
-						
-						
+
 					}
-					
-					if(b){
-					
-						if(mygame.userlastupdated == usertoedit.getId() && !rights.equals("write")){
-							
+
+					if (b) {
+
+						if (mygame.userlastupdated == usertoedit.getId()
+								&& !rights.equals("write")) {
+
 							mygame.setPublishOnAllPortals(false);
-							
+
 						}
-						
-					if (mygame.existsUser(usertoedit)) {
 
-						// EDIT
+						if (mygame.existsUser(usertoedit)) {
 
-						mygame.editUser(usertoedit, rights);
+							// EDIT
 
-						Global.updatePortals();
+							mygame.editUser(usertoedit, rights);
 
-					} else {
+							Global.updatePortals();
 
-						// NEU HINZUFÜGEN
+						} else {
 
-						mygame.addUser(usertoedit, rights);
-						Global.updatePortals();
+							// NEU HINZUFÜGEN
 
-					}
+							mygame.addUser(usertoedit, rights);
+							Global.updatePortals();
+
+						}
 					}
 
 					mygame.update();
 
 					Set<User> leer = new HashSet<User>();
 
-					if(usertoedit.getId() == Application.getLocalUser().getId() && !rights.equals("write")){
+					if (usertoedit.getId() == Application.getLocalUser()
+							.getId() && !rights.equals("write")) {
+
+						return redirect(routes.Portal.myGamesList(pid));
+
+					} else {
 
 						return redirect(routes.Portal
-								.myGamesList(pid));
-						
-					} else {
-					
-					return redirect(routes.Portal
-							.gameRightsOnCurrentPortal(gid));
-					
-					
+								.gameRightsOnCurrentPortal(gid));
+
 					}
 
 				}
@@ -1550,10 +1492,13 @@ public class Portal extends Controller {
 		}
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+//	@Restrict(@Group(Application.USER_ROLE))
 	public static Result doDeleteUserRightsOnGame(Long pid, Long gid, Long uid) {
 
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		ProviderPortal p = getLocalPortal();
 
@@ -1582,50 +1527,35 @@ public class Portal extends Controller {
 					User usertoedit = User.find.byId(uid);
 
 					if (mygame.existsUser(usertoedit)) {
-						
-						
-						
-						
-						
+
 						boolean b = true;
-						
-						if(usertoedit.getId() == Application.getLocalUser().getId()){
+
+						if (usertoedit.getId() == Application.getLocalUser()
+								.getId()) {
 							b = false;
-							
-							
-							
-							
-							if(mygame.getAmountOfUsers() >= 2){
-								
+
+							if (mygame.getAmountOfUsers() >= 2) {
+
 								b = true;
-								
+
 							}
-							
-							
+
 						}
-						
-						
-						
-						if(b){
-						
 
-						// DELTE
+						if (b) {
 
-						mygame.deleteUser(usertoedit);
+							// DELTE
 
-						
-						
+							mygame.deleteUser(usertoedit);
 
-						if(mygame.userlastupdated == usertoedit.getId()){
-							
-							mygame.setPublishOnAllPortals(false);
-							
-						}
-						
-						
-						Global.updatePortals();
-						
-						
+							if (mygame.userlastupdated == usertoedit.getId()) {
+
+								mygame.setPublishOnAllPortals(false);
+
+							}
+
+							Global.updatePortals();
+
 						}
 
 					}
@@ -1634,19 +1564,16 @@ public class Portal extends Controller {
 
 					Set<User> leer = new HashSet<User>();
 
-					
-					
-					if(usertoedit.getId() == Application.getLocalUser().getId()){
+					if (usertoedit.getId() == Application.getLocalUser()
+							.getId()) {
+
+						return redirect(routes.Portal.myGamesList(pid));
+
+					} else {
 
 						return redirect(routes.Portal
-								.myGamesList(pid));
-						
-					} else {
-					
-					return redirect(routes.Portal
-							.gameRightsOnCurrentPortal(gid));
-					
-					
+								.gameRightsOnCurrentPortal(gid));
+
 					}
 
 				}
@@ -1712,10 +1639,13 @@ public class Portal extends Controller {
 		return ok("");
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+//	@Restrict(@Group(Application.USER_ROLE))
 	public static Result addPortal(Long pid) {
 
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		if (Global.securityGuard.isDefaultPortal() == false) {
 
@@ -1729,10 +1659,13 @@ public class Portal extends Controller {
 		}
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+//	@Restrict(@Group(Application.USER_ROLE))
 	public static Result doAddGameTypeToPortal(Long pid, Long portal, Long gtid) {
 
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		ProviderPortal p = getLocalPortal();
 
@@ -1776,11 +1709,14 @@ public class Portal extends Controller {
 
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+//	@Restrict(@Group(Application.USER_ROLE))
 	public static Result doDeleteGameTypeFromPortal(Long pid, Long portal,
 			Long gtid) {
 
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		ProviderPortal p = getLocalPortal();
 
@@ -1825,10 +1761,13 @@ public class Portal extends Controller {
 
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+//	@Restrict(@Group(Application.USER_ROLE))
 	public static Result userRightsonPortal(Long pid, Long gid) {
 
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
 
@@ -1852,10 +1791,13 @@ public class Portal extends Controller {
 
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+//	@Restrict(@Group(Application.USER_ROLE))
 	public static Result gameTypesonPortal(Long pid, Long gid) {
 
 		session("currentportal", gid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
 
@@ -1897,10 +1839,13 @@ public class Portal extends Controller {
 
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+//	@Restrict(@Group(Application.USER_ROLE))
 	public static Result editPortal(Long pid, Long portal) {
 
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		if (ProviderPortal.find.where().eq("id", portal).findRowCount() != 1) {
 
@@ -1945,13 +1890,13 @@ public class Portal extends Controller {
 				formobject.agbs = myportal.agbs;
 				formobject.agbsversion = myportal.agbsversion;
 				formobject.portalprivacyagreement = myportal.portalprivacyagreement;
-				if(myportal.portalprivacyagreementversion != null)
-				formobject.portalprivacyagreementversion = myportal.portalprivacyagreementversion;
+				if (myportal.portalprivacyagreementversion != null)
+					formobject.portalprivacyagreementversion = myportal.portalprivacyagreementversion;
 				formobject.portalimprint = myportal.portalimprint;
 				formobject.portalagbs = myportal.portalagbs;
-				if(myportal.portalagbsversion != null)
-				formobject.portalagbsversion = myportal.portalagbsversion;
-				
+				if (myportal.portalagbsversion != null)
+					formobject.portalagbsversion = myportal.portalagbsversion;
+
 				Form<PostedPortal> fillForm = form(PostedPortal.class);
 				fillForm = fillForm.fill(formobject);
 
@@ -1969,9 +1914,12 @@ public class Portal extends Controller {
 	 * These are used to compute the Post objects of Forms.
 	 */
 
-	@Restrict(@Group(Application.USER_ROLE))
+//	@Restrict(@Group(Application.USER_ROLE))
 	public static Result doAddPortal(Long pid) {
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		if (Global.securityGuard.isDefaultPortal() == false) {
 
@@ -2110,10 +2058,13 @@ public class Portal extends Controller {
 		}
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+//	@Restrict(@Group(Application.USER_ROLE))
 	public static Result doDeletePortal(Long pid, Long portal) {
 
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		if (ProviderPortal.find.where().eq("id", portal).findRowCount() == 1) {
 
@@ -2170,9 +2121,12 @@ public class Portal extends Controller {
 
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+//	@Restrict(@Group(Application.USER_ROLE))
 	public static Result doEditPortal(Long pid, Long portal) {
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		if (ProviderPortal.find.where().eq("id", portal).findRowCount() == 1) {
 
@@ -2298,13 +2252,12 @@ public class Portal extends Controller {
 				}
 				myportal.setLinkColor(c5);
 
-				
 				myportal.portalagbs = form.portalagbs;
 				myportal.portalagbsversion = form.portalagbsversion;
 				myportal.portalprivacyagreement = form.portalprivacyagreement;
 				myportal.portalprivacyagreementversion = form.portalprivacyagreementversion;
 				myportal.portalimprint = form.portalimprint;
-				
+
 				myportal.agbs = form.agbs;
 				myportal.agbsversion = form.agbsversion;
 				myportal.privacyagreement = form.privacyagreement;
@@ -2344,11 +2297,14 @@ public class Portal extends Controller {
 
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+//	@Restrict(@Group(Application.USER_ROLE))
 	public static Result doEditUserRightsOnPortal(Long pid, Long peditid,
 			Long uid, String rights) {
 
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		ProviderPortal p = getLocalPortal();
 
@@ -2391,11 +2347,14 @@ public class Portal extends Controller {
 
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+//	@Restrict(@Group(Application.USER_ROLE))
 	public static Result doDeleteUserRightsOnPortal(Long pid, Long peditid,
 			Long uid) {
 
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		ProviderPortal p = getLocalPortal();
 
@@ -2416,20 +2375,16 @@ public class Portal extends Controller {
 							.render("Der User existiert nicht"));
 
 				} else {
-					
-					
-				for(ProviderGames pg :	myportal.getGameList()){
-					
-					
-					if(pg.getGame().userlastupdated == uid){
-					
-				pg.setVisibility(false);
-				pg.update();
+
+					for (ProviderGames pg : myportal.getGameList()) {
+
+						if (pg.getGame().userlastupdated == uid) {
+
+							pg.setVisibility(false);
+							pg.update();
+						}
+
 					}
-					
-				}
-					
-					
 
 					User usertoedit = User.find.byId(uid);
 
@@ -2439,8 +2394,7 @@ public class Portal extends Controller {
 
 					Global.updatePortals();
 
-					return redirect(routes.Portal
-							.userRightsonCurrentPortal());
+					return redirect(routes.Portal.userRightsonCurrentPortal());
 
 				}
 			}
@@ -2456,10 +2410,13 @@ public class Portal extends Controller {
 
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+//	@Restrict(@Group(Application.USER_ROLE))
 	public static Result doAddMeToPortal(Long pid) {
 
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		if (Global.securityGuard.hasAnyRightsOnPortal(Application
 				.getLocalUser(session()))) {
@@ -2667,10 +2624,13 @@ public class Portal extends Controller {
 
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+//	@Restrict(@Group(Application.USER_ROLE))
 	public static Result doDeleteNewsItem(Long pid, Long nid) {
 
 		session("currentportal", pid.toString());
+		if (getLocalUser(session()) == null) {
+			return redirect(routes.Application.login(pid));
+		}
 
 		if (Global.securityGuard
 				.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
@@ -2863,145 +2823,122 @@ public class Portal extends Controller {
 		return ok(views.html.template.render());
 
 	}
-	
-	
-	
-	
+
 	public static Result getAGBs(Long pid) {
 
-		
 		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
 			return badRequest(views.html.norights
 					.render("Das Portal existiert nicht"));
-		
-		} 
-		
+
+		}
+
 		return ok(views.html.portal.agbs.render(ProviderPortal.find.byId(pid)));
 
 	}
-	
-	
-	
-	
+
 	public static Result getPortalAGBs(Long pid) {
 
-		
 		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
 			return badRequest(views.html.norights
 					.render("Das Portal existiert nicht"));
-		
-		} 
-		
-		return ok(views.html.portal.portalagbs.render(ProviderPortal.find.byId(pid)));
+
+		}
+
+		return ok(views.html.portal.portalagbs.render(ProviderPortal.find
+				.byId(pid)));
 
 	}
-	
-	
+
 	public static Result getAGBVersion(Long pid) {
 
-		
 		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
 			return badRequest(views.html.norights
 					.render("Das Portal existiert nicht"));
-		
-		} 
-		
-		return ok(views.html.portal.agbsversion.render(ProviderPortal.find.byId(pid)));
+
+		}
+
+		return ok(views.html.portal.agbsversion.render(ProviderPortal.find
+				.byId(pid)));
 
 	}
-	
-	
+
 	public static Result getPrivacyAgreementVersion(Long pid) {
 
-		
 		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
 			return badRequest(views.html.norights
 					.render("Das Portal existiert nicht"));
-		
-		} 
-		
-		return ok(views.html.portal.privacyversion.render(ProviderPortal.find.byId(pid)));
+
+		}
+
+		return ok(views.html.portal.privacyversion.render(ProviderPortal.find
+				.byId(pid)));
 
 	}
-	
-	
+
 	public static Result getPrivacyAgreement(Long pid) {
 
-		
 		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
 			return badRequest(views.html.norights
 					.render("Das Portal existiert nicht"));
-		
-		} 
-		
-		return ok(views.html.portal.privacy.render(ProviderPortal.find.byId(pid)));
+
+		}
+
+		return ok(views.html.portal.privacy.render(ProviderPortal.find
+				.byId(pid)));
 
 	}
-	
-	
+
 	public static Result getPortalPrivacyAgreement(Long pid) {
 
-		
 		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
 			return badRequest(views.html.norights
 					.render("Das Portal existiert nicht"));
-		
-		} 
-		
-		return ok(views.html.portal.portalprivacy.render(ProviderPortal.find.byId(pid)));
+
+		}
+
+		return ok(views.html.portal.portalprivacy.render(ProviderPortal.find
+				.byId(pid)));
 
 	}
-	
-	
-	
-	
-	public static String getNameOfLastReleaseUser(Game g){
-		
-		
-		if(g.userlastupdated != null && g.userlastupdated != 0){
-		
-		if(User.find.byId(g.userlastupdated) != null){
-			
-		return	User.find.byId(g.userlastupdated).name;
-			
+
+	public static String getNameOfLastReleaseUser(Game g) {
+
+		if (g.userlastupdated != null && g.userlastupdated != 0) {
+
+			if (User.find.byId(g.userlastupdated) != null) {
+
+				return User.find.byId(g.userlastupdated).name;
+
+			} else {
+
+				return "Benutzer gelöscht";
+
+			}
+
 		} else {
-			
-			return "Benutzer gelöscht";
-			
-		}
-		
-		} else {
-			
+
 			return "Kein Benutzer";
-			
+
 		}
-		
-		
-		
+
 	}
-	
-	public static String getNameOfLastReleaseUser(){
-		
-	
-			return "Kein Benutzer";
-		
-		
-		
-		
+
+	public static String getNameOfLastReleaseUser() {
+
+		return "Kein Benutzer";
+
 	}
-	
-	
-	
+
 	public static Result getImprint(Long pid) {
 
-		
 		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
 			return badRequest(views.html.norights
 					.render("Das Portal existiert nicht"));
-		
-		} 
-		
-		return ok(views.html.portal.imprint.render(ProviderPortal.find.byId(pid)));
+
+		}
+
+		return ok(views.html.portal.imprint.render(ProviderPortal.find
+				.byId(pid)));
 
 	}
 
@@ -3050,9 +2987,6 @@ public class Portal extends Controller {
 		}
 
 	}
-	
-	
-	
 
 	public static Result getGameFileForPortal(Long portal, Long game) {
 
@@ -3096,10 +3030,6 @@ public class Portal extends Controller {
 			return ok(new File(mygame.getFile()).length() + "");
 		}
 	}
-	
-	
-	
-	
 
 	public static Result getGQPlayer(String filename) {
 		response().setContentType("image");
@@ -3116,10 +3046,8 @@ public class Portal extends Controller {
 
 		return ok(i_file);
 	}
-	
-	
-	
-	public static Result 	getCrossdomain() {
+
+	public static Result getCrossdomain() {
 		response().setContentType("text/plain");
 		byte[] i_file = null;
 
@@ -3134,10 +3062,6 @@ public class Portal extends Controller {
 
 		return ok(i_file);
 	}
-	
-	
-	
-
 
 	public static Result at(String filename) {
 		response().setContentType("image");
@@ -3172,12 +3096,6 @@ public class Portal extends Controller {
 		return Application.getCurrentPortal(session());
 
 	}
-	
-	
-	
-
-	
-
 
 	/*
 	 * FORM HANDLER
@@ -3209,7 +3127,6 @@ public class Portal extends Controller {
 
 		public boolean onlyhotspots;
 		public boolean onlyonehotspot;
-
 
 	}
 
@@ -3252,13 +3169,13 @@ public class Portal extends Controller {
 		public String color_3;
 		public String color_4;
 		public String color_5;
-		
+
 		public String portalagbs;
 		public String portalimprint;
 		public String portalprivacyagreement;
 		public int portalagbsversion;
 		public int portalprivacyagreementversion;
-		
+
 		public String agbs;
 		public String imprint;
 		public String privacyagreement;
