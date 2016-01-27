@@ -35,21 +35,24 @@
         
         
         @if(a.getMimeType().equals("area")){
-        	        <textarea rows="8" cols="100" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)"
-        	        onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");">@s.getAttributeValue(a)</textarea>
+        	        <textarea rows="8" cols="100" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId); textareaLengthCheck('sceneat@s.getId@a.getId' ,'counter_sceneat@s.getId@a.getId');"
+        	        onkeyup="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")'; textareaLengthCheck('sceneat@s.getId@a.getId' ,'counter_sceneat@s.getId@a.getId');">@s.getAttributeValue(a)</textarea>
+        	
+        	        <span id="counter_sceneat@s.getId@a.getId">@s.getAttributeValue(a).length()</span>
         	
         } else {
         
         
         
         @if(a.getName() == "Text"){
-        	        	        <textarea rows="8" cols="100" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)"
-        	        onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");">@s.getAttributeValue(a)</textarea>
+        	        	        <textarea rows="8" cols="100" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId); textareaLengthCheck('sceneat@s.getId@a.getId' ,'counter_sceneat@s.getId@a.getId');"
+        	        onkeyup="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")'; textareaLengthCheck('sceneat@s.getId@a.getId' ,'counter_sceneat@s.getId@a.getId');">@s.getAttributeValue(a)</textarea>
+        	        	        <span id="counter_sceneat@s.getId@a.getId">@s.getAttributeValue(a).length()</span>
         	
         	
         	} else {
                 <input style="display:inline-block" type="text"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)"
-                       	        onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");"/>
+                       	        onkeyup="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");"/>
         	}
         
         }
@@ -68,7 +71,7 @@
         
         
                 <input type="text"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId,true)"
-                        	        onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");"/>
+                        	        onkeyup="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");"/>
         
         
         
@@ -81,10 +84,11 @@
         
         
         
-                 <textarea rows="8" cols="100" type="text"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId,true)"
-                        	        onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");">@s.getAttributeValue(a)</textarea>
+                 <textarea rows="8" cols="100" type="text"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId,true); textareaLengthCheck('sceneat@s.getId@a.getId' ,'counter_sceneat@s.getId@a.getId');"
+                        	        onkeyup="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")'; textareaLengthCheck('sceneat@s.getId@a.getId' ,'counter_sceneat@s.getId@a.getId');">@s.getAttributeValue(a)</textarea>
         
         
+                	        <span id="counter_sceneat@s.getId@a.getId">@s.getAttributeValue(a).length()</span>
         
         
         }

@@ -138,8 +138,9 @@
         	
         	
         } else {
-        <textarea id="missionat@m.getId@a.getId" onchange="javascript:syncAttr('mission',@m.getId,@a.getId)" onkeydown="document.getElementById('status_missionat@m.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">@m.getAttributeValue(a)</textarea>
+        <textarea id="missionat@m.getId@a.getId" onkeyup="javascript:syncAttr('mission',@m.getId,@a.getId); textareaLengthCheck('missionat@m.getId@a.getId()' ,'counter_missionat@m.getId@a.getId');" onkeydown="document.getElementById('status_missionat@m.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")'; textareaLengthCheck('missionat@m.getId@a.getId()' ,'counter_missionat@m.getId@a.getId');">@m.getAttributeValue(a)</textarea>
         
+        <span id="counter_missionat@m.getId@a.getId">@m.getAttributeValue(a).length()</span>
         
         }
         
