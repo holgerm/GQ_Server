@@ -41,7 +41,7 @@
               				onchange="javascript:syncName('contentvalue',@c.getId,2); textareaLengthCheck('contentvaluename2_@c.getId' ,'counter_contentvaluename2_@c.getId');"
               				onkeyup="document.getElementById('status2_contentvaluename@c.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")'; textareaLengthCheck('contentvaluename2_@c.getId' ,'counter_contentvaluename2_@c.getId');"
               				 rows = "3" cols = "80">@c.getContent</textarea>
-              				    		        <span id="counter_contentvaluename2_@c.getId">@c.getContent.length()</span>
+              				    		        <span id="counter_contentvaluename2_@c.getId">@if(c.getContent != null){ @c.getContent } else { 0 } </span>
               				 
    		        <img id="status2_contentvaluename@c.getId" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
    		
