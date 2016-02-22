@@ -189,15 +189,15 @@ public class GeoQuestDefaultsFactory {
 
 		allHotspotRuleTypes = new ArrayList<RuleType>();
 
-		RuleType rtOnEnter = new RuleType("Betreten des HotSpots", "onEnter");
-		rtOnEnter.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/onenter.png");
-		rtOnEnter.save();
-		allHotspotRuleTypes.add(rtOnEnter);
+		RuleType rtOnEnterHotSpot = new RuleType("Betreten des HotSpots", "onEnter");
+		rtOnEnterHotSpot.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/onenter.png");
+		rtOnEnterHotSpot.save();
+		allHotspotRuleTypes.add(rtOnEnterHotSpot);
 
-		RuleType rtOnLeave = new RuleType("Verlassen des HotSpots", "onLeave");
-		rtOnLeave.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/onleave.png");
-		rtOnLeave.save();
-		allHotspotRuleTypes.add(rtOnLeave);
+		RuleType rtOnLeaveHotSpot = new RuleType("Verlassen des HotSpots", "onLeave");
+		rtOnLeaveHotSpot.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/onleave.png");
+		rtOnLeaveHotSpot.save();
+		allHotspotRuleTypes.add(rtOnLeaveHotSpot);
 
 		RuleType rtOnTapHotSpot = new RuleType("Antippen des HotSpots", "onTap");
 		rtOnTapHotSpot.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/ontap.png");
@@ -865,8 +865,8 @@ public class GeoQuestDefaultsFactory {
 		hpt1 = new HotspotType("Standard", "hotspot");
 		hpt1.save();
 
-		hpt1.addPossibleRuleType(rtOnEnter);
-		hpt1.addPossibleRuleType(rtOnLeave);
+		hpt1.addPossibleRuleType(rtOnEnterHotSpot);
+		hpt1.addPossibleRuleType(rtOnLeaveHotSpot);
 		hpt1.addPossibleRuleType(rtOnTapHotSpot);
 		hpt1.update();
 
@@ -899,6 +899,27 @@ public class GeoQuestDefaultsFactory {
 
 		hpt1.setAttributeType(ha4);
 
+		AttributeType ha5 = new AttributeType("iBeacon ID",
+				"iBeacon", "String");
+		ha5.setOptional(true);
+		ha5.save();
+
+		hpt1.setAttributeType(ha5);
+
+		AttributeType ha6 = new AttributeType("NFC ID",
+				"nfc", "String");
+		ha6.setOptional(true);
+		ha6.save();
+
+		hpt1.setAttributeType(ha6);
+
+
+		AttributeType ha7 = new AttributeType("QR Code",
+				"qrcode", "String");
+		ha7.setOptional(true);
+		ha7.save();
+
+		hpt1.setAttributeType(ha7);
 		hpt1.update();
 
 		gt.addPossibleHotspotType(hpt1);
