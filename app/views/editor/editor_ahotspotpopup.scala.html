@@ -158,9 +158,82 @@
 									        				
 									        				}}
 									        				}
-} else {
-<input type='text' class='h2textfieldsmall' id='hotspotname@hs.getId' value='@hs.getName()' onchange="javascript:syncName('hotspot',@hs.getId)" onkeydown="document.getElementById('status_hotspotname@hs.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';"><img id='status_hotspotname@hs.getId' src='@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")'/>  
-              		<br/>		 @Application.getLanguage("Optionen"):<span style="cursor:pointer;" onClick="javascript:openHotspotRule(@hs.getId());"> <icon style="height:20px; width:20px; background-image:url('@Global.SERVER_URL_2/assets/icons/actions/default.png'); background-size:20px 20px; background-position:0px 24px; display:inline-block;"></icon> @Application.getLanguage("Ereignisse")</a></span><span style="cursor:pointer;" onClick="javascript:duplicateHotspotInGame(@hs.getId());"> <icon class="icon-share" style="display:inline-block;"></icon> @Application.getLanguage("Duplizieren")</a></p></span>
-
-              		 
-<h4>@Application.getLanguage("Einstellungen")</h4> @for(a <- hs.getAllAttributes){@if(a.isEditable){<div style='width:80%'>@Application.getLanguage(a.getName)<div> @if(a.getFileType == "String"){     @if(a.hasPossibleValues()){<select id = "hotspotat@hs.getId@a.getId" onchange="javascript:syncAttr('hotspot',@hs.getId,@a.getId)" ><option ></option>@for(pm <- a.getPossibleValues()){<option  value = "@pm" @if(hs.getAttributeValue(a).equals(pm)){ selected="selected" } >@Application.getLanguage(pm)</option>}   </select>} else {<input type='text' value='@hs.getAttributeValue(a)' id='hotspotat@hs.getId@a.getId' onchange="javascript:syncAttr('hotspot',@hs.getId,@a.getId)" onkeydown="javascript:document.getElementById('status_hotspotat@hs.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';"> } } @if(a.getFileType == "int"){<input type='number' value='@hs.getAttributeValue(a)' id='hotspotat@hs.getId@a.getId' onchange="javascript:syncAttr('hotspot',@hs.getId,@a.getId)" onkeydown="javascript:document.getElementById('status_hotspotat@hs.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';"> } @if(a.getFileType == "boolean"){<input type='checkbox' id='hotspotat@hs.getId@a.getId'  @if(hs.getAttributeValue(a) == "true"){ checked = 'checked' }  onchange="javascript:syncAttr('hotspot',@hs.getId,@a.getId)" >} @if(a.getFileType == "file"){	<div id="hotspot@hs.getId()fileattr@a.getId()" name="hotspot@hs.getId()fileattr@a.getId()" class="fileattr"> @if(hs.getAttributeValue(a) != ""){        	<a href="@hs.getAttributeValue(a)" target="_blank">@Application.getLanguage("Aktuelle Datei anzeigen")</a> }</div><input type='file' id='hotspotat@hs.getId@a.getId' onchange="javascript:uploadFile('hotspot',@hs.getId,@a.getId)"> }  <img id='status_hotspotat@hs.getId@a.getId' src='@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")' /></div></div><br/>}}}
+	} else {
+		<input type='text' class='gqHotspotTitle' id='hotspotname@hs.getId' value='@hs.getName()' onchange="javascript:syncName('hotspot',@hs.getId)" onkeydown="document.getElementById('status_hotspotname@hs.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
+	  		<img id='status_hotspotname@hs.getId' src='@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")'/>  
+	        <br/>
+			<span style="cursor:pointer;" onClick="javascript:openHotspotRule(@hs.getId());"> 
+	        	<icon style="height:20px; width:20px; background-image:url('@Global.SERVER_URL_2/assets/icons/actions/default.png'); background-size:20px 20px; background-position:0px 24px; display:inline-block;">
+	        		</icon> @Application.getLanguage("Ereignisse")
+	        </span>
+	        <span style="cursor:pointer;" onClick="javascript:duplicateHotspotInGame(@hs.getId());"> 
+	        	<icon class="icon-share" style="display:inline-block;">
+	            	</icon> @Application.getLanguage("Duplizieren")
+	            </p>
+	        </span>
+	
+	        <h4>@Application.getLanguage("Einstellungen")</h4>
+	        @for(a <- hs.getAllAttributes) {
+	        	@if(a.isEditable) {
+			        @if(a.getFileType == "String") {
+		        		<div class='gqHotspotAttribute'>
+		        			<div>@Application.getLanguage(a.getName)</div>
+		        			<div>
+			        			@if(a.hasPossibleValues()) {
+			        				<select id="hotspotat@hs.getId@a.getId" onchange="javascript:syncAttr('hotspot',@hs.getId,@a.getId)">
+				        				<option></option>
+				        				@for(pm <- a.getPossibleValues()) {
+				        					<option  value="@pm" @if(hs.getAttributeValue(a).equals(pm)) { selected="selected" } >
+				        						@Application.getLanguage(pm)
+				        					</option>
+				        				}
+			        				</select>
+			        			} else {
+			        				<input type='text' value='@hs.getAttributeValue(a)' id='hotspotat@hs.getId@a.getId' 
+			        					onchange="javascript:syncAttr('hotspot',@hs.getId,@a.getId)" 
+			        					onkeydown="javascript:document.getElementById('status_hotspotat@hs.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';"> 
+			        			} 
+								<img id='status_hotspotat@hs.getId@a.getId' src='@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")' />
+							</div>
+						</div>
+			        } 
+			        @if(a.getFileType == "int") {
+		        		<div class='gqHotspotAttribute'>
+							<div>@Application.getLanguage(a.getName)</div>
+		        			<div>
+			        			<input type='number' value='@hs.getAttributeValue(a)' id='hotspotat@hs.getId@a.getId' 
+			        				onchange="javascript:syncAttr('hotspot',@hs.getId,@a.getId)" 
+			        				onkeydown="javascript:document.getElementById('status_hotspotat@hs.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
+								<img id='status_hotspotat@hs.getId@a.getId' src='@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")' />
+							</div>
+						</div>
+			        } 
+			        @if(a.getFileType == "boolean") {
+		        		<div class='gqHotspotAttribute'>
+		        			<div>
+			        			<input type='checkbox' style="margin-top:0; margin-bottom:4px;" id='hotspotat@hs.getId@a.getId'  
+				        			@if(hs.getAttributeValue(a) == "true") { checked = 'checked' }  
+				        			onchange="javascript:syncAttr('hotspot',@hs.getId,@a.getId)" >
+				        		@Application.getLanguage(a.getName)
+			        			<img id='status_hotspotat@hs.getId@a.getId' src='@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")' />
+							</div>
+						</div>
+			        } 
+			        @if(a.getFileType == "file") {	
+		        		<div class='gqHotspotAttribute'>
+							<div>@Application.getLanguage(a.getName)</div>
+		        			<div>
+			        			<div id="hotspot@hs.getId()fileattr@a.getId()" name="hotspot@hs.getId()fileattr@a.getId()" class="fileattr"> 
+			        				@if(hs.getAttributeValue(a) != "") {
+										<a href="@hs.getAttributeValue(a)" target="_blank">@Application.getLanguage("Aktuelle Datei anzeigen")</a> 
+									}
+								</div>
+								<input type='file' id='hotspotat@hs.getId@a.getId' 
+									onchange="javascript:uploadFile('hotspot',@hs.getId,@a.getId)"> 
+								<img id='status_hotspotat@hs.getId@a.getId' src='@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")' />
+							</div>
+						</div>
+					}  
+				}
+			}
+}
