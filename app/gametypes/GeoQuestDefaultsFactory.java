@@ -30,7 +30,7 @@ public class GeoQuestDefaultsFactory {
 	public MissionType webpage;
 	public MissionType imagecapture;
 	public MissionType questlist;
-	
+
 	public MissionType metadata;
 
 	public List<RuleType> allMissionRuleTypes;
@@ -74,101 +74,86 @@ public class GeoQuestDefaultsFactory {
 		GameType gt = new GameType("beliebiges Spiel");
 		gt.save();
 
-		
-
 		AttributeType att62 = new AttributeType("Startseite",
 				"Editor.StartMission", "mission");
 
 		att62.save();
 
 		gt.setAttributeType(att62);
-		
-		
 
-		
-		
-		AttributeType gt_att2 = new AttributeType("Autor","author","String");
+		AttributeType gt_att2 = new AttributeType("Autor", "author", "String");
 		gt_att2.save();
-		
+
 		gt.setAttributeType(gt_att2);
-		
-		
-		
-		AttributeType gt_att3 = new AttributeType("Version","version","String");
+
+		AttributeType gt_att3 = new AttributeType("Version", "version",
+				"String");
 		gt_att3.save();
-		
+
 		gt.setAttributeType(gt_att3);
-		
-		
-		
-		AttributeType gt_att4 = new AttributeType("Impressum","imprint","TextArea");
+
+		AttributeType gt_att4 = new AttributeType("Impressum", "imprint",
+				"TextArea");
 		gt_att4.save();
-		
+
 		gt.setAttributeType(gt_att4);
-		
-		
-		AttributeType gt_att5 = new AttributeType("Altersfreigabe","age","int");
+
+		AttributeType gt_att5 = new AttributeType("Altersfreigabe", "age",
+				"int");
 		gt_att5.save();
 		gt_att5.setDefaultValue("0");
 		gt_att5.update();
 		gt.setAttributeType(gt_att5);
-		
-		
-		
-		AttributeType gt_att6 = new AttributeType("Icon","icon","file");
+
+		AttributeType gt_att6 = new AttributeType("Icon", "icon", "file");
 		gt_att6.save();
-		
+
 		gt.setAttributeType(gt_att6);
-		
-		
 
-		AttributeType gt_att7 = new AttributeType("Featured Bild","featuredimage","file");
+		AttributeType gt_att7 = new AttributeType("Featured Bild",
+				"featuredimage", "file");
 		gt_att7.save();
-		
-		gt.setAttributeType(gt_att7);
-		
 
-		
-		AttributeType gt_att1 = new AttributeType("Hintergrundbild","bgimage","file");
+		gt.setAttributeType(gt_att7);
+
+		AttributeType gt_att1 = new AttributeType("Hintergrundbild", "bgimage",
+				"file");
 		gt_att1.save();
-		
+
 		gt.setAttributeType(gt_att1);
-		
+
 		AttributeType att61 = new AttributeType("Hintergrundfarbe", "bgcolor",
 				"Color");
 
 		att61.save();
 
 		gt.setAttributeType(att61);
-		
-		
-		
-		
 
-		
-		AttributeType gt_att8 = new AttributeType("Rückkehrverhalten selbst definieren","individualReturnDefinitions","boolean");
+		AttributeType gt_att8 = new AttributeType(
+				"Rückkehrverhalten selbst definieren",
+				"individualReturnDefinitions", "boolean");
 		gt_att8.save();
 		gt_att8.setDefaultValue("false");
 		gt_att8.update();
 		gt.setAttributeType(gt_att8);
-		
-		
-		
-		AttributeType gt_att9 = new AttributeType("Start Hotspot","startHotspot","hotspot");
+
+		AttributeType gt_att9 = new AttributeType("Start Hotspot",
+				"startHotspot", "hotspot");
 		gt_att9.save();
 		gt.setAttributeType(gt_att9);
-		
 
-		AttributeType gt_att10 = new AttributeType("An Ort des Benutzers transferieren","transferToUserPosition","boolean");
+		AttributeType gt_att10 = new AttributeType(
+				"An Ort des Benutzers transferieren", "transferToUserPosition",
+				"boolean");
 		gt_att10.save();
 		gt_att10.setDefaultValue("false");
 		gt_att10.update();
 		gt.setAttributeType(gt_att10);
-		
-		AttributeType gt_att11 = new AttributeType("Transfer Hotspot","transferHotspot","hotspot");
+
+		AttributeType gt_att11 = new AttributeType("Transfer Hotspot",
+				"transferHotspot", "hotspot");
 		gt_att11.save();
 		gt.setAttributeType(gt_att11);
-		
 
 		gt.update();
 
@@ -178,50 +163,50 @@ public class GeoQuestDefaultsFactory {
 
 		allMissionRuleTypes = new ArrayList<RuleType>();
 
-		RuleType rt1 = new RuleType("Nach einer erfolgreichen Interaktion",
+		RuleType rtOnSuccess = new RuleType("Nach einer erfolgreichen Interaktion",
 				"onSuccess");
-		rt1.setSymbol(Global.SERVER_URL_2
+		rtOnSuccess.setSymbol(Global.SERVER_URL_2
 				+ "/assets/icons/trigger/onsuccess.png");
-		rt1.save();
-		allMissionRuleTypes.add(rt1);
+		rtOnSuccess.save();
+		allMissionRuleTypes.add(rtOnSuccess);
 
-		RuleType rt2 = new RuleType("Nach einer erfolglosen Interaktion",
+		RuleType rtOnFailure = new RuleType("Nach einer erfolglosen Interaktion",
 				"onFailure");
-		rt2.setSymbol(Global.SERVER_URL_2
+		rtOnFailure.setSymbol(Global.SERVER_URL_2
 				+ "/assets/icons/trigger/onfailure.png");
-		rt2.save();
-		allMissionRuleTypes.add(rt2);
+		rtOnFailure.save();
+		allMissionRuleTypes.add(rtOnFailure);
 
-		RuleType rt3 = new RuleType("Ende der Mission", "onEnd");
-		rt3.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/onend.png");
-		rt3.save();
-		allMissionRuleTypes.add(rt3);
+		RuleType rtOnEnd = new RuleType("Ende der Mission", "onEnd");
+		rtOnEnd.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/onend.png");
+		rtOnEnd.save();
+		allMissionRuleTypes.add(rtOnEnd);
 
-		RuleType rt4 = new RuleType("Start der Mission", "onStart");
-		rt4.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/onstart.png");
-		rt4.save();
-		allMissionRuleTypes.add(rt4);
+		RuleType rtOnStart = new RuleType("Start der Mission", "onStart");
+		rtOnStart.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/onstart.png");
+		rtOnStart.save();
+		allMissionRuleTypes.add(rtOnStart);
 
 		allHotspotRuleTypes = new ArrayList<RuleType>();
 
-		RuleType rt5 = new RuleType("Betreten des HotSpots", "onEnter");
-		rt5.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/onenter.png");
-		rt5.save();
-		allHotspotRuleTypes.add(rt5);
+		RuleType rtOnEnter = new RuleType("Betreten des HotSpots", "onEnter");
+		rtOnEnter.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/onenter.png");
+		rtOnEnter.save();
+		allHotspotRuleTypes.add(rtOnEnter);
 
-		RuleType rt6 = new RuleType("Verlassen des HotSpots", "onLeave");
-		rt6.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/onleave.png");
-		rt6.save();
-		allHotspotRuleTypes.add(rt6);
+		RuleType rtOnLeave = new RuleType("Verlassen des HotSpots", "onLeave");
+		rtOnLeave.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/onleave.png");
+		rtOnLeave.save();
+		allHotspotRuleTypes.add(rtOnLeave);
 
-		RuleType rt7 = new RuleType("Antippen des HotSpots", "onTap");
-		rt7.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/ontap.png");
-		rt7.save();
-		allHotspotRuleTypes.add(rt7);
+		RuleType rtOnTapHotSpot = new RuleType("Antippen des HotSpots", "onTap");
+		rtOnTapHotSpot.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/ontap.png");
+		rtOnTapHotSpot.save();
+		allHotspotRuleTypes.add(rtOnTapHotSpot);
 
-		RuleType rt8 = new RuleType("Antippen des Bildschirms", "onTap");
-		rt8.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/ontap.png");
-		rt8.save();
+		RuleType rtOnTapScreen = new RuleType("Antippen des Bildschirms", "onTap");
+		rtOnTapScreen.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/ontap.png");
+		rtOnTapScreen.save();
 
 		RuleType rt9 = new RuleType("Antippen des Objekts", "onTap");
 		rt9.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/ontap.png");
@@ -237,14 +222,14 @@ public class GeoQuestDefaultsFactory {
 				+ "/assets/icons/actions/nextmission.png");
 		at1.setCategory("page");
 		at1.save();
-		
-		AttributeType at1a2 = new AttributeType("Rückkehr erlauben?", "allowReturn", "boolean");
+
+		AttributeType at1a2 = new AttributeType("Rückkehr erlauben?",
+				"allowReturn", "boolean");
 		at1a2.save();
 		at1a2.setDefaultValue("false");
 		at1a2.update();
 		at1.setAttributeType(at1a2);
 		at1.update();
-		
 
 		allActionTypes.add(at1);
 
@@ -253,14 +238,15 @@ public class GeoQuestDefaultsFactory {
 		at2.setSymbol(Global.SERVER_URL_2
 				+ "/assets/icons/actions/lastmission.png");
 		at2.save();
-	
-		AttributeType at2a2 = new AttributeType("Rückkehr erlauben?", "allowReturn", "boolean");
+
+		AttributeType at2a2 = new AttributeType("Rückkehr erlauben?",
+				"allowReturn", "boolean");
 		at2a2.save();
 		at2a2.setDefaultValue("false");
 		at2a2.update();
 		at2.setAttributeType(at2a2);
 		at2.update();
-		
+
 		allActionTypes.add(at2);
 
 		ActionType at3 = new ActionType("Seite aufrufen", "StartMission");
@@ -268,17 +254,17 @@ public class GeoQuestDefaultsFactory {
 		at3.setSymbol(Global.SERVER_URL_2
 				+ "/assets/icons/actions/callmission.png");
 		at3.save();
-		
+
 		AttributeType at3a1 = new AttributeType("Seite", "id", "mission");
 		at3a1.save();
 		at3.setAttributeType(at3a1);
-		
-		AttributeType at3a2 = new AttributeType("Rückkehr erlauben?", "allowReturn", "boolean");
+
+		AttributeType at3a2 = new AttributeType("Rückkehr erlauben?",
+				"allowReturn", "boolean");
 		at3a2.save();
 		at3a2.setDefaultValue("false");
 		at3a2.update();
 		at3.setAttributeType(at3a2);
-
 
 		at3.update();
 		allActionTypes.add(at3);
@@ -480,18 +466,14 @@ public class GeoQuestDefaultsFactory {
 		at15.setSymbol(Global.SERVER_URL_2
 				+ "/assets/icons/actions/centermap.png");
 		at15.save();
-		
-		
-		AttributeType at15a0 = new AttributeType(
-				"Ort", "hotspot", "hotspot");
+
+		AttributeType at15a0 = new AttributeType("Ort", "hotspot", "hotspot");
 
 		at15a0.save();
 
 		at15.setAttributeType(at15a0);
 		at15.update();
-		
-		
-		
+
 		AttributeType at15a1 = new AttributeType(
 				"Eigene Position einschließen", "position", "boolean");
 		at15a1.setDefaultValue("false");
@@ -620,7 +602,7 @@ public class GeoQuestDefaultsFactory {
 
 		allActionTypes.add(at22);
 		hotspotActionTypes.add(at22);
-		
+
 		ActionType at19 = new ActionType("Schleife unterbrechen", "Break");
 		at19.setCategory("condition");
 		at19.setPremiumRequirement("All Access");
@@ -685,11 +667,11 @@ public class GeoQuestDefaultsFactory {
 
 		// at20a6.save();
 
-//		 at20.setAttributeType(at20a6);
-	//	 at20.update();
+		// at20.setAttributeType(at20a6);
+		// at20.update();
 
 		// allActionTypes.add(at20);
-		 //hotspotActionTypes.add(at20);
+		// hotspotActionTypes.add(at20);
 
 		ActionType at21 = new ActionType("Routing anzeigen", "AddRoute");
 		at21.setCategory("map");
@@ -713,12 +695,11 @@ public class GeoQuestDefaultsFactory {
 
 		allActionTypes.add(at21);
 		hotspotActionTypes.add(at21);
-		
-		
-		
+
 		ActionType at23 = new ActionType("Variable abspeichern", "SaveVar");
 		at23.setCategory("var");
-		at23.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/savevar.png");
+		at23.setSymbol(Global.SERVER_URL_2
+				+ "/assets/icons/actions/savevar.png");
 
 		at23.save();
 
@@ -729,13 +710,13 @@ public class GeoQuestDefaultsFactory {
 		at23.setAttributeType(at23a1);
 		at23.update();
 
-
 		allActionTypes.add(at23);
 		hotspotActionTypes.add(at23);
-		
+
 		ActionType at24 = new ActionType("Variable laden", "LoadVar");
 		at24.setCategory("var");
-		at24.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/loadvar.png");
+		at24.setSymbol(Global.SERVER_URL_2
+				+ "/assets/icons/actions/loadvar.png");
 
 		at24.save();
 
@@ -746,50 +727,41 @@ public class GeoQuestDefaultsFactory {
 		at24.setAttributeType(at24a1);
 		at24.update();
 
-
 		allActionTypes.add(at24);
 		hotspotActionTypes.add(at24);
-		
-		
-		
-		
-		
-		
+
 		ActionType at25 = new ActionType("Route löschen", "RemoveRoute");
 		at25.setCategory("map");
-		at25.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/removeroute.png");
+		at25.setSymbol(Global.SERVER_URL_2
+				+ "/assets/icons/actions/removeroute.png");
 
 		at25.save();
 
 		allActionTypes.add(at25);
 		hotspotActionTypes.add(at25);
-		
-		
-		
-		
-		ActionType at26 = new ActionType("Variablen-Ansicht anzeigen", "ShowVar");
+
+		ActionType at26 = new ActionType("Variablen-Ansicht anzeigen",
+				"ShowVar");
 		at26.setCategory("var");
-		at26.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/varoverlay.png");
+		at26.setSymbol(Global.SERVER_URL_2
+				+ "/assets/icons/actions/varoverlay.png");
 
 		at26.save();
-		
 
-		AttributeType at26a1 = new AttributeType("Variable", "var", "expression");
+		AttributeType at26a1 = new AttributeType("Variable", "var",
+				"expression");
 		at26a1.save();
 		at26.setAttributeType(at26a1);
 		at26a1.update();
 
-			
-		AttributeType at26a2 = new AttributeType("Bezeichnung", "description", "String");
+		AttributeType at26a2 = new AttributeType("Bezeichnung", "description",
+				"String");
 
 		at26a2.save();
 
 		at26.setAttributeType(at26a2);
 		at26.update();
 
-		
-		
-		
 		AttributeType at26a3 = new AttributeType("Ausrichtung", "position",
 				"String");
 		at26a3.save();
@@ -798,42 +770,36 @@ public class GeoQuestDefaultsFactory {
 		at26a3.update();
 
 		at26.setAttributeType(at26a3);
-		
-		
 
 		allActionTypes.add(at26);
 		hotspotActionTypes.add(at26);
-		
-		
-		
-		ActionType at27 = new ActionType("Variablen-Ansicht ausblenden", "HideVar");
+
+		ActionType at27 = new ActionType("Variablen-Ansicht ausblenden",
+				"HideVar");
 		at27.setCategory("var");
-		at27.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/varoverlay_hide.png");
+		at27.setSymbol(Global.SERVER_URL_2
+				+ "/assets/icons/actions/varoverlay_hide.png");
 
 		at27.save();
-		
 
 		allActionTypes.add(at27);
 		hotspotActionTypes.add(at27);
-		
-		
-		
-		
-		ActionType at28 = new ActionType("Variable an Server senden", "SendVarToServer");
+
+		ActionType at28 = new ActionType("Variable an Server senden",
+				"SendVarToServer");
 		at28.setCategory("var");
-		at28.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/savevar.png");
+		at28.setSymbol(Global.SERVER_URL_2
+				+ "/assets/icons/actions/savevar.png");
 
 		at28.save();
 
-		
 		AttributeType at28a1 = new AttributeType("Variable", "var", "String");
 
 		at28a1.save();
 
 		at28.setAttributeType(at28a1);
 		at28.update();
-		
-		
+
 		AttributeType at28a2 = new AttributeType("IP-Adresse", "ip", "String");
 
 		at28a2.save();
@@ -841,28 +807,24 @@ public class GeoQuestDefaultsFactory {
 		at28.setAttributeType(at28a2);
 		at28.update();
 
-
 		allActionTypes.add(at28);
 		hotspotActionTypes.add(at28);
-		
-		
-		
 
-		ActionType at29 = new ActionType("Variable von Server laden", "SendVarToServer");
+		ActionType at29 = new ActionType("Variable von Server laden",
+				"SendVarToServer");
 		at29.setCategory("var");
-		at29.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/savevar.png");
+		at29.setSymbol(Global.SERVER_URL_2
+				+ "/assets/icons/actions/savevar.png");
 
 		at29.save();
 
-		
 		AttributeType at29a1 = new AttributeType("Variable", "var", "String");
 
 		at29a1.save();
 
 		at29.setAttributeType(at29a1);
 		at29.update();
-		
-		
+
 		AttributeType at29a2 = new AttributeType("IP-Adresse", "ip", "String");
 
 		at29a2.save();
@@ -870,49 +832,42 @@ public class GeoQuestDefaultsFactory {
 		at29.setAttributeType(at29a2);
 		at29.update();
 
-
 		allActionTypes.add(at29);
 		hotspotActionTypes.add(at29);
-		
-		
-		
-		
+
 		ActionType at30 = new ActionType("Quest starten", "StartQuest");
 		at30.setCategory("page");
-		at30.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/callmission.png");
+		at30.setSymbol(Global.SERVER_URL_2
+				+ "/assets/icons/actions/callmission.png");
 
 		at30.save();
 
-		
 		AttributeType at30a1 = new AttributeType("Quest", "quest", "int");
 
 		at30a1.save();
 
 		at30.setAttributeType(at30a1);
 		at30.update();
-	
-
 
 		allActionTypes.add(at30);
 		hotspotActionTypes.add(at30);
-		
 
-		//for (ActionType aat : allActionTypes) {
+		// for (ActionType aat : allActionTypes) {
 
-		//	if (!aat.getXMLType().equals("next")) {
-		//		gt.addPossibleMenuItemActionType(aat);
-		//	}
+		// if (!aat.getXMLType().equals("next")) {
+		// gt.addPossibleMenuItemActionType(aat);
+		// }
 
-		//}
+		// }
 
 		// / HOTSPOTS
 
 		hpt1 = new HotspotType("Standard", "hotspot");
 		hpt1.save();
 
-		hpt1.addPossibleRuleType(rt5);
-		hpt1.addPossibleRuleType(rt6);
-		hpt1.addPossibleRuleType(rt7);
+		hpt1.addPossibleRuleType(rtOnEnter);
+		hpt1.addPossibleRuleType(rtOnLeave);
+		hpt1.addPossibleRuleType(rtOnTapHotSpot);
 		hpt1.update();
 
 		AttributeType ha1 = new AttributeType("Marker Bild", "img", "file");
@@ -964,11 +919,11 @@ public class GeoQuestDefaultsFactory {
 
 		for (ActionType aat : allActionTypes) {
 
-			rt8.addPossibleActionType(aat);
+			rtOnTapScreen.addPossibleActionType(aat);
 
 		}
 
-		rt8.update();
+		rtOnTapScreen.update();
 
 		for (RuleType art : allHotspotRuleTypes) {
 
@@ -1199,9 +1154,9 @@ public class GeoQuestDefaultsFactory {
 		screen.update();
 
 		// RULE TYPES
-		screen.addPossibleRuleTypes(rt4);
-		screen.addPossibleRuleTypes(rt3);
-		screen.addPossibleRuleTypes(rt8);
+		screen.addPossibleRuleTypes(rtOnStart);
+		screen.addPossibleRuleTypes(rtOnEnd);
+		screen.addPossibleRuleTypes(rtOnTapScreen);
 
 		screen.update();
 
@@ -1378,10 +1333,10 @@ public class GeoQuestDefaultsFactory {
 
 		// RULE TYPES
 
-		frage.addPossibleRuleTypes(rt1);
-		frage.addPossibleRuleTypes(rt2);
-		frage.addPossibleRuleTypes(rt3);
-		frage.addPossibleRuleTypes(rt4);
+		frage.addPossibleRuleTypes(rtOnSuccess);
+		frage.addPossibleRuleTypes(rtOnFailure);
+		frage.addPossibleRuleTypes(rtOnEnd);
+		frage.addPossibleRuleTypes(rtOnStart);
 		frage.update();
 
 		// MISSION TYPE: Multiple Choice Question
@@ -1485,8 +1440,8 @@ public class GeoQuestDefaultsFactory {
 
 		// RULE TYPES
 
-		menu.addPossibleRuleTypes(rt3);
-		menu.addPossibleRuleTypes(rt4);
+		menu.addPossibleRuleTypes(rtOnEnd);
+		menu.addPossibleRuleTypes(rtOnStart);
 		menu.update();
 
 		// MISSION TYPE: NPCTalk
@@ -1537,10 +1492,102 @@ public class GeoQuestDefaultsFactory {
 
 		// RULES
 
-		textimage.addPossibleRuleTypes(rt4);
-		textimage.addPossibleRuleTypes(rt3);
+		textimage.addPossibleRuleTypes(rtOnStart);
+		textimage.addPossibleRuleTypes(rtOnEnd);
 
 		textimage.update();
+
+		// MISSION TYPE: CUSTOM PAGE
+
+		MissionType customPageType = new MissionType("Individuelle Seite",
+				"Custom");
+		customPageType.save();
+
+		mt.add(customPageType);
+
+		// SAVE MISSIONTYPE TO GAMETYPE
+		PartType customPageType_pt1 = new PartType(customPageType);
+		customPageType_pt1.save();
+
+		// ATTRIBIUTE PARAMETERS:
+		AttributeType customPageType_att0 = new AttributeType("Modul ID",
+				"modul", "String");
+		customPageType_att0.setOptional(true);
+		customPageType_att0.save();
+		customPageType.setAttributeType(customPageType_att0);
+
+		AttributeType customPageType_att1 = new AttributeType("Parameter 1",
+				"param1", "String");
+		customPageType_att1.setOptional(true);
+		customPageType_att1.save();
+		customPageType.setAttributeType(customPageType_att1);
+
+		AttributeType customPageType_att2 = new AttributeType("Parameter 2",
+				"param2", "String");
+		customPageType_att2.setOptional(true);
+		customPageType_att2.save();
+		customPageType.setAttributeType(customPageType_att2);
+
+		AttributeType customPageType_att3 = new AttributeType("Parameter 3",
+				"param3", "String");
+		customPageType_att3.setOptional(true);
+		customPageType_att3.save();
+		customPageType.setAttributeType(customPageType_att3);
+
+		AttributeType customPageType_att4 = new AttributeType("Parameter 4",
+				"param4", "String");
+		customPageType_att4.setOptional(true);
+		customPageType_att4.save();
+		customPageType.setAttributeType(customPageType_att4);
+
+		AttributeType customPageType_att5 = new AttributeType("Parameter 5",
+				"param5", "String");
+		customPageType_att5.setOptional(true);
+		customPageType_att5.save();
+		customPageType.setAttributeType(customPageType_att5);
+
+		AttributeType customPageType_att6 = new AttributeType("Parameter 6",
+				"param6", "String");
+		customPageType_att6.setOptional(true);
+		customPageType_att6.save();
+		customPageType.setAttributeType(customPageType_att6);
+
+		AttributeType customPageType_att7 = new AttributeType("Parameter 7",
+				"param7", "String");
+		customPageType_att7.setOptional(true);
+		customPageType_att7.save();
+		customPageType.setAttributeType(customPageType_att7);
+
+		AttributeType customPageType_att8 = new AttributeType("Parameter 8",
+				"param8", "String");
+		customPageType_att8.setOptional(true);
+		customPageType_att8.save();
+		customPageType.setAttributeType(customPageType_att8);
+
+		AttributeType customPageType_att9 = new AttributeType("Parameter 9",
+				"param9", "String");
+		customPageType_att9.setOptional(true);
+		customPageType_att9.save();
+		customPageType.setAttributeType(customPageType_att9);
+
+		AttributeType customPageType_att10 = new AttributeType("Parameter 10",
+				"param10", "String");
+		customPageType_att10.setOptional(true);
+		customPageType_att10.save();
+		customPageType.setAttributeType(customPageType_att10);
+
+		customPageType.update();
+
+		// RULES
+
+		customPageType.addPossibleRuleTypes(rtOnStart);
+		customPageType.addPossibleRuleTypes(rtOnEnd);
+		customPageType.addPossibleRuleTypes(rtOnFailure);
+		customPageType.addPossibleRuleTypes(rtOnSuccess);
+		customPageType.addPossibleRuleTypes(rtOnTapScreen);
+
+		customPageType.update();
+		
 
 		// MISSION TYPE: NPCTalk
 
@@ -1644,8 +1691,8 @@ public class GeoQuestDefaultsFactory {
 
 		// RULES
 
-		npctalk.addPossibleRuleTypes(rt4);
-		npctalk.addPossibleRuleTypes(rt3);
+		npctalk.addPossibleRuleTypes(rtOnStart);
+		npctalk.addPossibleRuleTypes(rtOnEnd);
 
 		npctalk.update();
 
@@ -1670,40 +1717,40 @@ public class GeoQuestDefaultsFactory {
 
 		osmap.setAttributeType(att18);
 
-		osmap.addPossibleRuleTypes(rt4);
+		osmap.addPossibleRuleTypes(rtOnStart);
 
 		osmap.update();
 
-//		// MISSION TYPE: MapGoogle
-//
-//		googlemap = new MissionType("Karte (Google)", "MapGoogle");
-//		googlemap.save();
-//
-//		mt.add(googlemap);
-//
-//		// SAVE MISSIONTYPE TO GAMETYPE
-//		PartType pt6 = new PartType(googlemap);
-//		pt6.save();
-//
-//		// ATTRIBIUTE
-//
-//		AttributeType att47 = new AttributeType("Map-Ansicht", "makind",
-//				"String");
-//		att47.setOptional(true);
-//		att47.save();
-//		att47.setDefaultValue("map");
-//		att47.addPossibleValue("map");
-//		att47.addPossibleValue("satellite");
-//		att47.update();
-//
-//		osmap.setAttributeType(att47);
-//
-//		// Zoom-Stufe
-//		googlemap.setAttributeType(att18);
-//
-//		googlemap.addPossibleRuleTypes(rt4);
-//
-//		googlemap.update();
+		// // MISSION TYPE: MapGoogle
+		//
+		// googlemap = new MissionType("Karte (Google)", "MapGoogle");
+		// googlemap.save();
+		//
+		// mt.add(googlemap);
+		//
+		// // SAVE MISSIONTYPE TO GAMETYPE
+		// PartType pt6 = new PartType(googlemap);
+		// pt6.save();
+		//
+		// // ATTRIBIUTE
+		//
+		// AttributeType att47 = new AttributeType("Map-Ansicht", "makind",
+		// "String");
+		// att47.setOptional(true);
+		// att47.save();
+		// att47.setDefaultValue("map");
+		// att47.addPossibleValue("map");
+		// att47.addPossibleValue("satellite");
+		// att47.update();
+		//
+		// osmap.setAttributeType(att47);
+		//
+		// // Zoom-Stufe
+		// googlemap.setAttributeType(att18);
+		//
+		// googlemap.addPossibleRuleTypes(rt4);
+		//
+		// googlemap.update();
 
 		// MISSION TYPE: AudioRecord
 
@@ -1735,8 +1782,8 @@ public class GeoQuestDefaultsFactory {
 		audiorecord.setAttributeType(att19);
 
 		// RULES
-		audiorecord.addPossibleRuleTypes(rt4);
-		audiorecord.addPossibleRuleTypes(rt3);
+		audiorecord.addPossibleRuleTypes(rtOnStart);
+		audiorecord.addPossibleRuleTypes(rtOnEnd);
 
 		audiorecord.update();
 
@@ -1784,10 +1831,10 @@ public class GeoQuestDefaultsFactory {
 		textquestion.setAttributeType(tf_att480);
 
 		// RULES
-		textquestion.addPossibleRuleTypes(rt1);
-		textquestion.addPossibleRuleTypes(rt2);
-		textquestion.addPossibleRuleTypes(rt3);
-		textquestion.addPossibleRuleTypes(rt4);
+		textquestion.addPossibleRuleTypes(rtOnSuccess);
+		textquestion.addPossibleRuleTypes(rtOnFailure);
+		textquestion.addPossibleRuleTypes(rtOnEnd);
+		textquestion.addPossibleRuleTypes(rtOnStart);
 
 		textquestion.update();
 
@@ -1847,10 +1894,10 @@ public class GeoQuestDefaultsFactory {
 		tagreading.setAttributeType(tagreading_att1);
 
 		// RULES
-		tagreading.addPossibleRuleTypes(rt1);
-		tagreading.addPossibleRuleTypes(rt2);
-		tagreading.addPossibleRuleTypes(rt4);
-		tagreading.addPossibleRuleTypes(rt3);
+		tagreading.addPossibleRuleTypes(rtOnSuccess);
+		tagreading.addPossibleRuleTypes(rtOnFailure);
+		tagreading.addPossibleRuleTypes(rtOnStart);
+		tagreading.addPossibleRuleTypes(rtOnEnd);
 
 		tagreading.update();
 
@@ -1935,10 +1982,10 @@ public class GeoQuestDefaultsFactory {
 		qrtagreading.setAttributeType(att31);
 
 		// RULES
-		qrtagreading.addPossibleRuleTypes(rt1);
-		qrtagreading.addPossibleRuleTypes(rt2);
-		qrtagreading.addPossibleRuleTypes(rt4);
-		qrtagreading.addPossibleRuleTypes(rt3);
+		qrtagreading.addPossibleRuleTypes(rtOnSuccess);
+		qrtagreading.addPossibleRuleTypes(rtOnFailure);
+		qrtagreading.addPossibleRuleTypes(rtOnStart);
+		qrtagreading.addPossibleRuleTypes(rtOnEnd);
 
 		qrtagreading.update();
 
@@ -1961,7 +2008,6 @@ public class GeoQuestDefaultsFactory {
 
 		videoplay.setAttributeType(att39);
 
-
 		AttributeType att32 = new AttributeType("Kontrollierbar?",
 				"controllable", "boolean");
 		att32.setDefaultValue("true");
@@ -1971,8 +2017,8 @@ public class GeoQuestDefaultsFactory {
 
 		// RULES
 
-		videoplay.addPossibleRuleTypes(rt4);
-		videoplay.addPossibleRuleTypes(rt3);
+		videoplay.addPossibleRuleTypes(rtOnStart);
+		videoplay.addPossibleRuleTypes(rtOnEnd);
 
 		videoplay.update();
 
@@ -2008,8 +2054,8 @@ public class GeoQuestDefaultsFactory {
 		webpage.setAttributeType(webpage_att1);
 
 		// RULES
-		webpage.addPossibleRuleTypes(rt4);
-		webpage.addPossibleRuleTypes(rt3);
+		webpage.addPossibleRuleTypes(rtOnStart);
+		webpage.addPossibleRuleTypes(rtOnEnd);
 
 		webpage.update();
 
@@ -2041,8 +2087,8 @@ public class GeoQuestDefaultsFactory {
 
 		imagecapture.setAttributeType(att45);
 
-		AttributeType att46 = new AttributeType("Button Beschriftung", "buttontext",
-				"String");
+		AttributeType att46 = new AttributeType("Button Beschriftung",
+				"buttontext", "String");
 		att46.setOptional(true);
 		att46.setDefaultValue("");
 		att46.save();
@@ -2050,75 +2096,53 @@ public class GeoQuestDefaultsFactory {
 		imagecapture.setAttributeType(att46);
 
 		// RULES
-		imagecapture.addPossibleRuleTypes(rt4);
-		imagecapture.addPossibleRuleTypes(rt3);
+		imagecapture.addPossibleRuleTypes(rtOnStart);
+		imagecapture.addPossibleRuleTypes(rtOnEnd);
 
 		imagecapture.update();
 
-		
-		
-		
-		
-		
-
-		
 		// MISSION TYPE: Meta-Daten
 
-				metadata = new MissionType("Meta-Daten", "MetaData");
-				metadata.save();
+		metadata = new MissionType("Meta-Daten", "MetaData");
+		metadata.save();
 
+		// SAVE MISSIONTYPE TO GAMETYPE
+		PartType metadata_pt1 = new PartType(metadata);
+		metadata_pt1.save();
 
-				
-				// SAVE MISSIONTYPE TO GAMETYPE
-				PartType metadata_pt1 = new PartType(metadata);
-				metadata_pt1.save();
-				
-				gt.addPossiblePartType(metadata_pt1);
-				gt.update();
+		gt.addPossiblePartType(metadata_pt1);
+		gt.update();
 
-				// POSSIBLE CONTENT TYPES
+		// POSSIBLE CONTENT TYPES
 
-				
-				ContentType metadata_ct1 = new ContentType("Meta-Eintrag", "stringmeta");
-				metadata_ct1.save();
+		ContentType metadata_ct1 = new ContentType("Meta-Eintrag", "stringmeta");
+		metadata_ct1.save();
 
+		ContentTypeOccurrence metadata_ct1_o = new ContentTypeOccurrence(
+				metadata_ct1);
+		metadata_ct1_o.setMin(1);
+		metadata_ct1_o.save();
 
-				ContentTypeOccurrence metadata_ct1_o = new ContentTypeOccurrence(metadata_ct1);
-				metadata_ct1_o.setMin(1);
-				metadata_ct1_o.save();
+		// ATTRIBUTE
+		AttributeType metadata_ct1_at1 = new AttributeType("Schlüssel", "key",
+				"String");
+		metadata_ct1_at1.setShowInParent(true);
+		metadata_ct1_at1.save();
+		metadata_ct1.setAttributeType(metadata_ct1_at1);
+		metadata_ct1.update();
 
-				
-		
+		// ATTRIBUTE
+		AttributeType metadata_ct1_at2 = new AttributeType("Wert", "value",
+				"String");
+		metadata_ct1_at2.setShowInParent(true);
+		metadata_ct1_at2.save();
+		metadata_ct1.setAttributeType(metadata_ct1_at2);
+		metadata_ct1.update();
 
-				// ATTRIBUTE
-				AttributeType metadata_ct1_at1 = new AttributeType("Schlüssel", "key", "String");
-				metadata_ct1_at1.setShowInParent(true);
-				metadata_ct1_at1.save();
-				metadata_ct1.setAttributeType(metadata_ct1_at1);
-				metadata_ct1.update();
+		metadata.addPossibleContentTypes(metadata_ct1);
 
+		metadata.update();
 
-				// ATTRIBUTE
-				AttributeType metadata_ct1_at2 = new AttributeType("Wert", "value", "String");
-				metadata_ct1_at2.setShowInParent(true);
-				metadata_ct1_at2.save();
-				metadata_ct1.setAttributeType(metadata_ct1_at2);
-				metadata_ct1.update();
-
-				
-				
-				metadata.addPossibleContentTypes(metadata_ct1);
-				
-				metadata.update();
-
-				
-		
-		
-	
-		
-		
-		
-		
 		// MISSION TYPE: QuestList
 
 		// questlist = new MissionType("Quest-Liste","QuestList");
@@ -2185,7 +2209,7 @@ public class GeoQuestDefaultsFactory {
 		gt.addPossiblePartType(pt8);
 
 		// Karte (Google) [MapGoogle]
-	//	gt.addPossiblePartType(pt6);
+		// gt.addPossiblePartType(pt6);
 
 		// Karte (OSM) [MapOSM]
 		gt.addPossiblePartType(pt5);
@@ -2210,6 +2234,9 @@ public class GeoQuestDefaultsFactory {
 
 		// Webseite [WebPage]
 		gt.addPossiblePartType(pt11);
+		
+		// Individuelle Seite [CustomPage]
+		gt.addPossiblePartType(customPageType_pt1);
 
 		gt.update();
 
