@@ -17,6 +17,7 @@ public class GeoQuestDefaultsFactory {
 	public MissionType frage;
 	public MissionType menu;
 	public MissionType textimage;
+	public MissionType navi;
 
 	public MissionType npctalk;
 	public MissionType osmap;
@@ -869,36 +870,19 @@ public class GeoQuestDefaultsFactory {
 		hpt1.addPossibleRuleType(rtOnLeaveHotSpot);
 		hpt1.addPossibleRuleType(rtOnTapHotSpot);
 		hpt1.update();
+		
+		
+		
 
-		AttributeType ha1 = new AttributeType("Marker Bild", "img", "file");
-		// ha1.setDefaultValue(Global.SERVER_URL_2+"/assets/img/marker.png");
-		ha1.setDefaultValue(Global.SERVER_URL_2
-				+ "/assets/img/erzbistummarker.png");
+		AttributeType ha8 = new AttributeType("Nummer",
+				"number", "int");
+		ha8.setOptional(true);
+		ha8.save();
 
-		ha1.save();
-
-		hpt1.setAttributeType(ha1);
-
-		AttributeType ha2 = new AttributeType("Radius (m)", "radius", "int");
-		ha2.setDefaultValue("20");
-		ha2.save();
-
-		hpt1.setAttributeType(ha2);
-
-		AttributeType ha3 = new AttributeType("Sichtbarkeit zu Beginn",
-				"initialVisibility", "boolean");
-		ha3.setDefaultValue("true");
-		ha3.save();
-
-		hpt1.setAttributeType(ha3);
-
-		AttributeType ha4 = new AttributeType("Aktivität zu Beginn",
-				"initialActivity", "boolean");
-		ha4.setDefaultValue("true");
-		ha4.save();
-
-		hpt1.setAttributeType(ha4);
-
+		hpt1.setAttributeType(ha8);
+		hpt1.update();
+		
+		
 		AttributeType ha5 = new AttributeType("iBeacon ID",
 				"iBeacon", "String");
 		ha5.setOptional(true);
@@ -920,6 +904,44 @@ public class GeoQuestDefaultsFactory {
 		ha7.save();
 
 		hpt1.setAttributeType(ha7);
+		hpt1.update();
+		
+
+		AttributeType ha1 = new AttributeType("Marker Bild", "img", "file");
+		// ha1.setDefaultValue(Global.SERVER_URL_2+"/assets/img/marker.png");
+		ha1.setDefaultValue(Global.SERVER_URL_2
+				+ "/assets/img/erzbistummarker.png");
+
+		ha1.save();
+
+		hpt1.setAttributeType(ha1);
+
+		hpt1.update();
+		
+		AttributeType ha2 = new AttributeType("Radius (m)", "radius", "int");
+		ha2.setDefaultValue("20");
+		ha2.save();
+
+		hpt1.setAttributeType(ha2);
+		
+		hpt1.update();
+
+		AttributeType ha3 = new AttributeType("Sichtbarkeit zu Beginn",
+				"initialVisibility", "boolean");
+		ha3.setDefaultValue("true");
+		ha3.save();
+
+		hpt1.setAttributeType(ha3);
+		
+		hpt1.update();
+
+		AttributeType ha4 = new AttributeType("Aktivität zu Beginn",
+				"initialActivity", "boolean");
+		ha4.setDefaultValue("true");
+		ha4.save();
+
+		hpt1.setAttributeType(ha4);
+
 		hpt1.update();
 
 		gt.addPossibleHotspotType(hpt1);
@@ -1716,6 +1738,100 @@ public class GeoQuestDefaultsFactory {
 		npctalk.addPossibleRuleTypes(rtOnEnd);
 
 		npctalk.update();
+		
+		
+		
+		// MISSION TYPE: Navigation
+
+				navi = new MissionType("Navigation", "Navigation");
+				navi.save();
+
+				mt.add(navi);
+
+				// SAVE MISSIONTYPE TO GAMETYPE
+				PartType pt_navi = new PartType(navi);
+				pt_navi.save();
+
+				// ATTRIBIUTE
+
+				AttributeType att_navi2 = new AttributeType("Nummer", "number",
+						"boolean");
+				att_navi2.setDefaultValue("true");
+				att_navi2.save();
+				navi.setAttributeType(att_navi2);
+				
+				AttributeType att_navi1 = new AttributeType("Karte", "map",
+						"boolean");
+				att_navi1.setDefaultValue("false");
+				att_navi1.save();
+				navi.setAttributeType(att_navi1);
+				
+				AttributeType att_navi9 = new AttributeType("QR-Code Scanner", "qr",
+						"boolean");
+				att_navi9.setDefaultValue("false");
+				att_navi9.save();
+				navi.setAttributeType(att_navi9);
+
+				AttributeType att_navi3 = new AttributeType("iBeacon", "ibeacon",
+						"boolean");
+				att_navi3.setDefaultValue("false");
+				att_navi3.save();
+				navi.setAttributeType(att_navi3);
+				
+				AttributeType att_navi4 = new AttributeType("NFC Scanner", "nfc",
+						"boolean");
+				att_navi4.setDefaultValue("false");
+				att_navi4.save();
+				navi.setAttributeType(att_navi4);
+				
+				
+				AttributeType att_navi5 = new AttributeType(
+						"Text Nummerneingabe", "text_number", "String");
+				att_navi5.setDefaultValue("Exponat Nummer eingeben...");
+				att_navi5.save();
+				navi.setAttributeType(att_navi5);
+
+				
+				
+				AttributeType att_navi7 = new AttributeType(
+						"Text QR-Code", "text_qr", "String");
+				att_navi7.setDefaultValue("Scanne einen QR-Code...");
+				att_navi7.save();
+				navi.setAttributeType(att_navi7);
+				
+				
+				
+				AttributeType att_navi8 = new AttributeType(
+						"Text NFC", "text_qr", "String");
+				att_navi8.setDefaultValue("Lege das Gerät auf eine iBeacon Station...");
+				att_navi8.save();
+				navi.setAttributeType(att_navi8);
+				
+				
+				
+				
+				AttributeType att_navi10 = new AttributeType(
+						"Text iBeacon", "text_ibeacon", "String");
+				att_navi10.setDefaultValue("Lege das Gerät auf eine NFC Station...");
+				att_navi10.save();
+				navi.setAttributeType(att_navi10);
+				
+				
+				AttributeType att_navi6 = new AttributeType(
+						"Text Navigation fehlgeschlagen", "text_notfound", "String");
+				att_navi6.setDefaultValue("Exponat nicht gefunden.");
+				att_navi6.save();
+				navi.setAttributeType(att_navi6);
+
+
+
+				navi.addPossibleRuleTypes(rtOnStart);
+				navi.addPossibleRuleTypes(rtOnEnd);
+
+				navi.update();
+				
+				
+				
 
 		// MISSION TYPE: MapOSM
 
@@ -2234,7 +2350,10 @@ public class GeoQuestDefaultsFactory {
 
 		// Karte (OSM) [MapOSM]
 		gt.addPossiblePartType(pt5);
-
+		
+		// Navigation [Navigation]
+		gt.addPossiblePartType(pt_navi);
+		
 		// NPC Dialog [NPCTalk]
 		gt.addPossiblePartType(pt4);
 

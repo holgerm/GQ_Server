@@ -593,7 +593,9 @@ public class Portal extends Controller {
 
 				final Form<UserSearch> filledForm = USER_SEARCH_FORM
 						.bindFromRequest();
+				
 				UserSearch form = filledForm.get();
+				if(form != null){
 
 				if (!form.name.isEmpty()) {
 
@@ -605,6 +607,7 @@ public class Portal extends Controller {
 
 					leer.addAll(p.searchForUserByEmail(form.email));
 
+				}
 				}
 
 				List<GameRights> toshow = new ArrayList<GameRights>();
