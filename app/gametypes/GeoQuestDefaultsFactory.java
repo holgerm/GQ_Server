@@ -31,6 +31,7 @@ public class GeoQuestDefaultsFactory {
 	public MissionType webpage;
 	public MissionType imagecapture;
 	public MissionType questlist;
+	public MissionType readNFC;
 
 	public MissionType metadata;
 
@@ -212,6 +213,13 @@ public class GeoQuestDefaultsFactory {
 		RuleType rt9 = new RuleType("Antippen des Objekts", "onTap");
 		rt9.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/ontap.png");
 		rt9.save();
+		
+		
+		
+		RuleType rtOnRead = new RuleType("Nach Einlesen", "onRead");
+		rtOnRead.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/onend.png");
+		rtOnRead.save();
+		allMissionRuleTypes.add(rtOnRead);
 
 		// ACTION TYPES
 
@@ -835,6 +843,12 @@ public class GeoQuestDefaultsFactory {
 
 		allActionTypes.add(at29);
 		hotspotActionTypes.add(at29);
+		
+		
+		
+		
+		
+		
 
 		ActionType at30 = new ActionType("Quest starten", "StartQuest");
 		at30.setCategory("page");
@@ -852,6 +866,49 @@ public class GeoQuestDefaultsFactory {
 
 		allActionTypes.add(at30);
 		hotspotActionTypes.add(at30);
+		
+		
+		
+		
+		
+		ActionType at31 = new ActionType("In NFC Tag schreiben",
+				"WriteToNFC");
+		at31.setCategory("var");
+		at31.setSymbol(Global.SERVER_URL_2
+				+ "/assets/icons/actions/savevar.png");
+
+		at31.save();
+
+		AttributeType at31a1 = new AttributeType("Inhalt", "content", "String");
+
+		at31a1.save();
+
+		at31.setAttributeType(at31a1);
+		at31.update();
+		
+		allActionTypes.add(at31);
+		hotspotActionTypes.add(at31);
+		
+		
+		
+		ActionType at32 = new ActionType("Variablen parsen",
+				"ParseVariables");
+		at32.setCategory("var");
+		at32.setSymbol(Global.SERVER_URL_2
+				+ "/assets/icons/actions/savevar.png");
+
+		at32.save();
+
+		AttributeType at32a1 = new AttributeType("Aus Variable", "FromVar", "String");
+
+		at32a1.save();
+
+		at32.setAttributeType(at32a1);
+		at32.update();
+		
+		allActionTypes.add(at32);
+		hotspotActionTypes.add(at32);
+		
 
 		// for (ActionType aat : allActionTypes) {
 
@@ -2279,6 +2336,53 @@ public class GeoQuestDefaultsFactory {
 		metadata.addPossibleContentTypes(metadata_ct1);
 
 		metadata.update();
+		
+		
+		
+		
+		
+		
+		
+		// MISSION TYPE: Read NFC
+
+				readNFC = new MissionType("NFC Tag einlesen", "ReadNFC");
+				readNFC.save();
+
+				mt.add(readNFC);
+
+				// SAVE MISSIONTYPE TO GAMETYPE
+				PartType pt_readNFC = new PartType(readNFC);
+				pt_readNFC.save();
+
+				// ATTRIBIUTE
+
+				AttributeType att_readNFC_01 = new AttributeType("In Variable speichern", "saveToVar", "String");
+				att_readNFC_01.save();
+
+				readNFC.setAttributeType(att_readNFC_01);
+
+				AttributeType att_readNFC_02 = new AttributeType("Bild", "image", "file");
+				att_readNFC_02.setMimeType("image");
+				att_readNFC_02.save();
+
+				readNFC.setAttributeType(att_readNFC_02);
+
+				AttributeType att_readNFC_03 = new AttributeType(
+						"Aufforderungstext", "text", "String");
+				att_readNFC_03.setDefaultValue("Scan");
+				att_readNFC_03.save();
+
+				readNFC.setAttributeType(att_readNFC_03);
+
+				// RULES
+				readNFC.addPossibleRuleTypes(rtOnStart);
+				readNFC.addPossibleRuleTypes(rtOnEnd);
+				readNFC.addPossibleRuleTypes(rtOnRead);
+
+				readNFC.update();
+
+		
+		
 
 		// MISSION TYPE: QuestList
 
@@ -2377,6 +2481,9 @@ public class GeoQuestDefaultsFactory {
 		
 		// Individuelle Seite [CustomPage]
 		gt.addPossiblePartType(customPageType_pt1);
+		
+		// NFC Read
+		gt.addPossiblePartType(pt_readNFC);
 
 		gt.update();
 
