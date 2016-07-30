@@ -62,6 +62,29 @@
         }
         
         
+                @if(a.getFileType == "StringList"){
+        	
+        	        <input type="hidden" value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId"  >
+        	
+        	
+          		@for(pm <- a.getPossibleValues()){
+          	        <input type="checkbox"/ @if(s.listAttributeContainsKey(s.getAttributeValue(a),pm,false)){ checked = "checked" } onchange="javascript:toggleKeyInList('sceneat@s.getId@a.getId','@pm',false); syncAttr('scene',@s.getId,@a.getId); document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';" >@pm &nbsp;
+          	}
+          	
+          	
+          	}
+          	
+          	 @if(a.getFileType == "QuoteStringList"){
+        	
+        	        <input type="hidden" value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId"  >
+        	
+        	
+          		@for(pm <- a.getPossibleValues()){
+          	        <input type="checkbox"/ @if(s.listAttributeContainsKey(s.getAttributeValue(a),pm,true)){ checked = "checked" } onchange="javascript:toggleKeyInList('sceneat@s.getId@a.getId','@pm',true); syncAttr('scene',@s.getId,@a.getId); document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';" >@pm &nbsp;
+          	}
+          	
+          	
+          	}
         
         
         
@@ -78,6 +101,20 @@
         
         }
         
+        
+         @if(a.getFileType == "StringTextArea"){
+        
+        
+        
+        
+                 <textarea rows="8" cols="100" type="text"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId); textareaLengthCheck('sceneat@s.getId@a.getId' ,'counter_sceneat@s.getId@a.getId');"
+                        	        onkeyup="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")'; textareaLengthCheck('sceneat@s.getId@a.getId' ,'counter_sceneat@s.getId@a.getId');">@s.getAttributeValue(a)</textarea>
+        
+        
+                	        <span id="counter_sceneat@s.getId@a.getId">@s.getAttributeValue(a).length()</span>
+        
+        
+        }
         
          @if(a.getFileType == "QuoteStringTextArea"){
         

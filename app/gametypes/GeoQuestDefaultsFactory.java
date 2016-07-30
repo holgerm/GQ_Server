@@ -857,7 +857,7 @@ public class GeoQuestDefaultsFactory {
 
 		at30.save();
 
-		AttributeType at30a1 = new AttributeType("Quest", "quest", "int");
+		AttributeType at30a1 = new AttributeType("Quest", "quest", "String");
 
 		at30a1.save();
 
@@ -1675,7 +1675,191 @@ public class GeoQuestDefaultsFactory {
 		customPageType_att10.setOptional(true);
 		customPageType_att10.save();
 		customPageType.setAttributeType(customPageType_att10);
+		
+		AttributeType customPageType_att11 = new AttributeType("Parameter 11",
+				"param11", "String");
+		customPageType_att11.setOptional(true);
+		customPageType_att11.save();
+		customPageType.setAttributeType(customPageType_att11);
 
+		AttributeType customPageType_att12 = new AttributeType("Parameter 12",
+				"param12", "String");
+		customPageType_att12.setOptional(true);
+		customPageType_att12.save();
+		customPageType.setAttributeType(customPageType_att12);
+
+		AttributeType customPageType_att13 = new AttributeType("Parameter 13",
+				"param13", "String");
+		customPageType_att13.setOptional(true);
+		customPageType_att13.save();
+		customPageType.setAttributeType(customPageType_att13);
+
+		AttributeType customPageType_att14 = new AttributeType("Parameter 14",
+				"param14", "String");
+		customPageType_att14.setOptional(true);
+		customPageType_att14.save();
+		customPageType.setAttributeType(customPageType_att14);
+
+		AttributeType customPageType_att15 = new AttributeType("Parameter 15",
+				"param15", "String");
+		customPageType_att15.setOptional(true);
+		customPageType_att15.save();
+		customPageType.setAttributeType(customPageType_att15);
+
+		AttributeType customPageType_att16 = new AttributeType("Parameter 16",
+				"param16", "String");
+		customPageType_att16.setOptional(true);
+		customPageType_att16.save();
+		customPageType.setAttributeType(customPageType_att16);
+
+		AttributeType customPageType_att17 = new AttributeType("Parameter 17",
+				"param17", "String");
+		customPageType_att17.setOptional(true);
+		customPageType_att17.save();
+		customPageType.setAttributeType(customPageType_att17);
+
+		AttributeType customPageType_att18 = new AttributeType("Parameter 18",
+				"param18", "String");
+		customPageType_att18.setOptional(true);
+		customPageType_att18.save();
+		customPageType.setAttributeType(customPageType_att18);
+
+		AttributeType customPageType_att19 = new AttributeType("Parameter 19",
+				"param19", "String");
+		customPageType_att19.setOptional(true);
+		customPageType_att19.save();
+		customPageType.setAttributeType(customPageType_att19);
+
+		AttributeType customPageType_att20 = new AttributeType("Parameter 20",
+				"param20", "String");
+		customPageType_att20.setOptional(true);
+		customPageType_att20.save();
+		customPageType.setAttributeType(customPageType_att20);
+
+		
+		AttributeType customPageType_file1 = new AttributeType("Datei 1",
+				"file1", "file");
+		customPageType_file1.setOptional(true);
+		customPageType_file1.save();
+		customPageType.setAttributeType(customPageType_file1);
+		
+		AttributeType customPageType_file2 = new AttributeType("Datei 2",
+				"file2", "file");
+		customPageType_file2.setOptional(true);
+		customPageType_file2.save();
+		customPageType.setAttributeType(customPageType_file2);
+		
+		AttributeType customPageType_file3 = new AttributeType("Datei 3",
+				"file3", "file");
+		customPageType_file3.setOptional(true);
+		customPageType_file3.save();
+		customPageType.setAttributeType(customPageType_file3);
+		
+		AttributeType customPageType_file4 = new AttributeType("Datei 4",
+				"file4", "file");
+		customPageType_file4.setOptional(true);
+		customPageType_file4.save();
+		customPageType.setAttributeType(customPageType_file4);
+		
+		AttributeType customPageType_file5 = new AttributeType("Datei 5",
+				"file5", "file");
+		customPageType_file5.setOptional(true);
+		customPageType_file5.save();
+		customPageType.setAttributeType(customPageType_file5);
+		
+		AttributeType customPageType_file6 = new AttributeType("Datei 6",
+				"file6", "file");
+		customPageType_file6.setOptional(true);
+		customPageType_file6.save();
+		customPageType.setAttributeType(customPageType_file6);
+		
+		AttributeType customPageType_file7 = new AttributeType("Datei 7",
+				"file7", "file");
+		customPageType_file7.setOptional(true);
+		customPageType_file7.save();
+		customPageType.setAttributeType(customPageType_file7);
+		
+		AttributeType customPageType_file8 = new AttributeType("Datei 8",
+				"file8", "file");
+		customPageType_file8.setOptional(true);
+		customPageType_file8.save();
+		customPageType.setAttributeType(customPageType_file8);
+		
+		AttributeType customPageType_file9 = new AttributeType("Datei 9",
+				"file9", "file");
+		customPageType_file9.setOptional(true);
+		customPageType_file9.save();
+		customPageType.setAttributeType(customPageType_file9);
+		
+		AttributeType customPageType_file10 = new AttributeType("Datei 10",
+				"file10", "file");
+		customPageType_file10.setOptional(true);
+		customPageType_file10.save();
+		customPageType.setAttributeType(customPageType_file10);
+		
+		
+		
+		AttributeType customPageType_bool1 = new AttributeType("Boolean 1",
+				"boolean1", "boolean");
+		customPageType_bool1.setOptional(true);
+		customPageType_bool1.save();
+		customPageType.setAttributeType(customPageType_bool1);
+		
+		AttributeType customPageType_bool2 = new AttributeType("Boolean 2",
+				"boolean2", "boolean");
+		customPageType_bool2.setOptional(true);
+		customPageType_bool2.save();
+		customPageType.setAttributeType(customPageType_bool2);
+		
+		AttributeType customPageType_bool3 = new AttributeType("Boolean 3",
+				"boolean3", "boolean");
+		customPageType_bool3.setOptional(true);
+		customPageType_bool3.save();
+		customPageType.setAttributeType(customPageType_bool3);
+		
+		AttributeType customPageType_bool4 = new AttributeType("Boolean 4",
+				"boolean4", "boolean");
+		customPageType_bool4.setOptional(true);
+		customPageType_bool4.save();
+		customPageType.setAttributeType(customPageType_bool4);
+		
+		AttributeType customPageType_bool5 = new AttributeType("Boolean 5",
+				"boolean5", "boolean");
+		customPageType_bool5.setOptional(true);
+		customPageType_bool5.save();
+		customPageType.setAttributeType(customPageType_bool5);
+		
+		AttributeType customPageType_bool6 = new AttributeType("Boolean 6",
+				"boolean6", "boolean");
+		customPageType_bool6.setOptional(true);
+		customPageType_bool6.save();
+		customPageType.setAttributeType(customPageType_bool6);
+		
+		AttributeType customPageType_bool7 = new AttributeType("Boolean 7",
+				"boolean7", "boolean");
+		customPageType_bool7.setOptional(true);
+		customPageType_bool7.save();
+		customPageType.setAttributeType(customPageType_bool7);
+		
+		AttributeType customPageType_bool8 = new AttributeType("Boolean 8",
+				"boolean8", "boolean");
+		customPageType_bool8.setOptional(true);
+		customPageType_bool8.save();
+		customPageType.setAttributeType(customPageType_bool8);
+		
+		AttributeType customPageType_bool9 = new AttributeType("Boolean 9",
+				"boolean9", "boolean");
+		customPageType_bool9.setOptional(true);
+		customPageType_bool9.save();
+		customPageType.setAttributeType(customPageType_bool9);
+		
+		AttributeType customPageType_bool10 = new AttributeType("Boolean 10",
+				"boolean10", "boolean");
+		customPageType_bool10.setOptional(true);
+		customPageType_bool10.save();
+		customPageType.setAttributeType(customPageType_bool10);
+		
+		
 		customPageType.update();
 
 		// RULES

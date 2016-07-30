@@ -118,7 +118,26 @@ success: function(data){
   position: absolute;
   top: 0; left: 0; bottom: 0; right: 0; background-color:#ffffff; padding:10px; z-index:999999991;">
   <h1>Veröffentlichen</h1>
-  Bist du sicher, dass du diese Quest veröffentlichen möchtest?
+  
+  Bist du sicher, dass du diese @Application.getLanguage("Quest") veröffentlichen möchtest?
+  
+  @if(Application.getLocalPortal.getContentHtmlParameter("general.games.adminshavetopublish") == "true"){
+  	<br/>
+  	  	<br/>
+  	
+  	Die Veröffentlichung wird zunächst von einem Administrator geprüft.
+  	  	<br/>
+  	
+  } else {
+  <br/>
+    	<br/>
+  
+  Die Veröffentlichung wird sofort gültig.
+  	<br/>
+
+  }
+  
+  
   <br/>
 Mit dem Veröffentlichen akzeptierst du die <u><span style="cursor:pointer; color:#0000FF;" onClick="javascript:window.open('@Application.getLocalPortal.getTemplateServerURLDropSlash/@Application.getLocalPortal().getId()/pagbs', 'MsgWindow', 'width=400, height=500');">AGBs</span></u> und
 <u><span style="cursor:pointer; color:#0000FF;" onClick="javascript:window.open('@Application.getLocalPortal.getTemplateServerURLDropSlash/@Application.getLocalPortal().getId()/pprivacyagreement', 'MsgWindow', 'width=400, height=500');">Datenschutzvereinbarung</span></u>.
