@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -4274,6 +4275,7 @@ public class Editor extends Controller {
 
 					Game g = Game.find.byId(gid);
 					g.userlastupdated = Application.getLocalUser().getId();
+					g.lastUpdate = new Date();
 					g.createXML();
 
 				} else {

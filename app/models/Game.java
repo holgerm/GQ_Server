@@ -1196,10 +1196,16 @@ public class Game extends Model {
 			Attr attr2 = doc.createAttribute("name");
 			attr2.setValue(name);
 			game.setAttributeNode(attr2);
+			
+			
 
 			Attr attr3 = doc.createAttribute("xmlformat");
 			attr3.setValue("5");
 			game.setAttributeNode(attr3);
+			
+			Attr attr5 = doc.createAttribute("lastUpdate");
+			attr5.setValue(""+lastUpdate.getTime());
+			game.setAttributeNode(attr5);
 
 			for (Attribute aa : attributes) {
 
