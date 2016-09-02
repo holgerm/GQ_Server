@@ -6,6 +6,8 @@
 L.GeoSearch = {};
 L.GeoSearch.Provider = {};
 
+var search = '';
+
 L.GeoSearch.Result = function (x, y, label) {
     this.X = x;
     this.Y = y;
@@ -83,6 +85,8 @@ L.Control.GeoSearch = L.Control.extend({
     },
 
     geosearch: function (qry) {
+    
+    if(qry != '0,0'){
         try {
             var provider = this._config.provider;
 
@@ -98,6 +102,13 @@ L.Control.GeoSearch = L.Control.extend({
         }
         catch (error) {
             this._printError(error);
+        }
+        } else {
+                    this._showLocation(null,0,0);
+                                this._map.fireEvent('geosearch_foundlocations', {Locations: null});
+                    
+        
+        
         }
     },
 
@@ -175,7 +186,10 @@ L.Control.GeoSearch = L.Control.extend({
         }
     },
 
-    _showLocation: function (location) {
+    _showLocation: function (location,x,y) {
+    location = location || null;
+    x = x|| 0;
+    y = y || 0;
         if (this.options.showMarker == true) {
         
             
@@ -191,11 +205,20 @@ var Icontoset = L.icon({
     popupAnchor:  [0,-30] // point from which the popup should open relative to the iconAnchor
 });
             
-            
+   if(location != null){         
              this._positionMarker = L.marker([location.Y, location.X], {draggable: true,icon: Icontoset}).addTo(this._map);
             
              document.getElementById('hotspotsnew_lat').value = location.Y;
     document.getElementById('hotspotsnew_long').value = location.X;
+   } else {
+   
+     this._positionMarker = L.marker([y, x], {draggable: true,icon: Icontoset}).addTo(this._map);
+            
+             document.getElementById('hotspotsnew_lat').value = y;
+    document.getElementById('hotspotsnew_long').value = x;
+   
+   }
+   
     positionmarker = this._positionMarker;
 			this._positionMarker.bindPopup("<h1>@Application.getLanguage("Hier erstellen:")</h1>  <p><label>@Application.getLanguage("Hotspot-Typ"):</label>	<select id = \"game_newhotspot_type\" >  @if(g.getType.getPossibleHotspotTypes.size() > 0){     @for(a_hstype <- g.getType.getPossibleHotspotTypes){              				  <option value=\"hotspot_@a_hstype.getId()\"><i class=\"icon-map-marker\"></i>@Application.getLanguage(a_hstype.getName())</option>         		   }          				  }	             @for(a_stype <- g.getType.getPossibleSceneTypes){                           @if(a_stype.getDefaultHotspots.size()>0){              <option value=\"scene_@a_stype.getId()\">                @Application.getLanguage(a_stype.getName())</option>               }                              }</select>          <div class=\"btn btn-success\" onClick=\"setHotspotFromSearch(location.Y,location.X)\">@Application.getLanguage("Setzen")</div>").openPopup();
 
@@ -232,9 +255,18 @@ this._positionMarker.on('move', function(event){
     
             
         }
+   if(location != null){         
 
         this._map.setView([location.Y, location.X], this._config.zoomLevel, false);
         this._map.fireEvent('geosearch_showlocation', {Location: location});
+        
+        } else {
+        
+                this._map.setView([y, x], this._config.zoomLevel, false);
+                        this._map.fireEvent('geosearch_showlocation', {Location: null});
+                
+        
+        }
     },
 
     _printError: function(message) {
