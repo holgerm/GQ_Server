@@ -1048,6 +1048,9 @@ public class Portal extends Controller {
 						GameType gt = new GameType(form.name);
 
 						gt.save();
+						
+						
+						if (!form.makescene || !form.onlyhotspots || !form.onlyonehotspot) { 
 
 						for (AttributeType a : g.getType().getAttributeTypes()) {
 
@@ -1094,6 +1097,7 @@ public class Portal extends Controller {
 
 						}
 
+						}
 						if (form.makescene) {
 
 							if (form.onlyonehotspot) {
@@ -1117,16 +1121,7 @@ public class Portal extends Controller {
 							gt.addPossibleSceneType(s);
 							gt.update();
 
-							Game g1 = gt.createMe(form.scenename);
-							g1.save();
-							Scene sce = s.createMe(form.scenename, g1);
-							sce.save();
-
-							// sce.redoLinking(g1);
-
-							Part p1 = new Part(sce);
-							p1.save();
-							gt.addDefaultPart(p1);
+						
 							gt.update();
 
 						} else {
