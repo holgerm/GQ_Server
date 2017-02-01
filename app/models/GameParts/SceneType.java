@@ -788,6 +788,8 @@ public class SceneType extends Model {
 
 						o.save();
 						atr.setLink(o);
+						// TODO: perhaps we should set the value of the linked object, too, e.g.:
+								// o.getAttribute().setValue(atrt.getDefaultValue());
 						atr.setValue(atrt.getDefaultValue());
 						atr.update();
 

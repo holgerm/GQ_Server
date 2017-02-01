@@ -328,6 +328,8 @@ public class Scene extends Model {
 
 			counter++;
 		}
+		
+		// Update Links to the copies of attributes etc.
 
 		return s;
 

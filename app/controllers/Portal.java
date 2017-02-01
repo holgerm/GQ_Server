@@ -53,6 +53,9 @@ import util.Global;
 
 import java.io.File;
 import java.net.URL;
+import java.net.URLConnection;
+
+import java.nio.file.Files;
 
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
@@ -564,7 +567,7 @@ public class Portal extends Controller {
 
 	}
 
-//	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result gameRightsonPortalUserSearch(Long pid, Long gid) {
 
 		session("currentportal", pid.toString());
@@ -593,21 +596,21 @@ public class Portal extends Controller {
 
 				final Form<UserSearch> filledForm = USER_SEARCH_FORM
 						.bindFromRequest();
-				
+
 				UserSearch form = filledForm.get();
-				if(form != null){
+				if (form != null) {
 
-				if (!form.name.isEmpty()) {
+					if (!form.name.isEmpty()) {
 
-					leer.addAll(p.searchForUserByName(form.name));
+						leer.addAll(p.searchForUserByName(form.name));
 
-				}
+					}
 
-				if (!form.email.isEmpty()) {
+					if (!form.email.isEmpty()) {
 
-					leer.addAll(p.searchForUserByEmail(form.email));
+						leer.addAll(p.searchForUserByEmail(form.email));
 
-				}
+					}
 				}
 
 				List<GameRights> toshow = new ArrayList<GameRights>();
@@ -628,7 +631,7 @@ public class Portal extends Controller {
 	 * These are used to compute the Post objects of Forms.
 	 */
 
-//	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result setGameVisibility(Long pid, Long gid, String value) {
 
 		session("currentportal", pid.toString());
@@ -666,7 +669,7 @@ public class Portal extends Controller {
 
 	}
 
-//	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result resetGameVisibility(Long pid, Long gid) {
 
 		session("currentportal", pid.toString());
@@ -700,7 +703,7 @@ public class Portal extends Controller {
 
 	}
 
-//	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result doDeleteGame(Long pid, Long game) {
 
 		session("currentportal", pid.toString());
@@ -755,7 +758,7 @@ public class Portal extends Controller {
 
 	}
 
-//	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result doUploadGame(Long pid) {
 		session("currentportal", pid.toString());
 		if (getLocalUser(session()) == null) {
@@ -997,7 +1000,7 @@ public class Portal extends Controller {
 		return redirect(routes.Portal.myGamesListOnCurrentPortal());
 	}
 
-//	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result doAddGameTypeFromGame(Long pid, Long gid) {
 		session("currentportal", pid.toString());
 		if (getLocalUser(session()) == null) {
@@ -1048,54 +1051,57 @@ public class Portal extends Controller {
 						GameType gt = new GameType(form.name);
 
 						gt.save();
-						
-						
-						if (!form.makescene || !form.onlyhotspots || !form.onlyonehotspot) { 
 
-						for (AttributeType a : g.getType().getAttributeTypes()) {
+						if (!form.makescene || !form.onlyhotspots
+								|| !form.onlyonehotspot) {
 
-							AttributeType gt_att5 = new AttributeType(
-									a.getName(), a.getXMLType(),
-									a.getFileType());
-							gt_att5.save();
+							for (AttributeType a : g.getType()
+									.getAttributeTypes()) {
 
-							gt_att5.setDefaultValue(g.getAttributeValue(a));
-							gt_att5.update();
+								AttributeType gt_att5 = new AttributeType(
+										a.getName(), a.getXMLType(),
+										a.getFileType());
+								gt_att5.save();
 
-							gt.setAttributeType(gt_att5);
-							gt.update();
+								gt_att5.setDefaultValue(g.getAttributeValue(a));
+								gt_att5.update();
 
-						}
+								gt.setAttributeType(gt_att5);
+								gt.update();
 
-						for (PartType pt : g.getType().getPossiblePartTypes()) {
+							}
 
-							gt.addPossiblePartType(pt);
-							gt.update();
+							for (PartType pt : g.getType()
+									.getPossiblePartTypes()) {
 
-						}
+								gt.addPossiblePartType(pt);
+								gt.update();
 
-						for (ActionType mi : g.getType()
-								.getPossibleMenuItemActionTypes()) {
+							}
 
-							gt.addPossibleMenuItemActionType(mi);
-							gt.update();
+							for (ActionType mi : g.getType()
+									.getPossibleMenuItemActionTypes()) {
 
-						}
+								gt.addPossibleMenuItemActionType(mi);
+								gt.update();
 
-						for (HotspotType ht : g.getType()
-								.getPossibleHotspotTypes()) {
+							}
 
-							gt.addPossibleHotspotType(ht);
-							gt.update();
+							for (HotspotType ht : g.getType()
+									.getPossibleHotspotTypes()) {
 
-						}
+								gt.addPossibleHotspotType(ht);
+								gt.update();
 
-						for (SceneType st : g.getType().getPossibleSceneTypes()) {
+							}
 
-							gt.addPossibleSceneType(st);
-							gt.update();
+							for (SceneType st : g.getType()
+									.getPossibleSceneTypes()) {
 
-						}
+								gt.addPossibleSceneType(st);
+								gt.update();
+
+							}
 
 						}
 						if (form.makescene) {
@@ -1121,7 +1127,6 @@ public class Portal extends Controller {
 							gt.addPossibleSceneType(s);
 							gt.update();
 
-						
 							gt.update();
 
 						} else {
@@ -1193,7 +1198,7 @@ public class Portal extends Controller {
 
 	}
 
-//	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result doEditGame(Long pid, Long game) {
 		session("currentportal", pid.toString());
 		if (getLocalUser(session()) == null) {
@@ -1297,7 +1302,7 @@ public class Portal extends Controller {
 		}
 	}
 
-//	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result doCopyGame(Long pid, Long game) {
 		session("currentportal", pid.toString());
 		if (getLocalUser(session()) == null) {
@@ -1392,7 +1397,7 @@ public class Portal extends Controller {
 		}
 	}
 
-//	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result doEditUserRightsOnGame(Long pid, Long gid, Long uid,
 			String rights) {
 
@@ -1490,7 +1495,7 @@ public class Portal extends Controller {
 		}
 	}
 
-//	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result doDeleteUserRightsOnGame(Long pid, Long gid, Long uid) {
 
 		session("currentportal", pid.toString());
@@ -1637,7 +1642,7 @@ public class Portal extends Controller {
 		return ok("");
 	}
 
-//	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result addPortal(Long pid) {
 
 		session("currentportal", pid.toString());
@@ -1657,7 +1662,7 @@ public class Portal extends Controller {
 		}
 	}
 
-//	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result doAddGameTypeToPortal(Long pid, Long portal, Long gtid) {
 
 		session("currentportal", pid.toString());
@@ -1707,7 +1712,7 @@ public class Portal extends Controller {
 
 	}
 
-//	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result doDeleteGameTypeFromPortal(Long pid, Long portal,
 			Long gtid) {
 
@@ -1759,7 +1764,7 @@ public class Portal extends Controller {
 
 	}
 
-//	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result userRightsonPortal(Long pid, Long gid) {
 
 		session("currentportal", pid.toString());
@@ -1789,7 +1794,7 @@ public class Portal extends Controller {
 
 	}
 
-//	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result gameTypesonPortal(Long pid, Long gid) {
 
 		session("currentportal", gid.toString());
@@ -1837,7 +1842,7 @@ public class Portal extends Controller {
 
 	}
 
-//	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result editPortal(Long pid, Long portal) {
 
 		session("currentportal", pid.toString());
@@ -1912,7 +1917,7 @@ public class Portal extends Controller {
 	 * These are used to compute the Post objects of Forms.
 	 */
 
-//	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result doAddPortal(Long pid) {
 		session("currentportal", pid.toString());
 		if (getLocalUser(session()) == null) {
@@ -2056,7 +2061,7 @@ public class Portal extends Controller {
 		}
 	}
 
-//	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result doDeletePortal(Long pid, Long portal) {
 
 		session("currentportal", pid.toString());
@@ -2119,7 +2124,7 @@ public class Portal extends Controller {
 
 	}
 
-//	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result doEditPortal(Long pid, Long portal) {
 		session("currentportal", pid.toString());
 		if (getLocalUser(session()) == null) {
@@ -2295,7 +2300,7 @@ public class Portal extends Controller {
 
 	}
 
-//	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result doEditUserRightsOnPortal(Long pid, Long peditid,
 			Long uid, String rights) {
 
@@ -2345,7 +2350,7 @@ public class Portal extends Controller {
 
 	}
 
-//	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result doDeleteUserRightsOnPortal(Long pid, Long peditid,
 			Long uid) {
 
@@ -2408,7 +2413,7 @@ public class Portal extends Controller {
 
 	}
 
-//	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result doAddMeToPortal(Long pid) {
 
 		session("currentportal", pid.toString());
@@ -2622,7 +2627,7 @@ public class Portal extends Controller {
 
 	}
 
-//	@Restrict(@Group(Application.USER_ROLE))
+	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result doDeleteNewsItem(Long pid, Long nid) {
 
 		session("currentportal", pid.toString());
@@ -3062,19 +3067,41 @@ public class Portal extends Controller {
 	}
 
 	public static Result at(String filename) {
-		response().setContentType("image");
-		byte[] i_file = null;
+		return at(filename, true);
+	}
 
+	public static Result head(String filename) {
+		return at(filename, false);
+	}
+
+	private static Result at(String filename, boolean withContent) {
+		String path = "public/uploads/" + filename;
 		try {
-			i_file = IOUtils.toByteArray(new FileInputStream(new File(
-					"public/uploads/" + filename)));
-		} catch (FileNotFoundException e) {
-			return ok("404: public/uploads/" + filename);
-		} catch (IOException e) {
-			return ok("404: public/uploads/" + filename);
-		}
+			File file = new File(path);
+			if (!file.exists() || !file.canRead()) {
+				return notFound(path);
+			}
+			String contentType = Files.probeContentType(file.toPath());
+			if (contentType == null)
+				contentType = URLConnection.guessContentTypeFromName(file
+						.getName());
+			if (contentType == null)
+				contentType = "unknown";
+			response().setContentType(contentType);
+			response().setHeader(CONTENT_LENGTH,
+					String.valueOf((long) file.length()));
 
-		return ok(i_file);
+			if (withContent) {
+				byte[] i_file = IOUtils.toByteArray(new FileInputStream(file));
+				return ok(i_file);
+			} else {
+				return ok();
+			}
+		} catch (FileNotFoundException e) {
+			return notFound(path);
+		} catch (Exception e) {
+			return internalServerError(e.getMessage());
+		}
 	}
 
 	public static User getLocalUser(final Session session) {

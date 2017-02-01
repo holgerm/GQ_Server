@@ -21,31 +21,34 @@ GET    /:pid/public                                                           co
 GET    /:pid/public_mapscript                                                 controllers.Portal.publicGamesMap(pid: Long)
 
 
-GET	   /publicmenu															controllers.Portal.getMenu()
+GET    /publicmenu                                                            controllers.Portal.getMenu()
 
 GET    /testConnection                                                        controllers.Portal.getConnectionTest()
 
 
 
-GET 	/:pid/agbs/version															controllers.Portal.getAGBVersion(pid:Long)
-GET 	/:pid/privacyagreement/version												controllers.Portal.getPrivacyAgreementVersion(pid:Long)
-GET 	/:pid/agbs															controllers.Portal.getAGBs(pid:Long)
-GET 	/:pid/privacyagreement												controllers.Portal.getPrivacyAgreement(pid:Long)
-GET 	/:pid/imprint														controllers.Portal.getImprint(pid:Long)
+GET    /:pid/agbs/version                                                     controllers.Portal.getAGBVersion(pid:Long)
+GET    /:pid/privacyagreement/version                                         controllers.Portal.getPrivacyAgreementVersion(pid:Long)
+GET    /:pid/agbs                                                             controllers.Portal.getAGBs(pid:Long)
+GET    /:pid/privacyagreement                                                 controllers.Portal.getPrivacyAgreement(pid:Long)
+GET    /:pid/imprint                                                          controllers.Portal.getImprint(pid:Long)
 
-GET 	/:pid/pagbs															controllers.Portal.getPortalAGBs(pid:Long)
-GET 	/:pid/pprivacyagreement												controllers.Portal.getPortalPrivacyAgreement(pid:Long)
+GET    /:pid/pagbs                                                            controllers.Portal.getPortalAGBs(pid:Long)
+GET    /:pid/pprivacyagreement                                                controllers.Portal.getPortalPrivacyAgreement(pid:Long)
 
 
 GET    /assets/*file                                                          controllers.Assets.at(path="/public", file)
 GET    /assets/javascript/routes.js                                           controllers.Application.jsRoutes
+
 GET    /uploadedassets/*file                                                  controllers.Portal.at(file)
+HEAD   /uploadedassets/*file                                                  controllers.Portal.head(file)
+
 GET    /gqplayer/*file                                                        controllers.Portal.getGQPlayer(file)
 
 
 
-GET		/dataTables/geoquest.js												controllers.Application.getDatatables()
-GET		/dataTables/jquery.js												controllers.Application.getDatatablesJquery()
+GET    /dataTables/geoquest.js                                                controllers.Application.getDatatables()
+GET    /dataTables/jquery.js                                                  controllers.Application.getDatatablesJquery()
 
 
 
@@ -54,25 +57,25 @@ GET    /testingtemplate                                                       co
 GET    /testmapping                                                           controllers.Application.getTestMapping
 
 
-GET		/setLanguage/:l														  controllers.Application.setLanguage(l: String)
+GET    /setLanguage/:l                                                        controllers.Application.setLanguage(l: String)
 
 
 
 
 
-GET	/devices/pair/:name/:deviceid											controllers.Application.createDevice(name: String, deviceid: String)
-GET /profile/:uid/devices/pair/:code														controllers.Application.addDeviceByCode(uid:Long,code: String)
-GET /device/:did/push/:gid														controllers.Application.pushQuestToDevice(did:Long,gid:Long)
-GET /device/:did/update														controllers.Application.getQuestPushes(did:String)
-GET	/editor/devices															controllers.Editor.getDevicesForEditor()
+GET    /devices/pair/:name/:deviceid                                          controllers.Application.createDevice(name: String, deviceid: String)
+GET    /profile/:uid/devices/pair/:code                                       controllers.Application.addDeviceByCode(uid:Long,code: String)
+GET    /device/:did/push/:gid                                                 controllers.Application.pushQuestToDevice(did:Long,gid:Long)
+GET    /device/:did/update                                                    controllers.Application.getQuestPushes(did:String)
+GET    /editor/devices                                                        controllers.Editor.getDevicesForEditor()
 
-GET	/device/:did/getxml														controllers.Editor.getTestXMLForClient(did:String)
+GET    /device/:did/getxml                                                    controllers.Editor.getTestXMLForClient(did:String)
 
 
 # ROUTING
 
 
-GET /routes/*arguments														 controllers.Portal.getRouting(arguments)
+GET    /routes/*arguments                                                     controllers.Portal.getRouting(arguments)
 
 # LOGGED IN
 GET    /:pid/my                                                               controllers.Portal.myGamesList(pid: Long)
@@ -82,12 +85,12 @@ GET    /:pid/mygames                                                          co
 
 
 
-GET		/:pid/profile/:uid/games											controllers.Portal.userGamesList(uid: Long, pid: Long)
+GET    /:pid/profile/:uid/games                                               controllers.Portal.userGamesList(uid: Long, pid: Long)
 
 
 
-GET  /:pid/search/user														controllers.Portal.userSearch(pid:Long)
-GET  /:pid/search/user/results														controllers.Portal.userSearchForm(pid:Long)
+GET    /:pid/search/user                                                      controllers.Portal.userSearch(pid:Long)
+GET    /:pid/search/user/results                                              controllers.Portal.userSearchForm(pid:Long)
 
 
 ## GAME
@@ -143,7 +146,7 @@ GET    /:pid/portal/:portal/gametypes/add/:gtid                               co
 GET    /:pid/portal/:portal/gametypes/remove/:gtid                            controllers.Portal.doDeleteGameTypeFromPortal(pid: Long, portal: Long, gtid: Long)
 
 GET    /:pid/portal/rights/:gid                                               controllers.Portal.userRightsonPortal(pid:Long,gid:Long)
-GET    /portal/rights                                                   		controllers.Portal.userRightsonCurrentPortal()
+GET    /portal/rights                                                         controllers.Portal.userRightsonCurrentPortal()
 
 
 GET    /:pid/portal/delete/:epid                                              controllers.Portal.doDeletePortal(pid: Long,epid: Long)
@@ -155,7 +158,7 @@ POST   /:pid/portal/edit/:epid                                                co
 
 GET    /:pid/:gid/migrate                                                     controllers.Portal.migrateGame(pid:Long,gid:Long)
 GET    /:pid/:gid/setvisibility/:value                                        controllers.Portal.setGameVisibility(pid:Long,gid: Long,value: String)
-GET    /:pid/:gid/resetvisibility                                        	controllers.Portal.resetGameVisibility(pid:Long,gid: Long)
+GET    /:pid/:gid/resetvisibility                                             controllers.Portal.resetGameVisibility(pid:Long,gid: Long)
 
 GET    /:pid/portal/editrights/:gid/:uid/:right                               controllers.Portal.doEditUserRightsOnPortal(pid:Long,gid:Long,uid:Long,right:String)
 
@@ -170,9 +173,9 @@ GET    /:pid/updatetemplate                                                   co
 
 # PREMIUM
 
-GET 	/premium/add/:months/months/touser/:uid								controllers.Portal.givePremiumAccess(uid: Long, months: Integer)
-GET		/premium/successful													controllers.Portal.paymentsuccessful()
-GET		/premium/failed													controllers.Portal.paymentfailed()
+GET    /premium/add/:months/months/touser/:uid                                controllers.Portal.givePremiumAccess(uid: Long, months: Integer)
+GET    /premium/successful                                                    controllers.Portal.paymentsuccessful()
+GET    /premium/failed                                                        controllers.Portal.paymentfailed()
 
 # EDITOR
 GET    /:pid/editor/:gid                                                      controllers.Editor.getEditorRedirect(gid: Long,pid:Long)
@@ -294,7 +297,7 @@ GET    /editor/:gid/fragments/Hotspot/:pid/ruleedit                           co
 GET    /editor/:gid/fragments/MenuItem/:pid/insidemenu                        controllers.Editor.getMenuItemInSideMenuForEditor(gid: Long, pid: Long)
 
 
-GET 	/editor/:gid/fragments/Attribute/Preview/:attr							controllers.Editor.getFilePreview(gid:Long,attr:Long)
+GET    /editor/:gid/fragments/Attribute/Preview/:attr                         controllers.Editor.getFilePreview(gid:Long,attr:Long)
 
 GET    /editor/:gid/fragments/Hotspot/:hid/popupcontent                       controllers.Editor.getHotspotPopupContent(gid: Long, hid: Long)
 GET    /editor/:gid/fragments/hotspotselector/:selectedValue                  controllers.Editor.getHotspotSelectorForEditor(gid: Long, selectedValue : String)
@@ -486,7 +489,7 @@ GET    /:pid/qeeveetemplates/:x/:y                                            co
 
 
 # IF NOTHING ELSE
-GET    /crossdomain.xml                                                        		controllers.Portal.getCrossdomain()
+GET    /crossdomain.xml                                                       controllers.Portal.getCrossdomain()
 
 
 GET    /:pid                                                                  controllers.Application.portalindex(pid:Long)

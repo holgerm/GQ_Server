@@ -2442,7 +2442,7 @@ public class Game extends Model {
 
 				if (at != null) {
 					if (or.getObjectId().equals(at.getParentId())) {
-
+						// we return a new object reference that links to the copy of the attribute that the given object reference linked to.
 						x = new ObjectReference(at);
 						
 						System.out.println("success!");
