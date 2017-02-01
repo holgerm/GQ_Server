@@ -13,6 +13,8 @@ import providers.MyUsernamePasswordAuthProvider;
 import providers.MyUsernamePasswordAuthProvider.MyIdentity;
 import providers.MyUsernamePasswordAuthUser;
 import views.html.account.signup.*;
+import util.Global;
+
 
 import com.feth.play.module.pa.PlayAuthenticate;
 
@@ -43,35 +45,34 @@ public class Signup extends Controller {
 	private static final Form<PasswordReset> PASSWORD_RESET_FORM = form(PasswordReset.class);
 
 	public static Result unverified(Long pid) {
-		//com.feth.play.module.pa.controllers.Authenticate.noCache(response());
-		
-		
-		if(pid == 61L){
-			
-			  return redirect("https://www.quest-mill.com/geoquest/unverified.php");
+		// com.feth.play.module.pa.controllers.Authenticate.noCache(response());
+
+		if (pid == 61L) {
+
+			return redirect("https://www.quest-mill.com/geoquest/unverified.php");
 
 		} else {
-		return ok(unverified.render());
+			return ok(unverified.render());
 		}
 	}
 
 	private static final Form<MyIdentity> FORGOT_PASSWORD_FORM = form(MyIdentity.class);
 
-	public static Result forgotPassword(Long pid,final String email) {
+	public static Result forgotPassword(Long pid, final String email) {
 		com.feth.play.module.pa.controllers.Authenticate.noCache(response());
 		Form<MyIdentity> form = FORGOT_PASSWORD_FORM;
 		if (email != null && !email.trim().isEmpty()) {
 			form = FORGOT_PASSWORD_FORM.fill(new MyIdentity(email));
 		}
-		
-		
-	if(pid == 61L){
-			
-			return ok(views.html.portal.publicportal_forgotpassword.render(form));
-			
+
+		if (pid == 61L) {
+
+			return ok(views.html.portal.publicportal_forgotpassword
+					.render(form));
+
 		} else {
-		return ok(password_forgot.render(form));
-		
+			return ok(password_forgot.render(form));
+
 		}
 	}
 
@@ -147,10 +148,10 @@ public class Signup extends Controller {
 		return ret;
 	}
 
-	public static Result resetPassword(Long pid,final String token) {
-        session("currentportal",pid.toString());
+	public static Result resetPassword(Long pid, final String token) {
+		session("currentportal", pid.toString());
 
-        com.feth.play.module.pa.controllers.Authenticate.noCache(response());
+		com.feth.play.module.pa.controllers.Authenticate.noCache(response());
 		final TokenAction ta = tokenIsValid(token, Type.PASSWORD_RESET);
 		if (ta == null) {
 			return badRequest(no_token_or_invalid.render());
@@ -161,9 +162,9 @@ public class Signup extends Controller {
 	}
 
 	public static Result doResetPassword(Long pid) {
-        session("currentportal",pid.toString());
+		session("currentportal", pid.toString());
 
-        com.feth.play.module.pa.controllers.Authenticate.noCache(response());
+		com.feth.play.module.pa.controllers.Authenticate.noCache(response());
 		final Form<PasswordReset> filledForm = PASSWORD_RESET_FORM
 				.bindFromRequest();
 		if (filledForm.hasErrors()) {
@@ -187,61 +188,76 @@ public class Signup extends Controller {
 				flash(Application.FLASH_MESSAGE_KEY,
 						Messages.get("playauthenticate.reset_password.message.no_password_account"));
 			}
-		
-				// send the user to the login page
-				flash(Application.FLASH_MESSAGE_KEY,
-						Messages.get("playauthenticate.reset_password.message.success.manual_login"));
-			
+
+			// send the user to the login page
+			flash(Application.FLASH_MESSAGE_KEY,
+					Messages.get("playauthenticate.reset_password.message.success.manual_login"));
+
 			return redirect(routes.Application.login(pid));
 		}
 	}
 
-	public static Result oAuthDenied(Long pid,final String getProviderKey) {
-        session("currentportal",pid.toString());
+	public static Result oAuthDenied(Long pid, final String getProviderKey) {
+		session("currentportal", pid.toString());
 
-        com.feth.play.module.pa.controllers.Authenticate.noCache(response());
+		com.feth.play.module.pa.controllers.Authenticate.noCache(response());
 		return ok(oAuthDenied.render(getProviderKey));
 	}
 
 	public static Result exists() {
 
-        com.feth.play.module.pa.controllers.Authenticate.noCache(response());
+		com.feth.play.module.pa.controllers.Authenticate.noCache(response());
 		return ok(exists.render());
 	}
 
-	public static Result verify(Long pid,final String token) {
-        session("currentportal",pid.toString());
+	public static Result verify(Long pid, final String token) {
+		session("currentportal", pid.toString());
 
-        com.feth.play.module.pa.controllers.Authenticate.noCache(response());
+		com.feth.play.module.pa.controllers.Authenticate.noCache(response());
 		final TokenAction ta = tokenIsValid(token, Type.EMAIL_VERIFICATION);
 		if (ta == null) {
 			return badRequest(no_token_or_invalid.render());
 		}
 		final String email = ta.targetUser.email;
-		
-	
-		for(ProviderUsers au: Application.getLocalPortal().userList){
-			
-			if(au.getRights().equals("admin")){
-				System.out.println("trying to send an email to admin: "+au.getUser().getName());
-		final MyUsernamePasswordAuthProvider provider = MyUsernamePasswordAuthProvider
-				.getProvider();
-		String text = "Auf deinem Geoquest Portal "+pid+" wurde ein neuer User mit dem Namen '"+ta.targetUser.getName()+"' und der E-Mail "+ta.targetUser.getEmail()+" erstellt. Solltest nur du die Berechtigung haben, diesen User freizuschalten, kümmere dich bitte darum.";
-		
-		
-		String html = "Auf deinem Geoquest Portal "+pid+" wurde ein neuer User mit dem Namen '"+ta.targetUser.getName()+"' und der E-Mail "+ta.targetUser.getEmail()+" erstellt.<br/><br/> Solltest nur du die Berechtigung haben, diesen User freizuschalten, kümmere dich bitte darum.";
-		provider.sendEmailToUser(au.getUser(), "Neuer User auf Portal "+pid+": "+ta.targetUser.getName(), text,html);
+
+		for (ProviderUsers au : Application.getLocalPortal().userList) {
+
+			if (au.getRights().equals("admin")) {
+				System.out.println("trying to send an email to admin: "
+						+ au.getUser().getName());
+				final MyUsernamePasswordAuthProvider provider = MyUsernamePasswordAuthProvider
+						.getProvider();
+
+				String linkToUserRightsTable = Global.SERVER_URL + pid
+						+ "/portal/rights/" + pid;
+				String text = "Auf deinem Geoquest Portal "
+						+ pid
+						+ " wurde ein neuer User mit dem Namen '"
+						+ ta.targetUser.getName()
+						+ "' und der E-Mail "
+						+ ta.targetUser.getEmail()
+						+ " erstellt. Solltest nur du die Berechtigung haben, diesen User freizuschalten, kümmere dich bitte darum: "
+						+ linkToUserRightsTable;
+
+				String html = "Auf deinem Geoquest Portal "
+						+ pid
+						+ " wurde ein neuer User mit dem Namen '"
+						+ ta.targetUser.getName()
+						+ "' und der E-Mail "
+						+ ta.targetUser.getEmail()
+						+ " erstellt.<br/><br/> Solltest nur du die Berechtigung haben, diesen User freizuschalten, kümmere dich bitte darum: "
+						+ "<a href=\"" + linkToUserRightsTable + "\">"
+						+ linkToUserRightsTable + "</a>";
+				provider.sendEmailToUser(au.getUser(), "Neuer User auf Portal "
+						+ pid + ": " + ta.targetUser.getName(), text, html);
 			}
-		
+
 		}
-		
+
 		User.verify(ta.targetUser);
 		flash(Application.FLASH_MESSAGE_KEY,
 				Messages.get("playauthenticate.verify_email.success", email));
-		
-		
-		
-		
+
 		if (Application.getLocalUser(session()) != null) {
 			return redirect(routes.Application.index());
 		} else {

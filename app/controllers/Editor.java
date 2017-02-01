@@ -4295,17 +4295,20 @@ public class Editor extends Controller {
 												+ au.getUser().getName());
 								final MyUsernamePasswordAuthProvider provider = MyUsernamePasswordAuthProvider
 										.getProvider();
-								String text = "Auf einem deiner Geoquest Portale wurde eine neue Quest mit dem Namen'"
+								String linkToUserRightsTable = Global.SERVER_URL + "/" + p.id + "/portal/rights/" + p.id;
+								String text = "Auf dem Geoquest Portal '" + p.name + "' wurde eine neue Quest mit dem Namen'"
 										+ c.getName()
 										+ "' und der ID "
 										+ c.getId()
-										+ " erstellt. Solltest nur du die Berechtigung haben, diese Quest zu veröffentlichen, kümmere dich bitte darum.";
+										+ " erstellt. Solltest nur du die Berechtigung haben, diese Quest zu veröffentlichen, kümmere dich bitte darum: " +
+										linkToUserRightsTable;
 
-								String html = "Auf einem deiner Geoquest Portale wurde eine neue Quest mit dem Namen'"
+								String html = "Auf dem Geoquest Portal '" + p.name + "' wurde eine neue Quest mit dem Namen'"
 										+ c.getName()
 										+ "' und der ID "
 										+ c.getId()
-										+ " erstellt.<br/><br/> Solltest nur du die Berechtigung haben, diese Quest zu veröffentlichen, kümmere dich bitte darum.";
+										+ " erstellt.<br/><br/> Solltest <b>nur du</b> die Berechtigung haben, diese Quest zu veröffentlichen, kümmere dich bitte darum: " +
+										"<a href=\"" + linkToUserRightsTable + "\">" + linkToUserRightsTable + "</a>";
 								provider.sendEmailToUser(au.getUser(),
 										"Neue Quest: " + c.getName(), text,
 										html);
