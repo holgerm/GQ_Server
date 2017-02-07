@@ -3088,6 +3088,8 @@ public class Portal extends Controller {
 			if (contentType == null)
 				contentType = "unknown";
 			response().setContentType(contentType);
+			response().setHeader(LAST_MODIFIED,
+					String.valueOf(file.lastModified()));
 			response().setHeader(CONTENT_LENGTH,
 					String.valueOf((long) file.length()));
 
