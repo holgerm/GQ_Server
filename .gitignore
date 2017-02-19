@@ -17,3 +17,5 @@ RUNNING_PID
 /test-db.h2.db
 /test-db.trace.db
 /dump/
+
+*.DS_Store
