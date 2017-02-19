@@ -1281,26 +1281,7 @@ public class GeoQuestDefaultsFactory {
 		frage_att1.save();
 		frage_att1.setDefaultValue("???");
 		frage_att1.update();
-
 		frage.setAttributeType(frage_att1);
-
-		AttributeType att4 = new AttributeType("Bis zum Erfolg wiederholen?",
-				"loopUntilSuccess", "boolean");
-		att4.setOptional(true);
-		att4.save();
-		att4.setDefaultValue("false");
-		att4.update();
-
-		frage.setAttributeType(att4);
-
-		AttributeType frage_att4 = new AttributeType(
-				"Feedback bei Wiederholung", "loopText", "String");
-		frage_att4.setOptional(false);
-		frage_att4.save();
-		frage_att4.setDefaultValue("X");
-		frage_att4.update();
-
-		frage.setAttributeType(frage_att4);
 
 		AttributeType frage_att2 = new AttributeType(
 				"Antworten zu Beginn mischen?", "shuffle", "boolean");
@@ -1308,8 +1289,38 @@ public class GeoQuestDefaultsFactory {
 		frage_att2.setDefaultValue("false");
 		frage_att2.setOptional(true);
 		frage_att2.update();
-
 		frage.setAttributeType(frage_att2);
+
+		AttributeType att4 = new AttributeType("Bis zum Erfolg wiederholen?",
+				"loopUntilSuccess", "boolean");
+		att4.setOptional(true);
+		att4.save();
+		att4.setDefaultValue("false");
+		att4.update();
+		frage.setAttributeType(att4);
+
+		AttributeType mpcf_att4a = new AttributeType("Bild bei Wiederholung", "loopImage", "file");
+		mpcf_att4a.setMimeType("image");
+		mpcf_att4a.setOptional(true);
+		mpcf_att4a.save();
+		frage.setAttributeType(mpcf_att4a);
+		
+		AttributeType mpcf_att4b = new AttributeType(
+				"Text bei Wiederholung", "loopText", "String");
+		mpcf_att4b.setOptional(false);
+		mpcf_att4b.save();
+		mpcf_att4b.setDefaultValue("X");
+		mpcf_att4b.update();
+		frage.setAttributeType(mpcf_att4b);
+
+
+		AttributeType mpcf_att4c = new AttributeType(
+				"Buttontext bei Wiederholung", "loopButtonText", "String");
+		mpcf_att4c.setOptional(true);
+		mpcf_att4c.save();
+		mpcf_att4c.setDefaultValue("<");
+		mpcf_att4c.update();
+		frage.setAttributeType(mpcf_att4c);
 
 		AttributeType frage_att3 = new AttributeType("Nur Bilder anzeigen?",
 				"showOnlyImages", "boolean");
@@ -2198,8 +2209,29 @@ public class GeoQuestDefaultsFactory {
 		tf_att4.save();
 		tf_att4.setDefaultValue("false");
 		tf_att4.update();
-
 		textquestion.setAttributeType(tf_att4);
+
+		AttributeType tf_att4a = new AttributeType("Bild bei Wiederholung", "loopImage", "file");
+		tf_att4a.setMimeType("image");
+		tf_att4a.setOptional(true);
+		tf_att4a.save();
+		textquestion.setAttributeType(tf_att4a);
+		
+		AttributeType tf_att4b = new AttributeType(
+				"Text bei Wiederholung", "loopText", "String");
+		tf_att4b.setOptional(true);
+		tf_att4b.save();
+		tf_att4b.setDefaultValue("X");
+		tf_att4b.update();
+		textquestion.setAttributeType(tf_att4b);
+		
+		AttributeType tf_att4c = new AttributeType(
+				"Buttontext bei Wiederholung", "loopButtonText", "String");
+		tf_att4c.setOptional(true);
+		tf_att4c.save();
+		tf_att4c.setDefaultValue("<");
+		tf_att4c.update();
+		textquestion.setAttributeType(tf_att4c);
 
 		AttributeType tf_att480 = new AttributeType("Hintergrund", "bg", "file");
 		tf_att480.setMimeType("image");
