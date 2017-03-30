@@ -38,7 +38,7 @@ public class User extends Model implements Subject {
 	 */
 	private static final long serialVersionUID = 1L;
 
-    @Id
+	@Id
 	public Long id;
 
 	@Email
@@ -48,33 +48,27 @@ public class User extends Model implements Subject {
 	public String email;
 
 	public String name;
-	
+
 	public String firstName;
-	
+
 	public String lastName;
-	
-	 @ManyToMany
-	    @OrderBy("validuntil")
+
+	@ManyToMany
+	@OrderBy("validuntil")
 	public List<PremiumAccess> premiumrights;
 
-	 
-	 @ManyToMany
+	@ManyToMany
 	public List<Device> paireddevices;
-	 
-	 
-    @ManyToMany
-    @OrderBy("datum")
-    private List<NewsstreamItem> Newsstream;
 
+	@ManyToMany
+	@OrderBy("datum")
+	private List<NewsstreamItem> Newsstream;
 
+	@OneToMany(mappedBy = "user")
+	private Set<GameRights> games;
 
-    @OneToMany(mappedBy="user")
-    private Set<GameRights> games;
-
-    @OneToMany(mappedBy="user")
-    private Set<ProviderUsers> portals;
-
-
+	@OneToMany(mappedBy = "user")
+	private Set<ProviderUsers> portals;
 
 	@Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date lastLogin;
@@ -85,9 +79,7 @@ public class User extends Model implements Subject {
 
 	@ManyToMany
 	public List<SecurityRole> roles;
-	
-	
-	
+
 	@ManyToMany
 	public List<ObjectReference> clipboard;
 
@@ -97,359 +89,297 @@ public class User extends Model implements Subject {
 	@ManyToMany
 	public List<UserPermission> permissions;
 
+	public String getEmail() {
 
+		return email;
+	}
 
-    public String getEmail(){
+	public String getName() {
 
-        return email;
-    }
+		return name;
+	}
 
-    public String getName(){
+	public void deleteNewsstreamItem(NewsstreamItem ni) {
 
-        return name;
-    }
-    
-    
-    
-    public void deleteNewsstreamItem(NewsstreamItem ni){
-    	
-    	if(Newsstream.contains(ni)== true){
+		if (Newsstream.contains(ni) == true) {
 
-            Newsstream.remove(ni);
+			Newsstream.remove(ni);
 
-        }
-    	
-    }
+		}
 
+	}
 
-    public void deleteGame(GameRights g){
+	public void deleteGame(GameRights g) {
 
-        if(games.contains(g)== true){
+		if (games.contains(g) == true) {
 
-            games.remove(g);
+			games.remove(g);
 
-        }
+		}
 
+	}
 
-    }
+	public void deletePortal(ProviderUsers pu) {
 
-    public void deletePortal(ProviderUsers pu){
+		if (portals.contains(pu) == true) {
 
-        if(portals.contains(pu)== true){
+			portals.remove(pu);
 
-            portals.remove(pu);
+		}
 
-        }
+	}
 
+	public String getPremiumStatus() {
 
-    }
-    
-    
-    
-    public String getPremiumStatus(){
-    	
-    	String s = "Free";
+		String s = "Free";
 		Date now = new Date();
 
-    	for(PremiumAccess ps : premiumrights){
-    		
-    		if(ps.isValid() && ps.getName().equals("All Access")){
-    		s = ps.getName();
-    		}
-    	}
-    	
-    	return s;
-    	
-    }
-    
-    public void givePremiumAccess(PremiumAccess pa){
-    	
-    	premiumrights.add(pa);
-    	
-    	this.update();
-    	
-    	
-    }
-    
-    
-    
-    public PremiumAccess getCurrentAccess(){
-    	
-
-    	for(PremiumAccess ps : premiumrights){
-    		
-    		if(ps.isValid() && ps.getName().equals("All Access")){
-    		return ps;
-    		}
-    	}
-    	
-    return null;
-    }
-    
-    
-    
-    
-    public Boolean canAccess(String s){
-    	
-    	
-    	if(s == null || s == ""){ return true; } else {
-    	
-    	for(PremiumAccess ps : premiumrights){
-    		
-    		if(ps.isValid() && ps.getName().equals(s)){
-    		return true;
-    		}
-    	}
-    	
-    	return false;
-    	
-    	}
-    }
-    
-    public Boolean isAdminOnPortalOne(){
-    	
-    	Boolean b = false;
-    	
-    	
-    	for(ProviderUsers pu : portals){
-    		
-    		
-    		if(pu.getPortal().getId().equals(1L) && pu.getRights().equals("admin")){
-    			
-    			b = true;
-    			
-    		}
-    		
-    		
-    	}
-    	
-    	
-    	
-    	return b;
-    	
-    }
-
-
-    public Set<GameRights> getGames(){
-        return games;
-
-    }
-
-
-
-    public Set<GameRights> getGamesOnPortal(ProviderPortal p){
-
-    	
-    	String help = "false";
-   
-    	if(p.getContentHtmlParameter("general.games.adminshaveallrights") != null){
-    	
-    		help = p.getContentHtmlParameter("general.games.adminshaveallrights");
-    	
-    	}
-    	
-    	if(help.equals("true") && Global.securityGuard.hasAdminRightsOnPortalX(this, p)){
-    		
-    		Set<GameRights> x = new HashSet<GameRights>();
-    	for(ProviderGames pg : p.getGameList()){
-    		
-    		GameRights gr = new GameRights();
-    		gr.setGame(pg.getGame());
-    		gr.setUser(this);
-    gr.setRights("write");
-    		x.add(gr);
-    		
-    	}
-    		return x;
-    		
-    	}
-    	
-        Set<GameRights> onPortal = new HashSet<GameRights>();
+		for (PremiumAccess ps : premiumrights) {
 
+			if (ps.isValid() && ps.getName().equals("All Access")) {
+				s = ps.getName();
+			}
+		}
 
-        for(GameRights agameright: games){
+		return s;
 
+	}
 
-            if(p.existsGame(agameright.getGame()) == true){
-                onPortal.add(agameright);
-            } else {
-            	
-            	//System.out.println("I have a GameRight that is not on this portal:"+agameright.getGame().getId());
-            	
-            }
+	public void givePremiumAccess(PremiumAccess pa) {
 
+		premiumrights.add(pa);
 
-        }
+		this.update();
 
-        return onPortal;
+	}
 
-    }
-    
-    
-    
-    
-    
-    
-    
-    public Set<GameRights> getPublicGamesOnPortal(ProviderPortal p){
+	public PremiumAccess getCurrentAccess() {
 
-    	
+		for (PremiumAccess ps : premiumrights) {
 
-    	
-        Set<GameRights> onPortal = new HashSet<GameRights>();
+			if (ps.isValid() && ps.getName().equals("All Access")) {
+				return ps;
+			}
+		}
 
+		return null;
+	}
 
-        for(GameRights agameright: games){
+	public Boolean canAccess(String s) {
 
-        	
-       
-        	
+		if (s == null || s == "") {
+			return true;
+		} else {
 
-            if(p.existsGame(agameright.getGame()) == true && p.getGame(agameright.getGame()).getVisibility()){
-                onPortal.add(agameright);
-            } else {
-            	
-            	//System.out.println("I have a GameRight that is not on this portal:"+agameright.getGame().getId());
-            	
-            }
+			for (PremiumAccess ps : premiumrights) {
 
+				if (ps.isValid() && ps.getName().equals(s)) {
+					return true;
+				}
+			}
 
-        }
+			return false;
 
-        return onPortal;
+		}
+	}
 
-    }
+	public Boolean isAdminOnPortalOne() {
 
+		Boolean b = false;
 
+		for (ProviderUsers pu : portals) {
 
+			if (pu.getPortal().getId().equals(1L)
+					&& pu.getRights().equals("admin")) {
 
-    public Set<GameRights> getGamesForPortal(ProviderPortal p){
+				b = true;
 
-        Set<GameRights> filtered = new HashSet();
+			}
 
-        for(GameRights agameright :games){
+		}
 
-           for(ProviderGames aprovidergame : Application.getLocalPortal().getGameList()){
+		return b;
 
-               if(agameright.getGame().equals(aprovidergame.getGame())){
+	}
 
-                   filtered.add(agameright);
+	public Set<GameRights> getGames() {
+		return games;
 
-               }
+	}
 
-           }
+	public Set<GameRights> getGamesOnPortal(ProviderPortal p) {
 
-        }
+		String help = "false";
 
-        return filtered;
+		if (p.getContentHtmlParameter("general.games.adminshaveallrights") != null) {
 
-    }
+			help = p.getContentHtmlParameter("general.games.adminshaveallrights");
 
-    public Long getId(){
+		}
 
-        return id;
-    }
+		if (help.equals("true")
+				&& Global.securityGuard.hasAdminRightsOnPortalX(this, p)) {
 
-    public Set<ProviderUsers> getPortals(){
-        return portals;
+			Set<GameRights> x = new HashSet<GameRights>();
+			for (ProviderGames pg : p.getGameList()) {
 
-    }
+				GameRights gr = new GameRights();
+				gr.setGame(pg.getGame());
+				gr.setUser(this);
+				gr.setRights("write");
+				x.add(gr);
 
-    
-    public void addPortal(ProviderUsers pu){
-    	
-    	boolean doit = true;
+			}
+			return x;
 
-    	for(ProviderUsers test:portals){
-    		
-    		if(test.getPortal().getId().equals(pu.getPortal().getId())){
-    			
-    			doit = false;
-    			
-    			
-    		}
-    		
-    		
-    	}
-    	
-    	
-    	
-    	if(doit){
-    		
-    		portals.add(pu);
-    		
-    	}
-    	
-    	
-    }
-    
-    public ProviderUsers getPortal(ProviderPortal p){
+		}
 
+		Set<GameRights> onPortal = new HashSet<GameRights>();
 
-        ProviderUsers pu = new ProviderUsers();
+		for (GameRights agameright : games) {
 
-        for(ProviderUsers aprovideruser : portals ){
+			if (p.existsGame(agameright.getGame()) == true) {
+				onPortal.add(agameright);
+			} else {
 
-            if(aprovideruser.getPortal().getId() == p.getId()){
+				// System.out.println("I have a GameRight that is not on this portal:"+agameright.getGame().getId());
 
-                pu = aprovideruser;
+			}
 
-            }
+		}
 
-        }
-        return pu;
+		return onPortal;
 
+	}
 
-    }
+	public Set<GameRights> getPublicGamesOnPortal(ProviderPortal p) {
 
+		Set<GameRights> onPortal = new HashSet<GameRights>();
 
-    public NewsstreamItem createNewsstreamItem(String title, String content,String vis){
+		for (GameRights agameright : games) {
 
+			if (p.existsGame(agameright.getGame()) == true
+					&& p.getGame(agameright.getGame()).getVisibility()) {
+				onPortal.add(agameright);
+			} else {
 
-        NewsstreamItem nsi = new NewsstreamItem(title,content,vis,"user",getId());
-       return nsi;
+				// System.out.println("I have a GameRight that is not on this portal:"+agameright.getGame().getId());
 
-    }
+			}
 
+		}
 
-    public void addNewsstream(NewsstreamItem nsi){
+		return onPortal;
 
+	}
 
-        Newsstream.add(nsi);
+	public Set<GameRights> getGamesForPortal(ProviderPortal p) {
 
-        this.update();
+		Set<GameRights> filtered = new HashSet();
 
+		for (GameRights agameright : games) {
 
+			for (ProviderGames aprovidergame : Application.getLocalPortal()
+					.getGameList()) {
 
+				if (agameright.getGame().equals(aprovidergame.getGame())) {
 
-    }
+					filtered.add(agameright);
 
+				}
 
+			}
 
+		}
 
+		return filtered;
 
+	}
 
-       /*
-        * Play Authenticate Code
-        */
+	public Long getId() {
 
+		return id;
+	}
 
+	public Set<ProviderUsers> getPortals() {
+		return portals;
 
-    @Override
-    public String getIdentifier()
-    {
-        return Long.toString(id);
-    }
+	}
 
-    @Override
-    public List<? extends Role> getRoles() {
-        return roles;
-    }
+	public void addPortal(ProviderUsers pu) {
 
-    @Override
-    public List<? extends Permission> getPermissions() {
-        return permissions;
-    }
+		boolean doit = true;
+
+		for (ProviderUsers test : portals) {
+
+			if (test.getPortal().getId().equals(pu.getPortal().getId())) {
+
+				doit = false;
+
+			}
+
+		}
+
+		if (doit) {
+
+			portals.add(pu);
+
+		}
+
+	}
+
+	public ProviderUsers getPortal(ProviderPortal p) {
+
+		ProviderUsers pu = new ProviderUsers();
+
+		for (ProviderUsers aprovideruser : portals) {
+
+			if (aprovideruser.getPortal().getId() == p.getId()) {
+
+				pu = aprovideruser;
+
+			}
+
+		}
+		return pu;
+
+	}
+
+	public NewsstreamItem createNewsstreamItem(String title, String content,
+			String vis) {
+
+		NewsstreamItem nsi = new NewsstreamItem(title, content, vis, "user",
+				getId());
+		return nsi;
+
+	}
+
+	public void addNewsstream(NewsstreamItem nsi) {
+
+		Newsstream.add(nsi);
+
+		this.update();
+
+	}
+
+	/*
+	 * Play Authenticate Code
+	 */
+
+	@Override
+	public String getIdentifier() {
+		return Long.toString(id);
+	}
+
+	@Override
+	public List<? extends Role> getRoles() {
+		return roles;
+	}
+
+	@Override
+	public List<? extends Permission> getPermissions() {
+		return permissions;
+	}
 
 	public static boolean existsByAuthUserIdentity(
 			final AuthUserIdentity identity) {
@@ -529,17 +459,17 @@ public class User extends Model implements Subject {
 				user.name = name;
 			}
 		}
-		
+
 		if (authUser instanceof FirstLastNameIdentity) {
-		  final FirstLastNameIdentity identity = (FirstLastNameIdentity) authUser;
-		  final String firstName = identity.getFirstName();
-		  final String lastName = identity.getLastName();
-		  if (firstName != null) {
-		    user.firstName = firstName;
-		  }
-		  if (lastName != null) {
-		    user.lastName = lastName;
-		  }
+			final FirstLastNameIdentity identity = (FirstLastNameIdentity) authUser;
+			final String firstName = identity.getFirstName();
+			final String lastName = identity.getLastName();
+			if (firstName != null) {
+				user.firstName = firstName;
+			}
+			if (lastName != null) {
+				user.lastName = lastName;
+			}
 		}
 
 		user.save();
@@ -571,19 +501,18 @@ public class User extends Model implements Subject {
 
 	public static void setLastLoginDate(final AuthUser knownUser) {
 		final User u = User.findByAuthUserIdentity(knownUser);
-		
-		if(u != null){
-		u.setLastLoginDateDate(new Date());
-		
-		u.update();
+
+		if (u != null) {
+			u.setLastLoginDateDate(new Date());
+
+			u.update();
 		}
 	}
-	
-	
-	public void setLastLoginDateDate(Date x){
-		
+
+	public void setLastLoginDateDate(Date x) {
+
 		lastLogin = x;
-		
+
 	}
 
 	public static User findByEmail(final String email) {
@@ -628,24 +557,15 @@ public class User extends Model implements Subject {
 		TokenAction.deleteByUser(this, Type.PASSWORD_RESET);
 	}
 
+	/**
+	 *
+	 * Finder is a Play Framework Class that lets other classes find a specific
+	 * object of this class, in this case, searching for objects with a Long
+	 * value is enabled.
+	 *
+	 */
 
-
-
-
-
-
-
-    /**
-     *
-     * Finder is a Play Framework Class that lets other classes find a specific object of this class,
-     * in this case, searching for objects with a Long value is enabled.
-     *
-     */
-
-
-    public static final Finder<Long, User> find = new Finder<Long, User>(
-            Long.class, User.class);
-
-
+	public static final Finder<Long, User> find = new Finder<Long, User>(
+			Long.class, User.class);
 
 }

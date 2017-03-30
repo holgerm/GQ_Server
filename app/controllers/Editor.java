@@ -3491,8 +3491,6 @@ public class Editor extends Controller {
 						return ok("No file uploaded");
 					}
 
-					Random generator = new Random(19580427);
-
 					if (resourceFile != null) {
 
 						String fileName = resourceFile.getFilename();
