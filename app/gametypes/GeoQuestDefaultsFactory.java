@@ -2107,6 +2107,7 @@ public class GeoQuestDefaultsFactory {
 		osmap.setAttributeType(att18);
 
 		osmap.addPossibleRuleTypes(rtOnStart);
+		osmap.addPossibleRuleTypes(rtOnEnd);
 
 		osmap.update();
 
