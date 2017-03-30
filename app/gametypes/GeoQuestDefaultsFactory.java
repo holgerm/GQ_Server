@@ -2110,37 +2110,7 @@ public class GeoQuestDefaultsFactory {
 
 		osmap.update();
 
-		// // MISSION TYPE: MapGoogle
-		//
-		// googlemap = new MissionType("Karte (Google)", "MapGoogle");
-		// googlemap.save();
-		//
-		// mt.add(googlemap);
-		//
-		// // SAVE MISSIONTYPE TO GAMETYPE
-		// PartType pt6 = new PartType(googlemap);
-		// pt6.save();
-		//
-		// // ATTRIBIUTE
-		//
-		// AttributeType att47 = new AttributeType("Map-Ansicht", "makind",
-		// "String");
-		// att47.setOptional(true);
-		// att47.save();
-		// att47.setDefaultValue("map");
-		// att47.addPossibleValue("map");
-		// att47.addPossibleValue("satellite");
-		// att47.update();
-		//
-		// osmap.setAttributeType(att47);
-		//
-		// // Zoom-Stufe
-		// googlemap.setAttributeType(att18);
-		//
-		// googlemap.addPossibleRuleTypes(rt4);
-		//
-		// googlemap.update();
-
+		
 		// MISSION TYPE: AudioRecord
 
 		audiorecord = new MissionType("Audio Aufnahme", "AudioRecord");
