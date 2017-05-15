@@ -32,6 +32,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import util.Global;
 import util.XmlUtil;
 import static util.XmlUtil.asList;
 import static util.XmlUtil.allSubNodesAsList;
@@ -590,11 +591,11 @@ for(Node z: allSubNodesAsList(the_if)){
 			
 		
 		
-		} else if(z.getTextContent().matches("(\\s*)\\d+(\\s*)")){
+		} else if(z.getTextContent().matches(Global.REGEXP_NUM)){
 
 			Element y = doc.createElement("num");
 
-			y.setTextContent(z.getTextContent());
+			y.setTextContent(z.getTextContent().trim());
 			
 			z.getParentNode().appendChild(y);
 			z.getParentNode().removeChild(z);
@@ -1122,11 +1123,11 @@ for(Node z: allSubNodesAsList(the_if)){
 			
 		
 		
-		} else if(z.getTextContent().matches("(\\s*)\\d+(\\s*)")){
+		} else if(z.getTextContent().matches(Global.REGEXP_NUM)){
 
 			Element y = doc.createElement("num");
 
-			y.setTextContent(z.getTextContent());
+			y.setTextContent(z.getTextContent().trim());
 			
 			z.getParentNode().appendChild(y);
 			z.getParentNode().removeChild(z);

@@ -53,7 +53,7 @@ public class Global extends GlobalSettings {
 		}
 	}
 	
-	
+	public static final String REGEXP_NUM = "(\\s*)[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)(\\s*)";
 	
 	public static Map<String,String> en_Translation;
 	public static Map<String,String> fr_Translation;

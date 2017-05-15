@@ -1,6 +1,7 @@
 package models.GameParts;
 
 import play.db.ebean.Model;
+import util.Global;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -538,11 +539,11 @@ if(parent != null){
 				
 			
 			// Number
-			} else if(value.matches("(\\s*)\\d+(\\s*)")){
+			} else if(value.matches(Global.REGEXP_NUM)){
 
 				Element y = doc.createElement("num");
 
-				y.setTextContent(value);
+				y.setTextContent(value.trim());
 				
 				valueel.appendChild(y);
 				

@@ -208,6 +208,7 @@ public class Portal extends Controller {
 
 			Set<GameRights> s = u.getGamesOnPortal(p);
 			sayTime("Mygames #3");
+			// TODO FILTER by game id to skip multiple mentions of right for the same game
 
 			return ok(views.html.portal.my_games.render(s));
 
