@@ -43,7 +43,9 @@ public class Application extends Controller {
 
 	public static Result index() {
 
-		session("currentportal", Global.defaultportal.getId().toString());
+		Long portalId = Global.defaultportal.getId();
+		String portalIdAsString = portalId.toString();
+		session("currentportal", portalIdAsString);
 
 		return redirect(routes.Portal.myGamesList(61L));
 	}

@@ -5,7 +5,7 @@ echo "Starting GeoQuest Server ..."
 #TODO: Check that Java 1.7 is available and set it active.
 echo "  switching to Java Version 1.7 ..."
 JAVA_HOME_OLD=$JAVA_HOME
-JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_25.jdk/Contents/Home/
+JAVA_HOME=$JAVA_1_7
 
 GQ_EDITOR_MODE_INSECURE=true
 export GQ_EDITOR_MODE_INSECURE
@@ -63,5 +63,5 @@ fi
 echo "back from play."
 
 # finally setting back to the previously used Java version and the directory we had been before:
-#export JAVA_HOME=$JAVA_HOME_OLD
+export JAVA_HOME=$JAVA_HOME_OLD
 popd > /dev/null
