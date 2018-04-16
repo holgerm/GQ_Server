@@ -23,7 +23,7 @@ var Icon@hs.getId() = L.icon({
 }).addTo(map);
 
 
- popups[@hs.getId()] = L.popup({ minWidth : 700 });
+ popups[@hs.getId()] = L.popup({ minWidth : 700, maxHeight: 500 });
 
     popups[@hs.getId()].setLatLng([@hs.getLatitude(),@hs.getLongitude()]);
 popups[@hs.getId()].offset = new L.Point(@hs.getMarkerAnchorHeight(g),@hs.getMarkerAnchorWidth(g));
