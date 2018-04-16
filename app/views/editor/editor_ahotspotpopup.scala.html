@@ -5,214 +5,129 @@
 @if(g.getType.hasOnlyOneScene()){
 	
 	@defining(g.getSceneForHotspot(hs)){ s => 
-	@for(a <- s.getAllAttributes){
-									        				
-									        				@if(a.isEditable){
-									        				
-									        				
-       <div style="display:inline-block; font-weight:bold; font-size:14px;">@Application.getLanguage(a.getName()) </div>
-     <br/>
-      
+		@for(a <- s.getAllAttributes){
+			@if(a.isEditable){
+				<div style="display:inline-block; font-weight:bold; font-size:14px;">@Application.getLanguage(a.getName()) </div>
+     			<br/>
+      			
+      			@if(a.getFileType == "String"){
+      			
+        				@if(a.hasPossibleValues()){
+						<select id = "sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)" >
+						<option ></option>
+						
+						@for(pm <- a.getPossibleValues()){
+							<option  value = "@pm" @if(s.getAttributeValue(a).equals(pm)){ selected="selected" } >@Application.getLanguage(pm)</option>
+						}   
+						
+						</select>
+					} else {
         
-        @if(a.getFileType == "String"){
-        
-        
-        
-            @if(a.hasPossibleValues()){
-								        	
-								        	
-											<select id = "sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)" >
-								             
-								             <option ></option>
-								              		@for(pm <- a.getPossibleValues()){
-								              			   <option  value = "@pm" @if(s.getAttributeValue(a).equals(pm)){ selected="selected" } >@Application.getLanguage(pm)</option>
-								              			
-								              			
-								              		}   </select>
-								        	
-								        	
-								        } else {
-        
-        
-        @if(a.getMimeType().equals("area")){
-        	        <textarea rows="8" cols="100" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId); textareaLengthCheck('sceneat@s.getId@a.getId' ,'counter_sceneat@s.getId@a.getId');"
-        	        onkeyup="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")'; textareaLengthCheck('sceneat@s.getId@a.getId' ,'counter_sceneat@s.getId@a.getId');">@s.getAttributeValue(a)</textarea>
-        	
-        	        <span id="counter_sceneat@s.getId@a.getId">@s.getAttributeValue(a).length()</span>
-        	
-        } else {
-        
-        
-        
-        @if(a.getName() == "Text"){
-        	        	        <textarea rows="8" cols="100" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId); textareaLengthCheck('sceneat@s.getId@a.getId' ,'counter_sceneat@s.getId@a.getId');"
-        	        onkeyup="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")'; textareaLengthCheck('sceneat@s.getId@a.getId' ,'counter_sceneat@s.getId@a.getId');">@s.getAttributeValue(a)</textarea>
-        	        	        <span id="counter_sceneat@s.getId@a.getId">@s.getAttributeValue(a).length()</span>
-        	
-        	
-        	} else {
-                <input style="display:inline-block" type="text"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)"
-                       	        onkeyup="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");"/>
-        	}
-        
-        }
-        
-        }
-        
-        }
+        					@if(a.getMimeType().equals("area")){
+        	        				<textarea rows="8" cols="100" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId); textareaLengthCheck('sceneat@s.getId@a.getId' ,'counter_sceneat@s.getId@a.getId');"
+        	        					onkeyup="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")'; textareaLengthCheck('sceneat@s.getId@a.getId' ,'counter_sceneat@s.getId@a.getId');">@s.getAttributeValue(a)</textarea>
+				        		<span id="counter_sceneat@s.getId@a.getId">@s.getAttributeValue(a).length()</span>
+        					} else {
+        						@if(a.getName() == "Text"){
+        	        	        			<textarea rows="8" cols="100" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId); textareaLengthCheck('sceneat@s.getId@a.getId' ,'counter_sceneat@s.getId@a.getId');"
+        	        						onkeyup="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")'; textareaLengthCheck('sceneat@s.getId@a.getId' ,'counter_sceneat@s.getId@a.getId');">@s.getAttributeValue(a)</textarea>
+        	        	        			<span id="counter_sceneat@s.getId@a.getId">@s.getAttributeValue(a).length()</span>
+        						} else {
+                					<input style="display:inline-block" type="text"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)"
+                       	        		onkeyup="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");"/>
+        						}
+        					}
+        				}
+        			}
         
         
                 @if(a.getFileType == "StringList"){
+        	        		<input type="hidden" value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId"  >
         	
-        	        <input type="hidden" value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId"  >
         	
-        	
-          		@for(pm <- a.getPossibleValues()){
-          	        <input type="checkbox"/ @if(s.listAttributeContainsKey(s.getAttributeValue(a),pm,false)){ checked = "checked" } onchange="javascript:toggleKeyInList('sceneat@s.getId@a.getId','@pm',false); syncAttr('scene',@s.getId,@a.getId); document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';" >@pm &nbsp;
-          	}
+          			@for(pm <- a.getPossibleValues()){
+          	        		<input type="checkbox"/ @if(s.listAttributeContainsKey(s.getAttributeValue(a),pm,false)){ checked = "checked" } onchange="javascript:toggleKeyInList('sceneat@s.getId@a.getId','@pm',false); syncAttr('scene',@s.getId,@a.getId); document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';" >@pm &nbsp;
+          			}
+          		}
           	
-          	
-          	}
-          	
-          	 @if(a.getFileType == "QuoteStringList"){
+          	 	@if(a.getFileType == "QuoteStringList"){
+        	        		<input type="hidden" value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId"  >
         	
-        	        <input type="hidden" value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId"  >
-        	
-        	
-          		@for(pm <- a.getPossibleValues()){
-          	        <input type="checkbox"/ @if(s.listAttributeContainsKey(s.getAttributeValue(a),pm,true)){ checked = "checked" } onchange="javascript:toggleKeyInList('sceneat@s.getId@a.getId','@pm',true); syncAttr('scene',@s.getId,@a.getId); document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';" >@pm &nbsp;
-          	}
-          	
-          	
-          	}
+          			@for(pm <- a.getPossibleValues()){
+          	        		<input type="checkbox"/ @if(s.listAttributeContainsKey(s.getAttributeValue(a),pm,true)){ checked = "checked" } onchange="javascript:toggleKeyInList('sceneat@s.getId@a.getId','@pm',true); syncAttr('scene',@s.getId,@a.getId); document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';" >@pm &nbsp;
+          			}
+          		}
         
         
-        
-         @if(a.getFileType == "QuoteString"){
-        
-        
-        
-        
-                <input type="text"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId,true)"
-                        	        onkeyup="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");"/>
+         		@if(a.getFileType == "QuoteString"){
+        				<input type="text"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId,true)"
+                    		onkeyup="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");"/>
+        			}
         
         
+        			 @if(a.getFileType == "StringTextArea"){
+        				<textarea rows="8" cols="100" type="text"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId); textareaLengthCheck('sceneat@s.getId@a.getId' ,'counter_sceneat@s.getId@a.getId');"
+                   		onkeyup="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")'; textareaLengthCheck('sceneat@s.getId@a.getId' ,'counter_sceneat@s.getId@a.getId');">@s.getAttributeValue(a)</textarea>
+        				<span id="counter_sceneat@s.getId@a.getId">@s.getAttributeValue(a).length()</span>
+				}
         
+         		@if(a.getFileType == "QuoteStringTextArea"){
+					<textarea rows="8" cols="100" type="text"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId,true); textareaLengthCheck('sceneat@s.getId@a.getId' ,'counter_sceneat@s.getId@a.getId');"
+                    		onkeyup="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")'; textareaLengthCheck('sceneat@s.getId@a.getId' ,'counter_sceneat@s.getId@a.getId');">@s.getAttributeValue(a)</textarea>
+        				<span id="counter_sceneat@s.getId@a.getId">@s.getAttributeValue(a).length()</span>
+	      		}
         
-        }
-        
-        
-         @if(a.getFileType == "StringTextArea"){
-        
-        
-        
-        
-                 <textarea rows="8" cols="100" type="text"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId); textareaLengthCheck('sceneat@s.getId@a.getId' ,'counter_sceneat@s.getId@a.getId');"
-                        	        onkeyup="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")'; textareaLengthCheck('sceneat@s.getId@a.getId' ,'counter_sceneat@s.getId@a.getId');">@s.getAttributeValue(a)</textarea>
-        
-        
-                	        <span id="counter_sceneat@s.getId@a.getId">@s.getAttributeValue(a).length()</span>
-        
-        
-        }
-        
-         @if(a.getFileType == "QuoteStringTextArea"){
-        
-        
-        
-        
-                 <textarea rows="8" cols="100" type="text"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId,true); textareaLengthCheck('sceneat@s.getId@a.getId' ,'counter_sceneat@s.getId@a.getId');"
-                        	        onkeyup="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")'; textareaLengthCheck('sceneat@s.getId@a.getId' ,'counter_sceneat@s.getId@a.getId');">@s.getAttributeValue(a)</textarea>
-        
-        
-                	        <span id="counter_sceneat@s.getId@a.getId">@s.getAttributeValue(a).length()</span>
-        
-        
-        }
-        
-        
-         
-        @if(a.getFileType == "int"){
-        
-        <input type="number"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)"
+		        @if(a.getFileType == "int"){
+    					<input type="number"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)"
                	        onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");"/>
+        			}
         
-        }
+		        @if(a.getFileType == "boolean"){
+		        		<input type="checkbox"/ id="sceneat@s.getId@a.getId" @if(s.getAttributeValue(a) == "true"){ checked = "checked" } onchange="javascript:syncAttr('scene',@s.getId,@a.getId)" >
+		        }
         
-        @if(a.getFileType == "boolean"){
-        
-        <input type="checkbox"/ id="sceneat@s.getId@a.getId" @if(s.getAttributeValue(a) == "true"){ checked = "checked" } onchange="javascript:syncAttr('scene',@s.getId,@a.getId)" >
-        
-        }
-        
-        
-         @if(a.getFileType == "file"){
-         	
-         	
-         	
-         
-									        
-         	
-         	
-         	
-        	<div id="scene@s.getId()fileattr@a.getId()" name="scene@s.getId()fileattr@a.getId()" class="fileattr">
-        	         	@if(s.getAttributeValue(a) != ""){
-         		<a href="@s.getAttributeValue(a)" target="_blank">@editor_athumbnail(s.getAttributeValue(a))</a>
-         		
-         		       
-         		       
-         		       
-         		   
-         		       
-         		        	         	
-         		
-         		
-         	}
-         	</div>
-         	
-         	
-         	
-         	
-         	<div id="scenefile_file_at@s.getId@a.getId">
-        <input type="file"/ id="scenefileat@s.getId@a.getId" onchange="javascript:uploadFile('scene',@s.getId,@a.getId)" >
-        
-        <a  onClick="javascript:document.getElementById('scenefile_file_at@s.getId@a.getId').style.display='none';document.getElementById('scenefile_text_at@s.getId@a.getId').style.display='block';">@Application.getLanguage("Variabel")</a>
-        </div>
-                <div id="scenefile_text_at@s.getId@a.getId" style="display:none;">
-                       <input type="text" value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)"         	        onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");"/>
-                       
-
-                      <a onClick="javascript:document.getElementById('scenefile_text_at@s.getId@a.getId').style.display='none';document.getElementById('scenefile_file_at@s.getId@a.getId').style.display='block';">@Application.getLanguage("Datei")</a>
-              
-               </div>
-        
-        }
-                   <img id="status_sceneat@s.getId@a.getId" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
-        
-        <br/>
-        
-      
-									        				
-									        				}}
-									        				}
-	} else {
-		<input type='text' class='gqHotspotTitle' id='hotspotname@hs.getId' value='@hs.getName()' onchange="javascript:syncName('hotspot',@hs.getId)" onkeydown="document.getElementById('status_hotspotname@hs.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
-	  		<img id='status_hotspotname@hs.getId' src='@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")'/>  
-	        <br/>
-			<span style="cursor:pointer;" onClick="javascript:openHotspotRule(@hs.getId());"> 
-	        	<icon style="height:20px; width:20px; background-image:url('@Global.SERVER_URL_2/assets/icons/actions/default.png'); background-size:20px 20px; background-position:0px 24px; display:inline-block;">
-	        		</icon> @Application.getLanguage("Ereignisse")
-	        </span>
-	        <span style="cursor:pointer;" onClick="javascript:duplicateHotspotInGame(@hs.getId());"> 
+	         	@if(a.getFileType == "file"){
+       				<div id="scene@s.getId()fileattr@a.getId()" name="scene@s.getId()fileattr@a.getId()" class="fileattr">
+        	         	
+	        	         	@if(s.getAttributeValue(a) != ""){
+	         				<a href="@s.getAttributeValue(a)" target="_blank">@editor_athumbnail(s.getAttributeValue(a))</a>
+	         			}
+	         			
+         			</div>
+         			<div id="scenefile_file_at@s.getId@a.getId">
+        					<input type="file"/ id="scenefileat@s.getId@a.getId" onchange="javascript:uploadFile('scene',@s.getId,@a.getId)" >
+        					<a  onClick="javascript:document.getElementById('scenefile_file_at@s.getId@a.getId').style.display='none';document.getElementById('scenefile_text_at@s.getId@a.getId').style.display='block';">@Application.getLanguage("Variabel")</a>
+        				</div>
+                		<div id="scenefile_text_at@s.getId@a.getId" style="display:none;">
+                       	<input type="text" value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)"         	        onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");"/>
+                      	<a onClick="javascript:document.getElementById('scenefile_text_at@s.getId@a.getId').style.display='none';document.getElementById('scenefile_file_at@s.getId@a.getId').style.display='block';">@Application.getLanguage("Datei")</a>
+	              	</div>
+        			}
+                
+                <img id="status_sceneat@s.getId@a.getId" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
+        			<br/>
+        		}
+    		}
+	}
+} else {
+	<input type='text' class='gqHotspotTitle' id='hotspotname@hs.getId' value='@hs.getName()' onchange="javascript:syncName('hotspot',@hs.getId)" onkeydown="document.getElementById('status_hotspotname@hs.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
+		<img id='status_hotspotname@hs.getId' src='@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")'/>  
+	    <br/>
+		<span style="cursor:pointer;" onClick="javascript:openHotspotRule(@hs.getId());"> 
+	    		<icon style="height:20px; width:20px; background-image:url('@Global.SERVER_URL_2/assets/icons/actions/default.png'); background-size:20px 20px; background-position:0px 24px; display:inline-block;">
+	    		</icon> @Application.getLanguage("Ereignisse")
+	    </span>
+	    <span style="cursor:pointer;" onClick="javascript:duplicateHotspotInGame(@hs.getId());"> 
 	        	<icon class="icon-share" style="display:inline-block;">
-	            	</icon> @Application.getLanguage("Duplizieren")
-	            </p>
-	        </span>
+	        	</icon> @Application.getLanguage("Duplizieren")
+	        </p>
+	    </span>
 	
-	        <h4>@Application.getLanguage("Einstellungen")</h4>
-	        @for(a <- hs.getAllAttributes) {
-	        	@if(a.isEditable) {
-			        @if(a.getFileType == "String") {
+	    <h4>@Application.getLanguage("Einstellungen")</h4>
+	        
+	    @for(a <- hs.getAllAttributes) {
+	    		@if(a.isEditable) {
+				@if(a.getFileType == "String") {
 		        		<div class='gqHotspotAttribute'>
 		        			<div>@Application.getLanguage(a.getName)</div>
 		        			<div>
@@ -230,11 +145,12 @@
 			        					onchange="javascript:syncAttr('hotspot',@hs.getId,@a.getId)" 
 			        					onkeydown="javascript:document.getElementById('status_hotspotat@hs.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';"> 
 			        			} 
-								<img id='status_hotspotat@hs.getId@a.getId' src='@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")' />
-							</div>
+							<img id='status_hotspotat@hs.getId@a.getId' src='@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")' />
 						</div>
-			        } 
-			        @if(a.getFileType == "int") {
+					</div>
+			 	} 
+				
+				@if(a.getFileType == "int") {
 		        		<div class='gqHotspotAttribute'>
 							<div>@Application.getLanguage(a.getName)</div>
 		        			<div>
