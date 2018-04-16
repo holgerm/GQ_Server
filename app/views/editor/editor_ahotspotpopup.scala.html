@@ -87,19 +87,22 @@
 		        }
         
 	         	@if(a.getFileType == "file"){
-       				<div id="scene@s.getId()fileattr@a.getId()" name="scene@s.getId()fileattr@a.getId()" class="fileattr">
-        	         	
-	        	         	@if(s.getAttributeValue(a) != ""){
-	         				<a href="@s.getAttributeValue(a)" target="_blank">@editor_athumbnail(s.getAttributeValue(a))</a>
+ 	       			<div id="scenefile_file_at@s.getId@a.getId" style="display:inline-block; width:82%">
+  	        	         	@if(s.getAttributeValue(a) != ""){
+  	        	         		@defining("Hochgeladenes Bild nicht gefunden"){ imageNotFoundText => 
+		         				<a href="@s.getAttributeValue(a)" target="_blank">
+		         					<img src="@s.getAttributeValue(a)" alt="@Application.getLanguage(imageNotFoundText)" width="20%"/>
+		         				</a>
+	         				}
 	         			}
-	         			
-         			</div>
-         			<div id="scenefile_file_at@s.getId@a.getId" style="display:inline-block; width:82%">
-        					<input type="file" id="scenefileat@s.getId@a.getId" style="width:60%;" onchange="javascript:uploadFile('scene',@s.getId,@a.getId)" >
+        					<input type="file" id="scenefileat@s.getId@a.getId" style="width:50%;" onchange="javascript:uploadFile('scene',@s.getId,@a.getId)" >
         					<a  onClick="javascript:document.getElementById('scenefile_file_at@s.getId@a.getId').style.display='none';document.getElementById('scenefile_text_at@s.getId@a.getId').style='display:inline-block; width:82%';">@Application.getLanguage("Variabel")</a>
         				</div>
                 		<div id="scenefile_text_at@s.getId@a.getId" style="display:none; width:82%">
-                       	<input type="text" value="@s.getAttributeValue(a)" style="width:60%;" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)"         	        onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");"/>
+   	        	         	@if(s.getAttributeValue(a) != ""){
+	         				<a href="@s.getAttributeValue(a)" target="_blank">@editor_athumbnail(s.getAttributeValue(a))</a>
+	         			}
+                      	<input type="text" value="@s.getAttributeValue(a)" style="width:50%;" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)"         	        onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");"/>
                       	<a onClick="javascript:document.getElementById('scenefile_text_at@s.getId@a.getId').style.display='none';document.getElementById('scenefile_file_at@s.getId@a.getId').style= 'display:inline-block; width:82%';">@Application.getLanguage("Datei")</a>
 	              	</div>
         			}

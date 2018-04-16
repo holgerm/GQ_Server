@@ -330,6 +330,7 @@ public class TranslationFactory {
 		addTranslation("Sorry, die Adresse wurde nicht gefunden.","Sorry, the address wasn't found.");
 		addTranslation("Wo ist der Ort den du suchst?","Type in an address to search");
 		
+		addTranslation("Hochgeladenes Bild nicht gefunden","Uploaded image not found");
 
 		
 		
