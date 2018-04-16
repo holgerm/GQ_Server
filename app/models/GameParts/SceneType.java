@@ -232,6 +232,8 @@ public class SceneType extends Model {
 					+ " (" + sorter.get(key).getId() + ")";
 
 		}
+		
+		this.update();
 
 		log = log + "<h1>Felder vorhanden</h1><ul>";
 
