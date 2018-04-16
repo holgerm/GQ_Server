@@ -222,8 +222,13 @@ var Icontoset = L.icon({
    }
    
     positionmarker = this._positionMarker;
-            this._positionMarker.bindPopup("<h1>@Application.getLanguage("Hier erstellen:")</h1>  <p><label>@Application.getLanguage("Hotspot-Typ"):</label>    <select id = \"game_newhotspot_type\" >  @if(g.getType.getPossibleHotspotTypes.size() > 0){     @for(a_hstype <- g.getType.getPossibleHotspotTypes){                              <option value=\"hotspot_@a_hstype.getId()\"><i class=\"icon-map-marker\"></i>@Application.getLanguage(a_hstype.getName())</option>                   }                          }              @for(a_stype <- g.getType.getPossibleSceneTypes){                           @if(a_stype.getDefaultHotspots.size()>0){              <option value=\"scene_@a_stype.getId()\">                @Application.getLanguage(a_stype.getName())</option>               }                              }</select>          <div class=\"btn btn-success\" onClick=\"setHotspotFromSearch(location.Y,location.X)\">@Application.getLanguage("Setzen")</div>").openPopup();
-
+    @defining("Hier erstellen:") { textHierErstellen =>
+    	@defining("Hotspot-Typ") { textHotspotTyp =>
+    	@defining("Setzen") { textSetzen =>
+    		this._positionMarker.bindPopup("<h1>@Application.getLanguage(textHierErstellen)</h1>  <p><label>@Application.getLanguage(textHotspotTyp):</label>    <select id = \"game_newhotspot_type\" >  @if(g.getType.getPossibleHotspotTypes.size() > 0){     @for(a_hstype <- g.getType.getPossibleHotspotTypes){                              <option value=\"hotspot_@a_hstype.getId()\"><i class=\"icon-map-marker\"></i>@Application.getLanguage(a_hstype.getName())</option>                   }                          }              @for(a_stype <- g.getType.getPossibleSceneTypes){                           @if(a_stype.getDefaultHotspots.size()>0){              <option value=\"scene_@a_stype.getId()\">                @Application.getLanguage(a_stype.getName())</option>               }                              }</select>          <div class=\"btn btn-success\" onClick=\"setHotspotFromSearch(location.Y,location.X)\">@Application.getLanguage(textSetzen)</div>").openPopup();
+	}
+	}
+	}
 
 this._positionMarker.on('add', function(event){
  var marker = event.target;
@@ -282,7 +287,6 @@ this._positionMarker.on('move', function(event){
     },
 
     _onKeyUp: function (e) {
-        console.log("*");
         var esc = 27,
             enter = 13,
             queryBox = document.getElementById('leaflet-control-geosearch-qry');
@@ -291,7 +295,6 @@ this._positionMarker.on('move', function(event){
             queryBox.value = '';
             this._map._container.focus();
         } else if (e.keyCode === enter) {
-            console.log("entered: %s", queryBox.value);
             this.geosearch(queryBox.value);
         }
     }
