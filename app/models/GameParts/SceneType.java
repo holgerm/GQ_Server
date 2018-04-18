@@ -222,6 +222,9 @@ public class SceneType extends Model {
 
 		}
 
+		attributeTypes.clear();
+		this.update();
+		
 		log = log + "<h1>Sorter</h1>";
 
 		for (Integer key : sorter.keySet()) {

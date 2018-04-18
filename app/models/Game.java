@@ -2491,6 +2491,8 @@ public class Game extends Model {
 
 			if (p.isScene()) {
 
+				// SCENES:
+				
 				SceneType old = p.getScene().getType();
 				System.out.println("SceneType search: " + old.getName());
 
@@ -2519,6 +2521,8 @@ public class Game extends Model {
 				}
 
 			} else {
+				
+				// MISSIONS aka PAGES:
 
 				MissionType oldMissionType = p.getMission().getType();
 
