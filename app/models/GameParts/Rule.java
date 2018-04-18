@@ -1,6 +1,7 @@
 package models.GameParts;
 
 import play.db.ebean.Model;
+import util.Global;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -144,13 +145,11 @@ public class Rule extends Model {
 			for (int i = 0; i < helplist.size(); i++) {
 				if (i == old_position - 1) {
 					new_actions.add(a.copyMe(a.getName()));
-					new_actions.add(helplist.get(i).copyMe(
-							helplist.get(i).getName()));
+					new_actions.add(helplist.get(i).copyMe(helplist.get(i).getName()));
 					helplist.get(i).removeMe();
 					i++;
 				} else {
-					new_actions.add(helplist.get(i).copyMe(
-							helplist.get(i).getName()));
+					new_actions.add(helplist.get(i).copyMe(helplist.get(i).getName()));
 
 				}
 
@@ -167,7 +166,7 @@ public class Rule extends Model {
 	public void action_right(Action a) {
 		int old_position = actions.indexOf(a);
 
-		if (old_position > -1 && old_position < actions.size() -1) {
+		if (old_position > -1 && old_position < actions.size() - 1) {
 
 			List<Action> helplist = new ArrayList<Action>();
 			for (Action a_a : actions) {
@@ -184,13 +183,11 @@ public class Rule extends Model {
 			for (int i = 0; i < helplist.size(); i++) {
 				if (i == old_position) {
 					i++;
-					new_actions.add(helplist.get(i).copyMe(
-							helplist.get(i).getName()));
-					helplist.get(i-1).removeMe();
+					new_actions.add(helplist.get(i).copyMe(helplist.get(i).getName()));
+					helplist.get(i - 1).removeMe();
 					new_actions.add(a.copyMe(a.getName()));
 				} else {
-					new_actions.add(helplist.get(i).copyMe(
-							helplist.get(i).getName()));
+					new_actions.add(helplist.get(i).copyMe(helplist.get(i).getName()));
 
 				}
 
@@ -223,8 +220,7 @@ public class Rule extends Model {
 
 						} else {
 
-							return subrules.get(0).getActions().get(0)
-									.getName();
+							return subrules.get(0).getActions().get(0).getName();
 						}
 					} else {
 						return "Nicht initialisiert->Subrules is empty";
@@ -288,8 +284,7 @@ public class Rule extends Model {
 		return id;
 	}
 
-	public static final Finder<Long, Rule> find = new Finder<Long, Rule>(
-			Long.class, Rule.class);
+	public static final Finder<Long, Rule> find = new Finder<Long, Rule>(Long.class, Rule.class);
 
 	@JSON(include = false)
 	public Rule copyMe() {
@@ -402,7 +397,6 @@ public class Rule extends Model {
 
 	}
 
-	
 	public Element createXMLForWeb(Document doc, int i, Mission m, Game g) {
 
 		Element rule = null;
@@ -420,8 +414,7 @@ public class Rule extends Model {
 				rule = doc.createElement("rule");
 
 				for (Condition ac : conditions) {
-					if (ac.isFull() && !ac.getFull().equals("")
-							&& !ac.getFull().equals(" ")) {
+					if (ac.isFull() && !ac.getFull().equals("") && !ac.getFull().equals(" ")) {
 
 						rule.appendChild(ac.getXML(doc, g, false));
 
@@ -471,10 +464,8 @@ public class Rule extends Model {
 
 		return rule;
 	}
-	
-	
-	public Element createXML(Document doc, int i, Mission m, Game g,
-			ZipOutputStream zout) {
+
+	public Element createXML(Document doc, int i, Mission m, Game g, ZipOutputStream zout) {
 
 		Element rule = null;
 
@@ -491,8 +482,7 @@ public class Rule extends Model {
 				rule = doc.createElement("rule");
 
 				for (Condition ac : conditions) {
-					if (ac.isFull() && !ac.getFull().equals("")
-							&& !ac.getFull().equals(" ")) {
+					if (ac.isFull() && !ac.getFull().equals("") && !ac.getFull().equals(" ")) {
 
 						rule.appendChild(ac.getXML(doc, g, false));
 
@@ -544,8 +534,7 @@ public class Rule extends Model {
 
 	}
 
-	public Element createXML(Document doc, int i, Hotspot h, Game g,
-			ZipOutputStream zout) {
+	public Element createXML(Document doc, int i, Hotspot h, Game g, ZipOutputStream zout) {
 
 		Element rule = null;
 
@@ -562,19 +551,15 @@ public class Rule extends Model {
 				rule = doc.createElement("rule");
 
 				for (Condition ac : conditions) {
-					if (ac.isFull() && !ac.getFull().equals("")
-							&& !ac.getFull().equals(" ")) {
+					if (ac.isFull() && !ac.getFull().equals("") && !ac.getFull().equals(" ")) {
 
 						Element the_if = doc.createElement("if");
 
-						InputStream inputStream = new ByteArrayInputStream(ac
-								.getFull().getBytes());
-						DocumentBuilderFactory newInstance = DocumentBuilderFactory
-								.newInstance();
+						InputStream inputStream = new ByteArrayInputStream(ac.getFull().getBytes());
+						DocumentBuilderFactory newInstance = DocumentBuilderFactory.newInstance();
 						newInstance.setNamespaceAware(true);
 
-						DocumentBuilderFactory docFactory = DocumentBuilderFactory
-								.newInstance();
+						DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 						DocumentBuilder docBuilder = null;
 						try {
 							docBuilder = docFactory.newDocumentBuilder();
@@ -588,8 +573,7 @@ public class Rule extends Model {
 						the_if.appendChild(doc.adoptNode(parse.getFirstChild()));
 						rule.appendChild(the_if);
 						try {
-							parse = newInstance.newDocumentBuilder().parse(
-									inputStream);
+							parse = newInstance.newDocumentBuilder().parse(inputStream);
 						} catch (SAXException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -629,8 +613,7 @@ public class Rule extends Model {
 				System.out.println("...not empty");
 				for (Rule ar : subrules.getRules()) {
 
-					Element rule2 = ar.createXML(doc, i + 1,
-							g.getLastMission(), g, zout);
+					Element rule2 = ar.createXML(doc, i + 1, g.getLastMission(), g, zout);
 					if (rule2 != null) {
 						rule.appendChild(rule2);
 					}
@@ -643,10 +626,7 @@ public class Rule extends Model {
 		return rule;
 
 	}
-	
-	
-	
-	
+
 	public Element createXMLForWeb(Document doc, int i, Hotspot h, Game g) {
 
 		Element rule = null;
@@ -664,19 +644,15 @@ public class Rule extends Model {
 				rule = doc.createElement("rule");
 
 				for (Condition ac : conditions) {
-					if (ac.isFull() && !ac.getFull().equals("")
-							&& !ac.getFull().equals(" ")) {
+					if (ac.isFull() && !ac.getFull().equals("") && !ac.getFull().equals(" ")) {
 
 						Element the_if = doc.createElement("if");
 
-						InputStream inputStream = new ByteArrayInputStream(ac
-								.getFull().getBytes());
-						DocumentBuilderFactory newInstance = DocumentBuilderFactory
-								.newInstance();
+						InputStream inputStream = new ByteArrayInputStream(ac.getFull().getBytes());
+						DocumentBuilderFactory newInstance = DocumentBuilderFactory.newInstance();
 						newInstance.setNamespaceAware(true);
 
-						DocumentBuilderFactory docFactory = DocumentBuilderFactory
-								.newInstance();
+						DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 						DocumentBuilder docBuilder = null;
 						try {
 							docBuilder = docFactory.newDocumentBuilder();
@@ -690,8 +666,7 @@ public class Rule extends Model {
 						the_if.appendChild(doc.adoptNode(parse.getFirstChild()));
 						rule.appendChild(the_if);
 						try {
-							parse = newInstance.newDocumentBuilder().parse(
-									inputStream);
+							parse = newInstance.newDocumentBuilder().parse(inputStream);
 						} catch (SAXException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -731,8 +706,7 @@ public class Rule extends Model {
 				System.out.println("...not empty");
 				for (Rule ar : subrules.getRules()) {
 
-					Element rule2 = ar.createXMLForWeb(doc, i + 1,
-							g.getLastMission(), g);
+					Element rule2 = ar.createXMLForWeb(doc, i + 1, g.getLastMission(), g);
 					if (rule2 != null) {
 						rule.appendChild(rule2);
 					}
@@ -830,8 +804,7 @@ public class Rule extends Model {
 		return parent;
 	}
 
-	public Element createXML(Document doc, int i, MenuItem menuItem, Game g,
-			ZipOutputStream zout) {
+	public Element createXML(Document doc, int i, MenuItem menuItem, Game g, ZipOutputStream zout) {
 
 		Element rule = null;
 		Element rule1 = null;
@@ -850,19 +823,15 @@ public class Rule extends Model {
 			rule1.appendChild(rule);
 
 			for (Condition ac : conditions) {
-				if (ac.isFull() && !ac.getFull().equals("")
-						&& !ac.getFull().equals(" ")) {
+				if (ac.isFull() && !ac.getFull().equals("") && !ac.getFull().equals(" ")) {
 
 					Element the_if = doc.createElement("if");
 
-					InputStream inputStream = new ByteArrayInputStream(ac
-							.getFull().getBytes());
-					DocumentBuilderFactory newInstance = DocumentBuilderFactory
-							.newInstance();
+					InputStream inputStream = new ByteArrayInputStream(ac.getFull().getBytes());
+					DocumentBuilderFactory newInstance = DocumentBuilderFactory.newInstance();
 					newInstance.setNamespaceAware(true);
 
-					DocumentBuilderFactory docFactory = DocumentBuilderFactory
-							.newInstance();
+					DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 					DocumentBuilder docBuilder = null;
 					try {
 						docBuilder = docFactory.newDocumentBuilder();
@@ -876,8 +845,7 @@ public class Rule extends Model {
 					the_if.appendChild(doc.adoptNode(parse.getFirstChild()));
 					rule.appendChild(the_if);
 					try {
-						parse = newInstance.newDocumentBuilder().parse(
-								inputStream);
+						parse = newInstance.newDocumentBuilder().parse(inputStream);
 					} catch (SAXException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -910,7 +878,5 @@ public class Rule extends Model {
 		return rule1;
 
 	}
-
-
 
 }

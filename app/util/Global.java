@@ -34,6 +34,13 @@ import akka.util.*;
 public class Global extends GlobalSettings {
 
 	public static final String GEOQUEST_VERSION = "0.1.20";
+	
+	public static boolean DEBUGGING = true;
+	public static void Log(String message) {
+		if (DEBUGGING) {
+			System.out.println(message);
+		}
+	}
 
 	private static String SERVER_URL_2_FALLBACK = "http://qeevee.org:9091";
 	public static String SERVER_URL_2;

@@ -1,6 +1,7 @@
 package models.GameParts;
 
 import play.db.ebean.Model;
+import util.Global;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -69,8 +70,7 @@ public class Scene extends Model {
 	public void setAttribute(Attribute t) {
 
 		try {
-			List<Attribute> copyOfAttributes = new ArrayList<Attribute>(
-					attributes.size());
+			List<Attribute> copyOfAttributes = new ArrayList<Attribute>(attributes.size());
 			;
 			for (Attribute item : attributes)
 				copyOfAttributes.add(item);
@@ -214,8 +214,7 @@ public class Scene extends Model {
 
 	// / CREATION
 
-	public Scene copyMe(String n, Map<Mission, Mission> missionbinder,
-			Map<Hotspot, Hotspot> hotspotbinder) {
+	public Scene copyMe(String n, Map<Mission, Mission> missionbinder, Map<Hotspot, Hotspot> hotspotbinder) {
 
 		String nam = name + " " + n;
 
@@ -328,7 +327,7 @@ public class Scene extends Model {
 
 			counter++;
 		}
-		
+
 		// Update Links to the copies of attributes etc.
 
 		return s;
@@ -347,19 +346,16 @@ public class Scene extends Model {
 			if (atrt != null) {
 				if (atrt.hasLink()) {
 
-					System.out
-							.println("An attribute wants to link to another object");
+					System.out.println("An attribute wants to link to another object");
 
 					if (atrt.getLink().getObjectId() != null) {
 
 						Attribute atr = new Attribute(atrttype);
 						atr.save();
-						ObjectReference o = g.getAbstractRelinkObject(
-								atrt.getLink(), this);
+						ObjectReference o = g.getAbstractRelinkObject(atrt.getLink(), this);
 						if (o != null) {
-							System.out.println("and is setting it to "
-									+ o.getObjectType() + " ("
-									+ o.getObjectId() + ")");
+							System.out.println(
+									"and is setting it to " + o.getObjectType() + " (" + o.getObjectId() + ")");
 
 							o.save();
 							atr.setLink(o);
@@ -370,15 +366,13 @@ public class Scene extends Model {
 
 						} else {
 
-							System.out
-									.println("but didn't find a fitting equivalent.");
+							System.out.println("but didn't find a fitting equivalent.");
 
 						}
 
 					} else {
 
-						System.out
-								.println("but has no object reference specified correctly.");
+						System.out.println("but has no object reference specified correctly.");
 
 					}
 
@@ -390,8 +384,7 @@ public class Scene extends Model {
 
 	}
 
-	public boolean listAttributeContainsKey(String list, String key,
-			boolean quotes) {
+	public boolean listAttributeContainsKey(String list, String key, boolean quotes) {
 		System.out.println("'" + list + "' contains" + key + "?");
 
 		if (quotes) {
@@ -431,8 +424,7 @@ public class Scene extends Model {
 
 	}
 
-	public static final Finder<Long, Scene> find = new Finder<Long, Scene>(
-			Long.class, Scene.class);
+	public static final Finder<Long, Scene> find = new Finder<Long, Scene>(Long.class, Scene.class);
 
 	public SceneType getType() {
 		return type;
@@ -721,8 +713,7 @@ public class Scene extends Model {
 
 				Mission am = ap.getMission();
 
-				System.out.println("searching in page " + am.getName() + " ("
-						+ am.getType().getXMLType() + ")");
+				System.out.println("searching in page " + am.getName() + " (" + am.getType().getXMLType() + ")");
 				for (AttributeType att : am.getAllAttributes()) {
 
 					if (am.getAttribute(att) != null) {
@@ -736,15 +727,13 @@ public class Scene extends Model {
 				// Contents
 
 				for (Content ac : am.getContents()) {
-					System.out.println("searching in content " + ac.getName()
-							+ " (" + ac.getType().getXMLType() + ")");
+					System.out.println("searching in content " + ac.getName() + " (" + ac.getType().getXMLType() + ")");
 
 					for (AttributeType att1 : ac.getAllAttributes()) {
 
 						if (ac.getAttribute(att1) != null) {
-							System.out.println("Attr:"
-									+ ac.getAttribute(att1).getName() + "="
-									+ ac.getAttributeValue(att1));
+							System.out.println(
+									"Attr:" + ac.getAttribute(att1).getName() + "=" + ac.getAttributeValue(att1));
 
 							allsubs.add(ac.getAttribute(att1));
 
@@ -837,8 +826,8 @@ public class Scene extends Model {
 	}
 
 	/**
-	 * TODO implement a generic implementation of this method for all uses (in
-	 * many different quest elements)
+	 * TODO implement a generic implementation of this method for all uses (in many
+	 * different quest elements)
 	 * 
 	 * @param at
 	 * @return
@@ -860,10 +849,8 @@ public class Scene extends Model {
 				x = aa.getValue();
 
 				if (aa.getType().getFileType().equals("QuoteString")
-						|| aa.getType().getFileType()
-								.equals("QuoteStringTextArea")) {
-					if (x.length() >= 2 && x.charAt(0) == ('"')
-							&& x.charAt(x.length() - 1) == '"') {
+						|| aa.getType().getFileType().equals("QuoteStringTextArea")) {
+					if (x.length() >= 2 && x.charAt(0) == ('"') && x.charAt(x.length() - 1) == '"') {
 						x = x.substring(1, x.length() - 1);
 						x = x.replace("<br>", "\n");
 					}
@@ -898,8 +885,7 @@ public class Scene extends Model {
 		name = n;
 	}
 
-	public Scene migrateTo(SceneType sceneType, GameType gameType,
-			Map<Mission, Mission> missionbinder,
+	public Scene migrateTo(SceneType sceneType, GameType gameType, Map<Mission, Mission> missionbinder,
 			Map<Hotspot, Hotspot> hotspotbinder) {
 
 		Scene s = new Scene(name, sceneType);
@@ -925,8 +911,7 @@ public class Scene extends Model {
 						if (npt.getName().equals(old.getName())) {
 
 							done = true;
-							Scene nss = p.getScene().migrateTo(npt, gameType,
-									missionbinder, hotspotbinder);
+							Scene nss = p.getScene().migrateTo(npt, gameType, missionbinder, hotspotbinder);
 							nss.save();
 							Part ns = new Part(nss);
 							ns.save();
@@ -941,37 +926,47 @@ public class Scene extends Model {
 
 				if (done == false) {
 
-					System.out
-							.println("Didn't find SceneType " + old.getName());
+					System.out.println("Didn't find SceneType " + old.getName());
 				}
 
 			} else {
 
 				MissionType old = p.getMission().getType();
 
+				Global.Log("Scene migrateTo(" + sceneType.getName() + "): mission: " + p.getMission().getName());
+
 				for (PartType npt : gameType.getPossiblePartTypes()) {
 
-					if (!npt.isSceneType()) {
+					Global.Log("Possible part type: id: " + npt.getId());
 
-						if (npt.getMissionType().getXMLType()
-								.equals(old.getXMLType())) {
+					if (!npt.isSceneType()) {
+						Global.Log("  is mission type: " + npt.getMissionType());
+
+						if (npt.getMissionType().getXMLType().equals(old.getXMLType())) {
 
 							done = true;
 
-							s.addPart(p.migrateTo(npt.getMissionType(),
-									missionbinder));
+							Global.Log("  going to add migrated mission type to mapping: "
+									+ npt.getMissionType().getXMLType());
+
+							s.addPart(p.migrateTo(npt.getMissionType(), missionbinder));
 							s.update();
+
+						} else {
+							Global.Log("  xml types are different - old: " + old.getXMLType() + " new: "
+									+ npt.getMissionType().getXMLType());
 
 						}
 
+					} else {
+						Global.Log("  is scene type");
 					}
 
 				}
 
 				if (done == false) {
 
-					System.out.println("Didn't find MissionType "
-							+ old.getXMLType());
+					System.out.println("Didn't find MissionType " + old.getXMLType());
 				}
 
 			}

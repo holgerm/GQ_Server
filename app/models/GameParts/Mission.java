@@ -1,6 +1,7 @@
 package models.GameParts;
 
 import play.db.ebean.Model;
+import util.Global;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -66,8 +67,8 @@ public class Mission extends Model {
 	private int posleft;
 
 	/**
-	 * Use for refresh in browser when we need new objects to replace old ones
-	 * to cheat over db.
+	 * Use for refresh in browser when we need new objects to replace old ones to
+	 * cheat over db.
 	 * 
 	 * @param n
 	 * @param m
@@ -104,8 +105,7 @@ public class Mission extends Model {
 	public void setAttribute(Attribute t) {
 
 		try {
-			List<Attribute> copyOfAttributes = new ArrayList<Attribute>(
-					attributes.size());
+			List<Attribute> copyOfAttributes = new ArrayList<Attribute>(attributes.size());
 			for (Attribute item : attributes)
 				copyOfAttributes.add(item);
 
@@ -284,29 +284,25 @@ public class Mission extends Model {
 
 	}
 
-	public static final Finder<Long, Mission> find = new Finder<Long, Mission>(
-			Long.class, Mission.class);
+	public static final Finder<Long, Mission> find = new Finder<Long, Mission>(Long.class, Mission.class);
 
-	
 	public Mission copyMe(String n, Map<Mission, Mission> missionbinder) {
 
-		
-		return copyMe(n,missionbinder,true);
-		
+		return copyMe(n, missionbinder, true);
+
 	}
-	
-	
-	public Mission copyMe(String n, Map<Mission, Mission> missionbinder,boolean migrate) {
+
+	public Mission copyMe(String n, Map<Mission, Mission> missionbinder, boolean migrate) {
 
 		String nam = name;
 
 		Mission m;
-		if(migrate){
-		 m = new Mission(nam, type,id);
+		if (migrate) {
+			m = new Mission(nam, type, id);
 		} else {
-		 m = new Mission(nam, type);
+			m = new Mission(nam, type);
 		}
-		
+
 		m.save();
 		missionbinder.put(this, m);
 
@@ -424,13 +420,11 @@ public class Mission extends Model {
 		for (AttributeType aa : getAllAttributes()) {
 
 			if (getAttributeValue(aa) != null) {
-				if ((!getAttributeValue(aa).equals(""))
-						&& (!getAttributeValue(aa).equals(" "))) {
+				if ((!getAttributeValue(aa).equals("")) && (!getAttributeValue(aa).equals(" "))) {
 
 					Attr attr4 = doc.createAttribute(aa.getXMLType());
 
-					if (aa.getFileType().equals("file")
-							&& (!getAttributeValue(aa).contains("@_"))
+					if (aa.getFileType().equals("file") && (!getAttributeValue(aa).contains("@_"))
 							&& (!getAttributeValue(aa).contains("$_"))) {
 
 						System.out.println("is File: " + getAttributeValue(aa));
@@ -445,8 +439,7 @@ public class Mission extends Model {
 
 							System.out.println("Path specified");
 
-							String portal = String.valueOf(Application
-									.getLocalPortal().getId());
+							String portal = String.valueOf(Application.getLocalPortal().getId());
 							String gameid = String.valueOf(g.getId());
 							if (splitResult.length > 4) {
 								portal = splitResult[splitResult.length - 4];
@@ -455,17 +448,14 @@ public class Mission extends Model {
 
 							}
 
-							File file = new File("public/uploads/" + portal
-									+ "/editor/" + gameid, path);
-							System.out.println("public/uploads/" + portal
-									+ "/editor/" + gameid);
+							File file = new File("public/uploads/" + portal + "/editor/" + gameid, path);
+							System.out.println("public/uploads/" + portal + "/editor/" + gameid);
 
 							if (!file.exists()) {
 
 								System.out.println("File 1 does not exist");
 
-								file = new File("public/uploads/" + portal
-										+ "/editor/" + gameid + "/files", path);
+								file = new File("public/uploads/" + portal + "/editor/" + gameid + "/files", path);
 
 								if (!file.exists()) {
 									System.out.println("File 2 does not exist");
@@ -473,8 +463,7 @@ public class Mission extends Model {
 									try {
 										FileUtils.copyURLToFile(url, file);
 									} catch (IOException x) {
-										System.out
-												.println("Copying file failed");
+										System.out.println("Copying file failed");
 										x.printStackTrace();
 
 									}
@@ -492,8 +481,7 @@ public class Mission extends Model {
 							byte data[] = new byte[BUFFER];
 
 							FileInputStream fis = new FileInputStream(file);
-							BufferedInputStream bis = new BufferedInputStream(
-									fis, BUFFER);
+							BufferedInputStream bis = new BufferedInputStream(fis, BUFFER);
 
 							ZipEntry ze = new ZipEntry("files/" + path);
 							zout.putNextEntry(ze);
@@ -513,12 +501,10 @@ public class Mission extends Model {
 
 						}
 
-					} else if (aa.getRealFileType().equals("seconds")
-							|| aa.getRealFileType().equals("stringseconds")) {
+					} else if (aa.getRealFileType().equals("seconds") || aa.getRealFileType().equals("stringseconds")) {
 
 						try {
-							int seconds = Integer
-									.parseInt(getAttributeValue(aa));
+							int seconds = Integer.parseInt(getAttributeValue(aa));
 							seconds = seconds * 1000;
 							attr4.setValue(String.valueOf(seconds));
 						} catch (NumberFormatException er) {
@@ -537,8 +523,7 @@ public class Mission extends Model {
 
 		for (Rule r : rules) {
 
-			if (!r.getFirstAction().equals("Keine")
-					&& !r.getFirstAction().equals("Deep")) {
+			if (!r.getFirstAction().equals("Keine") && !r.getFirstAction().equals("Deep")) {
 				Element rule = r.createXML(doc, 0, this, g, zout);
 				mission.appendChild(rule);
 
@@ -560,15 +545,9 @@ public class Mission extends Model {
 
 		return e;
 	}
-	
-	
-	
-	
-	
+
 	public List<Element> createXMLForWeb(Document doc, Game g) {
 
-		
-			
 		List<Element> e = new ArrayList<Element>();
 
 		Element mission = null;
@@ -587,17 +566,14 @@ public class Mission extends Model {
 		for (AttributeType aa : getAllAttributes()) {
 
 			if (getAttributeValue(aa) != null) {
-				if ((!getAttributeValue(aa).equals(""))
-						&& (!getAttributeValue(aa).equals(" "))) {
+				if ((!getAttributeValue(aa).equals("")) && (!getAttributeValue(aa).equals(" "))) {
 
 					Attr attr4 = doc.createAttribute(aa.getXMLType());
 
-					if (aa.getRealFileType().equals("seconds")
-							|| aa.getRealFileType().equals("stringseconds")) {
+					if (aa.getRealFileType().equals("seconds") || aa.getRealFileType().equals("stringseconds")) {
 
 						try {
-							int seconds = Integer
-									.parseInt(getAttributeValue(aa));
+							int seconds = Integer.parseInt(getAttributeValue(aa));
 							seconds = seconds * 1000;
 							attr4.setValue(String.valueOf(seconds));
 						} catch (NumberFormatException er) {
@@ -616,8 +592,7 @@ public class Mission extends Model {
 
 		for (Rule r : rules) {
 
-			if (!r.getFirstAction().equals("Keine")
-					&& !r.getFirstAction().equals("Deep")) {
+			if (!r.getFirstAction().equals("Keine") && !r.getFirstAction().equals("Deep")) {
 				Element rule = r.createXMLForWeb(doc, 0, this, g);
 				mission.appendChild(rule);
 
@@ -759,8 +734,7 @@ public class Mission extends Model {
 
 			if (done == false) {
 
-				System.out.println("Didn't find ContentType "
-						+ c.getType().getXMLType());
+				System.out.println("Didn't find ContentType " + c.getType().getXMLType());
 			}
 
 			m.setCopiedFrom(this);

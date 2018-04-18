@@ -1,26 +1,19 @@
 package models.GameParts;
 
-import play.db.ebean.Model;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.zip.ZipOutputStream;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-
-import models.Game;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.zip.ZipOutputStream;
+import models.Game;
+import play.db.ebean.Model;
 
 @Entity
 public class Part extends Model {
@@ -229,6 +222,7 @@ public class Part extends Model {
 	// }
 
 	public Part migrateTo(MissionType missionType, Map<Mission, Mission> missionbinder) {
+
 		if (!isScene()) {
 
 			Mission x = getMission().migrateTo(missionType);

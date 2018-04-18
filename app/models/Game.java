@@ -76,8 +76,7 @@ public class Game extends Model {
 	public Long id;
 	public String name;
 	public String zip;
-	
-	
+
 	@Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date lastUpdate;
 
@@ -93,7 +92,7 @@ public class Game extends Model {
 
 	public User owner;
 	public boolean publish;
-	
+
 	public Long userlastupdated;
 
 	private int version;
@@ -200,9 +199,6 @@ public class Game extends Model {
 
 	}
 
-	
-	
-	
 	public void editUser(User u, String newright) {
 
 		Set<GameRights> todelete = new HashSet<GameRights>();
@@ -385,49 +381,39 @@ public class Game extends Model {
 
 	}
 
-	public void relinkMissionAndHotspots(Map<Mission, Mission> missionbinder,
-			Map<Hotspot, Hotspot> hotspotbinder) {
+	public void relinkMissionAndHotspots(Map<Mission, Mission> missionbinder, Map<Hotspot, Hotspot> hotspotbinder) {
 
 		for (Attribute a : this.getAllSubAttributes()) {
 
 			if (a.getValue() != null) {
 				if (a.getValue().contains("$_")) {
 
-					for (Map.Entry<Mission, Mission> entry : missionbinder
-							.entrySet()) {
+					for (Map.Entry<Mission, Mission> entry : missionbinder.entrySet()) {
 
-						if (a.getValue()
-								.contains("$_" + entry.getKey().getId())
-								|| a.getValue().contains(
-										"$_mission_" + entry.getKey().getId())) {
+						if (a.getValue().contains("$_" + entry.getKey().getId())
+								|| a.getValue().contains("$_mission_" + entry.getKey().getId())) {
 
 							String newvalue = a.getValue();
 
-							newvalue = newvalue.replace("$_"
-									+ entry.getKey().getId(), "$_mission_"
-									+ entry.getValue().getId());
-							newvalue = newvalue.replace("$_mission_"
-									+ entry.getKey().getId(), "$_mission_"
-									+ entry.getValue().getId());
+							newvalue = newvalue.replace("$_" + entry.getKey().getId(),
+									"$_mission_" + entry.getValue().getId());
+							newvalue = newvalue.replace("$_mission_" + entry.getKey().getId(),
+									"$_mission_" + entry.getValue().getId());
 
 							a.setValue(newvalue);
 							a.update();
 						}
 					}
 
-					for (Map.Entry<Hotspot, Hotspot> entry : hotspotbinder
-							.entrySet()) {
+					for (Map.Entry<Hotspot, Hotspot> entry : hotspotbinder.entrySet()) {
 
-						if (a.getValue()
-								.contains("$_" + entry.getKey().getId())
-								|| a.getValue().contains(
-										"$_hotspot_" + entry.getKey().getId())) {
+						if (a.getValue().contains("$_" + entry.getKey().getId())
+								|| a.getValue().contains("$_hotspot_" + entry.getKey().getId())) {
 
 							String newvalue = a.getValue();
 
-							newvalue = newvalue.replace("$_hotspot_"
-									+ entry.getKey().getId(), "$_hotspot_"
-									+ entry.getValue().getId());
+							newvalue = newvalue.replace("$_hotspot_" + entry.getKey().getId(),
+									"$_hotspot_" + entry.getValue().getId());
 
 							a.setValue(newvalue);
 							a.update();
@@ -440,16 +426,11 @@ public class Game extends Model {
 
 					String newvalue = a.getValue();
 
-					for (Map.Entry<Mission, Mission> entry : missionbinder
-							.entrySet()) {
-						if (a.getValue().equals(
-								String.valueOf(entry.getKey().getId()))) {
+					for (Map.Entry<Mission, Mission> entry : missionbinder.entrySet()) {
+						if (a.getValue().equals(String.valueOf(entry.getKey().getId()))) {
 
-							newvalue = newvalue.replace(""
-									+ entry.getKey().getId(), ""
-									+ entry.getValue().getId());
-							System.out.println("excecuting mission attribute:"
-									+ entry.getKey().getId() + " -> "
+							newvalue = newvalue.replace("" + entry.getKey().getId(), "" + entry.getValue().getId());
+							System.out.println("excecuting mission attribute:" + entry.getKey().getId() + " -> "
 									+ entry.getValue().getId());
 
 						}
@@ -464,16 +445,11 @@ public class Game extends Model {
 
 					String newvalue = a.getValue();
 
-					for (Map.Entry<Hotspot, Hotspot> entry : hotspotbinder
-							.entrySet()) {
-						if (a.getValue().equals(
-								String.valueOf(entry.getKey().getId()))) {
+					for (Map.Entry<Hotspot, Hotspot> entry : hotspotbinder.entrySet()) {
+						if (a.getValue().equals(String.valueOf(entry.getKey().getId()))) {
 
-							newvalue = newvalue.replace(""
-									+ entry.getKey().getId(), ""
-									+ entry.getValue().getId());
-							System.out.println("excecuting hotspot attribute:"
-									+ entry.getKey().getId() + " -> "
+							newvalue = newvalue.replace("" + entry.getKey().getId(), "" + entry.getValue().getId());
+							System.out.println("excecuting hotspot attribute:" + entry.getKey().getId() + " -> "
 									+ entry.getValue().getId());
 
 						}
@@ -500,8 +476,7 @@ public class Game extends Model {
 		for (GameRights item : rights)
 			gr.add(item);
 
-		List<NewsstreamItem> ni = new ArrayList<NewsstreamItem>(
-				Newsstream.size());
+		List<NewsstreamItem> ni = new ArrayList<NewsstreamItem>(Newsstream.size());
 		for (NewsstreamItem item : Newsstream)
 			ni.add(item);
 
@@ -511,11 +486,9 @@ public class Game extends Model {
 				update();
 				if (oneni.getPosterClass() == "user") {
 
-					if (User.find.where().eq("id", oneni.getPosterid())
-							.findRowCount() == 1) {
+					if (User.find.where().eq("id", oneni.getPosterid()).findRowCount() == 1) {
 
-						User.find.byId(oneni.getPosterid())
-								.deleteNewsstreamItem(oneni);
+						User.find.byId(oneni.getPosterid()).deleteNewsstreamItem(oneni);
 					}
 
 				}
@@ -544,10 +517,8 @@ public class Game extends Model {
 
 				portals.remove(onepg);
 				update();
-				if (ProviderPortal.find.where()
-						.eq("id", onepg.getPortal().getId()).findRowCount() == 1) {
-					ProviderPortal p = ProviderPortal.find.byId(onepg
-							.getPortal().getId());
+				if (ProviderPortal.find.where().eq("id", onepg.getPortal().getId()).findRowCount() == 1) {
+					ProviderPortal p = ProviderPortal.find.byId(onepg.getPortal().getId());
 
 					p.deleteGame(onepg);
 
@@ -668,27 +639,22 @@ public class Game extends Model {
 
 	}
 
-	
-	
-
 	@JSON(include = false)
 	public int getAmountOfUsers() {
-		
+
 		int i = 0;
-	for(GameRights gr : rights){
-		
-		if(gr.getRights().equals("write")){
-			
-			
-			i++;
-			
+		for (GameRights gr : rights) {
+
+			if (gr.getRights().equals("write")) {
+
+				i++;
+
+			}
+
 		}
-		
-	}
 		return i;
 	}
-	
-	
+
 	@JSON(include = false)
 	public String getPortalBackLink() {
 
@@ -818,8 +784,7 @@ public class Game extends Model {
 				boolean contained = false;
 
 				for (GameRights acontainedgr : onPortal) {
-					if (acontainedgr.getUser().getId() == aprovideruser
-							.getUser().getId()) {
+					if (acontainedgr.getUser().getId() == aprovideruser.getUser().getId()) {
 						contained = true;
 					}
 
@@ -874,8 +839,7 @@ public class Game extends Model {
 	public void setAttribute(Attribute t) {
 
 		try {
-			List<Attribute> copyOfAttributes = new ArrayList<Attribute>(
-					attributes.size());
+			List<Attribute> copyOfAttributes = new ArrayList<Attribute>(attributes.size());
 			;
 			for (Attribute item : attributes)
 				copyOfAttributes.add(item);
@@ -1061,25 +1025,20 @@ public class Game extends Model {
 
 		try {
 
-			File theDir3 = new File("public/uploads/"
-					+ Application.getLocalPortal().getId());
+			File theDir3 = new File("public/uploads/" + Application.getLocalPortal().getId());
 			if (!theDir3.exists())
 				theDir3.mkdir();
 
-			File theDir2 = new File("public/uploads/"
-					+ Application.getLocalPortal().getId() + "/editor");
+			File theDir2 = new File("public/uploads/" + Application.getLocalPortal().getId() + "/editor");
 			if (!theDir2.exists())
 				theDir2.mkdir();
 
-			File theDir = new File("public/uploads/"
-					+ Application.getLocalPortal().getId() + "/editor/" + sid
-					+ "/");
+			File theDir = new File("public/uploads/" + Application.getLocalPortal().getId() + "/editor/" + sid + "/");
 			if (!theDir.exists())
 				theDir.mkdir();
 
-			File f = new File("public/uploads/"
-					+ Application.getLocalPortal().getId() + "/editor/" + sid
-					+ "/", "game.xml");
+			File f = new File("public/uploads/" + Application.getLocalPortal().getId() + "/editor/" + sid + "/",
+					"game.xml");
 
 			String xmlFilePath = f.getAbsolutePath();
 
@@ -1096,12 +1055,7 @@ public class Game extends Model {
 		}
 
 	}
-	
-	
-	
-	
-	
-	
+
 	public String createTestXML() {
 
 		String xmlString = createXMLForWeb(getFirstMission());
@@ -1109,31 +1063,25 @@ public class Game extends Model {
 
 		try {
 
-			File theDir3 = new File("public/uploads/"
-					+ Application.getLocalPortal().getId());
+			File theDir3 = new File("public/uploads/" + Application.getLocalPortal().getId());
 			if (!theDir3.exists())
 				theDir3.mkdir();
 
-			File theDir2 = new File("public/uploads/"
-					+ Application.getLocalPortal().getId() + "/editor");
+			File theDir2 = new File("public/uploads/" + Application.getLocalPortal().getId() + "/editor");
 			if (!theDir2.exists())
 				theDir2.mkdir();
-			
-			
-			File theDir4 = new File("public/uploads/"
-					+ Application.getLocalPortal().getId() + "/editor/test");
+
+			File theDir4 = new File("public/uploads/" + Application.getLocalPortal().getId() + "/editor/test");
 			if (!theDir4.exists())
 				theDir4.mkdir();
 
-			File theDir = new File("public/uploads/"
-					+ Application.getLocalPortal().getId() + "/editor/test/" + sid
-					+ "/");
+			File theDir = new File(
+					"public/uploads/" + Application.getLocalPortal().getId() + "/editor/test/" + sid + "/");
 			if (!theDir.exists())
 				theDir.mkdir();
 
-			File f = new File("public/uploads/"
-					+ Application.getLocalPortal().getId() + "/editor/test/" + sid
-					+ "/", "game.xml");
+			File f = new File("public/uploads/" + Application.getLocalPortal().getId() + "/editor/test/" + sid + "/",
+					"game.xml");
 
 			String xmlFilePath = f.getAbsolutePath();
 
@@ -1143,14 +1091,14 @@ public class Game extends Model {
 			this.update();
 
 			System.out.println("File saved!");
-			
+
 			return zip2;
 
 		} catch (IOException ioe) {
 
 			ioe.printStackTrace();
 		}
-		
+
 		return "error";
 
 	}
@@ -1161,24 +1109,19 @@ public class Game extends Model {
 		String content = "";
 		try {
 
-			File theDir3 = new File("public/uploads/"
-					+ Application.getLocalPortal().getId());
+			File theDir3 = new File("public/uploads/" + Application.getLocalPortal().getId());
 			if (!theDir3.exists())
 				theDir3.mkdir();
 
-			File theDir2 = new File("public/uploads/"
-					+ Application.getLocalPortal().getId() + "/editor");
+			File theDir2 = new File("public/uploads/" + Application.getLocalPortal().getId() + "/editor");
 			if (!theDir2.exists())
 				theDir2.mkdir();
 
-			File theDir = new File("public/uploads/"
-					+ Application.getLocalPortal().getId() + "/editor/" + sid
-					+ "/");
+			File theDir = new File("public/uploads/" + Application.getLocalPortal().getId() + "/editor/" + sid + "/");
 			if (!theDir.exists())
 				theDir.mkdir();
 
-			DocumentBuilderFactory docFactory = DocumentBuilderFactory
-					.newInstance();
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder;
 
 			docBuilder = docFactory.newDocumentBuilder();
@@ -1196,15 +1139,13 @@ public class Game extends Model {
 			Attr attr2 = doc.createAttribute("name");
 			attr2.setValue(name);
 			game.setAttributeNode(attr2);
-			
-			
 
 			Attr attr3 = doc.createAttribute("xmlformat");
 			attr3.setValue("5");
 			game.setAttributeNode(attr3);
-			
+
 			Attr attr5 = doc.createAttribute("lastUpdate");
-			attr5.setValue(""+lastUpdate.getTime());
+			attr5.setValue("" + lastUpdate.getTime());
 			game.setAttributeNode(attr5);
 
 			for (Attribute aa : attributes) {
@@ -1274,15 +1215,12 @@ public class Game extends Model {
 
 					transformer = tf.newTransformer();
 
-					transformer.setOutputProperty(
-							OutputKeys.OMIT_XML_DECLARATION, "yes");
+					transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 					StringWriter writer = new StringWriter();
 
-					transformer.transform(new DOMSource(doc), new StreamResult(
-							writer));
+					transformer.transform(new DOMSource(doc), new StreamResult(writer));
 
-					content = writer.getBuffer().toString()
-							.replaceAll("\n|\r", "");
+					content = writer.getBuffer().toString().replaceAll("\n|\r", "");
 
 				} catch (TransformerConfigurationException e) {
 					// TODO Auto-generated catch block
@@ -1577,8 +1515,7 @@ public class Game extends Model {
 
 				} else {
 
-					if (!p.getMission().getType().getXMLType()
-							.equals("MetaData")) {
+					if (!p.getMission().getType().getXMLType().equals("MetaData")) {
 						n = p.getMission();
 						current = false;
 						done = true;
@@ -1600,23 +1537,21 @@ public class Game extends Model {
 
 		if (!parts.isEmpty()) {
 			int i = 1;
-			System.out.println("parts.size: "+parts.size());
+			System.out.println("parts.size: " + parts.size());
 
-			while (((m == null) || i <= parts.size()
-					|| m.getType().getXMLType().equals("MetaData")) && (parts.size() - i) >= 0) {
-				
-				
-				
-				System.out.println("looking for: "+(parts.size() - i));
+			while (((m == null) || i <= parts.size() || m.getType().getXMLType().equals("MetaData"))
+					&& (parts.size() - i) >= 0) {
 
-				if(parts.get(parts.size() - i) != null){
-				Part p = parts.get(parts.size() - i);
-				if (p.getLastMission() != null) {
-					m = p.getLastMission();
+				System.out.println("looking for: " + (parts.size() - i));
+
+				if (parts.get(parts.size() - i) != null) {
+					Part p = parts.get(parts.size() - i);
+					if (p.getLastMission() != null) {
+						m = p.getLastMission();
+
+					}
 
 				}
-			
-				} 
 				i++;
 			}
 		}
@@ -1653,8 +1588,7 @@ public class Game extends Model {
 
 					if (Mission.find.where().eq("id", testid).findRowCount() != 1) {
 
-						System.out.println("Start-Mission " + testid
-								+ " not found.");
+						System.out.println("Start-Mission " + testid + " not found.");
 					} else {
 
 						ret = Mission.find.byId(testid);
@@ -1727,8 +1661,7 @@ public class Game extends Model {
 
 							if (y.getContent() != null) {
 
-								String str2 = y.getContent().replaceAll("<",
-										"&lt;");
+								String str2 = y.getContent().replaceAll("<", "&lt;");
 								str2 = str2.replaceAll(">", "&gt;");
 								str2 = str2.replaceAll("\"", "&quot;");
 								str2 = str2.replaceAll("&", "&amp;");
@@ -1771,22 +1704,18 @@ public class Game extends Model {
 
 										for (Action ac : sr.getActions()) {
 
-											if (ac.getType().getXMLType()
-													.equals("SetVariable")) {
+											if (ac.getType().getXMLType().equals("SetVariable")) {
 
 												String var = "";
 												String value = "";
 
-												for (Attribute at : ac
-														.getAttributes()) {
+												for (Attribute at : ac.getAttributes()) {
 
-													if (at.getXMLType().equals(
-															"var")) {
+													if (at.getXMLType().equals("var")) {
 
 														var = at.getValue();
 
-													} else if (at.getXMLType()
-															.equals("value")) {
+													} else if (at.getXMLType().equals("value")) {
 
 														value = at.getValue();
 
@@ -1794,14 +1723,11 @@ public class Game extends Model {
 
 												}
 
-												if (!var.equals("")
-														&& !value.equals("")) {
+												if (!var.equals("") && !value.equals("")) {
 
-													value = value.replaceAll(
-															"\"", "");
+													value = value.replaceAll("\"", "");
 
-													x = x.replace("@" + var
-															+ "@", value);
+													x = x.replace("@" + var + "@", value);
 
 												}
 
@@ -1849,8 +1775,7 @@ public class Game extends Model {
 
 							if (y.getContent() != null) {
 
-								String str2 = y.getContent().replaceAll("<",
-										"&lt;");
+								String str2 = y.getContent().replaceAll("<", "&lt;");
 								str2 = str2.replaceAll(">", "&gt;");
 								str2 = str2.replaceAll("\"", "&quot;");
 								str2 = str2.replaceAll("&", "&amp;");
@@ -1891,22 +1816,18 @@ public class Game extends Model {
 
 										for (Action ac : sr.getActions()) {
 
-											if (ac.getType().getXMLType()
-													.equals("SetVariable")) {
+											if (ac.getType().getXMLType().equals("SetVariable")) {
 
 												String var = "";
 												String value = "";
 
-												for (Attribute at : ac
-														.getAttributes()) {
+												for (Attribute at : ac.getAttributes()) {
 
-													if (at.getXMLType().equals(
-															"var")) {
+													if (at.getXMLType().equals("var")) {
 
 														var = at.getValue();
 
-													} else if (at.getXMLType()
-															.equals("value")) {
+													} else if (at.getXMLType().equals("value")) {
 
 														value = at.getValue();
 
@@ -1914,14 +1835,11 @@ public class Game extends Model {
 
 												}
 
-												if (!var.equals("")
-														&& !value.equals("")) {
+												if (!var.equals("") && !value.equals("")) {
 
-													value = value.replaceAll(
-															"\"", "");
+													value = value.replaceAll("\"", "");
 
-													x = x.replace("@" + var
-															+ "@", value);
+													x = x.replace("@" + var + "@", value);
 
 												}
 
@@ -2249,11 +2167,9 @@ public class Game extends Model {
 		}
 	}
 
-	public NewsstreamItem createNewsstreamItem(String title, String content,
-			String vis) {
+	public NewsstreamItem createNewsstreamItem(String title, String content, String vis) {
 
-		NewsstreamItem nsi = new NewsstreamItem(title, content, vis, "game",
-				getId());
+		NewsstreamItem nsi = new NewsstreamItem(title, content, vis, "game", getId());
 
 		return nsi;
 
@@ -2299,34 +2215,27 @@ public class Game extends Model {
 	/**
 	 * 
 	 * Finder is a Play Framework Class that lets other classes find a specific
-	 * object of this class, in this case, searching for objects with a Long
-	 * value is enabled.
+	 * object of this class, in this case, searching for objects with a Long value
+	 * is enabled.
 	 * 
 	 */
 
-	public static final Finder<Long, Game> find = new Finder<Long, Game>(
-			Long.class, Game.class);
+	public static final Finder<Long, Game> find = new Finder<Long, Game>(Long.class, Game.class);
 
 	public void setPublish(boolean b) {
 		publish = b;
 
 	}
-	
-	
-	
-	public void setPublishOnAllPortals(boolean b){
-		
-		
-		
-		
-		for(ProviderGames pg : portals){
-			
+
+	public void setPublishOnAllPortals(boolean b) {
+
+		for (ProviderGames pg : portals) {
+
 			pg.setVisibility(b);
 			pg.update();
-			
+
 		}
-		
-	
+
 	}
 
 	@JSON(include = true)
@@ -2431,8 +2340,6 @@ public class Game extends Model {
 
 		} else if (or.getObjectType().equals("Attribute")) {
 
-			
-			
 			System.out.println("Searching for Attribute: " + or.getObjectId());
 
 			List<Attribute> allattr = s.getAllSubAttributes();
@@ -2442,9 +2349,10 @@ public class Game extends Model {
 
 				if (at != null) {
 					if (or.getObjectId().equals(at.getParentId())) {
-						// we return a new object reference that links to the copy of the attribute that the given object reference linked to.
+						// we return a new object reference that links to the copy of the attribute that
+						// the given object reference linked to.
 						x = new ObjectReference(at);
-						
+
 						System.out.println("success!");
 
 					}
@@ -2492,7 +2400,7 @@ public class Game extends Model {
 			if (p.isScene()) {
 
 				// SCENES:
-				
+
 				SceneType old = p.getScene().getType();
 				System.out.println("SceneType search: " + old.getName());
 
@@ -2501,8 +2409,7 @@ public class Game extends Model {
 					if (npt.getName().equals(old.getName())) {
 
 						done = true;
-						Scene nss = p.getScene().migrateTo(npt, gt, missionbinder,
-								hotspotbinder);
+						Scene nss = p.getScene().migrateTo(npt, gt, missionbinder, hotspotbinder);
 						nss.save();
 						Part ns = new Part(nss);
 						ns.save();
@@ -2516,12 +2423,11 @@ public class Game extends Model {
 
 				if (done == false) {
 
-					System.out
-							.println("Didn't find SceneType " + old.getName());
+					System.out.println("Didn't find SceneType " + old.getName());
 				}
 
 			} else {
-				
+
 				// MISSIONS aka PAGES:
 
 				MissionType oldMissionType = p.getMission().getType();
@@ -2529,12 +2435,10 @@ public class Game extends Model {
 				PartType targetPartType = null;
 
 				String xmlTypeOld = oldMissionType.getXMLType();
-				if (xmlTypeOld.equals("NPCTalk")
-						&& oldMissionType.getName().equals("Text mit Bild")) {
+				if (xmlTypeOld.equals("NPCTalk") && oldMissionType.getName().equals("Text mit Bild")) {
 					xmlTypeOld = "ImageWithText";
 				}
-				if (xmlTypeOld.equals("MultipleChoiceQuestion")
-						&& oldMissionType.getName().equals("Auswahlmenü")) {
+				if (xmlTypeOld.equals("MultipleChoiceQuestion") && oldMissionType.getName().equals("Auswahlmenü")) {
 					xmlTypeOld = "Menu";
 				}
 
@@ -2545,8 +2449,7 @@ public class Game extends Model {
 						// TODO special solution for migration e.g. from
 						// textmitbild to whatever or auswahlmenu
 
-						if (npt.getMissionType().getXMLType()
-								.equals(xmlTypeOld)) {
+						if (npt.getMissionType().getXMLType().equals(xmlTypeOld)) {
 
 							targetPartType = npt;
 
@@ -2558,8 +2461,7 @@ public class Game extends Model {
 				}
 
 				if (targetPartType != null) {
-					Part np = p.migrateTo(targetPartType.getMissionType(),
-							missionbinder);
+					Part np = p.migrateTo(targetPartType.getMissionType(), missionbinder);
 
 					g.addPart(np);
 					g.update();
@@ -2568,8 +2470,7 @@ public class Game extends Model {
 
 				else {
 
-					System.out.println("Didn't find MissionType "
-							+ oldMissionType.getName());
+					System.out.println("Didn't find MissionType " + oldMissionType.getName());
 				}
 
 			}
@@ -2649,8 +2550,7 @@ public class Game extends Model {
 
 					if (atr.getValue() != null) {
 						if (x.getCopiedFrom() != null) {
-							if (atr.getValue()
-									.equals(String.valueOf(x.getId()))) {
+							if (atr.getValue().equals(String.valueOf(x.getId()))) {
 
 								atr.setValue(x.getName());
 								atr.update();
@@ -2667,8 +2567,7 @@ public class Game extends Model {
 
 					if (atr.getValue() != null) {
 						if (x.getParent() != null) {
-							if (atr.getValue().equals(
-									String.valueOf(x.getParent().getId()))) {
+							if (atr.getValue().equals(String.valueOf(x.getParent().getId()))) {
 
 								atr.setValue(String.valueOf(x.getId()));
 								atr.update();

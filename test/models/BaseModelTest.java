@@ -1,28 +1,21 @@
 package models;
 
-import com.avaje.ebean.CallableSql;
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.EbeanServer;
-import com.avaje.ebean.config.ServerConfig;
-import com.avaje.ebean.config.dbplatform.H2Platform;
-import com.avaje.ebeaninternal.api.SpiEbeanServer;
-import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import play.api.db.DBApi;
-import play.api.db.evolutions.Evolution;
-import play.api.db.evolutions.Evolutions;
+
+import com.avaje.ebean.CallableSql;
+import com.avaje.ebean.Ebean;
+import com.avaje.ebean.EbeanServer;
+import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
+
 import play.test.FakeApplication;
 import play.test.Helpers;
-import scala.collection.Seq;
-import util.Global;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Callable;
 
 /**
  * Base class for Model testing
