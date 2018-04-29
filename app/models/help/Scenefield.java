@@ -3,13 +3,26 @@ package models.help;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.GameParts.Attribute;
+import models.GameParts.Content;
+
 public class Scenefield {
 
+	private Attribute attribute;
 	private String name;
 	private String type;
 	private int sortingOrder = 0;
 	private String defaultValue = "";
 	private List<String> possibleValues = new ArrayList<String>();
+	
+	public Scenefield(Content content) {
+		this(content.getContent());
+	}
+	
+	public Scenefield(Attribute attribute) {
+		this(attribute.getValue());
+		this.attribute = attribute;
+	}
 
 	public Scenefield(String definition) {
 		String parameters = definition.substring("scenefield(".length(),
@@ -88,6 +101,10 @@ public class Scenefield {
 
 	public String getDefaultValue() {
 		return defaultValue;
+	}
+	
+	public Attribute getAttribute() {
+		return attribute;
 	}
 
 }

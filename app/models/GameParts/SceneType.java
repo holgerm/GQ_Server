@@ -1,15 +1,5 @@
 package models.GameParts;
 
-import play.db.ebean.Model;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
-
-import models.Game;
-import models.help.Scenefield;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -20,6 +10,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+
+import models.Game;
+import models.help.Scenefield;
+import play.db.ebean.Model;
 
 @Entity
 public class SceneType extends Model {
@@ -93,9 +91,7 @@ public class SceneType extends Model {
 
 	public String addDefaultsFromGame(Game g) {
 
-		SortedMap<Integer, AttributeType> sorter = new TreeMap<Integer, AttributeType>();
-
-		String log = "<br/>";
+		SortedMap<Integer, Scenefield> sorter = new TreeMap<Integer, Scenefield>();
 
 		defaultParts.addAll(g.getParts());
 		defaultHotspots.addAll(g.getHotspots());
@@ -105,169 +101,114 @@ public class SceneType extends Model {
 		Integer sortstart = 10000;
 		for (Attribute aa : g.getAllSubAttributes()) {
 
-			log = log + "Attribut mit ID" + aa.getType().getId() + ", XMLTyp "
-					+ aa.getXMLType() + " und Value " + aa.getValue();
 			if (aa.getValue() != null) {
 				if (aa.getValue().contains("scenefield(")) {
-					Scenefield scHelper = new Scenefield(aa.getValue());
-					sortstart = sortstart + 1;
-					log = log + " -> Link: " + aa.getValue();
-					log = log + "->> Füge Feld hinzu: " + scHelper.getName();
+					Scenefield scHelper = new Scenefield(aa);
 
-					try {
-						AttributeType att01 = new AttributeType(
-								scHelper.getName(), String.valueOf(aa.getId()),
-								scHelper.getType());
-						att01.setMimeType(aa.getType().getMimeType());
-						att01.setOptional(true);
-						att01.save();
-						ObjectReference or = new ObjectReference(aa);
-						or.save();
-						att01.setLink(or);
-						for (String p : scHelper.getPossibleValues()) {
-							att01.addPossibleValue(p);
-						}
-
-						att01.setDefaultValue(scHelper.getDefaultValue());
-						att01.update();
-
-						int sort = (scHelper.getSortingOrder() == 0 ? sortstart
-								: scHelper.getSortingOrder());
-						while (sorter.containsKey(sort)) {
-							sort++;
-						}
-						sorter.put(sort, att01);
-						// this.setAttributeType(att01);
-						log = log + " ->>> success<br/>";
-
-					} catch (Exception e) {
-						StringWriter sw = new StringWriter();
-						PrintWriter pw = new PrintWriter(sw);
-						e.printStackTrace(pw);
-						
-						log = log + " ->>> Error<br/>";
-						log = log + e.getMessage() + "trace: " + sw.toString() + "<br/>";
-
+					// determine next sort number:
+					sortstart++;
+					int sort = (scHelper.getSortingOrder() == 0 ? sortstart : scHelper.getSortingOrder());
+					while (sorter.containsKey(sort)) {
+						sort++;
 					}
-
-					this.update();
-
-				} else {
-
-					log = log + "<br/>";
-
+					sorter.put(sort, scHelper);
 				}
-
-			} else {
-				log = log + "<br/>";
-
 			}
-
 		}
 
-		for (Content aa : g.getAllContents()) {
-			if (aa.getContent() != null) {
-				if (aa.getContent().contains("scenefield(")) {
-					sortstart = sortstart + 1;
-					String split = aa.getContent();
-					String[] split1 = split.split("scenefield\\(");
-					String[] split2 = split1[1].split("\\)");
-
-					System.out.println(split1[1]);
-					Integer sort = sortstart;
-					String type = "";
-					String field = split2[0];
-					if (split2[0].contains(",")) {
-						String[] split3 = split2[0].split(",");
-
-						field = split3[0];
-						type = split3[1];
-
-						if (split3.length > 2) {
-
-							try {
-								sort = Integer.valueOf(split3[2]);
-
-							} catch (NumberFormatException e) {
-
-								log = log
-										+ "Couldn't transform sort-Attribute to Integer value: "
-										+ split3[2];
-
-							}
-
-						}
-
-					}
-					System.out.println(field);
-
-					AttributeType att01 = new AttributeType(field, "content",
-							"String");
-					att01.setOptional(true);
-					att01.save();
-					ObjectReference or = new ObjectReference(aa);
-					or.save();
-					att01.setLink(or);
-					att01.update();
-
-					sorter.put(sort, att01);
-
-					// setAttributeType(att01);
-
-					this.update();
-
-				}
-
-			}
-
-		}
+		/*
+		 * Scenefields für Contents sind auskommentiert.
+		 * 
+		 * Ich denke sie haben eh nicht funktioniert und man braucht sie auch nicht. Man
+		 * kann besser eine Variable definieren und diese dann in dem Content verwenden.
+		 * Ist eh flexibler.
+		 */
+		// for (Content aa : g.getAllContents()) {
+		// if (aa.getContent() != null) {
+		// if (aa.getContent().contains("scenefield(")) {
+		// Scenefield scHelper = new Scenefield(aa);
+		//
+		// // determine next sort number:
+		// sortstart++;
+		// String split = aa.getContent();
+		// String[] split1 = split.split("scenefield\\(");
+		// String[] split2 = split1[1].split("\\)");
+		//
+		// System.out.println(split1[1]);
+		// Integer sort = sortstart;
+		// String type = "";
+		// String field = split2[0];
+		// if (split2[0].contains(",")) {
+		// String[] split3 = split2[0].split(",");
+		//
+		// field = split3[0];
+		// type = split3[1];
+		//
+		// if (split3.length > 2) {
+		//
+		// try {
+		// sort = Integer.valueOf(split3[2]);
+		//
+		// } catch (NumberFormatException e) {
+		// System.out.println(e.getMessage());
+		// }
+		// }
+		// }
+		//
+		// AttributeType att01 = new AttributeType(field, "content", "String");
+		// att01.setOptional(true);
+		// att01.save();
+		// ObjectReference or = new ObjectReference(aa);
+		// or.save();
+		// att01.setLink(or);
+		// att01.update();
+		//
+		// sorter.put(sort, att01);
+		//
+		// // setAttributeType(att01);
+		//
+		// this.update();
+		// }
+		// }
+		// }
 
 		attributeTypes.clear();
 		this.update();
-		
-		log = log + "<h1>Sorter</h1>";
 
+		// create new attributes:
 		for (Integer key : sorter.keySet()) {
 
-			attributeTypes.add(sorter.get(key));
+			Scenefield scHelper = sorter.get(key);
+			Attribute att = scHelper.getAttribute();
+			try {
+				AttributeType att01 = new AttributeType(scHelper.getName(), String.valueOf(att.getId()),
+						scHelper.getType());
+				att01.setMimeType(att.getType().getMimeType());
+				att01.setOptional(true);
+				att01.save();
+				ObjectReference or = new ObjectReference(att);
+				or.save();
+				att01.setLink(or);
+				for (String p : scHelper.getPossibleValues()) {
+					att01.addPossibleValue(p);
+				}
 
-			log = log + "<br/>" + key + ":  " + sorter.get(key).getName()
-					+ " (" + sorter.get(key).getId() + ")";
+				att01.setDefaultValue(scHelper.getDefaultValue());
+				att01.update();
 
+				attributeTypes.add(att01);
+			} catch (Exception e) {
+				StringWriter sw = new StringWriter();
+				PrintWriter pw = new PrintWriter(sw);
+				e.printStackTrace(pw);
+			}
+
+			this.update();
 		}
-		
+
 		this.update();
 
-		log = log + "<h1>Felder vorhanden</h1><ul>";
-
-		for (AttributeType at : attributeTypes) {
-
-			log = log + "<li>" + at.getName() + "</li>";
-
-		}
-		log = log + "</ul>";
-
-		log = log + "<h1>Parts vorhanden</h1><ul>";
-
-		for (Part apt : defaultParts) {
-
-			log = log + "<li>" + apt.getMission().getName() + "</li>";
-
-		}
-		log = log + "</ul>";
-
-		log = log + "<h1>Hotspots vorhanden</h1><ul>";
-
-		for (Hotspot ahst : defaultHotspots) {
-
-			log = log + "<li>" + ahst.getName() + "</li>";
-
-		}
-		log = log + "</ul><br/><br/>";
-
-		System.out.print(log);
-		return log;
-
+		return "";
 	}
 
 	// SETTER
@@ -315,8 +256,7 @@ public class SceneType extends Model {
 	public void setAttributeType(AttributeType t) {
 
 		try {
-			List<AttributeType> copyOfAttributes = new ArrayList<AttributeType>(
-					attributeTypes.size());
+			List<AttributeType> copyOfAttributes = new ArrayList<AttributeType>(attributeTypes.size());
 			;
 			for (AttributeType item : attributeTypes)
 				copyOfAttributes.add(item);
@@ -408,6 +348,60 @@ public class SceneType extends Model {
 		return defaultHotspots;
 	}
 
+	/**
+	 * Finds a MissionType as part of this SceneType whose name or type name matches
+	 * with the given original Mission. We search first for default missions and
+	 * second for possible mission types.
+	 * 
+	 * @param originalM
+	 *            the mission we want to find a matching MissionType for.
+	 * @return MissionType as direct possible part of this SceneType, or <b>null</b>
+	 *         if no match found.
+	 */
+	public MissionType findMigrationTargetMissionType(Mission originalM) {
+		// look for matching mission in default parts:
+		for (Part p : getDefaultPart()) {
+			if (!p.isScene()) {
+				Mission targetM = p.getMission();
+				if (originalM.getName().equals(targetM.getName())) {
+					return targetM.getType();
+				}
+			}
+		}
+
+		// look for matching mission in possible part types:
+		for (PartType pt : getPossiblePartTypes()) {
+			if (!pt.isSceneType()) {
+				MissionType targetMT = pt.getMissionType();
+				if (originalM.getType().getName().equals(targetMT.getName())) {
+					return targetMT;
+				}
+			}
+		}
+
+		// no matching mission type found:
+		return null;
+	}
+
+	public HotspotType findMigrationTargetHotspotType(Hotspot originalH) {
+		// look for matching mission in default hotspots:
+		for (Hotspot targetH : getDefaultHotspots()) {
+			if (originalH.getName().equals(targetH.getName())) {
+				return targetH.getType();
+			}
+		}
+
+		// look for matching mission in possible hotspot types:
+		for (HotspotType targetHT : getPossibleHotspotTypes()) {
+			if (originalH.getType().getName().equals(targetHT.getName())) {
+				return targetHT;
+			}
+		}
+
+		// no matching mission type found:
+		return null;
+	}
+
 	public Set<MissionType> getPossibleMissionTypes() {
 
 		Set<MissionType> all = new HashSet<MissionType>();
@@ -478,8 +472,7 @@ public class SceneType extends Model {
 
 				Attribute atr = new Attribute(atrt);
 				atr.save();
-				ObjectReference o = g
-						.getAbstractRelinkObject(atrt.getLink(), s);
+				ObjectReference o = g.getAbstractRelinkObject(atrt.getLink(), s);
 				atr.setLink(o);
 				atr.setValue(atrt.getDefaultValue());
 				atr.update();
@@ -494,8 +487,7 @@ public class SceneType extends Model {
 		// LINK REBINDING
 
 		for (Map.Entry<Mission, Mission> entry : missionbinder.entrySet()) {
-			System.out.println("Ersetze alle $_" + entry.getKey().getId()
-					+ " durch $_" + entry.getValue().getId());
+			System.out.println("Ersetze alle $_" + entry.getKey().getId() + " durch $_" + entry.getValue().getId());
 		}
 
 		for (Attribute a : s.getAllSubAttributes()) {
@@ -503,25 +495,18 @@ public class SceneType extends Model {
 			if (a.getValue() != null) {
 				if (a.getValue().contains("$_")) {
 
-					for (Map.Entry<Mission, Mission> entry : missionbinder
-							.entrySet()) {
+					for (Map.Entry<Mission, Mission> entry : missionbinder.entrySet()) {
 
-						if (a.getValue()
-								.contains("$_" + entry.getKey().getId())) {
+						if (a.getValue().contains("$_" + entry.getKey().getId())) {
 
 							String newvalue = a.getValue();
 
-							newvalue = newvalue.replace("$_"
-									+ entry.getKey().getId(), "$_"
-									+ entry.getValue().getId());
-							newvalue = newvalue.replace("$_mission_"
-									+ entry.getKey().getId(), "$_mission_"
-									+ entry.getValue().getId());
-							System.out.println("excecuting in "
-									+ a.getType().getName() + " of type "
-									+ a.getTypeDescription() + ":$_"
-									+ entry.getKey().getId() + " -> $_"
-									+ entry.getValue().getId());
+							newvalue = newvalue.replace("$_" + entry.getKey().getId(), "$_" + entry.getValue().getId());
+							newvalue = newvalue.replace("$_mission_" + entry.getKey().getId(),
+									"$_mission_" + entry.getValue().getId());
+							System.out.println(
+									"excecuting in " + a.getType().getName() + " of type " + a.getTypeDescription()
+											+ ":$_" + entry.getKey().getId() + " -> $_" + entry.getValue().getId());
 
 							a.setValue(newvalue);
 							a.update();
@@ -534,16 +519,11 @@ public class SceneType extends Model {
 
 					String newvalue = a.getValue();
 
-					for (Map.Entry<Mission, Mission> entry : missionbinder
-							.entrySet()) {
-						if (a.getValue().equals(
-								String.valueOf(entry.getKey().getId()))) {
+					for (Map.Entry<Mission, Mission> entry : missionbinder.entrySet()) {
+						if (a.getValue().equals(String.valueOf(entry.getKey().getId()))) {
 
-							newvalue = newvalue.replace(""
-									+ entry.getKey().getId(), ""
-									+ entry.getValue().getId());
-							System.out.println("excecuting mission attribute:"
-									+ entry.getKey().getId() + " -> "
+							newvalue = newvalue.replace("" + entry.getKey().getId(), "" + entry.getValue().getId());
+							System.out.println("excecuting mission attribute:" + entry.getKey().getId() + " -> "
 									+ entry.getValue().getId());
 
 						}
@@ -561,19 +541,15 @@ public class SceneType extends Model {
 
 			if (atrt.hasLink()) {
 
-				System.out
-						.println("An attribute wants to link to another object");
+				System.out.println("An attribute wants to link to another object");
 
 				if (atrt.getLink().getObjectId() != null) {
 
 					Attribute atr = new Attribute(atrt);
 					atr.save();
-					ObjectReference o = g.getAbstractRelinkObject(
-							atrt.getLink(), s);
+					ObjectReference o = g.getAbstractRelinkObject(atrt.getLink(), s);
 					if (o != null) {
-						System.out.println("and is setting it to "
-								+ o.getObjectType() + " (" + o.getObjectId()
-								+ ")");
+						System.out.println("and is setting it to " + o.getObjectType() + " (" + o.getObjectId() + ")");
 
 						o.save();
 						atr.setLink(o);
@@ -584,15 +560,13 @@ public class SceneType extends Model {
 
 					} else {
 
-						System.out
-								.println("but didn't find a fitting equivalent.");
+						System.out.println("but didn't find a fitting equivalent.");
 
 					}
 
 				} else {
 
-					System.out
-							.println("but has no object reference specified correctly.");
+					System.out.println("but has no object reference specified correctly.");
 
 				}
 
@@ -667,34 +641,25 @@ public class SceneType extends Model {
 
 								Attribute aa = aact.getAttribute(aat);
 
-								System.out.println("AttributeType: "
-										+ aat.getName() + " ("
-										+ aat.getXMLType() + ")");
+								System.out.println("AttributeType: " + aat.getName() + " (" + aat.getXMLType() + ")");
 
 								if (aa != null) {
 
-									System.out.println("Attribute: "
-											+ aa.getName());
-									System.out.println("Value: "
-											+ aa.getValue());
+									System.out.println("Attribute: " + aa.getName());
+									System.out.println("Value: " + aa.getValue());
 
-									System.out.println("Abstract:"
-											+ aa.hasAbstractValue());
+									System.out.println("Abstract:" + aa.hasAbstractValue());
 
 									if (aa.hasAbstractValue()) {
 
-										System.out
-												.println("Found Abstract Value ");
+										System.out.println("Found Abstract Value ");
 
-										ObjectReference or = aa
-												.getAbstractValue();
+										ObjectReference or = aa.getAbstractValue();
 
-										Attribute newa = new Attribute(
-												aa.getType());
+										Attribute newa = new Attribute(aa.getType());
 
 										newa.save();
-										newa.setValue(g
-												.getAbstractRelink(or, s));
+										newa.setValue(g.getAbstractRelink(or, s));
 										newa.update();
 										aact.setAttribute(newa);
 										aact.update();
@@ -719,8 +684,7 @@ public class SceneType extends Model {
 
 					if (am.getRule(art) != null) {
 
-						System.out.println("Rule: "
-								+ am.getRule(art).getTrigger());
+						System.out.println("Rule: " + am.getRule(art).getTrigger());
 
 						for (Rule ar : am.getRule(art).getSubRules()) {
 
@@ -732,28 +696,21 @@ public class SceneType extends Model {
 
 									if (aa != null) {
 
-										System.out.println("Attribute: "
-												+ aa.getName());
-										System.out.println("Value: "
-												+ aa.getValue());
+										System.out.println("Attribute: " + aa.getName());
+										System.out.println("Value: " + aa.getValue());
 
-										System.out.println("Abstract:"
-												+ aa.hasAbstractValue());
+										System.out.println("Abstract:" + aa.hasAbstractValue());
 
 										if (aa.hasAbstractValue()) {
 
-											System.out
-													.println("Found Abstract Value ");
+											System.out.println("Found Abstract Value ");
 
-											ObjectReference or = aa
-													.getAbstractValue();
+											ObjectReference or = aa.getAbstractValue();
 
-											Attribute newa = new Attribute(
-													aa.getType());
+											Attribute newa = new Attribute(aa.getType());
 
 											newa.save();
-											newa.setValue(g.getAbstractRelink(
-													or, s));
+											newa.setValue(g.getAbstractRelink(or, s));
 											newa.update();
 											aact.setAttribute(newa);
 											aact.update();
@@ -777,24 +734,20 @@ public class SceneType extends Model {
 
 			if (atrt.hasLink()) {
 
-				System.out
-						.println("An attribute wants to link to another object");
+				System.out.println("An attribute wants to link to another object");
 
 				if (atrt.getLink().getObjectId() != null) {
 
 					Attribute atr = new Attribute(atrt);
 					atr.save();
-					ObjectReference o = g.getAbstractRelinkObject(
-							atrt.getLink(), s);
+					ObjectReference o = g.getAbstractRelinkObject(atrt.getLink(), s);
 					if (o != null) {
-						System.out.println("and is setting it to "
-								+ o.getObjectType() + " (" + o.getObjectId()
-								+ ")");
+						System.out.println("and is setting it to " + o.getObjectType() + " (" + o.getObjectId() + ")");
 
 						o.save();
 						atr.setLink(o);
 						// TODO: perhaps we should set the value of the linked object, too, e.g.:
-								// o.getAttribute().setValue(atrt.getDefaultValue());
+						// o.getAttribute().setValue(atrt.getDefaultValue());
 						atr.setValue(atrt.getDefaultValue());
 						atr.update();
 
@@ -803,15 +756,13 @@ public class SceneType extends Model {
 
 					} else {
 
-						System.out
-								.println("but didn't find a fitting equivalent.");
+						System.out.println("but didn't find a fitting equivalent.");
 
 					}
 
 				} else {
 
-					System.out
-							.println("but has no object reference specified correctly.");
+					System.out.println("but has no object reference specified correctly.");
 
 				}
 
@@ -822,8 +773,7 @@ public class SceneType extends Model {
 		// LINK REBINDING
 
 		for (Map.Entry<Mission, Mission> entry : missionbinder.entrySet()) {
-			System.out.println("Ersetze alle $_" + entry.getKey().getId()
-					+ " durch $_" + entry.getValue().getId());
+			System.out.println("Ersetze alle $_" + entry.getKey().getId() + " durch $_" + entry.getValue().getId());
 		}
 
 		for (Attribute a : s.getAllSubAttributes()) {
@@ -831,25 +781,18 @@ public class SceneType extends Model {
 			if (a.getValue() != null) {
 				if (a.getValue().contains("$_")) {
 
-					for (Map.Entry<Mission, Mission> entry : missionbinder
-							.entrySet()) {
+					for (Map.Entry<Mission, Mission> entry : missionbinder.entrySet()) {
 
-						if (a.getValue()
-								.contains("$_" + entry.getKey().getId())) {
+						if (a.getValue().contains("$_" + entry.getKey().getId())) {
 
 							String newvalue = a.getValue();
 
-							newvalue = newvalue.replace("$_"
-									+ entry.getKey().getId(), "$_"
-									+ entry.getValue().getId());
-							newvalue = newvalue.replace("$_mission_"
-									+ entry.getKey().getId(), "$_mission_"
-									+ entry.getValue().getId());
-							System.out.println("excecuting in "
-									+ a.getType().getName() + " of type "
-									+ a.getTypeDescription() + ":$_"
-									+ entry.getKey().getId() + " -> $_"
-									+ entry.getValue().getId());
+							newvalue = newvalue.replace("$_" + entry.getKey().getId(), "$_" + entry.getValue().getId());
+							newvalue = newvalue.replace("$_mission_" + entry.getKey().getId(),
+									"$_mission_" + entry.getValue().getId());
+							System.out.println(
+									"excecuting in " + a.getType().getName() + " of type " + a.getTypeDescription()
+											+ ":$_" + entry.getKey().getId() + " -> $_" + entry.getValue().getId());
 
 							a.setValue(newvalue);
 							a.update();
@@ -862,16 +805,11 @@ public class SceneType extends Model {
 
 					String newvalue = a.getValue();
 
-					for (Map.Entry<Mission, Mission> entry : missionbinder
-							.entrySet()) {
-						if (a.getValue().equals(
-								String.valueOf(entry.getKey().getId()))) {
+					for (Map.Entry<Mission, Mission> entry : missionbinder.entrySet()) {
+						if (a.getValue().equals(String.valueOf(entry.getKey().getId()))) {
 
-							newvalue = newvalue.replace(""
-									+ entry.getKey().getId(), ""
-									+ entry.getValue().getId());
-							System.out.println("excecuting mission attribute:"
-									+ entry.getKey().getId() + " -> "
+							newvalue = newvalue.replace("" + entry.getKey().getId(), "" + entry.getValue().getId());
+							System.out.println("excecuting mission attribute:" + entry.getKey().getId() + " -> "
 									+ entry.getValue().getId());
 
 						}
@@ -900,7 +838,6 @@ public class SceneType extends Model {
 		return s;
 	}
 
-	public static final Finder<Long, SceneType> find = new Finder<Long, SceneType>(
-			Long.class, SceneType.class);
+	public static final Finder<Long, SceneType> find = new Finder<Long, SceneType>(Long.class, SceneType.class);
 
 }

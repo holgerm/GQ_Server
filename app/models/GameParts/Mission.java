@@ -667,18 +667,18 @@ public class Mission extends Model {
 
 			for (AttributeType atrt : missionType.getAttributeTypes()) {
 
-				if (atrt.getXMLType().equals(attt.getXMLType())) {
-
+//				if (atrt.getXMLType().equals(attt.getXMLType())) {
+				if (atrt.getName().equals(attt.getName())) {
 					m.setAttribute(at.migrateTo(atrt));
 					m.update();
-
+					done = true;
 				}
 
 			}
 
 			if (done == false) {
 
-				System.out.println("Didn't find AttributeType " + at.getName());
+				System.out.println("Didn't find AttributeType (Mission) " + at.getName());
 			}
 
 			m.update();

@@ -71,7 +71,7 @@ public class Scene extends Model {
 
 		try {
 			List<Attribute> copyOfAttributes = new ArrayList<Attribute>(attributes.size());
-			;
+
 			for (Attribute item : attributes)
 				copyOfAttributes.add(item);
 
@@ -231,7 +231,7 @@ public class Scene extends Model {
 			nam = name + " " + String.valueOf(n);
 		}
 
-		Scene s = new Scene(nam, type);
+		Scene s = new Scene(name, type);
 		s.save();
 
 		// PARTS
@@ -885,8 +885,15 @@ public class Scene extends Model {
 		name = n;
 	}
 
-	public Scene migrateTo(SceneType sceneType, GameType gameType, Map<Mission, Mission> missionbinder,
+	public Scene migrateTo(SceneType sceneType, Map<Mission, Mission> missionbinder,
 			Map<Hotspot, Hotspot> hotspotbinder) {
+
+		Attribute att1 = getAttributes().get(0);
+		String val1 = att1.getValue();
+		List<String> posValuesAtt1 = att1.getType().getPossibleValues();
+		Attribute att2 = getAttributes().get(1);
+		String val2 = att2.getValue();
+		List<String> posValuesAtt2 = att2.getType().getPossibleValues();
 
 		Scene s = new Scene(name, sceneType);
 		s.save();
@@ -911,7 +918,7 @@ public class Scene extends Model {
 						if (npt.getName().equals(old.getName())) {
 
 							done = true;
-							Scene nss = p.getScene().migrateTo(npt, gameType, missionbinder, hotspotbinder);
+							Scene nss = p.getScene().migrateTo(npt, missionbinder, hotspotbinder);
 							nss.save();
 							Part ns = new Part(nss);
 							ns.save();
@@ -930,44 +937,56 @@ public class Scene extends Model {
 				}
 
 			} else {
+				
+				// Part p is a MISSION:
 
-				MissionType old = p.getMission().getType();
+//				MissionType old = p.getMission().getType();
+				Mission originalM = p.getMission();
 
-				Global.Log("Scene migrateTo(" + sceneType.getName() + "): mission: " + p.getMission().getName());
-
-				for (PartType npt : gameType.getPossiblePartTypes()) {
-
-					Global.Log("Possible part type: id: " + npt.getId());
-
-					if (!npt.isSceneType()) {
-						Global.Log("  is mission type: " + npt.getMissionType());
-
-						if (npt.getMissionType().getXMLType().equals(old.getXMLType())) {
-
-							done = true;
-
-							Global.Log("  going to add migrated mission type to mapping: "
-									+ npt.getMissionType().getXMLType());
-
-							s.addPart(p.migrateTo(npt.getMissionType(), missionbinder));
-							s.update();
-
-						} else {
-							Global.Log("  xml types are different - old: " + old.getXMLType() + " new: "
-									+ npt.getMissionType().getXMLType());
-
-						}
-
-					} else {
-						Global.Log("  is scene type");
-					}
-
+				Global.Log("Scene migrateTo(" + sceneType.getName() + "): mission: " + originalM.getName());
+				
+				MissionType targetMT = sceneType.findMigrationTargetMissionType(originalM);
+				if (targetMT != null) {
+					s.addPart(p.migrateTo(targetMT, missionbinder));
+					s.update();
+					done = true;
+				} else {
+					System.out.println("Didn't find MissionType " + originalM.getType().getName());
 				}
 
-				if (done == false) {
-
-					System.out.println("Didn't find MissionType " + old.getXMLType());
-				}
+//				for (PartType npt : gameType.getPossiblePartTypes()) {
+//
+//					Global.Log("Possible part type: id: " + npt.getId());
+//
+//					if (!npt.isSceneType()) {
+//						Global.Log("  is mission type: " + npt.getMissionType());
+//
+//						if (npt.getMissionType().getXMLType().equals(old.getXMLType())) {
+//
+//							done = true;
+//
+//							Global.Log("  going to add migrated mission type to mapping: "
+//									+ npt.getMissionType().getXMLType());
+//
+//							s.addPart(p.migrateTo(npt.getMissionType(), missionbinder));
+//							s.update();
+//
+//						} else {
+//							Global.Log("  xml types are different - old: " + old.getXMLType() + " new: "
+//									+ npt.getMissionType().getXMLType());
+//
+//						}
+//
+//					} else {
+//						Global.Log("  is scene type");
+//					}
+//
+//				}
+//
+//				if (done == false) {
+//
+//					System.out.println("Didn't find MissionType " + old.getXMLType());
+//				}
 
 			}
 
@@ -982,21 +1001,25 @@ public class Scene extends Model {
 			boolean done = false;
 			AttributeType attt = at.getType();
 
-			for (AttributeType atrt : type.getAttributeTypes()) {
+			for (AttributeType atrt : sceneType.getAttributeTypes()) {
 
-				if (atrt.getXMLType().equals(attt.getXMLType())) {
-
+//				if (atrt.getXMLType().equals(attt.getXMLType())) {
+				/*
+				 * We use names instead of xmlTypeNames here. In the xmlName slot of the attributeTypes the id of linked attributes is stored.
+				 * This could also be used, but names are more intuitive to use here. They are given manually during the game type creation.
+				 * They should of course be unique throughout this scene, but we can expect that anyway, since other wise they would be shown
+				 * as different entry fields with the same name in the editor.
+				 */
+				if (atrt.getName().equals(attt.getName())) {
 					s.setAttribute(at.migrateTo(atrt));
 					s.update();
 					done = true;
-
 				}
-
 			}
 
 			if (done == false) {
 
-				System.out.println("Didn't find AttributeType " + at.getName());
+				System.out.println("Didn't find AttributeType (Scene) " + at.getName());
 			}
 
 			s.update();
@@ -1007,29 +1030,38 @@ public class Scene extends Model {
 
 		for (Hotspot hs : hotspots) {
 
-			boolean done = false;
-
-			HotspotType old = hs.getType();
-
-			for (HotspotType hst : type.getPossibleHotspotTypes()) {
-
-				if (hst.getName().equals(old.getName())) {
-
-					done = true;
-
-					s.addHotspot(hs.migrateTo(hst, hotspotbinder));
-					s.update();
-
-				}
-
+			
+			HotspotType targetHT = sceneType.findMigrationTargetHotspotType(hs);
+			if (targetHT != null) {
+				s.addHotspot(hs.migrateTo(targetHT, hotspotbinder));
+				s.update();
+			} else {
+				System.out.println("Didn't find HotspotType " + hs.getType().getName());
 			}
 
-			if (done == false) {
-
-				System.out.println("Didn't find HotspotType " + old.getName());
-			}
-
-			s.update();
+//			boolean done = false;
+//
+//			HotspotType old = hs.getType();
+//
+//			for (HotspotType hst : type.getPossibleHotspotTypes()) {
+//
+//				if (hst.getName().equals(old.getName())) {
+//
+//					done = true;
+//
+//					s.addHotspot(hs.migrateTo(hst, hotspotbinder));
+//					s.update();
+//
+//				}
+//
+//			}
+//
+//			if (done == false) {
+//
+//				System.out.println("Didn't find HotspotType " + old.getName());
+//			}
+//
+//			s.update();
 
 		}
 

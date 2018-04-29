@@ -316,7 +316,7 @@ public class Attribute extends Model {
 
 		Global.Log("Attribute migrateTo(" + atrt.getName() + ")");
 
-		Attribute a = new Attribute(type);
+		Attribute a = new Attribute(atrt);
 		a.save();
 
 		a.setAbstractValue(abstractValue);

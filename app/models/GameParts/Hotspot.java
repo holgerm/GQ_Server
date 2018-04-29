@@ -686,10 +686,12 @@ public class Hotspot extends Model {
 
 			for (AttributeType atrt : h.getType().getAttributeTypes()) {
 
-				if (atrt.getXMLType().equals(attt.getXMLType())) {
+//					if (atrt.getXMLType().equals(attt.getXMLType())) {
+					if (atrt.getName().equals(attt.getName())) {
 
 					h.setAttribute(at.migrateTo(atrt));
 					h.update();
+					done = true;
 
 				}
 
@@ -697,7 +699,7 @@ public class Hotspot extends Model {
 
 			if (done == false) {
 
-				System.out.println("Didn't find AttributeType " + at.getName());
+				System.out.println("Didn't find AttributeType (Hotspot) " + at.getName());
 			}
 
 			h.update();

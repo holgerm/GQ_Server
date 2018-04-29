@@ -65,10 +65,8 @@ public class Editor extends Controller {
 						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
-
-				return ok(views.html.editor.editormain.render(Game.find
-						.byId(gid)));
-
+				Game game = Game.find.byId(gid);
+				return ok(views.html.editor.editormain.render(game));
 			}
 
 		}

@@ -725,7 +725,8 @@ public class Action extends Model {
 
 			for (AttributeType atrt : nat.getAttributeTypes()) {
 
-				if (atrt.getXMLType().equals(attt.getXMLType())) {
+//				if (atrt.getXMLType().equals(attt.getXMLType())) {
+				if (atrt.getName().equals(attt.getName())) {
 
 					a.setAttribute(at.migrateTo(atrt, rt));
 
@@ -737,7 +738,7 @@ public class Action extends Model {
 
 			if (!done) {
 
-				System.out.println("Didn't find AttributeType " + at.getName());
+				System.out.println("Didn't find AttributeType (Action) " + at.getName());
 			}
 
 		}

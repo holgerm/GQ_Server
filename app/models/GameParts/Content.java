@@ -459,18 +459,18 @@ public class Content extends Model {
 
 			for (AttributeType atrt : nct.getAttributeTypes()) {
 
-				if (atrt.getXMLType().equals(attt.getXMLType())) {
-
+//				if (atrt.getXMLType().equals(attt.getXMLType())) {
+				if (atrt.getName().equals(attt.getName())) {
 					c.setAttribute(at.migrateTo(atrt));
 					c.update();
-
+					done = true;
 				}
 
 			}
 
 			if (done == false) {
 
-				System.out.println("Didn't find AttributeType " + at.getName());
+				System.out.println("Didn't find AttributeType (Content) " + at.getName());
 			}
 
 			c.update();

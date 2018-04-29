@@ -2409,7 +2409,7 @@ public class Game extends Model {
 					if (npt.getName().equals(old.getName())) {
 
 						done = true;
-						Scene nss = p.getScene().migrateTo(npt, gt, missionbinder, hotspotbinder);
+						Scene nss = p.getScene().migrateTo(npt, missionbinder, hotspotbinder);
 						nss.save();
 						Part ns = new Part(nss);
 						ns.save();
@@ -2525,14 +2525,14 @@ public class Game extends Model {
 
 					g.setAttribute(at.migrateTo(atrt));
 					g.update();
-
+					done = true;
 				}
 
 			}
 
 			if (done == false) {
 
-				System.out.println("Didn't find AttributeType " + at.getName());
+				System.out.println("Didn't find AttributeType (Game) " + at.getName());
 			}
 
 			g.update();

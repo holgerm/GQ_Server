@@ -1521,7 +1521,7 @@ System.out.println("Mapping...");
 
             for (TemplateParameter aparamter: contenthtml.getParameters()){
 
-                if(aparamter.getName().equals(code)){
+                if(code.equals(aparamter.getName())) {
 
                 	
                 	String sentence = aparamter.getValue();
