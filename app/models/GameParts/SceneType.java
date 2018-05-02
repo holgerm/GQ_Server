@@ -89,7 +89,7 @@ public class SceneType extends Model {
 
 	}
 
-	public String addDefaultsFromGame(Game g) {
+	public void addDefaultsFromGame(Game g) {
 
 		SortedMap<Integer, Scenefield> sorter = new TreeMap<Integer, Scenefield>();
 
@@ -207,8 +207,6 @@ public class SceneType extends Model {
 		}
 
 		this.update();
-
-		return "";
 	}
 
 	// SETTER

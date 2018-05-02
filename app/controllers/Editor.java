@@ -53,16 +53,14 @@ public class Editor extends Controller {
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 				Game game = Game.find.byId(gid);
@@ -89,28 +87,25 @@ public class Editor extends Controller {
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (Part.find.where().eq("id", pid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Das Spiel existiert nicht"));
+					return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 				} else {
 
-					return ok(views.html.editor.editor_apartinsidemenu.render(
-							Game.find.byId(gid), Part.find.byId(pid)));
+					return ok(
+							views.html.editor.editor_apartinsidemenu.render(Game.find.byId(gid), Part.find.byId(pid)));
 
 				}
 			}
@@ -124,21 +119,18 @@ public class Editor extends Controller {
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
-				return ok(views.html.editor.editor_sidemenu_missionlist
-						.render(Game.find.byId(gid)));
+				return ok(views.html.editor.editor_sidemenu_missionlist.render(Game.find.byId(gid)));
 
 			}
 
@@ -150,30 +142,25 @@ public class Editor extends Controller {
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
 			if (MenuItem.find.where().eq("id", pid).findRowCount() != 1) {
 
-				return badRequest(views.html.norights
-						.render("Das Menu-Item existiert nicht"));
+				return badRequest(views.html.norights.render("Das Menu-Item existiert nicht"));
 
 			} else {
 
-				if (Global.securityGuard.hasWriteRightsOnGame(
-						Application.getLocalUser(session()),
+				if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
 						Game.find.byId(gid)) == false) {
 
-					return badRequest(views.html.norights
-							.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+					return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 				} else {
 
-					return ok(views.html.editor.editor_amenuiteminsidemenu
-							.render(Game.find.byId(gid),
-									MenuItem.find.byId(pid)));
+					return ok(views.html.editor.editor_amenuiteminsidemenu.render(Game.find.byId(gid),
+							MenuItem.find.byId(pid)));
 
 				}
 
@@ -187,29 +174,25 @@ public class Editor extends Controller {
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
 			if (Hotspot.find.where().eq("id", pid).findRowCount() != 1) {
 
-				return badRequest(views.html.norights
-						.render("Der Hotspot existiert nicht"));
+				return badRequest(views.html.norights.render("Der Hotspot existiert nicht"));
 
 			} else {
 
-				if (Global.securityGuard.hasWriteRightsOnGame(
-						Application.getLocalUser(session()),
+				if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
 						Game.find.byId(gid)) == false) {
 
-					return badRequest(views.html.norights
-							.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+					return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 				} else {
 
-					return ok(views.html.editor.editor_ahotspotinsidemenu
-							.render(Game.find.byId(gid), Hotspot.find.byId(pid)));
+					return ok(views.html.editor.editor_ahotspotinsidemenu.render(Game.find.byId(gid),
+							Hotspot.find.byId(pid)));
 
 				}
 
@@ -224,28 +207,25 @@ public class Editor extends Controller {
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (Hotspot.find.where().eq("id", pid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Der Hotspot existiert nicht"));
+					return badRequest(views.html.norights.render("Der Hotspot existiert nicht"));
 
 				} else {
 
-					return ok(views.html.editor.editor_rulesinhotspot.render(
-							Game.find.byId(gid), Hotspot.find.byId(pid)));
+					return ok(views.html.editor.editor_rulesinhotspot.render(Game.find.byId(gid),
+							Hotspot.find.byId(pid)));
 
 				}
 
@@ -260,28 +240,25 @@ public class Editor extends Controller {
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (Mission.find.where().eq("id", pid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Die Mission existiert nicht"));
+					return badRequest(views.html.norights.render("Die Mission existiert nicht"));
 
 				} else {
 
-					return ok(views.html.editor.editor_rulesinmission.render(
-							Game.find.byId(gid), Mission.find.byId(pid)));
+					return ok(views.html.editor.editor_rulesinmission.render(Game.find.byId(gid),
+							Mission.find.byId(pid)));
 
 				}
 			}
@@ -290,33 +267,29 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getMarkerAddScriptForEditor(Long gid, Long pid,
-			boolean last) {
+	public static Result getMarkerAddScriptForEditor(Long gid, Long pid, boolean last) {
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (Hotspot.find.where().eq("id", pid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Der Hotspot existiert nicht"));
+					return badRequest(views.html.norights.render("Der Hotspot existiert nicht"));
 
 				} else {
 
-					return ok(views.html.editor.leaflet_addmarker.render(
-							Game.find.byId(gid), Hotspot.find.byId(pid), last));
+					return ok(views.html.editor.leaflet_addmarker.render(Game.find.byId(gid), Hotspot.find.byId(pid),
+							last));
 
 				}
 			}
@@ -330,28 +303,24 @@ public class Editor extends Controller {
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 				if (Part.find.where().eq("id", pid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Das Spiel existiert nicht"));
+					return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 				} else {
 
-					return ok(views.html.editor.editor_allmissioninfo.render(
-							Game.find.byId(gid), Part.find.byId(pid)
-									.getMission()));
+					return ok(views.html.editor.editor_allmissioninfo.render(Game.find.byId(gid),
+							Part.find.byId(pid).getMission()));
 
 				}
 			}
@@ -365,28 +334,25 @@ public class Editor extends Controller {
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (Mission.find.where().eq("id", pid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Das Spiel existiert nicht"));
+					return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 				} else {
 
-					return ok(views.html.editor.editor_allmissioninfo.render(
-							Game.find.byId(gid), Mission.find.byId(pid)));
+					return ok(views.html.editor.editor_allmissioninfo.render(Game.find.byId(gid),
+							Mission.find.byId(pid)));
 
 				}
 			}
@@ -397,39 +363,34 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result getSceneInfoForEditor(Long gid, Long pid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (Part.find.where().eq("id", pid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Die Szene existiert nicht"));
+					return badRequest(views.html.norights.render("Die Szene existiert nicht"));
 
 				} else {
 
-					return ok(views.html.editor.editor_allsceneinfo
-							.render(Game.find.byId(gid), Part.find.byId(pid)
-									.getScene()));
+					return ok(views.html.editor.editor_allsceneinfo.render(Game.find.byId(gid),
+							Part.find.byId(pid).getScene()));
 
 				}
 			}
@@ -440,38 +401,34 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result getHotspotPopupContent(Long gid, Long hid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (Hotspot.find.where().eq("id", hid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Der Hotspot existiert nicht"));
+					return badRequest(views.html.norights.render("Der Hotspot existiert nicht"));
 
 				} else {
 
-					return ok(views.html.editor.editor_ahotspotpopup.render(
-							Game.find.byId(gid), Hotspot.find.byId(hid)));
+					return ok(
+							views.html.editor.editor_ahotspotpopup.render(Game.find.byId(gid), Hotspot.find.byId(hid)));
 
 				}
 			}
@@ -482,33 +439,29 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result getIdFromPart(Long gid, Long pid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (Part.find.where().eq("id", pid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Das Spiel existiert nicht"));
+					return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 				} else {
 
@@ -532,41 +485,36 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result getIdFromSceneHotspot(Long gid, Long pid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (Scene.find.where().eq("id", pid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Das Spiel existiert nicht"));
+					return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 				} else {
 
 					Scene x = Scene.find.byId(pid);
 					if (!x.getHotspots().isEmpty()) {
 
-						return ok(String
-								.valueOf(x.getHotspots().get(0).getId()));
+						return ok(String.valueOf(x.getHotspots().get(0).getId()));
 
 					} else {
 
@@ -581,49 +529,41 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getNewContentInContentForEditor(Long gid, Long cid,
-			Long mid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result getNewContentInContentForEditor(Long gid, Long cid, Long mid) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Die Mission existiert nicht"));
+					return badRequest(views.html.norights.render("Die Mission existiert nicht"));
 
 				} else {
 
 					if (Content.find.where().eq("id", cid).findRowCount() != 1) {
 
-						return badRequest(views.html.norights
-								.render("Der Inhalt existiert nicht"));
+						return badRequest(views.html.norights.render("Der Inhalt existiert nicht"));
 
 					} else {
 
-						return ok(views.html.editor.editor_contentincontent
-								.render(Game.find.byId(gid),
-										Mission.find.byId(mid),
-										Content.find.byId(cid)));
+						return ok(views.html.editor.editor_contentincontent.render(Game.find.byId(gid),
+								Mission.find.byId(mid), Content.find.byId(cid)));
 
 					}
 
@@ -635,48 +575,41 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getRuleInMissionForEditor(Long gid, Long rtype,
-			Long mid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result getRuleInMissionForEditor(Long gid, Long rtype, Long mid) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Die Mission existiert nicht"));
+					return badRequest(views.html.norights.render("Die Mission existiert nicht"));
 
 				} else {
 
 					if (RuleType.find.where().eq("id", rtype).findRowCount() != 1) {
 
-						return badRequest(views.html.norights
-								.render("Der Inhalt existiert nicht"));
+						return badRequest(views.html.norights.render("Der Inhalt existiert nicht"));
 
 					} else {
 
-						return ok(views.html.editor.editor_rulesinmission
-								.render(Game.find.byId(gid),
-										Mission.find.byId(mid)));
+						return ok(views.html.editor.editor_rulesinmission.render(Game.find.byId(gid),
+								Mission.find.byId(mid)));
 
 					}
 
@@ -689,31 +622,27 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result getMissionSelectorForEditor(Long gid, String v) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
-				return ok(views.html.editor.editor_missionselector.render(
-						Game.find.byId(gid), v));
+				return ok(views.html.editor.editor_missionselector.render(Game.find.byId(gid), v));
 
 			}
 
@@ -722,33 +651,28 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getHotspotSelectorForEditor(Long gid,
-			String selectedValue) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result getHotspotSelectorForEditor(Long gid, String selectedValue) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
-				return ok(views.html.editor.editor_hotspotselector.render(
-						Game.find.byId(gid), selectedValue));
+				return ok(views.html.editor.editor_hotspotselector.render(Game.find.byId(gid), selectedValue));
 
 			}
 
@@ -757,49 +681,41 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getContentListItemForEditor(Long gid, Long cid,
-			Long mid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result getContentListItemForEditor(Long gid, Long cid, Long mid) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Das Spiel existiert nicht"));
+					return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 				} else {
 
 					if (Content.find.where().eq("id", cid).findRowCount() != 1) {
 
-						return badRequest(views.html.norights
-								.render("Das Spiel existiert nicht"));
+						return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 					} else {
 
-						return ok(views.html.editor.editor_acontentinmissionedit
-								.render(Game.find.byId(gid),
-										Content.find.byId(cid),
-										Mission.find.byId(mid)));
+						return ok(views.html.editor.editor_acontentinmissionedit.render(Game.find.byId(gid),
+								Content.find.byId(cid), Mission.find.byId(mid)));
 
 					}
 
@@ -812,49 +728,41 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getContentInContentListForEditor(Long gid, Long cid,
-			Long scid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result getContentInContentListForEditor(Long gid, Long cid, Long scid) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (Content.find.where().eq("id", scid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Der Sub-Content existiert nicht"));
+					return badRequest(views.html.norights.render("Der Sub-Content existiert nicht"));
 
 				} else {
 
 					if (Content.find.where().eq("id", cid).findRowCount() != 1) {
 
-						return badRequest(views.html.norights
-								.render("Das Spiel existiert nicht"));
+						return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 					} else {
 
-						return ok(views.html.editor.editor_acontentincontent
-								.render(Game.find.byId(gid),
-										Content.find.byId(scid),
-										Content.find.byId(cid)));
+						return ok(views.html.editor.editor_acontentincontent.render(Game.find.byId(gid),
+								Content.find.byId(scid), Content.find.byId(cid)));
 
 					}
 
@@ -867,38 +775,34 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result getAllContentInMissionForEditor(Long gid, Long mid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Die Mission existiert nicht"));
+					return badRequest(views.html.norights.render("Die Mission existiert nicht"));
 
 				} else {
 
-					return ok(views.html.editor.editor_contentlistinmission
-							.render(Game.find.byId(gid), Mission.find.byId(mid)));
+					return ok(views.html.editor.editor_contentlistinmission.render(Game.find.byId(gid),
+							Mission.find.byId(mid)));
 
 				}
 
@@ -909,49 +813,41 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getContentInContentForEditor(Long gid, Long cid,
-			Long mid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result getContentInContentForEditor(Long gid, Long cid, Long mid) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Das Spiel existiert nicht"));
+					return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 				} else {
 
 					if (Content.find.where().eq("id", cid).findRowCount() != 1) {
 
-						return badRequest(views.html.norights
-								.render("Das Spiel existiert nicht"));
+						return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 					} else {
 
-						return ok(views.html.editor.editor_contentincontent
-								.render(Game.find.byId(gid),
-										Mission.find.byId(mid),
-										Content.find.byId(cid)));
+						return ok(views.html.editor.editor_contentincontent.render(Game.find.byId(gid),
+								Mission.find.byId(mid), Content.find.byId(cid)));
 
 					}
 
@@ -965,38 +861,33 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result getContentInfoForEditor(Long gid, Long cid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (Content.find.where().eq("id", cid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Das Spiel existiert nicht"));
+					return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 				} else {
 
-					return ok(views.html.editor.editor_contentedit.render(
-							Game.find.byId(gid), Content.find.byId(cid)));
+					return ok(views.html.editor.editor_contentedit.render(Game.find.byId(gid), Content.find.byId(cid)));
 
 				}
 
@@ -1014,49 +905,41 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getMissionActionInfoForEditor(Long gid, Long cid,
-			String rtype, Integer z, Long mid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result getMissionActionInfoForEditor(Long gid, Long cid, String rtype, Integer z, Long mid) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (Action.find.where().eq("id", cid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Die Action existiert nicht"));
+					return badRequest(views.html.norights.render("Die Action existiert nicht"));
 
 				} else {
 
 					if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
-						return badRequest(views.html.norights
-								.render("Die Mission existiert nicht"));
+						return badRequest(views.html.norights.render("Die Mission existiert nicht"));
 
 					} else {
 
-						return ok(views.html.editor.editor_actioninmissionedit
-								.render(Game.find.byId(gid),
-										Action.find.byId(cid), rtype, z,
-										Mission.find.byId(mid)));
+						return ok(views.html.editor.editor_actioninmissionedit.render(Game.find.byId(gid),
+								Action.find.byId(cid), rtype, z, Mission.find.byId(mid)));
 
 					}
 				}
@@ -1067,41 +950,35 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getActionInfoForEditor(Long gid, Long cid,
-			String rtype, Integer z) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result getActionInfoForEditor(Long gid, Long cid, String rtype, Integer z) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (Action.find.where().eq("id", cid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Die Action existiert nicht"));
+					return badRequest(views.html.norights.render("Die Action existiert nicht"));
 
 				} else {
 
-					return ok(views.html.editor.editor_actionedit.render(
-							Game.find.byId(gid), Action.find.byId(cid), rtype,
-							z));
+					return ok(views.html.editor.editor_actionedit.render(Game.find.byId(gid), Action.find.byId(cid),
+							rtype, z));
 
 				}
 
@@ -1113,47 +990,40 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result getActionInRuleForEditor(Long gid, Long cid, Long rid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (Action.find.where().eq("id", cid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Die Action existiert nicht"));
+					return badRequest(views.html.norights.render("Die Action existiert nicht"));
 
 				} else {
 
 					if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
 
-						return badRequest(views.html.norights
-								.render("Die Regel existiert nicht"));
+						return badRequest(views.html.norights.render("Die Regel existiert nicht"));
 
 					} else {
 
-						return ok(views.html.editor.editor_aactionintrigger
-								.render(Game.find.byId(gid),
-										Action.find.byId(cid),
-										Rule.find.byId(rid)));
+						return ok(views.html.editor.editor_aactionintrigger.render(Game.find.byId(gid),
+								Action.find.byId(cid), Rule.find.byId(rid)));
 
 					}
 				}
@@ -1165,50 +1035,42 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getActionInActionAttributeForEditor(Long gid,
-			Long aid, Long parent, Long atrid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result getActionInActionAttributeForEditor(Long gid, Long aid, Long parent, Long atrid) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (Action.find.where().eq("id", aid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Die Action existiert nicht"));
+					return badRequest(views.html.norights.render("Die Action existiert nicht"));
 
 				} else {
 
 					if (Action.find.where().eq("id", parent).findRowCount() != 1) {
 
-						return badRequest(views.html.norights
-								.render("Die Parent-Action existiert nicht"));
+						return badRequest(views.html.norights.render("Die Parent-Action existiert nicht"));
 
 					} else {
 
-						if (AttributeType.find.where().eq("id", atrid)
-								.findRowCount() != 1) {
+						if (AttributeType.find.where().eq("id", atrid).findRowCount() != 1) {
 
-							return badRequest(views.html.norights
-									.render("Der AttributTyp existiert nicht"));
+							return badRequest(views.html.norights.render("Der AttributTyp existiert nicht"));
 
 						} else {
 
@@ -1218,14 +1080,13 @@ public class Editor extends Controller {
 							AttributeType a = AttributeType.find.byId(atrid);
 							if (d.getAttribute(a) == null) {
 
-								return badRequest(views.html.norights
-										.render("Das Attribut existiert nicht"));
+								return badRequest(views.html.norights.render("Das Attribut existiert nicht"));
 
 							} else {
 
 								Attribute c = d.getAttribute(a);
-								return ok(views.html.editor.editor_aactioninattribute
-										.render(Game.find.byId(gid), b, c));
+								return ok(
+										views.html.editor.editor_aactioninattribute.render(Game.find.byId(gid), b, c));
 
 							}
 						}
@@ -1239,57 +1100,47 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getMissionRuleForEditor(Long gid, Long rid,
-			Long rtype, Long mid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result getMissionRuleForEditor(Long gid, Long rid, Long rtype, Long mid) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Die Regel existiert nicht"));
+					return badRequest(views.html.norights.render("Die Regel existiert nicht"));
 
 				} else {
 
 					if (RuleType.find.where().eq("id", rtype).findRowCount() != 1) {
 
-						return badRequest(views.html.norights
-								.render("Die Regel existiert nicht"));
+						return badRequest(views.html.norights.render("Die Regel existiert nicht"));
 
 					} else {
 
 						if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
-							return badRequest(views.html.norights
-									.render("Die Mission existiert nicht"));
+							return badRequest(views.html.norights.render("Die Mission existiert nicht"));
 
 						} else {
 
-							return ok(views.html.editor.editor_aruleinmission
-									.render(Game.find.byId(gid),
-											Rule.find.byId(rid),
-											RuleType.find.byId(rtype),
-											Mission.find.byId(mid)));
+							return ok(views.html.editor.editor_aruleinmission.render(Game.find.byId(gid),
+									Rule.find.byId(rid), RuleType.find.byId(rtype), Mission.find.byId(mid)));
 
 						}
 					}
@@ -1303,45 +1154,39 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result getRuleForEditor(Long gid, Long rid, Long rtype) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Die Regel existiert nicht"));
+					return badRequest(views.html.norights.render("Die Regel existiert nicht"));
 
 				} else {
 
 					if (RuleType.find.where().eq("id", rtype).findRowCount() != 1) {
 
-						return badRequest(views.html.norights
-								.render("Die Regel existiert nicht"));
+						return badRequest(views.html.norights.render("Die Regel existiert nicht"));
 
 					} else {
 
-						return ok(views.html.editor.editor_arule.render(
-								Game.find.byId(gid), Rule.find.byId(rid),
+						return ok(views.html.editor.editor_arule.render(Game.find.byId(gid), Rule.find.byId(rid),
 								RuleType.find.byId(rtype)));
 
 					}
@@ -1355,38 +1200,34 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result getActionsForRuleForEditor(Long gid, Long rid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Die Regel existiert nicht"));
+					return badRequest(views.html.norights.render("Die Regel existiert nicht"));
 
 				} else {
 
-					return ok(views.html.editor.editor_actionsintrigger.render(
-							Game.find.byId(gid), Rule.find.byId(rid)));
+					return ok(
+							views.html.editor.editor_actionsintrigger.render(Game.find.byId(gid), Rule.find.byId(rid)));
 
 				}
 
@@ -1398,30 +1239,26 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result getMapScript(Long gid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
-				return ok(views.html.editor.leafletMapfunction.render(Game.find
-						.byId(gid)));
+				return ok(views.html.editor.leafletMapfunction.render(Game.find.byId(gid)));
 
 			}
 
@@ -1431,30 +1268,26 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result getMapSearchScript(Long gid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
-				return ok(views.html.editor.geosearch.render(Game.find
-						.byId(gid)));
+				return ok(views.html.editor.geosearch.render(Game.find.byId(gid)));
 			}
 
 		}
@@ -1462,35 +1295,30 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result addMissionInSzene(Long gid, Long sid, Long mtype,
-			String name) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result addMissionInSzene(Long gid, Long sid, Long mtype, String name) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (Scene.find.where().eq("id", sid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Die Szene existiert nicht"));
+					return badRequest(views.html.norights.render("Die Szene existiert nicht"));
 
 				} else {
 
@@ -1498,8 +1326,7 @@ public class Editor extends Controller {
 
 					if (MissionType.find.where().eq("id", mtype).findRowCount() != 1) {
 
-						return badRequest(views.html.norights
-								.render("Der Missionstyp existiert nicht"));
+						return badRequest(views.html.norights.render("Der Missionstyp existiert nicht"));
 
 					} else {
 
@@ -1527,26 +1354,23 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result addMissionInGame(Long gid, Long mtype, String name) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -1554,8 +1378,7 @@ public class Editor extends Controller {
 
 				if (MissionType.find.where().eq("id", mtype).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Der Missionstyp existiert nicht"));
+					return badRequest(views.html.norights.render("Der Missionstyp existiert nicht"));
 
 				} else {
 
@@ -1570,8 +1393,7 @@ public class Editor extends Controller {
 					if (name.equals("Hier Namen eingeben")) {
 
 						int i = g.getMissions().size() + 1;
-						name = Application.getLanguage("Neue Seite") + " (" + i
-								+ ")";
+						name = Application.getLanguage("Neue Seite") + " (" + i + ")";
 
 					}
 
@@ -1595,26 +1417,23 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result addMenuItemInGame(Long gid, String title) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -1637,11 +1456,10 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result duplicateMissionInGame(Long gid, Long mid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
@@ -1651,16 +1469,14 @@ public class Editor extends Controller {
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -1668,15 +1484,13 @@ public class Editor extends Controller {
 
 				if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Die Mission existiert nicht"));
+					return badRequest(views.html.norights.render("Die Mission existiert nicht"));
 
 				} else {
 
 					Mission y = Mission.find.byId(mid);
 
-					Mission nm = y.copyMe("Copy of " + y.getName(),
-							missionbinder, false);
+					Mission nm = y.copyMe("Copy of " + y.getName(), missionbinder, false);
 					nm.save();
 
 					Part z = new Part(nm);
@@ -1696,26 +1510,23 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result duplicateHotspotInGame(Long gid, Long mid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -1723,8 +1534,7 @@ public class Editor extends Controller {
 
 				if (Hotspot.find.where().eq("id", mid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Der hotspot existiert nicht"));
+					return badRequest(views.html.norights.render("Der hotspot existiert nicht"));
 
 				} else {
 
@@ -1747,26 +1557,23 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result duplicateSubRuleInRule(Long gid, Long rid, Long srid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		} else {
 
 			if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
 
-				return badRequest(views.html.norights
-						.render("Die Hauptregel existiert nicht"));
+				return badRequest(views.html.norights.render("Die Hauptregel existiert nicht"));
 
 			} else {
 
@@ -1774,8 +1581,7 @@ public class Editor extends Controller {
 
 				if (Rule.find.where().eq("id", srid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Die Unterregel existiert nicht"));
+					return badRequest(views.html.norights.render("Die Unterregel existiert nicht"));
 
 				} else {
 
@@ -1798,11 +1604,10 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result duplicateSceneInGame(Long gid, Long sid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
@@ -1811,16 +1616,14 @@ public class Editor extends Controller {
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -1828,15 +1631,13 @@ public class Editor extends Controller {
 
 				if (Scene.find.where().eq("id", sid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Die Mission existiert nicht"));
+					return badRequest(views.html.norights.render("Die Mission existiert nicht"));
 
 				} else {
 
 					Scene y = Scene.find.byId(sid);
 
-					Scene nm = y.copyMe("Copy of " + y.getName(),
-							missionbinder, hotspotbinder);
+					Scene nm = y.copyMe("Copy of " + y.getName(), missionbinder, hotspotbinder);
 					nm.save();
 
 					Part z = new Part(nm);
@@ -1854,28 +1655,24 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result addHotspotInGame(Long gid, Long htype, String lon,
-			String lat, String n) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result addHotspotInGame(Long gid, Long htype, String lon, String lat, String n) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -1883,15 +1680,13 @@ public class Editor extends Controller {
 
 				if (HotspotType.find.where().eq("id", htype).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Der Missionstyp existiert nicht"));
+					return badRequest(views.html.norights.render("Der Missionstyp existiert nicht"));
 
 				} else {
 
 					HotspotType y = HotspotType.find.byId(htype);
 
-					Hotspot nm = y.createMe(Float.valueOf(lon),
-							Float.valueOf(lat), n);
+					Hotspot nm = y.createMe(Float.valueOf(lon), Float.valueOf(lat), n);
 					nm.save();
 
 					g.addHotspot(nm);
@@ -1908,26 +1703,23 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result addSceneInGame(Long gid, Long stype, String name) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -1935,8 +1727,7 @@ public class Editor extends Controller {
 
 				if (SceneType.find.where().eq("id", stype).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Der Szenentyp existiert nicht"));
+					return badRequest(views.html.norights.render("Der Szenentyp existiert nicht"));
 
 				} else {
 
@@ -1968,13 +1759,11 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result addNewSceneTypeInGameTypeFromGame(Long gid, Long gtid,
-			String name) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result addNewSceneTypeInGameTypeFromGame(Long gid, Long gtid, String name) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
@@ -1982,16 +1771,14 @@ public class Editor extends Controller {
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -1999,8 +1786,7 @@ public class Editor extends Controller {
 
 				if (GameType.find.where().eq("id", gtid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Der Gametyp existiert nicht"));
+					return badRequest(views.html.norights.render("Der Gametyp existiert nicht"));
 
 				} else {
 
@@ -2009,13 +1795,12 @@ public class Editor extends Controller {
 					System.out.println("Creating Scene...");
 					SceneType s = new SceneType(name);
 					s.save();
-					String log = s.addDefaultsFromGame(g);
+					s.addDefaultsFromGame(g);
 					s.update();
 					gt.addPossibleSceneType(s);
 					gt.update();
 
-					return ok(views.html.gteditor.gteditor_newscene.render(s,
-							gt, log));
+					return ok(views.html.gteditor.gteditor_newscene.render(s, gt, ""));
 
 				}
 
@@ -2032,8 +1817,7 @@ public class Editor extends Controller {
 
 		if (SceneType.find.where().eq("id", sid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Der SceneType existiert nicht"));
+			return badRequest(views.html.norights.render("Der SceneType existiert nicht"));
 
 		} else {
 
@@ -2041,8 +1825,7 @@ public class Editor extends Controller {
 
 			if (GameType.find.where().eq("id", gtid).findRowCount() != 1) {
 
-				return badRequest(views.html.norights
-						.render("Der Gametyp existiert nicht"));
+				return badRequest(views.html.norights.render("Der Gametyp existiert nicht"));
 
 			} else {
 
@@ -2061,28 +1844,24 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result addSceneInGameWithPoints(Long gid, Long stype,
-			String name, String lon, String lat) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result addSceneInGameWithPoints(Long gid, Long stype, String name, String lon, String lat) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -2090,8 +1869,7 @@ public class Editor extends Controller {
 
 				if (SceneType.find.where().eq("id", stype).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Der Szenentyp existiert nicht"));
+					return badRequest(views.html.norights.render("Der Szenentyp existiert nicht"));
 
 				} else {
 
@@ -2104,8 +1882,7 @@ public class Editor extends Controller {
 
 					SceneType y = SceneType.find.byId(stype);
 
-					Scene nm = y.createMe(name, Float.valueOf(lon),
-							Float.valueOf(lat), g);
+					Scene nm = y.createMe(name, Float.valueOf(lon), Float.valueOf(lat), g);
 
 					Part z = new Part(nm);
 					z.save();
@@ -2123,28 +1900,24 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result addContentInMission(Long gid, Long mission,
-			Long ctype, String name) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result addContentInMission(Long gid, Long mission, Long ctype, String name) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -2152,15 +1925,13 @@ public class Editor extends Controller {
 
 				if (ContentType.find.where().eq("id", ctype).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Der Inhaltstyp existiert nicht"));
+					return badRequest(views.html.norights.render("Der Inhaltstyp existiert nicht"));
 
 				} else {
 
 					if (Mission.find.where().eq("id", mission).findRowCount() != 1) {
 
-						return badRequest(views.html.norights
-								.render("Die Mission existiert nicht"));
+						return badRequest(views.html.norights.render("Die Mission existiert nicht"));
 
 					} else {
 
@@ -2186,26 +1957,23 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result addActionInRule(Long gid, Long rid, Long atype) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -2213,15 +1981,13 @@ public class Editor extends Controller {
 
 				if (ActionType.find.where().eq("id", atype).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Der Action-Typ existiert nicht"));
+					return badRequest(views.html.norights.render("Der Action-Typ existiert nicht"));
 
 				} else {
 
 					if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
 
-						return badRequest(views.html.norights
-								.render("Die Rule existiert nicht"));
+						return badRequest(views.html.norights.render("Die Rule existiert nicht"));
 
 					} else {
 
@@ -2252,28 +2018,24 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result moveActionInRule(Long gid, Long rid, Long aid,
-			String direction) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result moveActionInRule(Long gid, Long rid, Long aid, String direction) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -2281,15 +2043,13 @@ public class Editor extends Controller {
 
 				if (Action.find.where().eq("id", aid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Der Action existiert nicht"));
+					return badRequest(views.html.norights.render("Der Action existiert nicht"));
 
 				} else {
 
 					if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
 
-						return badRequest(views.html.norights
-								.render("Die Rule existiert nicht"));
+						return badRequest(views.html.norights.render("Die Rule existiert nicht"));
 
 					} else {
 
@@ -2319,56 +2079,46 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result addActionInActionAttribute(Long gid, Long aid,
-			Long atrid, Long atype) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result addActionInActionAttribute(Long gid, Long aid, Long atrid, Long atype) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (ActionType.find.where().eq("id", atype).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Der Action-Typ existiert nicht"));
+					return badRequest(views.html.norights.render("Der Action-Typ existiert nicht"));
 
 				} else {
 
 					if (Action.find.where().eq("id", aid).findRowCount() != 1) {
 
-						return badRequest(views.html.norights
-								.render("Die Action existiert nicht"));
+						return badRequest(views.html.norights.render("Die Action existiert nicht"));
 
 					} else {
 
-						if (AttributeType.find.where().eq("id", atrid)
-								.findRowCount() != 1) {
+						if (AttributeType.find.where().eq("id", atrid).findRowCount() != 1) {
 
-							return badRequest(views.html.norights
-									.render("Der Attributtyp existiert nicht"));
+							return badRequest(views.html.norights.render("Der Attributtyp existiert nicht"));
 
 						} else {
 
-							System.out
-									.println("Trying to add action in: action "
-											+ aid + " (atr" + atrid + ")");
+							System.out.println("Trying to add action in: action " + aid + " (atr" + atrid + ")");
 
 							AttributeType atr = AttributeType.find.byId(atrid);
 
@@ -2414,26 +2164,23 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result addConditionInRule(Long gid, Long rid, String text) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -2441,8 +2188,7 @@ public class Editor extends Controller {
 
 				if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Die Rule existiert nicht"));
+					return badRequest(views.html.norights.render("Die Rule existiert nicht"));
 
 				} else {
 
@@ -2470,11 +2216,10 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result editConditionInRule(Long gid, Long rid, String text) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
@@ -2482,16 +2227,14 @@ public class Editor extends Controller {
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -2540,26 +2283,23 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result deleteActionFromRule(Long gid, Long rid, Long aid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -2567,15 +2307,13 @@ public class Editor extends Controller {
 
 				if (Action.find.where().eq("id", aid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Die Aktion existiert nicht"));
+					return badRequest(views.html.norights.render("Die Aktion existiert nicht"));
 
 				} else {
 
 					if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
 
-						return badRequest(views.html.norights
-								.render("Die Rule existiert nicht"));
+						return badRequest(views.html.norights.render("Die Rule existiert nicht"));
 
 					} else {
 
@@ -2616,28 +2354,24 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result deleteActionFromAttribute(Long gid, Long atrid,
-			Long aid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result deleteActionFromAttribute(Long gid, Long atrid, Long aid) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -2645,15 +2379,13 @@ public class Editor extends Controller {
 
 				if (Action.find.where().eq("id", aid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Die Aktion existiert nicht"));
+					return badRequest(views.html.norights.render("Die Aktion existiert nicht"));
 
 				} else {
 
 					if (Attribute.find.where().eq("id", atrid).findRowCount() != 1) {
 
-						return badRequest(views.html.norights
-								.render("Das Attribut existiert nicht"));
+						return badRequest(views.html.norights.render("Das Attribut existiert nicht"));
 
 					} else {
 
@@ -2680,26 +2412,23 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result deleteActionFromMenuItem(Long gid, Long atrid, Long aid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -2707,15 +2436,13 @@ public class Editor extends Controller {
 
 				if (Action.find.where().eq("id", aid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Die Aktion existiert nicht"));
+					return badRequest(views.html.norights.render("Die Aktion existiert nicht"));
 
 				} else {
 
 					if (MenuItem.find.where().eq("id", atrid).findRowCount() != 1) {
 
-						return badRequest(views.html.norights
-								.render("Das Menu-Item existiert nicht"));
+						return badRequest(views.html.norights.render("Das Menu-Item existiert nicht"));
 
 					} else {
 
@@ -2745,26 +2472,23 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result addRuleInMission(Long gid, Long mission, Long rtype) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -2772,15 +2496,13 @@ public class Editor extends Controller {
 
 				if (RuleType.find.where().eq("id", rtype).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Der Rule-Typ existiert nicht"));
+					return badRequest(views.html.norights.render("Der Rule-Typ existiert nicht"));
 
 				} else {
 
 					if (Mission.find.where().eq("id", mission).findRowCount() != 1) {
 
-						return badRequest(views.html.norights
-								.render("Die Mission existiert nicht"));
+						return badRequest(views.html.norights.render("Die Mission existiert nicht"));
 
 					} else {
 
@@ -2813,26 +2535,23 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result addSubRuleInRule(Long gid, Long rule) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -2840,8 +2559,7 @@ public class Editor extends Controller {
 
 				if (Rule.find.where().eq("id", rule).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Die Rule existiert nicht"));
+					return badRequest(views.html.norights.render("Die Rule existiert nicht"));
 
 				} else {
 
@@ -2863,26 +2581,23 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result addSubActionInAction(Long gid, Long action, Long atype) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -2890,15 +2605,13 @@ public class Editor extends Controller {
 
 				if (Action.find.where().eq("id", action).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Die Action existiert nicht"));
+					return badRequest(views.html.norights.render("Die Action existiert nicht"));
 
 				} else {
 
 					if (ActionType.find.where().eq("id", atype).findRowCount() != 1) {
 
-						return badRequest(views.html.norights
-								.render("Die Action existiert nicht"));
+						return badRequest(views.html.norights.render("Die Action existiert nicht"));
 
 					} else {
 
@@ -2923,11 +2636,10 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result deleteSubRuleFromRule(Long gid, Long rid, Long srid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
@@ -2937,11 +2649,10 @@ public class Editor extends Controller {
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -2976,9 +2687,8 @@ public class Editor extends Controller {
 							z.removeMe();
 							z.delete();
 						} catch (RuntimeException e) {
-							System.out
-									.println("Couldn't delete Subrule-Object. Will remain in database with id "
-											+ z.getId());
+							System.out.println(
+									"Couldn't delete Subrule-Object. Will remain in database with id " + z.getId());
 						}
 
 					}
@@ -2994,26 +2704,23 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result addRuleInHotspot(Long gid, Long hotspot, Long rtype) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -3021,15 +2728,13 @@ public class Editor extends Controller {
 
 				if (RuleType.find.where().eq("id", rtype).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Der Rule-Typ existiert nicht"));
+					return badRequest(views.html.norights.render("Der Rule-Typ existiert nicht"));
 
 				} else {
 
 					if (Hotspot.find.where().eq("id", hotspot).findRowCount() != 1) {
 
-						return badRequest(views.html.norights
-								.render("Die Mission existiert nicht"));
+						return badRequest(views.html.norights.render("Die Mission existiert nicht"));
 
 					} else {
 
@@ -3061,28 +2766,24 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result addContentInContent(Long gid, Long cid, Long ctype,
-			String name) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result addContentInContent(Long gid, Long cid, Long ctype, String name) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -3090,15 +2791,13 @@ public class Editor extends Controller {
 
 				if (ContentType.find.where().eq("id", ctype).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Der Inhaltstyp existiert nicht"));
+					return badRequest(views.html.norights.render("Der Inhaltstyp existiert nicht"));
 
 				} else {
 
 					if (Content.find.where().eq("id", cid).findRowCount() != 1) {
 
-						return badRequest(views.html.norights
-								.render("Der Inhalt existiert nicht"));
+						return badRequest(views.html.norights.render("Der Inhalt existiert nicht"));
 
 					} else {
 
@@ -3124,19 +2823,17 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result setSceneName(Long gid, Long sid, String name) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		} else {
 
@@ -3164,11 +2861,10 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result setGameName(Long gid, String name) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
@@ -3179,11 +2875,10 @@ public class Editor extends Controller {
 			help = "Game " + gid + "not found";
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -3203,19 +2898,17 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result setHotspotName(Long gid, Long cid, String name) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		} else {
 
@@ -3243,19 +2936,17 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result setMenuItemName(Long gid, Long cid, String name) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		} else {
 			String help = "Error!";
@@ -3282,19 +2973,17 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result setContentName(Long gid, Long cid, String name) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		} else {
 			String help = "Error!";
@@ -3320,19 +3009,17 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result setContentValue(Long gid, Long cid, String name) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		} else {
 			String help = "Error!";
@@ -3357,21 +3044,18 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result setHotspotCoords(Long gid, Long hid, String lon,
-			String lat) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result setHotspotCoords(Long gid, Long hid, String lon, String lat) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		} else {
 			String help = "Error!";
@@ -3388,8 +3072,7 @@ public class Editor extends Controller {
 				h.setLatitude(Float.valueOf(lat));
 				h.update();
 
-				System.out.println(Float.valueOf(lon) + " "
-						+ Float.valueOf(lat));
+				System.out.println(Float.valueOf(lon) + " " + Float.valueOf(lat));
 				help = "synced";
 			}
 
@@ -3400,19 +3083,17 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result setMissionName(Long gid, Long mid, String name) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		} else {
 			String help = "Error!";
@@ -3445,21 +3126,18 @@ public class Editor extends Controller {
 	// / EDITOR SETTERS: UPLOADS
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result uploadAttributeFile(Long gid, String type, Long hid,
-			Long cid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result uploadAttributeFile(Long gid, String type, Long hid, Long cid) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		} else {
 			String help = "Error!";
@@ -3474,8 +3152,7 @@ public class Editor extends Controller {
 				// // SAVE FILE
 				try {
 					System.out.println(request().body().asText());
-					MultipartFormData body = request().body()
-							.asMultipartFormData();
+					MultipartFormData body = request().body().asMultipartFormData();
 
 					FilePart resourceFile = null;
 					List<FilePart> files = body.getFiles();
@@ -3506,35 +3183,30 @@ public class Editor extends Controller {
 						while (exists == true) {
 
 							i++;
-							File f = new File("public/uploads/"
-									+ Application.getLocalPortal().getId()
-									+ "/editor/" + gid + "/", i + "_"
-									+ destfilename);
+							File f = new File(
+									"public/uploads/" + Application.getLocalPortal().getId() + "/editor/" + gid + "/",
+									i + "_" + destfilename);
 							if (!f.exists()) {
 								exists = false;
 							}
 
 						}
 
-						File tosave = new File("public/uploads/"
-								+ Application.getLocalPortal().getId()
-								+ "/editor/" + gid + "/", i + "_"
-								+ destfilename);
+						File tosave = new File(
+								"public/uploads/" + Application.getLocalPortal().getId() + "/editor/" + gid + "/",
+								i + "_" + destfilename);
 
 						try {
 
 							FileUtils.moveFile(file, tosave);
 
-							String dest = Global.SERVER_URL_2
-									+ "/uploadedassets/"
-									+ Application.getLocalPortal().getId()
-									+ "/editor/" + gid + "/" + i + "_"
+							String dest = Global.SERVER_URL_2 + "/uploadedassets/"
+									+ Application.getLocalPortal().getId() + "/editor/" + gid + "/" + i + "_"
 									+ destfilename;
 
 							if (type.equals("hotspot")) {
 
-								if (Hotspot.find.where().eq("id", hid)
-										.findRowCount() != 1) {
+								if (Hotspot.find.where().eq("id", hid).findRowCount() != 1) {
 
 									help = "Hotspot " + hid + "not found";
 								} else {
@@ -3554,8 +3226,7 @@ public class Editor extends Controller {
 
 							} else if (type.equals("mission")) {
 
-								if (Mission.find.where().eq("id", hid)
-										.findRowCount() != 1) {
+								if (Mission.find.where().eq("id", hid).findRowCount() != 1) {
 
 									help = "Mission " + hid + "not found";
 								} else {
@@ -3575,8 +3246,7 @@ public class Editor extends Controller {
 
 							} else if (type.equals("content")) {
 
-								if (Content.find.where().eq("id", hid)
-										.findRowCount() != 1) {
+								if (Content.find.where().eq("id", hid).findRowCount() != 1) {
 
 									help = "Content " + hid + "not found";
 								} else {
@@ -3596,8 +3266,7 @@ public class Editor extends Controller {
 
 							} else if (type.equals("action")) {
 
-								if (Action.find.where().eq("id", hid)
-										.findRowCount() != 1) {
+								if (Action.find.where().eq("id", hid).findRowCount() != 1) {
 
 									help = "Action " + hid + "not found";
 								} else {
@@ -3617,8 +3286,7 @@ public class Editor extends Controller {
 
 							} else if (type.equals("scene")) {
 
-								if (Scene.find.where().eq("id", hid)
-										.findRowCount() != 1) {
+								if (Scene.find.where().eq("id", hid).findRowCount() != 1) {
 
 									help = "Scene " + hid + "not found";
 								} else {
@@ -3673,40 +3341,35 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result getFilePreview(Long gid, Long attr) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (Attribute.find.where().eq("id", attr).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Die Action existiert nicht"));
+					return badRequest(views.html.norights.render("Die Action existiert nicht"));
 
 				} else {
 
 					Attribute a = Attribute.find.byId(attr);
 
-					return ok(views.html.editor.editor_afilepreview.render(
-							Game.find.byId(gid), attr, a.getValue()));
+					return ok(views.html.editor.editor_afilepreview.render(Game.find.byId(gid), attr, a.getValue()));
 
 				}
 			}
@@ -3718,11 +3381,10 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result setGameAttribute(Long gid, Long atype, String value) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
@@ -3734,11 +3396,10 @@ public class Editor extends Controller {
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -3773,13 +3434,11 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result setContentAttribute(Long gid, Long cid, Long atype,
-			String value) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result setContentAttribute(Long gid, Long cid, Long atype, String value) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
@@ -3791,11 +3450,10 @@ public class Editor extends Controller {
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -3807,8 +3465,7 @@ public class Editor extends Controller {
 
 					Content c = Content.find.byId(cid);
 
-					if (AttributeType.find.where().eq("id", atype)
-							.findRowCount() != 1) {
+					if (AttributeType.find.where().eq("id", atype).findRowCount() != 1) {
 
 						return ok("Attribute not found");
 
@@ -3838,13 +3495,11 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result setMissionAttribute(Long gid, Long mid, Long atype,
-			String value) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result setMissionAttribute(Long gid, Long mid, Long atype, String value) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
@@ -3856,11 +3511,10 @@ public class Editor extends Controller {
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -3872,8 +3526,7 @@ public class Editor extends Controller {
 
 					Mission c = Mission.find.byId(mid);
 
-					if (AttributeType.find.where().eq("id", atype)
-							.findRowCount() != 1) {
+					if (AttributeType.find.where().eq("id", atype).findRowCount() != 1) {
 
 						return ok("Attribute not found");
 
@@ -3903,13 +3556,11 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result setHotspotAttribute(Long gid, Long mid, Long atype,
-			String value) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result setHotspotAttribute(Long gid, Long mid, Long atype, String value) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
@@ -3921,11 +3572,10 @@ public class Editor extends Controller {
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -3937,8 +3587,7 @@ public class Editor extends Controller {
 
 					Hotspot c = Hotspot.find.byId(mid);
 
-					if (AttributeType.find.where().eq("id", atype)
-							.findRowCount() != 1) {
+					if (AttributeType.find.where().eq("id", atype).findRowCount() != 1) {
 
 						return ok("Attribute not found");
 
@@ -3968,13 +3617,11 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result setActionAttribute(Long gid, Long mid, Long atype,
-			String value) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result setActionAttribute(Long gid, Long mid, Long atype, String value) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
@@ -3986,11 +3633,10 @@ public class Editor extends Controller {
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 				if (Action.find.where().eq("id", mid).findRowCount() != 1) {
@@ -4001,8 +3647,7 @@ public class Editor extends Controller {
 
 					Action c = Action.find.byId(mid);
 
-					if (AttributeType.find.where().eq("id", atype)
-							.findRowCount() != 1) {
+					if (AttributeType.find.where().eq("id", atype).findRowCount() != 1) {
 
 						return ok("Attribute not found");
 
@@ -4032,13 +3677,11 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result setSceneAttribute(Long gid, Long mid, Long atype,
-			String value) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result setSceneAttribute(Long gid, Long mid, Long atype, String value) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
@@ -4050,11 +3693,10 @@ public class Editor extends Controller {
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -4066,8 +3708,7 @@ public class Editor extends Controller {
 
 					Scene c = Scene.find.byId(mid);
 
-					if (AttributeType.find.where().eq("id", atype)
-							.findRowCount() != 1) {
+					if (AttributeType.find.where().eq("id", atype).findRowCount() != 1) {
 
 						return ok("Attribute not found");
 
@@ -4093,8 +3734,7 @@ public class Editor extends Controller {
 
 							} else {
 
-								System.out
-										.println(a.getName() + " has no link");
+								System.out.println(a.getName() + " has no link");
 
 							}
 
@@ -4110,9 +3750,7 @@ public class Editor extends Controller {
 
 						}
 
-						if (at.getFileType().equals("QuoteString")
-								|| at.getFileType().equals(
-										"QuoteStringTextArea")) {
+						if (at.getFileType().equals("QuoteString") || at.getFileType().equals("QuoteStringTextArea")) {
 
 							help = "synced";
 
@@ -4133,13 +3771,11 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result setMenuItemAttribute(Long gid, Long mid, String a,
-			String value) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result setMenuItemAttribute(Long gid, Long mid, String a, String value) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
@@ -4151,11 +3787,10 @@ public class Editor extends Controller {
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -4218,26 +3853,23 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result createXML(Long gid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -4247,12 +3879,10 @@ public class Editor extends Controller {
 				String help1 = "false";
 				if (p.getContentHtmlParameter("general.games.adminshavetopublish") != null) {
 
-					help1 = p
-							.getContentHtmlParameter("general.games.adminshavetopublish");
+					help1 = p.getContentHtmlParameter("general.games.adminshavetopublish");
 				}
 				if (help1.equals("true")) {
-					if (Global.securityGuard.hasAdminRightsOnPortal(Application
-							.getLocalUser(session())) == false) {
+					if (Global.securityGuard.hasAdminRightsOnPortal(Application.getLocalUser(session())) == false) {
 
 						doit = false;
 					}
@@ -4286,28 +3916,23 @@ public class Editor extends Controller {
 						for (ProviderUsers au : p.getUsers()) {
 
 							if (au.getRights().equals("admin")) {
-								System.out
-										.println("trying to send an email to admin: "
-												+ au.getUser().getName());
+								System.out.println("trying to send an email to admin: " + au.getUser().getName());
 								final MyUsernamePasswordAuthProvider provider = MyUsernamePasswordAuthProvider
 										.getProvider();
-								String linkToUserRightsTable = Global.SERVER_URL + "/" + p.id + "/portal/rights/" + p.id;
-								String text = "Auf dem Geoquest Portal '" + p.name + "' wurde eine neue Quest mit dem Namen'"
-										+ c.getName()
-										+ "' und der ID "
+								String linkToUserRightsTable = Global.SERVER_URL + "/" + p.id + "/portal/rights/"
+										+ p.id;
+								String text = "Auf dem Geoquest Portal '" + p.name
+										+ "' wurde eine neue Quest mit dem Namen'" + c.getName() + "' und der ID "
 										+ c.getId()
-										+ " erstellt. Solltest nur du die Berechtigung haben, diese Quest zu veröffentlichen, kümmere dich bitte darum: " +
-										linkToUserRightsTable;
+										+ " erstellt. Solltest nur du die Berechtigung haben, diese Quest zu veröffentlichen, kümmere dich bitte darum: "
+										+ linkToUserRightsTable;
 
-								String html = "Auf dem Geoquest Portal '" + p.name + "' wurde eine neue Quest mit dem Namen'"
-										+ c.getName()
-										+ "' und der ID "
+								String html = "Auf dem Geoquest Portal '" + p.name
+										+ "' wurde eine neue Quest mit dem Namen'" + c.getName() + "' und der ID "
 										+ c.getId()
-										+ " erstellt.<br/><br/> Solltest <b>nur du</b> die Berechtigung haben, diese Quest zu veröffentlichen, kümmere dich bitte darum: " +
-										"<a href=\"" + linkToUserRightsTable + "\">" + linkToUserRightsTable + "</a>";
-								provider.sendEmailToUser(au.getUser(),
-										"Neue Quest: " + c.getName(), text,
-										html);
+										+ " erstellt.<br/><br/> Solltest <b>nur du</b> die Berechtigung haben, diese Quest zu veröffentlichen, kümmere dich bitte darum: "
+										+ "<a href=\"" + linkToUserRightsTable + "\">" + linkToUserRightsTable + "</a>";
+								provider.sendEmailToUser(au.getUser(), "Neue Quest: " + c.getName(), text, html);
 							}
 
 						}
@@ -4326,23 +3951,20 @@ public class Editor extends Controller {
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
 				if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Die Mission existiert nicht"));
+					return badRequest(views.html.norights.render("Die Mission existiert nicht"));
 
 				} else {
 
@@ -4363,8 +3985,7 @@ public class Editor extends Controller {
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
@@ -4390,10 +4011,8 @@ public class Editor extends Controller {
 				// String result = g.createXMLForWeb(m); // return file instead
 
 				response().setContentType("text/xml");
-				response().setHeader("Content-disposition",
-						"attachment; filename=game.xml");
-				response().setHeader("Content-Length",
-						gameXMLFile.length() + "");
+				response().setHeader("Content-disposition", "attachment; filename=game.xml");
+				response().setHeader("Content-Length", gameXMLFile.length() + "");
 
 				return ok(gameXMLFile);
 			} else {
@@ -4413,8 +4032,7 @@ public class Editor extends Controller {
 
 		} else {
 
-			Device d = Device.find.where().eq("deviceid", deviceid)
-					.findUnique();
+			Device d = Device.find.where().eq("deviceid", deviceid).findUnique();
 
 			if (d.quest == "") {
 
@@ -4433,10 +4051,8 @@ public class Editor extends Controller {
 					// instead
 
 					response().setContentType("text/xml");
-					response().setHeader("Content-disposition",
-							"attachment; filename=game.xml");
-					response().setHeader("Content-Length",
-							gameXMLFile.length() + "");
+					response().setHeader("Content-disposition", "attachment; filename=game.xml");
+					response().setHeader("Content-Length", gameXMLFile.length() + "");
 
 					d.questpush = 0L;
 					d.update();
@@ -4453,11 +4069,10 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result movePartInGame(Long gid, Long pid, String direction) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
@@ -4468,11 +4083,10 @@ public class Editor extends Controller {
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -4494,8 +4108,7 @@ public class Editor extends Controller {
 						g.part_down(p);
 					}
 
-					return ok(views.html.editor.editor_sidemenu_missionlist
-							.render(Game.find.byId(gid)));
+					return ok(views.html.editor.editor_sidemenu_missionlist.render(Game.find.byId(gid)));
 
 				}
 			}
@@ -4507,11 +4120,10 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result deletePartFromGame(Long gid, Long pid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
@@ -4522,11 +4134,10 @@ public class Editor extends Controller {
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -4554,11 +4165,10 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result deleteHotspotFromGame(Long gid, Long pid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
@@ -4569,11 +4179,10 @@ public class Editor extends Controller {
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -4601,11 +4210,10 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result deleteMenuItemFromGame(Long gid, Long pid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
@@ -4616,11 +4224,10 @@ public class Editor extends Controller {
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -4648,11 +4255,10 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result deleteContentFromMission(Long gid, Long mid, Long cid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
@@ -4663,11 +4269,10 @@ public class Editor extends Controller {
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -4702,13 +4307,11 @@ public class Editor extends Controller {
 	}
 
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result setPositionInMission(Long gid, Long mid, Integer top,
-			Integer left) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+	public static Result setPositionInMission(Long gid, Long mid, Integer top, Integer left) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
@@ -4719,11 +4322,10 @@ public class Editor extends Controller {
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 
@@ -4750,11 +4352,10 @@ public class Editor extends Controller {
 
 	@Restrict(@Group(Application.USER_ROLE))
 	public static Result deleteContentFromContent(Long gid, Long ccid, Long cid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(
-				Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+				Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 		}
 
@@ -4765,11 +4366,10 @@ public class Editor extends Controller {
 
 		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					Application.getLocalUser(session()), Game.find.byId(gid)) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+					Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
 			} else {
 

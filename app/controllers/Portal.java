@@ -1137,7 +1137,8 @@ public class Portal extends Controller {
 
 							SceneType s = new SceneType(form.scenename);
 							s.save();
-
+							s.addDefaultsFromGame(g);
+							
 							s.update();
 							gt.addPossibleSceneType(s);
 							gt.update();
