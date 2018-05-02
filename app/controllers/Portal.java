@@ -721,8 +721,6 @@ public class Portal extends Controller {
 
 			Game mygame = Game.find.byId(game);
 
-			String gamaname = mygame.getName();
-
 			if (Global.securityGuard.hasWriteRightsOnGame(
 					getLocalUser(session()), mygame) == false) {
 
@@ -1003,6 +1001,7 @@ public class Portal extends Controller {
 
 	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result doAddGameTypeFromGame(Long pid, Long gid) {
+		System.out.println("Portal.doAddGameTypeFromGame(" + pid + ", " + gid + ")");
 		session("currentportal", pid.toString());
 		if (getLocalUser(session()) == null) {
 			return redirect(routes.Application.login(pid));
@@ -1029,6 +1028,8 @@ public class Portal extends Controller {
 						.bindFromRequest();
 
 				if (filledForm.hasErrors()) {
+					
+					System.out.println("Filled form has errors.");
 
 					return badRequest(views.html.portal.add_gametype.render(g,
 							filledForm, ""));
@@ -1052,6 +1053,11 @@ public class Portal extends Controller {
 						GameType gt = new GameType(form.name);
 
 						gt.save();
+						
+						System.out.println("Form params:");
+						System.out.println("\tmakescene: " + form.makescene);
+						System.out.println("\tonlyhotspots: " + form.onlyhotspots);
+						System.out.println("\tonlyonehotspot: " + form.onlyonehotspot);
 
 						if (!form.makescene || !form.onlyhotspots
 								|| !form.onlyonehotspot) {
@@ -1111,25 +1117,30 @@ public class Portal extends Controller {
 
 								gt.easy_editor = true;
 								gt.multiple_only_scene_type = true;
+								gt.update();
 
+								System.out.println("easyeditor set and multiple only scene type set too ... gt-id: " + gt.getId());
+								
+								gt.refresh();
+								System.out.println("#1 New GameType persisted. Id: " + gt.getId() + 
+										", easyEditor: " + gt.easy_editor + 
+										", editor_only_scene_type: " + gt.editor_only_scene_type + 
+										", multiple_only_scene_type: " + gt.multiple_only_scene_type + 
+										", show_only_hotspots_in_sidemenu: " + gt.show_only_hotspots_in_sidemenu);
 							}
 
 							if (form.onlyhotspots) {
 
 								gt.show_only_hotspots_in_sidemenu = true;
-
+								gt.update();
 							}
 
 							SceneType s = new SceneType(form.scenename);
 							s.save();
-							String log = s.addDefaultsFromGame(g);
 
 							s.update();
 							gt.addPossibleSceneType(s);
 							gt.update();
-
-							gt.update();
-
 						} else {
 
 							for (Part p : g.getParts()) {
@@ -1137,13 +1148,14 @@ public class Portal extends Controller {
 							}
 
 							for (Hotspot h : g.getHotspots()) {
-
 								gt.addDefaultHotspot(h);
-
 							}
 
 							gt.update();
 						}
+						
+						gt.refresh();
+						System.out.println("Possible Scenetypes: #" + gt.getPossibleSceneTypes().size());
 
 						ProviderPortal myportal = ProviderPortal.find.byId(pid);
 
