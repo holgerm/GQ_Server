@@ -120,8 +120,6 @@
 	<classpathentry kind="var" path="PLAY_2_1_2/repository/local/org.seleniumhq.selenium/selenium-support/2.25.0/jars/selenium-support.jar"/>
 	<classpathentry kind="var" path="PLAY_2_1_2/repository/local/org.easytesting/fest-assert/1.4/jars/fest-assert.jar"/>
 	<classpathentry kind="var" path="PLAY_2_1_2/repository/local/org.easytesting/fest-util/1.1.6/jars/fest-util.jar"/>
-	<classpathentry kind="con" path="org.scala-ide.sdt.launching.SCALA_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/Java SE 7 [1.7.0_25]"/>
 	<classpathentry kind="lib" path="target/scala-2.10/classes"/>
 	<classpathentry kind="var" path="PLAY_2_1_2"/>
