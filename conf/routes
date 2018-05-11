@@ -27,14 +27,17 @@ GET    /testConnection                                                        co
 
 
 
-GET    /:pid/agbs/version                                                     controllers.Portal.getAGBVersion(pid:Long)
+# Routes for the Mobile App to legal infos:
+GET    /:pid/privacyagreement                                                 controllers.Portal.getPrivacyAgreement(pid:Long, asHTML:Boolean = false)
 GET    /:pid/privacyagreement/version                                         controllers.Portal.getPrivacyAgreementVersion(pid:Long)
-GET    /:pid/agbs                                                             controllers.Portal.getAGBs(pid:Long)
-GET    /:pid/privacyagreement                                                 controllers.Portal.getPrivacyAgreement(pid:Long)
 GET    /:pid/imprint                                                          controllers.Portal.getImprint(pid:Long)
+GET    /:pid/agbs                                                             controllers.Portal.getAGBs(pid:Long)
+GET    /:pid/agbs/version                                                     controllers.Portal.getAGBVersion(pid:Long)
 
+# Routes for Browser Links to legal portal infos:
 GET    /:pid/pagbs                                                            controllers.Portal.getPortalAGBs(pid:Long)
 GET    /:pid/pprivacyagreement                                                controllers.Portal.getPortalPrivacyAgreement(pid:Long)
+GET    /:pid/privacyagreementhtml                                             controllers.Portal.getPrivacyAgreement(pid:Long, asHTML:Boolean = true)
 
 
 GET    /assets/*file                                                          controllers.Assets.at(path="/public", file)

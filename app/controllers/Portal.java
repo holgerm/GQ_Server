@@ -1,78 +1,62 @@
 package controllers;
 
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
-import be.objectify.deadbolt.java.actions.SubjectPresent;
+import static play.data.Form.form;
 
-import com.avaje.ebean.Ebean;
-import com.feth.play.module.pa.PlayAuthenticate;
-import com.feth.play.module.pa.user.AuthUser;
-
-import flexjson.JSONSerializer;
-import models.*;
-import models.GameParts.*;
-import net.sf.ehcache.ObjectExistsException;
-
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.node.ObjectNode;
-
-import com.gargoylesoftware.htmlunit.*;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.xml.XmlPage;
-
-import play.api.libs.json.*;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Random;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
+import com.avaje.ebean.Ebean;
+import com.feth.play.module.pa.PlayAuthenticate;
+import com.feth.play.module.pa.user.AuthUser;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.WebRequest;
+import com.gargoylesoftware.htmlunit.xml.XmlPage;
+
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+import flexjson.JSONSerializer;
+import models.Game;
+import models.GameInfo;
+import models.GameRights;
+import models.NewsstreamItem;
+import models.PremiumAccess;
+import models.ProviderGames;
+import models.ProviderPortal;
+import models.ProviderUsers;
+import models.SortedHtml;
+import models.User;
+import models.GameParts.ActionType;
+import models.GameParts.AttributeType;
+import models.GameParts.GameType;
+import models.GameParts.Hotspot;
+import models.GameParts.HotspotType;
+import models.GameParts.Part;
+import models.GameParts.PartType;
+import models.GameParts.SceneType;
 import play.data.Form;
-import play.data.format.Formats;
-import play.data.format.Formats.NonEmpty;
 import play.data.validation.Constraints.MinLength;
 import play.data.validation.Constraints.Required;
-import play.db.ebean.Model;
-import play.i18n.Messages;
-import play.libs.Json;
-import play.mvc.BodyParser;
 import play.mvc.Controller;
-import play.mvc.Result;
-import play.mvc.Http.Session;
-import providers.MyUsernamePasswordAuthProvider;
-import providers.MyUsernamePasswordAuthUser;
-import security.MyUserPortalRights;
-import util.Global;
-
-import java.io.File;
-import java.net.URL;
-import java.net.URLConnection;
-
-import java.nio.file.Files;
-
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
-import views.html.index;
-import views.html.signup;
-import views.html.portal.my_portals;
-
-import java.util.List;
-import java.util.Set;
-
-import javax.management.modelmbean.RequiredModelMBean;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
-
-import static play.data.Form.form;
+import play.mvc.Http.Session;
+import play.mvc.Result;
+import util.Global;
+import util.Texts;
 
 public class Portal extends Controller {
 
@@ -94,12 +78,8 @@ public class Portal extends Controller {
 
 		Boolean oeffentlichespiele = true;
 
-		if (Application.getLocalPortal().getContentHtmlParameter(
-				"general.includesites.Oeffentliche_Spiele") != null
-				&& Application
-						.getLocalPortal()
-						.getContentHtmlParameter(
-								"general.includesites.Oeffentliche_Spiele")
+		if (Application.getLocalPortal().getContentHtmlParameter("general.includesites.Oeffentliche_Spiele") != null
+				&& Application.getLocalPortal().getContentHtmlParameter("general.includesites.Oeffentliche_Spiele")
 						.equals("false")) {
 			oeffentlichespiele = false;
 		}
@@ -124,8 +104,7 @@ public class Portal extends Controller {
 
 		} else {
 
-			List<ProviderGames> gr = Application.getLocalPortal()
-					.getPublicGamesList();
+			List<ProviderGames> gr = Application.getLocalPortal().getPublicGamesList();
 			return ok(views.html.portal.public_games.render(gr));
 		}
 
@@ -153,8 +132,7 @@ public class Portal extends Controller {
 			}
 
 		} else {
-			List<ProviderGames> gr = Application.getLocalPortal()
-					.getPublicGamesList();
+			List<ProviderGames> gr = Application.getLocalPortal().getPublicGamesList();
 			return ok(views.html.portal.public_games.render(gr));
 		}
 
@@ -164,8 +142,7 @@ public class Portal extends Controller {
 
 		session("currentportal", pid.toString());
 
-		List<ProviderGames> gr = Application.getLocalPortal()
-				.getPublicGamesList();
+		List<ProviderGames> gr = Application.getLocalPortal().getPublicGamesList();
 		return ok(views.html.portal.publicgamesmap.render(gr));
 
 	}
@@ -249,8 +226,7 @@ public class Portal extends Controller {
 				return ok(views.html.portal.user_games.render(u2, s));
 			} else {
 
-				return badRequest(views.html.norights
-						.render("Der User existiert nicht."));
+				return badRequest(views.html.norights.render("Der User existiert nicht."));
 
 			}
 
@@ -268,8 +244,7 @@ public class Portal extends Controller {
 
 			} else {
 
-				return badRequest(views.html.norights
-						.render("Der User existiert nicht."));
+				return badRequest(views.html.norights.render("Der User existiert nicht."));
 
 			}
 
@@ -278,8 +253,7 @@ public class Portal extends Controller {
 
 	public static void sayTime(String prefix) {
 
-		System.out.println(prefix + ": "
-				+ (System.currentTimeMillis() - lastdate));
+		System.out.println(prefix + ": " + (System.currentTimeMillis() - lastdate));
 
 		lastdate = System.currentTimeMillis();
 
@@ -288,8 +262,7 @@ public class Portal extends Controller {
 	public static Result myGamesListOnCurrentPortal() {
 		ProviderPortal p = Application.getLocalPortal();
 
-		String url = p.getTemplateServerURLDropSlash() + ""
-				+ p.getPathTo(routes.Portal.myGamesList(p.getId()));
+		String url = p.getTemplateServerURLDropSlash() + "" + p.getPathTo(routes.Portal.myGamesList(p.getId()));
 		return redirect(url);
 
 	}
@@ -308,8 +281,7 @@ public class Portal extends Controller {
 
 	public static Result logoutstepone() {
 		ProviderPortal p = Application.getLocalPortal();
-		String url = p.getTemplateServerURLDropSlash() + ""
-				+ p.getPathTo(routes.Portal.logoutsteptwo(p.getId()));
+		String url = p.getTemplateServerURLDropSlash() + "" + p.getPathTo(routes.Portal.logoutsteptwo(p.getId()));
 
 		return redirect(url);
 
@@ -353,8 +325,7 @@ public class Portal extends Controller {
 			return redirect(routes.Application.login(pid));
 		}
 
-		if (Global.securityGuard
-				.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
+		if (Global.securityGuard.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
 
 			return badRequest(views.html.norightsonportal
 					.render("Du benötigst mindestens User-Rechte, um diese Seite aufrufen zu können."));
@@ -374,8 +345,7 @@ public class Portal extends Controller {
 			return redirect(routes.Application.login(pid));
 		}
 
-		if (Global.securityGuard
-				.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
+		if (Global.securityGuard.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
 
 			return badRequest(views.html.norightsonportal
 					.render("Du benötigst mindestens User-Rechte, um diese Seite aufrufen zu können."));
@@ -384,15 +354,13 @@ public class Portal extends Controller {
 
 			if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				return badRequest(views.html.norights
-						.render("Das Spiel existiert nicht"));
+				return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 			} else {
 
 				Game g = Game.find.byId(gid);
 
-				return ok(views.html.portal.add_gametype.render(g,
-						GAMETYPE_FORM, ""));
+				return ok(views.html.portal.add_gametype.render(g, GAMETYPE_FORM, ""));
 			}
 		}
 	}
@@ -407,31 +375,27 @@ public class Portal extends Controller {
 
 		if (Game.find.where().eq("id", game).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
 			Game mygame = Game.find.byId(game);
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					getLocalUser(session()), mygame) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(getLocalUser(session()), mygame) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte, um dieses Spiel zu editieren."));
+				return badRequest(
+						views.html.norights.render("Du benötigst Schreib-Rechte, um dieses Spiel zu editieren."));
 
 			} else {
 
 				UploadedGame formobject = new UploadedGame();
 				formobject.name = mygame.getName();
-				formobject.publ = Global.defaultportal.getGame(mygame)
-						.getVisibility();
+				formobject.publ = Global.defaultportal.getGame(mygame).getVisibility();
 
 				Form<UploadedGame> fillForm = form(UploadedGame.class);
 				fillForm = fillForm.fill(formobject);
 
-				return ok(views.html.portal.edit_game.render(fillForm, mygame,
-						""));
+				return ok(views.html.portal.edit_game.render(fillForm, mygame, ""));
 
 			}
 		}
@@ -454,15 +418,13 @@ public class Portal extends Controller {
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
 			Game mygame = Game.find.byId(gid);
 			ProviderPortal p = getLocalPortal();
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					getLocalUser(session()), mygame) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(getLocalUser(session()), mygame) == false) {
 
 				String xyz = "Du benötigst Schreib-Rechte für das Spiel um die Rechte anderer User zu editieren."
 						+ mygame.getUser(getLocalUser(session())).getRights();
@@ -477,8 +439,7 @@ public class Portal extends Controller {
 
 				toshow.addAll(mygame.getRightsOnPortal(p));
 
-				return ok(views.html.portal.game_rights.render(toshow, mygame,
-						leer, USER_SEARCH_FORM));
+				return ok(views.html.portal.game_rights.render(toshow, mygame, leer, USER_SEARCH_FORM));
 
 			}
 		}
@@ -490,15 +451,13 @@ public class Portal extends Controller {
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
 			Game mygame = Game.find.byId(gid);
 			ProviderPortal p = getLocalPortal();
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					getLocalUser(session()), mygame) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(getLocalUser(session()), mygame) == false) {
 
 				String xyz = "Du benötigst Schreib-Rechte für das Spiel um die Rechte anderer User zu editieren."
 						+ mygame.getUser(getLocalUser(session())).getRights();
@@ -513,8 +472,7 @@ public class Portal extends Controller {
 
 				toshow.addAll(mygame.getRightsOnPortal(p));
 
-				return ok(views.html.portal.game_rights.render(toshow, mygame,
-						leer, USER_SEARCH_FORM));
+				return ok(views.html.portal.game_rights.render(toshow, mygame, leer, USER_SEARCH_FORM));
 
 			}
 		}
@@ -560,8 +518,6 @@ public class Portal extends Controller {
 			return redirect(routes.Application.login(pid));
 		}
 
-		ProviderPortal p = getLocalPortal();
-
 		Set<User> leer = new HashSet<User>();
 
 		return ok(views.html.portal.user_search.render(leer, USER_SEARCH_FORM));
@@ -578,15 +534,13 @@ public class Portal extends Controller {
 
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
 			Game mygame = Game.find.byId(gid);
 			ProviderPortal p = getLocalPortal();
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					getLocalUser(session()), mygame) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(getLocalUser(session()), mygame) == false) {
 
 				return badRequest(views.html.norights
 						.render("Du benötigst Schreib-Rechte für das Spiel um die Rechte anderer User zu editieren."));
@@ -595,8 +549,7 @@ public class Portal extends Controller {
 
 				Set<User> leer = new HashSet<User>();
 
-				final Form<UserSearch> filledForm = USER_SEARCH_FORM
-						.bindFromRequest();
+				final Form<UserSearch> filledForm = USER_SEARCH_FORM.bindFromRequest();
 
 				UserSearch form = filledForm.get();
 				if (form != null) {
@@ -617,8 +570,7 @@ public class Portal extends Controller {
 				List<GameRights> toshow = new ArrayList<GameRights>();
 
 				toshow.addAll(mygame.getRightsOnPortal(p));
-				return ok(views.html.portal.game_rights.render(toshow, mygame,
-						leer, filledForm));
+				return ok(views.html.portal.game_rights.render(toshow, mygame, leer, filledForm));
 
 			}
 
@@ -682,8 +634,7 @@ public class Portal extends Controller {
 
 		String help = "Error!";
 
-		if (Application.getLocalPortal().getUser(Application.getLocalUser())
-				.getRights().equals("admin")) {
+		if (Application.getLocalPortal().getUser(Application.getLocalUser()).getRights().equals("admin")) {
 
 			if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
@@ -714,18 +665,16 @@ public class Portal extends Controller {
 
 		if (Game.find.where().eq("id", game).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
 			Game mygame = Game.find.byId(game);
 
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					getLocalUser(session()), mygame) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(getLocalUser(session()), mygame) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte, um dieses Spiel zu entfernen."));
+				return badRequest(
+						views.html.norights.render("Du benötigst Schreib-Rechte, um dieses Spiel zu entfernen."));
 
 			} else {
 
@@ -747,8 +696,7 @@ public class Portal extends Controller {
 
 				} else {
 
-					return badRequest(views.html.norights
-							.render("Unbekannter Fehler beim Entfernen des Spiels."));
+					return badRequest(views.html.norights.render("Unbekannter Fehler beim Entfernen des Spiels."));
 
 				}
 
@@ -765,8 +713,7 @@ public class Portal extends Controller {
 		}
 
 		Game g;
-		if (Global.securityGuard
-				.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
+		if (Global.securityGuard.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
 
 			return badRequest(views.html.norightsonportal
 					.render("Du benötigst mindestens User-Rechte, um ein Spiel hochzuladen."));
@@ -779,40 +726,34 @@ public class Portal extends Controller {
 
 			if (filledForm.hasErrors()) {
 
-				return badRequest(views.html.portal.add_game.render(filledForm,
-						""));
+				return badRequest(views.html.portal.add_game.render(filledForm, ""));
 
 			} else {
 
 				MultipartFormData body = request().body().asMultipartFormData();
 				FilePart resourceFile = body.getFile("zip");
 				UploadedGame form = filledForm.get();
-				Random generator = new Random(19580427);
 
 				if (resourceFile == null) {
 
 					if (form.gametype == 0) {
 
-						return badRequest(views.html.portal.add_game
-								.render(filledForm,
-										"Du musst entweder einen Spieltyp auswählen oder eine Datei hochladen."));
+						return badRequest(views.html.portal.add_game.render(filledForm,
+								"Du musst entweder einen Spieltyp auswählen oder eine Datei hochladen."));
 					} else {
 
 						// NEW GAME FROM GAMETYPE
 
-						if (GameType.find.where().eq("id", form.gametype)
-								.findRowCount() != 1) {
+						if (GameType.find.where().eq("id", form.gametype).findRowCount() != 1) {
 
-							return badRequest(views.html.portal.add_game
-									.render(filledForm,
-											"Der Spieltyp existiert nicht."));
+							return badRequest(
+									views.html.portal.add_game.render(filledForm, "Der Spieltyp existiert nicht."));
 
 						} else {
 
 							System.out.println("Looking for GameType.");
 							GameType gt = GameType.find.byId(form.gametype);
-							System.out.println("GAMETYPE FOUND:"
-									+ form.gametype);
+							System.out.println("GAMETYPE FOUND:" + form.gametype);
 							g = gt.createMe(form.name);
 							System.out.println("Game created successfully.");
 
@@ -830,8 +771,7 @@ public class Portal extends Controller {
 					while (exists == true) {
 
 						i++;
-						File f = new File("public/uploads/"
-								+ Application.getLocalPortal().getName() + "/",
+						File f = new File("public/uploads/" + Application.getLocalPortal().getName() + "/",
 								i + "_" + fileName);
 						if (!f.exists()) {
 							exists = false;
@@ -839,18 +779,16 @@ public class Portal extends Controller {
 
 					}
 
-					File tosave = new File("public/uploads/"
-							+ Application.getLocalPortal().getName() + "/", i
-							+ "_" + fileName);
+					File tosave = new File("public/uploads/" + Application.getLocalPortal().getName() + "/",
+							i + "_" + fileName);
 
 					try {
 
 						FileUtils.moveFile(file, tosave);
 
 					} catch (IOException ioe) {
-						return badRequest(views.html.portal.add_game
-								.render(filledForm,
-										"Fehler #0010 beim Datei-Upload. Versuchen Sie es später erneut oder kontaktieren Sie einen System-Administrator."));
+						return badRequest(views.html.portal.add_game.render(filledForm,
+								"Fehler #0010 beim Datei-Upload. Versuchen Sie es später erneut oder kontaktieren Sie einen System-Administrator."));
 
 					}
 
@@ -875,13 +813,11 @@ public class Portal extends Controller {
 				System.out.println("Visibility");
 				// USER WALL
 
-				String text = getLocalPortal().getLanguageParameter(
-						"hat_ein_neues_Spiel_erstellt")
-						+ ": " + g.getName();
+				String text = getLocalPortal().getLanguageParameter("hat_ein_neues_Spiel_erstellt") + ": "
+						+ g.getName();
 
 				String titel = "Neues Spiel";
-				NewsstreamItem nsi = currentuser.createNewsstreamItem(titel,
-						text, visi);
+				NewsstreamItem nsi = currentuser.createNewsstreamItem(titel, text, visi);
 				nsi.save();
 				currentuser.addNewsstream(nsi);
 
@@ -893,8 +829,7 @@ public class Portal extends Controller {
 
 				// MAIN PORTAL COPY
 
-				if (!(Global.defaultportal.getIdentifier().equals(Application
-						.getLocalPortal().getIdentifier()))) {
+				if (!(Global.defaultportal.getIdentifier().equals(Application.getLocalPortal().getIdentifier()))) {
 
 					Global.defaultportal.addNewGame(g, form.publ);
 					Global.defaultportal.save();
@@ -923,13 +858,9 @@ public class Portal extends Controller {
 
 				System.out.println("Done");
 
-				if (Application.getLocalPortal().getContentHtmlParameter(
-						"general.games.directotoeditor") != null) {
+				if (Application.getLocalPortal().getContentHtmlParameter("general.games.directotoeditor") != null) {
 
-					if (Application
-							.getLocalPortal()
-							.getContentHtmlParameter(
-									"general.games.directotoeditor")
+					if (Application.getLocalPortal().getContentHtmlParameter("general.games.directotoeditor")
 							.equals("false")) {
 						return redirect(routes.Portal.myGamesList(pid));
 
@@ -955,15 +886,13 @@ public class Portal extends Controller {
 
 		if (!Application.getLocalUser().isAdminOnPortalOne()) {
 
-			return badRequest(views.html.norights
-					.render("Das kann nur ein Admin tun."));
+			return badRequest(views.html.norights.render("Das kann nur ein Admin tun."));
 
 		} else {
 
 			if (User.find.where().eq("id", uid).findRowCount() != 1) {
 
-				return badRequest(views.html.norights
-						.render("Der User existiert nicht."));
+				return badRequest(views.html.norights.render("Der User existiert nicht."));
 
 			} else {
 
@@ -1007,45 +936,36 @@ public class Portal extends Controller {
 			return redirect(routes.Application.login(pid));
 		}
 
-		if (Global.securityGuard
-				.hasAdminRightsOnPortal(getLocalUser(session())) == false) {
+		if (Global.securityGuard.hasAdminRightsOnPortal(getLocalUser(session())) == false) {
 
-			return badRequest(views.html.norightsonportal
-					.render("Du benötigst Admin-Rechte, um einen Spieltyp anzulegen."));
+			return badRequest(
+					views.html.norightsonportal.render("Du benötigst Admin-Rechte, um einen Spieltyp anzulegen."));
 
 		} else {
 
 			if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				return badRequest(views.html.norights
-						.render("Das Spiel existiert nicht"));
+				return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 			} else {
 
 				Game g = Game.find.byId(gid);
 
-				final Form<GameToGameType> filledForm = GAMETYPE_FORM
-						.bindFromRequest();
+				final Form<GameToGameType> filledForm = GAMETYPE_FORM.bindFromRequest();
 
 				if (filledForm.hasErrors()) {
-					
+
 					System.out.println("Filled form has errors.");
 
-					return badRequest(views.html.portal.add_gametype.render(g,
-							filledForm, ""));
+					return badRequest(views.html.portal.add_gametype.render(g, filledForm, ""));
 
 				} else {
 
-					if (ProviderPortal.find.where().eq("id", pid)
-							.findRowCount() != 1) {
-						return badRequest(views.html.portal.add_gametype
-								.render(g, filledForm,
-										"Entschulding! Diese Funktion ist noch in der Entwicklung."));
-
+					if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
+						return badRequest(views.html.portal.add_gametype.render(g, filledForm,
+								"Entschulding! Diese Funktion ist noch in der Entwicklung."));
 					} else {
 
-						MultipartFormData body = request().body()
-								.asMultipartFormData();
 						GameToGameType form = filledForm.get();
 
 						// NEW GAMETYPE FROM GAME
@@ -1053,21 +973,12 @@ public class Portal extends Controller {
 						GameType gt = new GameType(form.name);
 
 						gt.save();
-						
-						System.out.println("Form params:");
-						System.out.println("\tmakescene: " + form.makescene);
-						System.out.println("\tonlyhotspots: " + form.onlyhotspots);
-						System.out.println("\tonlyonehotspot: " + form.onlyonehotspot);
 
-						if (!form.makescene || !form.onlyhotspots
-								|| !form.onlyonehotspot) {
+						if (!form.makescene || !form.onlyhotspots || !form.onlyonehotspot) {
 
-							for (AttributeType a : g.getType()
-									.getAttributeTypes()) {
+							for (AttributeType a : g.getType().getAttributeTypes()) {
 
-								AttributeType gt_att5 = new AttributeType(
-										a.getName(), a.getXMLType(),
-										a.getFileType());
+								AttributeType gt_att5 = new AttributeType(a.getName(), a.getXMLType(), a.getFileType());
 								gt_att5.save();
 
 								gt_att5.setDefaultValue(g.getAttributeValue(a));
@@ -1078,32 +989,28 @@ public class Portal extends Controller {
 
 							}
 
-							for (PartType pt : g.getType()
-									.getPossiblePartTypes()) {
+							for (PartType pt : g.getType().getPossiblePartTypes()) {
 
 								gt.addPossiblePartType(pt);
 								gt.update();
 
 							}
 
-							for (ActionType mi : g.getType()
-									.getPossibleMenuItemActionTypes()) {
+							for (ActionType mi : g.getType().getPossibleMenuItemActionTypes()) {
 
 								gt.addPossibleMenuItemActionType(mi);
 								gt.update();
 
 							}
 
-							for (HotspotType ht : g.getType()
-									.getPossibleHotspotTypes()) {
+							for (HotspotType ht : g.getType().getPossibleHotspotTypes()) {
 
 								gt.addPossibleHotspotType(ht);
 								gt.update();
 
 							}
 
-							for (SceneType st : g.getType()
-									.getPossibleSceneTypes()) {
+							for (SceneType st : g.getType().getPossibleSceneTypes()) {
 
 								gt.addPossibleSceneType(st);
 								gt.update();
@@ -1118,15 +1025,6 @@ public class Portal extends Controller {
 								gt.easy_editor = true;
 								gt.multiple_only_scene_type = true;
 								gt.update();
-
-								System.out.println("easyeditor set and multiple only scene type set too ... gt-id: " + gt.getId());
-								
-								gt.refresh();
-								System.out.println("#1 New GameType persisted. Id: " + gt.getId() + 
-										", easyEditor: " + gt.easy_editor + 
-										", editor_only_scene_type: " + gt.editor_only_scene_type + 
-										", multiple_only_scene_type: " + gt.multiple_only_scene_type + 
-										", show_only_hotspots_in_sidemenu: " + gt.show_only_hotspots_in_sidemenu);
 							}
 
 							if (form.onlyhotspots) {
@@ -1138,7 +1036,7 @@ public class Portal extends Controller {
 							SceneType s = new SceneType(form.scenename);
 							s.save();
 							s.addDefaultsFromGame(g);
-							
+
 							s.update();
 							gt.addPossibleSceneType(s);
 							gt.update();
@@ -1154,9 +1052,6 @@ public class Portal extends Controller {
 
 							gt.update();
 						}
-						
-						gt.refresh();
-						System.out.println("Possible Scenetypes: #" + gt.getPossibleSceneTypes().size());
 
 						ProviderPortal myportal = ProviderPortal.find.byId(pid);
 
@@ -1164,8 +1059,7 @@ public class Portal extends Controller {
 
 						myportal.update();
 
-						return redirect(routes.Portal
-								.myGamesListOnCurrentPortal());
+						return redirect(routes.Portal.myGamesListOnCurrentPortal());
 
 					}
 				}
@@ -1221,29 +1115,22 @@ public class Portal extends Controller {
 
 		if (Game.find.where().eq("id", game).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 			Game mygame = Game.find.byId(game);
 
-			if (Global.securityGuard
-					.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
+			if (Global.securityGuard.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
 
 				return badRequest(views.html.norightsonportal
 						.render("Du benötigst mindestens User-Rechte, um ein Spiel hochzuladen."));
 
 			} else {
-
-				User currentuser = getLocalUser(session());
-
-				final Form<UploadedGame> filledForm = UPLOAD_FORM
-						.bindFromRequest();
+				final Form<UploadedGame> filledForm = UPLOAD_FORM.bindFromRequest();
 
 				if (filledForm.hasErrors()) {
 
-					return badRequest(views.html.portal.edit_game.render(
-							filledForm, mygame, ""));
+					return badRequest(views.html.portal.edit_game.render(filledForm, mygame, ""));
 
 				}
 
@@ -1263,9 +1150,6 @@ public class Portal extends Controller {
 				FilePart resourceFile = body.getFile("zip");
 
 				if (resourceFile != null) {
-
-					Random generator = new Random(19580427);
-
 					String fileName = resourceFile.getFilename();
 					File file = resourceFile.getFile();
 
@@ -1274,8 +1158,7 @@ public class Portal extends Controller {
 					while (exists == true) {
 
 						i++;
-						File f = new File("public/uploads/"
-								+ Application.getLocalPortal().getName() + "/",
+						File f = new File("public/uploads/" + Application.getLocalPortal().getName() + "/",
 								i + "_" + fileName);
 						if (!f.exists()) {
 							exists = false;
@@ -1283,9 +1166,8 @@ public class Portal extends Controller {
 
 					}
 
-					File tosave = new File("public/uploads/"
-							+ Application.getLocalPortal().getName() + "/", i
-							+ "_" + fileName);
+					File tosave = new File("public/uploads/" + Application.getLocalPortal().getName() + "/",
+							i + "_" + fileName);
 
 					try {
 
@@ -1293,10 +1175,8 @@ public class Portal extends Controller {
 
 					} catch (IOException ioe) {
 
-						return badRequest(views.html.portal.edit_game
-								.render(filledForm,
-										mygame,
-										"Fehler #0011 beim Datei-Upload. Versuchen Sie es später erneut oder kontaktieren Sie einen System-Administrator."));
+						return badRequest(views.html.portal.edit_game.render(filledForm, mygame,
+								"Fehler #0011 beim Datei-Upload. Versuchen Sie es später erneut oder kontaktieren Sie einen System-Administrator."));
 
 					}
 
@@ -1325,25 +1205,20 @@ public class Portal extends Controller {
 
 		if (Game.find.where().eq("id", game).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 			Game mygame = Game.find.byId(game);
 
-			if (Global.securityGuard
-					.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
+			if (Global.securityGuard.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
 
 				return badRequest(views.html.norightsonportal
 						.render("Du benötigst mindestens User-Rechte, um ein Spiel zu kopieren."));
 
 			} else {
-
-				ProviderPortal p = ProviderPortal.find.byId(pid);
 				User currentuser = getLocalUser(session());
 
-				Game g = mygame
-						.copyMe(" " + Application.getLanguage(("Kopie")));
+				Game g = mygame.copyMe(" " + Application.getLanguage(("Kopie")));
 				g.save();
 				System.out.println("Game created.");
 				g.addOwner(currentuser);
@@ -1357,13 +1232,11 @@ public class Portal extends Controller {
 				boolean publ = false;
 				// USER WALL
 
-				String text = getLocalPortal().getLanguageParameter(
-						"hat_ein_neues_Spiel_erstellt")
-						+ ": " + g.getName();
+				String text = getLocalPortal().getLanguageParameter("hat_ein_neues_Spiel_erstellt") + ": "
+						+ g.getName();
 
 				String titel = "Neues Spiel";
-				NewsstreamItem nsi = currentuser.createNewsstreamItem(titel,
-						text, visi);
+				NewsstreamItem nsi = currentuser.createNewsstreamItem(titel, text, visi);
 				nsi.save();
 				currentuser.addNewsstream(nsi);
 
@@ -1375,8 +1248,7 @@ public class Portal extends Controller {
 
 				// MAIN PORTAL COPY
 
-				if (!(Global.defaultportal.getIdentifier().equals(Application
-						.getLocalPortal().getIdentifier()))) {
+				if (!(Global.defaultportal.getIdentifier().equals(Application.getLocalPortal().getIdentifier()))) {
 
 					Global.defaultportal.addNewGame(g, publ);
 					Global.defaultportal.save();
@@ -1412,25 +1284,20 @@ public class Portal extends Controller {
 	}
 
 	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result doEditUserRightsOnGame(Long pid, Long gid, Long uid,
-			String rights) {
+	public static Result doEditUserRightsOnGame(Long pid, Long gid, Long uid, String rights) {
 
 		session("currentportal", pid.toString());
 		if (getLocalUser(session()) == null) {
 			return redirect(routes.Application.login(pid));
 		}
 
-		ProviderPortal p = getLocalPortal();
-
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 			Game mygame = Game.find.byId(gid);
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					getLocalUser(session()), mygame) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(getLocalUser(session()), mygame) == false) {
 
 				return badRequest(views.html.norights
 						.render("Du benötigst Schreib-Rechte für das Spiel um die Rechte anderer User zu editieren."));
@@ -1439,8 +1306,7 @@ public class Portal extends Controller {
 
 				if (User.find.where().eq("id", uid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Der User existiert nicht"));
+					return badRequest(views.html.norights.render("Der User existiert nicht"));
 
 				} else {
 
@@ -1448,8 +1314,7 @@ public class Portal extends Controller {
 
 					boolean b = true;
 
-					if (usertoedit.getId() == Application.getLocalUser()
-							.getId()) {
+					if (usertoedit.getId() == Application.getLocalUser().getId()) {
 						b = false;
 
 						if (mygame.getAmountOfUsers() >= 2) {
@@ -1462,8 +1327,7 @@ public class Portal extends Controller {
 
 					if (b) {
 
-						if (mygame.userlastupdated == usertoedit.getId()
-								&& !rights.equals("write")) {
+						if (mygame.userlastupdated == usertoedit.getId() && !rights.equals("write")) {
 
 							mygame.setPublishOnAllPortals(false);
 
@@ -1489,17 +1353,13 @@ public class Portal extends Controller {
 
 					mygame.update();
 
-					Set<User> leer = new HashSet<User>();
-
-					if (usertoedit.getId() == Application.getLocalUser()
-							.getId() && !rights.equals("write")) {
+					if (usertoedit.getId() == Application.getLocalUser().getId() && !rights.equals("write")) {
 
 						return redirect(routes.Portal.myGamesList(pid));
 
 					} else {
 
-						return redirect(routes.Portal
-								.gameRightsOnCurrentPortal(gid));
+						return redirect(routes.Portal.gameRightsOnCurrentPortal(gid));
 
 					}
 
@@ -1517,17 +1377,13 @@ public class Portal extends Controller {
 			return redirect(routes.Application.login(pid));
 		}
 
-		ProviderPortal p = getLocalPortal();
-
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 			Game mygame = Game.find.byId(gid);
-			if (Global.securityGuard.hasWriteRightsOnGame(
-					getLocalUser(session()), mygame) == false) {
+			if (Global.securityGuard.hasWriteRightsOnGame(getLocalUser(session()), mygame) == false) {
 
 				return badRequest(views.html.norights
 						.render("Du benötigst Schreib-Rechte für das Spiel um die Rechte anderer User zu editieren."));
@@ -1536,8 +1392,7 @@ public class Portal extends Controller {
 
 				if (User.find.where().eq("id", uid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Der User existiert nicht"));
+					return badRequest(views.html.norights.render("Der User existiert nicht"));
 
 				} else {
 
@@ -1547,8 +1402,7 @@ public class Portal extends Controller {
 
 						boolean b = true;
 
-						if (usertoedit.getId() == Application.getLocalUser()
-								.getId()) {
+						if (usertoedit.getId() == Application.getLocalUser().getId()) {
 							b = false;
 
 							if (mygame.getAmountOfUsers() >= 2) {
@@ -1579,17 +1433,13 @@ public class Portal extends Controller {
 
 					mygame.save();
 
-					Set<User> leer = new HashSet<User>();
-
-					if (usertoedit.getId() == Application.getLocalUser()
-							.getId()) {
+					if (usertoedit.getId() == Application.getLocalUser().getId()) {
 
 						return redirect(routes.Portal.myGamesList(pid));
 
 					} else {
 
-						return redirect(routes.Portal
-								.gameRightsOnCurrentPortal(gid));
+						return redirect(routes.Portal.gameRightsOnCurrentPortal(gid));
 
 					}
 
@@ -1609,28 +1459,24 @@ public class Portal extends Controller {
 
 		session("currentportal", pid.toString());
 
-		ProviderPortal p = Application.getLocalPortal();
-
 		User u = getLocalUser(session());
 
 		if (Global.securityGuard.isDefaultPortal() == false) {
 
-			return badRequest(views.html.norights
-					.render("Diese Seite kann nur vom Geoquest Webservice aus aufgerufen werden."));
+			return badRequest(
+					views.html.norights.render("Diese Seite kann nur vom Geoquest Webservice aus aufgerufen werden."));
 
 		} else {
 
 			Set<ProviderUsers> pplist = new HashSet<ProviderUsers>();
 
 			for (ProviderUsers pp : u.getPortals()) {
-				if (!(pp.getPortal().getId().equals(Global.defaultportal
-						.getId())))
+				if (!(pp.getPortal().getId().equals(Global.defaultportal.getId())))
 					pplist.add(pp);
 
 			}
 
-			return ok(views.html.portal.my_portals.render(ProviderPortal.find
-					.all()));
+			return ok(views.html.portal.my_portals.render(ProviderPortal.find.all()));
 
 		}
 	}
@@ -1645,8 +1491,7 @@ public class Portal extends Controller {
 			for (SortedHtml sh : p.getHtml()) {
 
 				if (sh.getWort().equals("%%_GEOQUEST_NAV_LI_%%")) {
-					return ok(views.html.geoquestcodes.mainnavigation.render(
-							sh, ""));
+					return ok(views.html.geoquestcodes.mainnavigation.render(sh, ""));
 				}
 
 			}
@@ -1666,8 +1511,8 @@ public class Portal extends Controller {
 
 		if (Global.securityGuard.isDefaultPortal() == false) {
 
-			return badRequest(views.html.norights
-					.render("Diese Seite kann nur vom Geoquest Webservice aus aufgerufen werden."));
+			return badRequest(
+					views.html.norights.render("Diese Seite kann nur vom Geoquest Webservice aus aufgerufen werden."));
 
 		} else {
 
@@ -1684,16 +1529,11 @@ public class Portal extends Controller {
 			return redirect(routes.Application.login(pid));
 		}
 
-		ProviderPortal p = getLocalPortal();
-
 		if (ProviderPortal.find.where().eq("id", portal).findRowCount() == 1) {
 
 			ProviderPortal myportal = ProviderPortal.find.byId(portal);
 
-			String portalname = myportal.getName();
-
-			if (Global.securityGuard.hasAdminRightsOnPortalX(
-					getLocalUser(session()), myportal) == false) {
+			if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
 
 				return badRequest(views.html.norights
 						.render("Du benötigst Admin-Rechte auf diesem Portal, um dieses Portal zu entfernen."));
@@ -1706,12 +1546,11 @@ public class Portal extends Controller {
 
 					myportal.update();
 
-					return redirect(routes.Portal.gameTypesonPortal(myportal
-							.getId(), Application.getLocalPortal().getId()));
+					return redirect(
+							routes.Portal.gameTypesonPortal(myportal.getId(), Application.getLocalPortal().getId()));
 
 				} else {
-					return badRequest(views.html.norights
-							.render("Der Spieltyp existiert nicht."));
+					return badRequest(views.html.norights.render("Der Spieltyp existiert nicht."));
 
 				}
 
@@ -1719,32 +1558,25 @@ public class Portal extends Controller {
 
 		} else {
 
-			return badRequest(views.html.norights
-					.render("Das Portal existiert nicht."));
+			return badRequest(views.html.norights.render("Das Portal existiert nicht."));
 
 		}
 
 	}
 
 	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result doDeleteGameTypeFromPortal(Long pid, Long portal,
-			Long gtid) {
+	public static Result doDeleteGameTypeFromPortal(Long pid, Long portal, Long gtid) {
 
 		session("currentportal", pid.toString());
 		if (getLocalUser(session()) == null) {
 			return redirect(routes.Application.login(pid));
 		}
 
-		ProviderPortal p = getLocalPortal();
-
 		if (ProviderPortal.find.where().eq("id", portal).findRowCount() == 1) {
 
 			ProviderPortal myportal = ProviderPortal.find.byId(portal);
 
-			String portalname = myportal.getName();
-
-			if (Global.securityGuard.hasAdminRightsOnPortalX(
-					getLocalUser(session()), myportal) == false) {
+			if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
 
 				return badRequest(views.html.norights
 						.render("Du benötigst Admin-Rechte auf diesem Portal, um dieses Portal zu entfernen."));
@@ -1758,12 +1590,11 @@ public class Portal extends Controller {
 
 					Global.updatePortals();
 
-					return redirect(routes.Portal.gameTypesonPortal(myportal
-							.getId(), Application.getLocalPortal().getId()));
+					return redirect(
+							routes.Portal.gameTypesonPortal(myportal.getId(), Application.getLocalPortal().getId()));
 
 				} else {
-					return badRequest(views.html.norights
-							.render("Der Spieltyp existiert nicht."));
+					return badRequest(views.html.norights.render("Der Spieltyp existiert nicht."));
 
 				}
 
@@ -1771,8 +1602,7 @@ public class Portal extends Controller {
 
 		} else {
 
-			return badRequest(views.html.norights
-					.render("Das Portal existiert nicht."));
+			return badRequest(views.html.norights.render("Das Portal existiert nicht."));
 
 		}
 
@@ -1788,16 +1618,14 @@ public class Portal extends Controller {
 
 		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Portal existiert nicht"));
+			return badRequest(views.html.norights.render("Das Portal existiert nicht"));
 
 		} else {
 			ProviderPortal myportal = ProviderPortal.find.byId(gid);
-			if (Global.securityGuard.hasAdminRightsOnPortalX(
-					getLocalUser(session()), myportal) == false) {
+			if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Admin-Rechte auf diesem Portal, um die User-Rechte auf dem Portal zu editieren."));
+				return badRequest(views.html.norights.render(
+						"Du benötigst Admin-Rechte auf diesem Portal, um die User-Rechte auf dem Portal zu editieren."));
 
 			} else {
 
@@ -1818,16 +1646,14 @@ public class Portal extends Controller {
 
 		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Portal existiert nicht"));
+			return badRequest(views.html.norights.render("Das Portal existiert nicht"));
 
 		} else {
 			ProviderPortal myportal = ProviderPortal.find.byId(pid);
-			if (Global.securityGuard.hasAdminRightsOnPortalX(
-					getLocalUser(session()), myportal) == false) {
+			if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Admin-Rechte auf diesem Portal, um die User-Rechte auf dem Portal zu editieren."));
+				return badRequest(views.html.norights.render(
+						"Du benötigst Admin-Rechte auf diesem Portal, um die User-Rechte auf dem Portal zu editieren."));
 
 			} else {
 
@@ -1842,11 +1668,10 @@ public class Portal extends Controller {
 	public static Result userRightsonCurrentPortal() {
 
 		ProviderPortal myportal = Application.getLocalPortal();
-		if (Global.securityGuard.hasAdminRightsOnPortalX(
-				getLocalUser(session()), myportal) == false) {
+		if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
 
-			return badRequest(views.html.norights
-					.render("Du benötigst Admin-Rechte auf diesem Portal, um die User-Rechte auf dem Portal zu editieren."));
+			return badRequest(views.html.norights.render(
+					"Du benötigst Admin-Rechte auf diesem Portal, um die User-Rechte auf dem Portal zu editieren."));
 
 		} else {
 
@@ -1866,15 +1691,13 @@ public class Portal extends Controller {
 
 		if (ProviderPortal.find.where().eq("id", portal).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Portal existiert nicht"));
+			return badRequest(views.html.norights.render("Das Portal existiert nicht"));
 
 		} else {
 
 			ProviderPortal myportal = ProviderPortal.find.byId(portal);
 
-			if (Global.securityGuard.hasAdminRightsOnPortalX(
-					getLocalUser(session()), myportal) == false) {
+			if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
 
 				return badRequest(views.html.norights
 						.render("Du benötigst Admin-Rechte auf diesem Portal, um dieses Portal zu editieren."));
@@ -1917,8 +1740,7 @@ public class Portal extends Controller {
 				Form<PostedPortal> fillForm = form(PostedPortal.class);
 				fillForm = fillForm.fill(formobject);
 
-				return ok(views.html.portal.edit_portal.render(fillForm,
-						myportal, ""));
+				return ok(views.html.portal.edit_portal.render(fillForm, myportal, ""));
 
 			}
 		}
@@ -1940,8 +1762,8 @@ public class Portal extends Controller {
 
 		if (Global.securityGuard.isDefaultPortal() == false) {
 
-			return badRequest(views.html.norights
-					.render("Diese Seite kann nur vom Geoquest Webservice aus aufgerufen werden."));
+			return badRequest(
+					views.html.norights.render("Diese Seite kann nur vom Geoquest Webservice aus aufgerufen werden."));
 
 		} else {
 
@@ -1950,15 +1772,13 @@ public class Portal extends Controller {
 
 			if (filledForm.hasGlobalErrors()) {
 
-				return badRequest(views.html.portal.add_portal.render(
-						filledForm, "Global Error"));
+				return badRequest(views.html.portal.add_portal.render(filledForm, "Global Error"));
 
 			}
 
 			if (filledForm.hasErrors()) {
 
-				return badRequest(views.html.portal.add_portal.render(
-						filledForm, ""));
+				return badRequest(views.html.portal.add_portal.render(filledForm, ""));
 
 			}
 
@@ -1966,8 +1786,6 @@ public class Portal extends Controller {
 
 			MultipartFormData body = request().body().asMultipartFormData();
 			FilePart resourceFile = body.getFile("logo");
-
-			Random generator = new Random(19580427);
 
 			Long nid = Application.getLocalPortal().getId();
 
@@ -1993,8 +1811,7 @@ public class Portal extends Controller {
 				while (exists == true) {
 
 					i++;
-					File f = new File("public/uploads/"
-							+ Application.getLocalPortal().getName() + "/img/",
+					File f = new File("public/uploads/" + Application.getLocalPortal().getName() + "/img/",
 							i + "_" + fileName);
 					if (!f.exists()) {
 						exists = false;
@@ -2002,8 +1819,7 @@ public class Portal extends Controller {
 
 				}
 
-				File tosave = new File("public/uploads/portallogos/", i + "_"
-						+ fileName);
+				File tosave = new File("public/uploads/portallogos/", i + "_" + fileName);
 
 				try {
 
@@ -2012,9 +1828,8 @@ public class Portal extends Controller {
 					tosavename = tosave.getAbsolutePath();
 
 				} catch (IOException ioe) {
-					return badRequest(views.html.portal.add_portal
-							.render(filledForm,
-									"Fehler #0012 beim Datei-Upload. Versuchen Sie es später erneut oder kontaktieren Sie einen System-Administrator."));
+					return badRequest(views.html.portal.add_portal.render(filledForm,
+							"Fehler #0012 beim Datei-Upload. Versuchen Sie es später erneut oder kontaktieren Sie einen System-Administrator."));
 
 				}
 
@@ -2046,12 +1861,9 @@ public class Portal extends Controller {
 				c5 = "#ffccff";
 			}
 
-			ProviderPortal p = new ProviderPortal(form.name, the_url,
-					form.formname, form.pwfield, form.userfield, form.password,
-					form.user, form.afterloginurl, form.autoverify,
-					form.submitbutton, form.mappingurl, form.customserverurl,
-					form.posturl, form.addcss, c1, "default", c2, c3, c4, c5,
-					tosavename);
+			ProviderPortal p = new ProviderPortal(form.name, the_url, form.formname, form.pwfield, form.userfield,
+					form.password, form.user, form.afterloginurl, form.autoverify, form.submitbutton, form.mappingurl,
+					form.customserverurl, form.posturl, form.addcss, c1, "default", c2, c3, c4, c5, tosavename);
 			p.save();
 			p.addNewAdmin(currentuser);
 			p.save();
@@ -2062,15 +1874,13 @@ public class Portal extends Controller {
 			if (!set_url) {
 
 				System.out.println("Trying to set default template");
-				p.setTemplateURL(Global.SERVER_URL + nid
-						+ "/qeeveetemplates/default/html");
+				p.setTemplateURL(Global.SERVER_URL + nid + "/qeeveetemplates/default/html");
 				p.update();
 				p.updateHtmlByTemplateNoPassword();
 
 			}
 
-			return redirect(Application.getLocalPortal()
-					.getTemplateServerURLDropSlash() + "/" + nid + "/public");
+			return redirect(Application.getLocalPortal().getTemplateServerURLDropSlash() + "/" + nid + "/public");
 
 		}
 	}
@@ -2087,10 +1897,7 @@ public class Portal extends Controller {
 
 			ProviderPortal myportal = ProviderPortal.find.byId(portal);
 
-			String portalname = myportal.getName();
-
-			if (Global.securityGuard.hasAdminRightsOnPortalX(
-					getLocalUser(session()), myportal) == false) {
+			if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
 
 				return badRequest(views.html.norights
 						.render("Du benötigst Admin-Rechte auf diesem Portal, um dieses Portal zu entfernen."));
@@ -2117,13 +1924,11 @@ public class Portal extends Controller {
 
 				if (done == true) {
 
-					return ok(views.html.portal.public_games.render(Application
-							.getLocalPortal().getPublicGamesList()));
+					return ok(views.html.portal.public_games.render(Application.getLocalPortal().getPublicGamesList()));
 
 				} else {
 
-					return badRequest(views.html.norights
-							.render("Unbekannter Fehler beim Entfernen des Portals."));
+					return badRequest(views.html.norights.render("Unbekannter Fehler beim Entfernen des Portals."));
 
 				}
 
@@ -2131,8 +1936,7 @@ public class Portal extends Controller {
 
 		} else {
 
-			return badRequest(views.html.norights
-					.render("Das zu entfernende Portal existiert nicht."));
+			return badRequest(views.html.norights.render("Das zu entfernende Portal existiert nicht."));
 
 		}
 
@@ -2149,23 +1953,18 @@ public class Portal extends Controller {
 
 			ProviderPortal myportal = ProviderPortal.find.byId(portal);
 
-			if (Global.securityGuard.hasAdminRightsOnPortalX(
-					getLocalUser(session()), myportal) == false) {
+			if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
 
 				return badRequest(views.html.norights
 						.render("Du benötigst Admin-Rechte auf dem jeweiligen Portal, um es zu editieren."));
 
 			} else {
 
-				User currentuser = getLocalUser(session());
-
-				final Form<PostedPortal> filledForm = PORTAL_FORM
-						.bindFromRequest();
+				final Form<PostedPortal> filledForm = PORTAL_FORM.bindFromRequest();
 
 				if (filledForm.hasErrors()) {
 
-					return badRequest(views.html.portal.edit_portal.render(
-							filledForm, myportal, ""));
+					return badRequest(views.html.portal.edit_portal.render(filledForm, myportal, ""));
 
 				}
 
@@ -2173,8 +1972,6 @@ public class Portal extends Controller {
 
 				MultipartFormData body = request().body().asMultipartFormData();
 				FilePart resourceFile = body.getFile("logo");
-
-				Random generator = new Random(19580427);
 
 				String tosavename = "";
 
@@ -2190,16 +1987,14 @@ public class Portal extends Controller {
 					while (exists == true) {
 
 						i++;
-						File f = new File("public/uploads/portallogos/", i
-								+ "_" + fileName);
+						File f = new File("public/uploads/portallogos/", i + "_" + fileName);
 						if (!f.exists()) {
 							exists = false;
 						}
 
 					}
 
-					File tosave = new File("public/uploads/portallogos/", i
-							+ "_" + fileName);
+					File tosave = new File("public/uploads/portallogos/", i + "_" + fileName);
 
 					try {
 
@@ -2209,10 +2004,8 @@ public class Portal extends Controller {
 						myportal.setLogoimg(tosavename);
 
 					} catch (IOException ioe) {
-						return badRequest(views.html.portal.edit_portal
-								.render(filledForm,
-										myportal,
-										"Fehler #0013 beim Datei-Upload. Versuchen Sie es später erneut oder kontaktieren Sie einen System-Administrator."));
+						return badRequest(views.html.portal.edit_portal.render(filledForm, myportal,
+								"Fehler #0013 beim Datei-Upload. Versuchen Sie es später erneut oder kontaktieren Sie einen System-Administrator."));
 
 					}
 
@@ -2227,9 +2020,8 @@ public class Portal extends Controller {
 
 				} else {
 
-					myportal.setTemplateURL(Global.SERVER_URL
-							+ myportal.getIdentifier()
-							+ "/qeeveetemplates/default/html");
+					myportal.setTemplateURL(
+							Global.SERVER_URL + myportal.getIdentifier() + "/qeeveetemplates/default/html");
 
 				}
 
@@ -2237,8 +2029,7 @@ public class Portal extends Controller {
 					myportal.setTemplatePw(form.password);
 				} else {
 
-					System.out
-							.println("ignored empty password in <<Edit Portal>>-form");
+					System.out.println("ignored empty password in <<Edit Portal>>-form");
 
 				}
 
@@ -2307,29 +2098,25 @@ public class Portal extends Controller {
 
 			final Form<PostedPortal> filledForm = PORTAL_FORM.bindFromRequest();
 
-			return badRequest(views.html.portal.edit_portal.render(filledForm,
-					getLocalPortal(), "Das Portal existiert nicht"));
+			return badRequest(
+					views.html.portal.edit_portal.render(filledForm, getLocalPortal(), "Das Portal existiert nicht"));
 
 		}
 
 	}
 
 	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result doEditUserRightsOnPortal(Long pid, Long peditid,
-			Long uid, String rights) {
+	public static Result doEditUserRightsOnPortal(Long pid, Long peditid, Long uid, String rights) {
 
 		session("currentportal", pid.toString());
 		if (getLocalUser(session()) == null) {
 			return redirect(routes.Application.login(pid));
 		}
 
-		ProviderPortal p = getLocalPortal();
-
 		if (ProviderPortal.find.where().eq("id", peditid).findRowCount() == 1) {
 
 			ProviderPortal myportal = ProviderPortal.find.byId(peditid);
-			if (Global.securityGuard.hasAdminRightsOnPortalX(
-					getLocalUser(session()), myportal) == false) {
+			if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
 
 				return badRequest(views.html.norights
 						.render("Du benötigst Admin-Rechte auf dem jeweiligen Portal, um es zu editieren."));
@@ -2338,8 +2125,7 @@ public class Portal extends Controller {
 
 				if (User.find.where().eq("id", uid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Der User existiert nicht"));
+					return badRequest(views.html.norights.render("Der User existiert nicht"));
 
 				} else {
 					User usertoedit = User.find.byId(uid);
@@ -2350,8 +2136,7 @@ public class Portal extends Controller {
 
 					Global.updatePortals();
 
-					return redirect(routes.Portal.userRightsonPortal(pid,
-							peditid));
+					return redirect(routes.Portal.userRightsonPortal(pid, peditid));
 
 				}
 			}
@@ -2365,21 +2150,17 @@ public class Portal extends Controller {
 	}
 
 	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result doDeleteUserRightsOnPortal(Long pid, Long peditid,
-			Long uid) {
+	public static Result doDeleteUserRightsOnPortal(Long pid, Long peditid, Long uid) {
 
 		session("currentportal", pid.toString());
 		if (getLocalUser(session()) == null) {
 			return redirect(routes.Application.login(pid));
 		}
 
-		ProviderPortal p = getLocalPortal();
-
 		if (ProviderPortal.find.where().eq("id", peditid).findRowCount() == 1) {
 
 			ProviderPortal myportal = ProviderPortal.find.byId(peditid);
-			if (Global.securityGuard.hasAdminRightsOnPortalX(
-					getLocalUser(session()), myportal) == false) {
+			if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
 
 				return badRequest(views.html.norights
 						.render("Du benötigst Admin-Rechte auf dem jeweiligen Portal, um es zu editieren."));
@@ -2388,8 +2169,7 @@ public class Portal extends Controller {
 
 				if (User.find.where().eq("id", uid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights
-							.render("Der User existiert nicht"));
+					return badRequest(views.html.norights.render("Der User existiert nicht"));
 
 				} else {
 
@@ -2420,8 +2200,7 @@ public class Portal extends Controller {
 
 			// NEEDS ERRORMESSAGE
 
-			return badRequest(views.html.norights
-					.render("Das Portal existiert nicht."));
+			return badRequest(views.html.norights.render("Das Portal existiert nicht."));
 
 		}
 
@@ -2435,11 +2214,10 @@ public class Portal extends Controller {
 			return redirect(routes.Application.login(pid));
 		}
 
-		if (Global.securityGuard.hasAnyRightsOnPortal(Application
-				.getLocalUser(session()))) {
+		if (Global.securityGuard.hasAnyRightsOnPortal(Application.getLocalUser(session()))) {
 
-			return badRequest(views.html.norights
-					.render("Deine Registrierung auf diesem Portal muss erst von einem Administrator bestätigt werden."));
+			return badRequest(views.html.norights.render(
+					"Deine Registrierung auf diesem Portal muss erst von einem Administrator bestätigt werden."));
 
 		} else {
 
@@ -2447,8 +2225,7 @@ public class Portal extends Controller {
 
 			if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
 
-				return badRequest(views.html.norights
-						.render("Das Portal existiert nicht"));
+				return badRequest(views.html.norights.render("Das Portal existiert nicht"));
 
 			} else {
 
@@ -2481,8 +2258,7 @@ public class Portal extends Controller {
 
 			if (p.hasGameType(g.getType())) {
 
-				return badRequest(views.html.norights
-						.render("Es liegen keine Updates für diesen Spieltyp vor."));
+				return badRequest(views.html.norights.render("Es liegen keine Updates für diesen Spieltyp vor."));
 
 			} else {
 
@@ -2502,9 +2278,7 @@ public class Portal extends Controller {
 
 						}
 
-						System.out
-								.println("Done with Game Migration on Portal "
-										+ p.getId());
+						System.out.println("Done with Game Migration on Portal " + p.getId());
 
 						p.deleteGame(p.getGame(g));
 
@@ -2541,8 +2315,7 @@ public class Portal extends Controller {
 							if (pg.getPortal().getId().equals(p.getId())) {
 
 								// NEU HINZUFÜGEN
-								pg.getPortal().addNewGame(newg,
-										pg.getVisibility());
+								pg.getPortal().addNewGame(newg, pg.getVisibility());
 								pg.setVisibility(false);
 								pg.update();
 
@@ -2570,15 +2343,13 @@ public class Portal extends Controller {
 
 						Global.updatePortals();
 
-						return redirect(routes.Portal.gameRightsonPortal(pid,
-								newg.getId()));
+						return redirect(routes.Portal.gameRightsonPortal(pid, newg.getId()));
 
 					}
 
 				}
 
-				return redirect(routes.Portal
-						.gameRightsonPortal(pid, g.getId()));
+				return redirect(routes.Portal.gameRightsonPortal(pid, g.getId()));
 
 			}
 
@@ -2595,12 +2366,12 @@ public class Portal extends Controller {
 
 			return redirect("https://quest-mill.com/geoquest/private.php");
 
-		} else if (pid == 61L
-				|| (Application.getLocalPortal().getContentHtmlParameter(
-						"general.includesites.Newsstream") != null && (Application
-						.getLocalPortal().getContentHtmlParameter(
-								"general.includesites.Newsstream")
-						.equals("false")))) {
+		} else 
+			if (pid == 61L
+				|| (Application.getLocalPortal().getContentHtmlParameter("general.includesites.Newsstream") != null
+						&& (Application.getLocalPortal().getContentHtmlParameter("general.includesites.Newsstream")
+								.equals("false")))) 
+		{
 
 			User u = getLocalUser(session());
 
@@ -2611,15 +2382,9 @@ public class Portal extends Controller {
 			} else {
 
 				return redirect(routes.Portal.myGamesListOnCurrentPortal());
-
 			}
 
 		} else {
-
-			ProviderPortal p = Application.getLocalPortal();
-
-			Set<ProviderUsers> pplist = new HashSet<ProviderUsers>();
-
 			List<NewsstreamItem> ilist;
 			ilist = getLocalPortal().getNewsstream();
 
@@ -2630,15 +2395,10 @@ public class Portal extends Controller {
 
 	public static Result portalNewsstreamOnCurrentPortal() {
 
-		ProviderPortal p = Application.getLocalPortal();
-
-		Set<ProviderUsers> pplist = new HashSet<ProviderUsers>();
-
 		List<NewsstreamItem> ilist;
 		ilist = getLocalPortal().getNewsstream();
 
 		return ok(views.html.portal.portalnewsstream.render(ilist));
-
 	}
 
 	// @Restrict(@Group(Application.USER_ROLE))
@@ -2649,11 +2409,10 @@ public class Portal extends Controller {
 			return redirect(routes.Application.login(pid));
 		}
 
-		if (Global.securityGuard
-				.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
+		if (Global.securityGuard.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
 
-			return badRequest(views.html.norights
-					.render("Deine Registrierung auf diesem Portal muss erst von einem Administrator bestätigt werden."));
+			return badRequest(views.html.norights.render(
+					"Deine Registrierung auf diesem Portal muss erst von einem Administrator bestätigt werden."));
 
 		} else {
 
@@ -2667,10 +2426,8 @@ public class Portal extends Controller {
 
 	public static Result getGamesInfoListJSON(Long pid) {
 		JSONSerializer postDetailsSerializer = new JSONSerializer()
-				.include("id", "typeID", "name", "hotspots",
-						"hotspots.longitude", "hotspots.latitude", "metadata",
-						"metadata.key", "metadata.value", "lastUpdate",
-						"version", "featuredImagePath", "iconPath")
+				.include("id", "typeID", "name", "hotspots", "hotspots.longitude", "hotspots.latitude", "metadata",
+						"metadata.key", "metadata.value", "lastUpdate", "version", "featuredImagePath", "iconPath")
 				.exclude("*").prettyPrint(true);
 
 		List<GameInfo> gameInfos = new ArrayList<GameInfo>();
@@ -2707,10 +2464,8 @@ public class Portal extends Controller {
 		}
 
 		JSONSerializer postDetailsSerializer = new JSONSerializer()
-				.include("id", "name", "zip", "lastUpdate", "hotspots",
-						"hotspots.longitude", "hotspots.latitude",
-						"parts.scene.hotspots.longitude",
-						"parts.scene.hotspots.l", "parts.scene", "type.id")
+				.include("id", "name", "zip", "lastUpdate", "hotspots", "hotspots.longitude", "hotspots.latitude",
+						"parts.scene.hotspots.longitude", "parts.scene.hotspots.l", "parts.scene", "type.id")
 				.exclude("*").prettyPrint(true);
 		List<Game> obj = new ArrayList<Game>();
 
@@ -2743,8 +2498,7 @@ public class Portal extends Controller {
 
 		} else {
 
-			JSONSerializer postDetailsSerializer = new JSONSerializer()
-					.exclude("*.class").prettyPrint(true);
+			JSONSerializer postDetailsSerializer = new JSONSerializer().exclude("*.class").prettyPrint(true);
 
 			Game g = Game.find.byId(gid);
 			String jsonStr = "";
@@ -2777,10 +2531,8 @@ public class Portal extends Controller {
 		} else {
 
 			JSONSerializer postDetailsSerializer = new JSONSerializer()
-					.include("id", "name", "zip", "lastUpdate", "hotspots",
-							"hotspots.longitude", "hotspots.latitude",
-							"parts.scene.hotspots.longitude",
-							"parts.scene.hotspots.l", "parts.scene", "type.id")
+					.include("id", "name", "zip", "lastUpdate", "hotspots", "hotspots.longitude", "hotspots.latitude",
+							"parts.scene.hotspots.longitude", "parts.scene.hotspots.l", "parts.scene", "type.id")
 					.exclude("*").prettyPrint(true);
 
 			List<Game> obj = new ArrayList<Game>();
@@ -2797,11 +2549,10 @@ public class Portal extends Controller {
 	}
 
 	public static Result getPortalsJson() {
-		List<ProviderPortal> obj = Ebean.find(ProviderPortal.class)
-				.select("id,name").findList();
+		List<ProviderPortal> obj = Ebean.find(ProviderPortal.class).select("id,name").findList();
 
-		JSONSerializer postDetailsSerializer = new JSONSerializer()
-				.include("id", "name").exclude("*").prettyPrint(true);
+		JSONSerializer postDetailsSerializer = new JSONSerializer().include("id", "name").exclude("*")
+				.prettyPrint(true);
 
 		return ok(postDetailsSerializer.serialize(obj));
 
@@ -2844,8 +2595,7 @@ public class Portal extends Controller {
 	public static Result getAGBs(Long pid) {
 
 		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
-			return badRequest(views.html.norights
-					.render("Das Portal existiert nicht"));
+			return badRequest(views.html.norights.render("Das Portal existiert nicht"));
 
 		}
 
@@ -2856,65 +2606,65 @@ public class Portal extends Controller {
 	public static Result getPortalAGBs(Long pid) {
 
 		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
-			return badRequest(views.html.norights
-					.render("Das Portal existiert nicht"));
+			return badRequest(views.html.norights.render("Das Portal existiert nicht"));
 
 		}
 
-		return ok(views.html.portal.portalagbs.render(ProviderPortal.find
-				.byId(pid)));
+		return ok(views.html.portal.portalagbs.render(ProviderPortal.find.byId(pid)));
 
 	}
 
 	public static Result getAGBVersion(Long pid) {
 
 		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
-			return badRequest(views.html.norights
-					.render("Das Portal existiert nicht"));
+			return badRequest(views.html.norights.render("Das Portal existiert nicht"));
 
 		}
 
-		return ok(views.html.portal.agbsversion.render(ProviderPortal.find
-				.byId(pid)));
+		return ok(views.html.portal.agbsversion.render(ProviderPortal.find.byId(pid)));
 
 	}
 
 	public static Result getPrivacyAgreementVersion(Long pid) {
 
 		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
-			return badRequest(views.html.norights
-					.render("Das Portal existiert nicht"));
+			return badRequest(views.html.norights.render("Das Portal existiert nicht"));
 
 		}
 
-		return ok(views.html.portal.privacyversion.render(ProviderPortal.find
-				.byId(pid)));
+		return ok(views.html.portal.privacyversion.render(ProviderPortal.find.byId(pid)));
 
 	}
 
-	public static Result getPrivacyAgreement(Long pid) {
+	/**
+	 * This is called from the App to show the Privacy Agreement in Unitys Rich Text
+	 * format.
+	 * 
+	 * @param pid
+	 * @return
+	 */
+	public static Result getPrivacyAgreement(Long pid, boolean asHTML) {
 
 		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
-			return badRequest(views.html.norights
-					.render("Das Portal existiert nicht"));
+			return badRequest(views.html.norights.render("Das Portal existiert nicht"));
 
 		}
 
-		return ok(views.html.portal.privacy.render(ProviderPortal.find
-				.byId(pid)));
+		ProviderPortal p = ProviderPortal.find.byId(pid);
+		String privacyAgreement = asHTML ? Texts.UnityRichText2HTML(p.getAppPrivacyAgreement())
+				: p.getAppPrivacyAgreement();
 
+		return ok(views.html.simpletext.render(privacyAgreement));
 	}
 
 	public static Result getPortalPrivacyAgreement(Long pid) {
 
 		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
-			return badRequest(views.html.norights
-					.render("Das Portal existiert nicht"));
+			return badRequest(views.html.norights.render("Das Portal existiert nicht"));
 
 		}
 
-		return ok(views.html.portal.portalprivacy.render(ProviderPortal.find
-				.byId(pid)));
+		return ok(views.html.portal.portalprivacy.render(ProviderPortal.find.byId(pid)));
 
 	}
 
@@ -2949,14 +2699,16 @@ public class Portal extends Controller {
 	public static Result getImprint(Long pid) {
 
 		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
-			return badRequest(views.html.norights
-					.render("Das Portal existiert nicht"));
+			return badRequest(views.html.norights.render("Das Portal existiert nicht"));
 
 		}
 
-		return ok(views.html.portal.imprint.render(ProviderPortal.find
-				.byId(pid)));
+		return ok(views.html.portal.imprint.render(ProviderPortal.find.byId(pid)));
 
+//		ProviderPortal p = ProviderPortal.find.byId(pid);
+//		String privacyAgreement = p.getAppPrivacyAgreement();
+//
+//		return ok(views.html.simpletext.render(privacyAgreement));
 	}
 
 	/*
@@ -2964,17 +2716,15 @@ public class Portal extends Controller {
 	 */
 
 	/*
-	 * getLocalPortal() looks for the global variable currentportal. If it is
-	 * not set, it looks at the defaultportal variable, but in most cases
-	 * currentportal should be set, because it gets set to defaultportal onStart
-	 * of Global.
+	 * getLocalPortal() looks for the global variable currentportal. If it is not
+	 * set, it looks at the defaultportal variable, but in most cases currentportal
+	 * should be set, because it gets set to defaultportal onStart of Global.
 	 */
 
 	public static Result updatePortalTemplate(Long pid) {
 		session("currentportal", pid.toString());
 
-		if (Global.securityGuard
-				.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
+		if (Global.securityGuard.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
 
 			return badRequest(views.html.norightsonportal
 					.render("Aus Sicherheitsgründen können nur Benutzer dieses Portals die Template Seite updaten."));
@@ -2983,8 +2733,7 @@ public class Portal extends Controller {
 
 			Application.getLocalPortal().updateHtmlByTemplateNoPassword();
 			Global.updatePortals();
-			return ok(views.html.portal.public_games.render(Application
-					.getLocalPortal().getPublicGamesList()));
+			return ok(views.html.portal.public_games.render(Application.getLocalPortal().getPublicGamesList()));
 
 		}
 
@@ -2993,8 +2742,7 @@ public class Portal extends Controller {
 	public static Result getGameFileSizeForPortal(Long portal, Long game) {
 		if (Game.find.where().eq("id", game).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
@@ -3014,20 +2762,17 @@ public class Portal extends Controller {
 
 		if (Game.find.where().eq("id", game).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
 			Game mygame = Game.find.byId(game);
 
 			response().setContentType("application/x-download");
-			response().setHeader("Content-disposition",
-					"attachment; filename=game.zip");
+			response().setHeader("Content-disposition", "attachment; filename=game.zip");
 			// response().setHeader("Content-Length" , new
 			// File(mygame.getFile()).length()+"");
-			System.out.println("Content-Length: "
-					+ (new File(mygame.getFile()).length()));
+			System.out.println("Content-Length: " + (new File(mygame.getFile()).length()));
 
 			return ok(new File(mygame.getFile()));
 		}
@@ -3037,8 +2782,7 @@ public class Portal extends Controller {
 
 		if (Game.find.where().eq("id", game).findRowCount() != 1) {
 
-			return badRequest(views.html.norights
-					.render("Das Spiel existiert nicht"));
+			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
 		} else {
 
@@ -3053,8 +2797,7 @@ public class Portal extends Controller {
 		byte[] i_file = null;
 
 		try {
-			i_file = IOUtils.toByteArray(new FileInputStream(new File(
-					"public/gqplayer/" + filename)));
+			i_file = IOUtils.toByteArray(new FileInputStream(new File("public/gqplayer/" + filename)));
 		} catch (FileNotFoundException e) {
 			return ok("404: public/gqplayer/" + filename);
 		} catch (IOException e) {
@@ -3069,8 +2812,7 @@ public class Portal extends Controller {
 		byte[] i_file = null;
 
 		try {
-			i_file = IOUtils.toByteArray(new FileInputStream(new File(
-					"public/crossdomain.xml")));
+			i_file = IOUtils.toByteArray(new FileInputStream(new File("public/crossdomain.xml")));
 		} catch (FileNotFoundException e) {
 			return ok("404: crossdomain file");
 		} catch (IOException e) {
@@ -3097,15 +2839,12 @@ public class Portal extends Controller {
 			}
 			String contentType = Files.probeContentType(file.toPath());
 			if (contentType == null)
-				contentType = URLConnection.guessContentTypeFromName(file
-						.getName());
+				contentType = URLConnection.guessContentTypeFromName(file.getName());
 			if (contentType == null)
 				contentType = "unknown";
 			response().setContentType(contentType);
-			response().setHeader(LAST_MODIFIED,
-					String.valueOf(file.lastModified()));
-			response().setHeader(CONTENT_LENGTH,
-					String.valueOf((long) file.length()));
+			response().setHeader(LAST_MODIFIED, String.valueOf(file.lastModified()));
+			response().setHeader(CONTENT_LENGTH, String.valueOf((long) file.length()));
 
 			if (withContent) {
 				byte[] i_file = IOUtils.toByteArray(new FileInputStream(file));
