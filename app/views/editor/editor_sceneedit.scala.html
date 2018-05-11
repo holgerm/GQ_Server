@@ -1,408 +1,133 @@
 @(g:Game,s:models.GameParts.Scene)
 @import util.Global
 
-
-              			@if(s != null && s.getType != null){
-
-
- 				<div class="missionedit" id="sceneedit@s.getId()" name="sceneedit@s.getId()">
- 				
- 				 				              				<div class="scrollable-content" style="overflow:auto; height:100%; width:100%;">
- 				
- 					<div class="options">
- 					<i class="icon-resize-full" onClick="javascript:toggleFullscreen('sceneedit@s.getId()','90%','75%','120px','5%','35px')"></i>
- 					<i class="icon-remove" onClick="javascript:document.getElementById('sceneedit@s.getId()').style.display = 'none';hideInnerMissions('sceneedit@s.getId()');deactiveFullscreen('sceneedit@s.getId()','90%','75%','120px','5%','35px');"></i></div>
-              				<input type="text" class="h2textfield" id="scenename@s.getId" value="@s.getName()"
-              				onchange="javascript:syncName('scene',@s.getId)" onkeydown="document.getElementById('status_scenename@s.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
-              				        <img id="status_scenename@s.getId" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
-              				
-        	<br />
-              				<p class="missionviewtext">
-              				
-              				<em>@Application.getLanguage(s.getType.getName)      @if(s.getHotspots.size <2){ 
-              				
-              				
-@for(hs <- s.getHotspots){
- 
-               <i class="icon-map-marker" style="display:inline-block;" onClick="javascript:hideAddEditMissions();panTo('marker[@hs.getId]');popups[@hs.getId()].openOn(map);"></i>
-
-}
-              				
-              				
-              				
-              				}
-              				</em>
-              				</p>
-              				
-              				
-              				<p>
-              				 @Application.getLanguage("Optionen"):<a href="@Global.SERVER_URL_2/editor/@g.getId()/duplicate/scene/@s.getId()"> <icon class="icon-share" style="display:inline-block;"></icon> @Application.getLanguage("Duplizieren")</a>
-              				 @if(s.getFirstMission() != null){
-              				<span  style="cursor:pointer;" onClick="javascript:startUnityPreview('@Global.SERVER_URL_2/editor/@g.getId/webxml/@s.getFirstMission().getId()');"><icon class="icon-play" style="display:inline-block;"></icon> @Application.getLanguage("Vorschau")</span></p>
-              			}
-              				<br/>
-              				
-              				
-              				
-              				
-              				
-              				
-              				
-              				
-              				<div class="accordion" id="accordion2">
-              			
-              			
-              			
-              			
-              			
-              			
-              			
-              			
-              			
-              			
-              			
-              			
-              			
-              			
-              			
-              			@if(s.hasPossibleParts()){
-              			
-              			
-              				
-              				@if(s.getType() != null){
-   @if(s.getType().canSeeMissions()){
-   
-   
-   
-    @if(s.showMultipleAchordions()){  
-    
-  <div class="accordion-group">
-    <div class="accordion-heading">
-      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne@s.getId">
-       @Application.getLanguage("Seiten")
-      </a>
-    </div>
-    <div id="collapseOne@s.getId" class="accordion-body collapse in">
-      <div class="accordion-inner">
-       
-       
-       
-       } else {
-       
-       <h3>@Application.getLanguage("Seiten")</h3>
-       
-       }
-       
-       
-        @for(s_part <- s.getParts()){
-              	
-              	@if(!s_part.isScene()){
-              		
-              		  @defining(s_part.getMission()) { ms =>
-               
-              
-               
-             <div class="missioninview" id="listmission@ms.getId">  
-               <div class="missionlink" style="display:inline-block;" id="listmissionname@ms.getId"  onClick="javascript:openMission(@ms.getId())" > @ms.getName()
-             </div>
-             @if(s_part.isDeletable){
-               <div class="floatright"><i class="icon-minus-sign" onClick="javascript:deleteItem('Part',@s_part.getId,'mission',@ms.getId)"></i> </div>
-            }
-              
-                           
-              </div>
-            
-            
-               
+@if(s != null && s.getType != null){
+	<div class="missionedit" id="sceneedit@s.getId()" name="sceneedit@s.getId()">
+ 		<div class="scrollable-content" style="overflow:auto; height:100%; width:100%;">
+ 			<div class="options">
+ 				<i class="icon-resize-full" onClick="javascript:toggleFullscreen('sceneedit@s.getId()','90%','75%','120px','5%','35px')"></i>
+ 				<i class="icon-remove" onClick="javascript:document.getElementById('sceneedit@s.getId()').style.display = 'none';hideInnerMissions('sceneedit@s.getId()');deactiveFullscreen('sceneedit@s.getId()','90%','75%','120px','5%','35px');"></i>
+ 			</div>
+            <input 	type="text" class="h2textfield" id="scenename@s.getId" value="@s.getName()"
+              		onchange="javascript:syncName('scene',@s.getId)" onkeydown="document.getElementById('status_scenename@s.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
+            <img id="status_scenename@s.getId" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
+            <br />
+            <p class="missionviewtext">
+            	<em>@Application.getLanguage(s.getType.getName)
+            		@if(s.getHotspots.size <2){ 
+              			@for(hs <- s.getHotspots){
+              				<i class="icon-map-marker" style="display:inline-block;" onClick="javascript:hideAddEditMissions();panTo('marker[@hs.getId]');popups[@hs.getId()].openOn(map);"></i>
+						}
               		}
-              	
-              			}
-      }
-      
-      
-      <br/><br/>
-       <i class="icon-plus-sign" onClick="javascript:hideAddEditMissions();document.getElementById('missionnew_scene@s.getId').style.display = 'block';"></i>    
-         
-          @if(s.showMultipleAchordions()){       			
-    </div>
-  </div>
-  </div>
-  }
-  
-  
-  
-  }
-  }
-  }
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  @if(s.hasPossibleHotspots()){
-  
-     @if(s.getHotspots.size > 1){
-     	
-     	
-     	 @if(s.showMultipleAchordions()){  
-    <div class="accordion-group">
-    <div class="accordion-heading">
-      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo@s.getId">
-       @Application.getLanguage("Hotspots")
-      </a>
-    </div>
-    <div id="collapseTwo@s.getId" class="accordion-body collapse">
-      <div class="accordion-inner">
-       
-     } else {
-     <h2>@Application.getLanguage("Hotspots")</h2>
-     
-     }
-     
-     
-  
-@for(hs <- s.getHotspots){
- 
-<div class="missionlink" id="listhotspot@hs.getId" onClick="javascript:panTo('marker[@hs.getId()]'); popups[@hs.getId()].openOn(map);">
-
-               <i class="icon-map-marker" style="display:inline-block;"></i>
-
- <div style="display:inline-block; width:65%;  white-space: nowrap;  overflow: hidden;  position:relative; top:5px;">
-
- @hs.getName 
- </div>
- 
- </div></br>
-}
-      
-      
-       @if(s.showMultipleAchordions()){  
-    </div>
-  </div>
-  </div>
-  }
-  
-  }
-  
-  }
-  
-  
-  
-  
-  
-  
-  
-  @if(s.hasAttributeTypes()){
-  
-  
-  
-  
-   @if(s.showMultipleAchordions()){  
-   
-  <div class="accordion-group">
-    <div class="accordion-heading">
-      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree@s.getId">
-        @Application.getLanguage("Einstellungen für Unterseiten")
-      </a>
-    </div>
-    <div id="collapseThree@s.getId" class="accordion-body collapse">
-      <div class="accordion-inner">
-      
-      } 
-    
-    	@for(a <- s.getAllAttributes){
-									        				
-									        				@if(a.isEditable){
-									        				
-									        				 <div style="width:80%">
-       @Application.getLanguage(a.getName()) 
-<br/>        
-        
-     
-        
-        @if(a.getFileType == "String"){
-        
-        
-        
-            @if(a.hasPossibleValues()){
-								        	
-								        	
-											<select id = "sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)" >
-								             
-								             <option ></option>
-								              		@for(pm <- a.getPossibleValues()){
-								              			   <option  value = "@pm" @if(s.getAttributeValue(a).equals(pm)){ selected="selected" } >@Application.getLanguage(pm)</option>
-								              			
-								              			
-								              		}   </select>
-								        	
-								        	
-								        } else {
-        
-        
-        <input type="text"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)" onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
-        
-        
-        }
-        
-        }
-        @if(a.getFileType == "StringList"){
-        	
-        	        <input type="hidden" value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId"  >
-        	
-        	
-          		@for(pm <- a.getPossibleValues()){
-          	        <input type="checkbox"/ @if(s.listAttributeContainsKey(s.getAttributeValue(a),pm,false)){ checked = "checked" } onchange="javascript:toggleKeyInList('sceneat@s.getId@a.getId','@pm',false); syncAttr('scene',@s.getId,@a.getId); document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';" >@pm &nbsp;
-          	}
-          	
-          	
-          	}
-          	
-          	 @if(a.getFileType == "QuoteStringList"){
-        	
-        	        <input type="hidden" value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId"  >
-        	
-        	
-          		@for(pm <- a.getPossibleValues()){
-          	        <input type="checkbox"/ @if(s.listAttributeContainsKey(s.getAttributeValue(a),pm,true)){ checked = "checked" } onchange="javascript:toggleKeyInList('sceneat@s.getId@a.getId','@pm',true); syncAttr('scene',@s.getId,@a.getId); document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';" >@pm &nbsp;
-          	}
-          	
-          	
-          	}
-        
-        
-         @if(a.getFileType == "QuoteString"){
-        
-        
-           @if(a.hasPossibleValues()){
-								        	
-								        	
-											<select id = "sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)" >
-								             
-								             <option ></option>
-								              		@for(pm <- a.getPossibleValues()){
-								              			   <option  value = "@pm" @if(s.getAttributeValue(a) != null && s.getAttributeValue(a).equals(pm)){ selected="selected" } >@Application.getLanguage(pm)</option>
-								              			
-								              			
-								              		}   </select>
-								        	
-								        	
-								        } else {
-        
-        
-        
-        <input type="text"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId,true)" onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
-        
-        }
-        
-        
-        }
-
-         @if(a.getFileType == "QuoteStringTextArea"){
-        
-        
-        
-        
-                 <textarea rows="8" cols="100" type="text"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId,true)"
-                        	        onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");">@s.getAttributeValue(a)</textarea>
-        
-        
-        
-        
-        }
-        
-         
-        @if(a.getFileType == "int"){
-        
-        <input type="number"/ value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)" onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
-        
-        }
-        
-        @if(a.getFileType == "boolean"){
-        
-        <input type="checkbox"/ id="sceneat@s.getId@a.getId" @if(s.getAttributeValue(a) == "true"){ checked = "checked" } onchange="javascript:syncAttr('scene',@s.getId,@a.getId)" >
-        
-        }
-        
-        
-         @if(a.getFileType == "file"){
-         	
-         	
-         	
-         
-         	
-         	
-         	
-        	<div id="scene@s.getId()fileattr@a.getId()" name="scene@s.getId()fileattr@a.getId()" class="fileattr">
-        	         	@if(s.getAttributeValue(a) != ""){
-         		<a href="@s.getAttributeValue(a)" target="_blank">
-
-@editor_athumbnail(s.getAttributeValue(a))
-</a>
-         		
-         	}
-         	</div>
-         	
-         	
-         	
-         	
-         	<div id="scenefile_file_at@s.getId@a.getId" style="inline-block">
-        <input type="file"/ id="scenefileat@s.getId@a.getId" onchange="javascript:uploadFile('scene',@s.getId,@a.getId)" >
-        
-        <a  onClick="javascript:document.getElementById('scenefile_file_at@s.getId@a.getId').style.display='none';document.getElementById('scenefile_text_at@s.getId@a.getId').style.display='inline-block';">@Application.getLanguage("Variabel")</a>
-        </div>
-                <div id="scenefile_text_at@s.getId@a.getId" style="display:none;">
-                       <input type="text" value="@s.getAttributeValue(a)" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)" onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
-                      <a onClick="javascript:document.getElementById('scenefile_text_at@s.getId@a.getId').style.display='none';document.getElementById('scenefile_file_at@s.getId@a.getId').style.display='inline-block';">@Application.getLanguage("Datei")</a>
-              
-               </div>
-        
-        }
-                <img id="status_sceneat@s.getId@a.getId" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
-        
-        
-        
-     
-        </div>
-        <br/>
-         <br/>
-         
-          <br/>
-									        				
-									        				}
-									        				}
-									        				
-    
-    
-     @if(s.showMultipleAchordions()){  
-     
-      </div>
-     
-      
-    </div>
-  </div>
-  }
-  
-  }
-  
-  
-  
-  
-  </div>
-  
-  
-  
-  
-  
-  
-</div>
-              				
-              		
-              	</div>
+              	</em>
+      		</p>
+            <p>
+      			@Application.getLanguage("Optionen"):<a href="@Global.SERVER_URL_2/editor/@g.getId()/duplicate/scene/@s.getId()"> <icon class="icon-share" style="display:inline-block;"></icon> @Application.getLanguage("Duplizieren")</a>
+              	@if(s.getFirstMission() != null){
+              		<span  style="cursor:pointer;" onClick="javascript:startUnityPreview('@Global.SERVER_URL_2/editor/@g.getId/webxml/@s.getFirstMission().getId()');"><icon class="icon-play" style="display:inline-block;"></icon> @Application.getLanguage("Vorschau")</span>
               	}
+      		</p>
+    		<br/>
+              				
+			<div class="accordion" id="accordion2">
+				@if(s.hasPossibleParts()){
+					@if(s.getType() != null){
+						@if(s.getType().canSeeMissions()){
+							@if(s.showMultipleAchordions()){  
+								<div class="accordion-group">
+    								<div class="accordion-heading">
+      									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne@s.getId">
+       										@Application.getLanguage("Seiten")
+      									</a>
+    								</div>
+    								<div id="collapseOne@s.getId" class="accordion-body collapse in">
+      									<div class="accordion-inner">
+							} else {
+								<h3>@Application.getLanguage("Seiten")</h3>
+							}
+							@for(s_part <- s.getParts()){
+				              	@if(!s_part.isScene()){
+								@defining(s_part.getMission()) { ms =>
+									<div class="missioninview" id="listmission@ms.getId">  
+						               	<div class="missionlink" style="display:inline-block;" id="listmissionname@ms.getId"  onClick="javascript:openMission(@ms.getId())" > @ms.getName()
+						            	</div>
+						          		@if(s_part.isDeletable){
+						          			<div class="floatright">
+						               			<i class="icon-minus-sign" onClick="javascript:deleteItem('Part',@s_part.getId,'mission',@ms.getId)"></i>
+						               		</div>
+						      			}
+									</div>
+								}
+								}
+							}
+							<br/>
+							<br/>
+       						<i class="icon-plus-sign" onClick="javascript:hideAddEditMissions();document.getElementById('missionnew_scene@s.getId').style.display = 'block';"></i>    
+         
+							@if(s.showMultipleAchordions()){       			
+										</div>
+  									</div>
+  								</div>
+  							}
+						}
+					}
+				}
+  
+  				@if(s.hasPossibleHotspots()){
+					 @if(s.getHotspots.size > 1){
+						@if(s.showMultipleAchordions()){  
+ 							<div class="accordion-group">
+								<div class="accordion-heading">
+									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo@s.getId">
+										@Application.getLanguage("Hotspots")
+									</a>
+    							</div>
+   								<div id="collapseTwo@s.getId" class="accordion-body collapse">
+      								<div class="accordion-inner">
+						} else {
+     						<h2>@Application.getLanguage("Hotspots")</h2>
+						}
+  
+						@for(hs <- s.getHotspots){
+							<div class="missionlink" id="listhotspot@hs.getId" onClick="javascript:panTo('marker[@hs.getId()]'); popups[@hs.getId()].openOn(map);">
+								<i class="icon-map-marker" style="display:inline-block;"></i>
+								<div style="display:inline-block; width:65%;  white-space: nowrap;  overflow: hidden;  position:relative; top:5px;">
+									@hs.getName 
+								</div>
+							</div>
+							</br>
+						}
+      
+						@if(s.showMultipleAchordions()){  
+    								</div>
+  								</div>
+  							</div>
+  						}
+					}
+				}
+  
+				@if(s.hasAttributeTypes()){
+				@if(s.showMultipleAchordions()){  
+					<div class="accordion-group">
+						<div class="accordion-heading">
+							<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree@s.getId">
+        						@Application.getLanguage("Einstellungen für Unterseiten")
+      						</a>
+    					</div>
+    					<div id="collapseThree@s.getId" class="accordion-body collapse">
+      						<div class="accordion-inner">
+				} 
+    
+				@scene_attributes(s)
+
+				@if(s.showMultipleAchordions()){  
+							</div>
+						</div>
+					</div>
+  				}
+			}
+  
+		</div>
+	</div>
+</div>
+}

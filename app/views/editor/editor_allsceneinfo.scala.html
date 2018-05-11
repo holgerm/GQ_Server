@@ -1,9 +1,7 @@
 @(g:Game, s:models.GameParts.Scene)
-
 @import models.GameParts._
-
-	<div id="allscenecontent_@s.getId()">
-				@editor_newmissioninscene(g,s)
-				@editor_newhotspotinscene(g,s)
-				@editor_sceneedit(g,s)	
-			</div>
+<div id="allscenecontent_@s.getId()">
+	@editor_newmissioninscene(g,s)
+	@editor_newhotspotinscene(g,s)
+	@editor_sceneedit(g,s)
+</div>

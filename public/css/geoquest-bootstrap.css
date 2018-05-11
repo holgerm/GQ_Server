@@ -1,6 +1,8 @@
 @charset "UTF-8";
 /* CSS Document */
 
+ 
+
 /* override bootstrap styles */
 body {
 	color: #000;
@@ -8,6 +10,7 @@ body {
 	padding-top: 100px;
 }
 
+	
 @media ( max-width : 979px) {
 	body {
 		padding-top: 0px;
