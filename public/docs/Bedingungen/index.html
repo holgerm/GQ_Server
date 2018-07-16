@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="https://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Unbenanntes Dokument</title>
+</head>
+
+<body>
+<h1>Bedingungen<br />
+</h1>
+<p>Bedingungen sind die größte Schwierigkeit, bei der Benutzung von Variablen in geoquest. Eine Bedingung kann nämlich schonmal kompliziert aussehen.<br />
+  Die Grundidee ist aber eigentlich simpel:
+  Im Grunde geht es darum einen Ausdruck aufzuschreiben, der &quot;wahr&quot; oder &quot;falsch&quot; sein kann. <br />
+  Schwieriger ist es, die richtige Schreibweise zu lernen.<br />
+</p>
+<h3><br />
+  Einzelne Bedingungen
+</h3>
+<p>Wir nehmen im folgenden an, dass wir folgende Variablen gesetzt haben:</p>
+<p>a = 0<br />
+  b = &quot;eins&quot;<br />
+  c = true<br />
+  d = a+1 </p>
+<p>Wir können nun bestimmte Aktionen ausführen, wenn diese Variablen bestimmte Werte annehmen, z.B.<br />
+</p>
+<p>falls die Textvariable b den Text &quot;zwei&quot; beinhaltet:<br />
+  b = &quot;zwei&quot; (ist mit den oben definierten Variablen nicht wahr)<br />
+  <br />
+  falls die Zahlvariable a kleiner als 3 ist<br />
+  a &lt; 3 (ist mit den oben definierten Variablen wahr)</p>
+<p>falls die Wahrheitsvariable c wahr ist<br />
+  c = true (ist mit den oben definierten Variablen wahr)</p>
+<p>falls die Wahrheitsvariable c unwahr ist<br />
+  c = false (ist mit den oben definierten Variablen nicht wahr)</p>
+<p>falls die Zahlvariable d größer als 1 ist<br />
+  d &gt; 1 (ist mit den oben definierten Variablen nicht wahr) </p>
+<p>falls die Zahlvariable d größer oder gleich 1 ist<br />
+  d &gt;= 1 (ist mit den oben definierten Variablen wahr) <br />
+  <br />
+  <br />
+  <br />
+  <br />
+  Wir können auch zwei Variablen miteinander vergleichen:<br />
+  <br />
+  falls a gleich d ist:<br />
+  a = d (ist mit den oben definierten Variablen nicht wahr)</p>
+<p>falls a ungleich d ist:<br />
+  a = d (ist mit den oben definierten Variablen wahr)</p>
+<p>falls a kleiner als d ist:<br />
+  a &lt; d (ist mit den oben definierten Variablen wahr)</p>
+usw.<br />
+<strong><br />
+In geoquest können in Bedingungen keine Operatoren, wie +(plus), -(minus),*(mal) oder /(geteilt) benutzt werden. Wenn eine Variable mit einer mathematischen Rechnung verglichen werden soll, muss diese vorher mit der Aktion &quot;Variable neuen Wert zuweisen&quot; in eine neue Variable geschrieben werden.</strong><br />
+<br />
+<br />
+Diese Operatoren lassen sich einfach über den gelben Erweitert-Button hinzufügen, wenn du sie mal vergessen hast:<br />
+<br />
+<img src="002.png" alt="" width="456" height="273" />
+<p>&nbsp;</p>
+<p>Im Textfeld könnte das also z.B. so aussehen:<br />
+  <br />
+  <img src="004.png" alt="" width="316" height="156" /></p>
+<p>Nun würden alle Aktionen, die du unter &quot;Dann&quot; weiter unten anlegst, ausgeführt werden, weil<br />
+a = 0 und d = a +1 = 1 ist und weil 0 &lt;= 1 wahr ist, wird der gesamte Ausdruck wahr.</p>
+<p><br />
+  <br />
+</p>
+<h3>Mehrere Bedingungen</h3>
+<p>Wir nehmen im folgenden wieder an, dass wir folgende Variablen gesetzt haben:</p>
+<p>a = 0<br />
+  b = &quot;eins&quot;<br />
+  c = true<br />
+  d = a+1 </p>
+<p>Manchmal möchtest du aber vielleicht mehr als eine Bedingung überprüfen. Dazu müssen zwei oder mehrere Bedingungen logisch verknüpft werden.<br />
+  <br />
+  Es gibt drei Arten von logischer Verknüpfung, die du ebenfalls leicht unter dem gelben &quot;Erweitert&quot;-Button hinzufügen kannst:<br />
+  <br />
+  <img src="003.png" alt="" width="518" height="184" /><br />
+  <br />
+AND/UND -&gt; Die Bedingung wird wahr, wenn alle Teilbedingungen wahr sind. Sollte nur eine der Teilbedinugen unwahr sein, so ist die gesamte Bedingung unwahr, z.B.:</p>
+<p>a = 0 AND b = &quot;eins&quot; AND c = true AND d =1 (ist wahr)<br />
+  a = 0 AND b = &quot;eins&quot; AND c = true AND d =2 (ist unwahr)<br />
+  <br />
+  <br />
+  OR/ODER -&gt; Die Bedingung ist wahr, wenn eine der Teilbedingungen wahr ist. Es können alle bis auf eine der Teilbedingungen unwahr sein und die gesamte Bedingung wird dennoch wahr sein, z.B.:</p>
+<p>a &lt; 0 OR b = &quot;zwei&quot; OR c = false OR d = 1 (ist wahr, weil d = 1 wahr ist)<br />
+  a &lt; 0 OR b = &quot;zwei&quot; OR c = false OR d = 2 (ist unwahr, weil keine der Teilbedingungen wahr ist)<br />
+  <br />
+  <br />
+  !/NOT/NICHT -&gt;
+  Die Bedingung ist wahr, wenn die Bedingung in der Klammer unwahr ist. So kann jederzeit das Gegenteil einer Bedinungskette abgefragt werden.<br />
+  a != d ist das gleiche wie !(a = d)<br />
+  <br />
+  Anhand der Beispiele von oben erhalten wir nun gegenteilige Ergebnisse, wenn wir die Bedingungen in negierte Klammern stecken:<br />
+  !(a = 0 AND b = &quot;eins&quot; AND c = true AND d =1) (ist unwahr, weil die Bedingung in der Klammer wahr ist, siehe oben)<br />
+!(a = 0 AND b = &quot;eins&quot; AND c = true AND d =2) (ist wahr, weil die Bedingung in der Klammer unwahr ist, siehe oben)</p>
+<p><br />
+</p>
+<h3>Klammernsetzung</h3>
+<p>Wir nehmen im folgenden wieder an, dass wir folgende Variablen gesetzt haben:</p>
+<p>a = 0<br />
+  b = &quot;eins&quot;<br />
+  c = true<br />
+  d = a+1 </p>
+<p>Um mehrere dieser logischen Verknüpfungen gleichzeitig zu benutzen, haben wir anhand der Nicht-Verknüpfung schon gesehen, dass es notwendig ist Klammern zu setzen.<br />
+Sobald zwei verschiedene logische Verknüpfung benutzt werden, sind Klammern sofort einzusetzen und eine weitere logische Verknüpfung dazwischen zu setzen, z.B.</p>
+<p><br />
+  (a &lt;= d AND b = &quot;eins&quot;) OR (c = false AND d = 1)<br />
+(--------- wahr --------) OR (------ unwahr -------) = wahr</p>
+<p>(a &lt;= d OR b = &quot;eins&quot;) AND (c = false OR d = 1)<br />
+(--------- wahr -------) AND(-------wahr-------) = wahr</p>
+<p><br />
+  Es können aber trotzdem mehrere Bedinungen des gleichen Typs ohne Klammern verknüpft werden:<br />
+  <br />
+  a = 0 OR c = false OR a &gt;= 1 OR (b = &quot;eins&quot; AND d &gt;= 2 AND d &lt;= 10)   -----&gt;<br />
+  (wahr) OR (unwahr) OR (unwahr) OR ((wahr) AND (unwahr) AND (wahr)) -----&gt;<br />
+  (wahr) OR (unwahr) OR (unwahr) OR (unwahr)
+  -----&gt; (wahr)<br />
+  <br />
+  <br />
+  Außerdem kann eine beliebig tiefe Verschachtelung von Klammern benutzt werden:
+<br />
+<br />
+a &lt; 100 AND (a &lt; 99 OR (a &gt; 98 AND !(a &lt;97 OR a &gt; 96))) ------&gt;<br />
+(wahr) AND (wahr OR (unwahr AND !(wahr OR unwahr))) ------&gt;<br />
+(wahr) AND (wahr OR (unwahr AND !(wahr))) -----&gt;<br />
+(wahr) AND (wahr OR (unwahr AND unwahr)) ------&gt;<br />
+(wahr) AND (wahr OR (unwahr))
+--------&gt;<br />
+(wahr) AND (wahr) -----&gt;<br />
+(wahr)</p>
+<p>&nbsp;</p>
+<p>Solltest du noch weitere Fragen zum Thema Bedingungen haben, scheue dich nicht nachzufragen.<br />
+  </strong><br />
+  <br />
+  <br />
+  <strong><br />
+  <br />
+</strong></p>
+</body>
+</html>

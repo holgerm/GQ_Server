@@ -17,8 +17,8 @@
 
 <base href="@Global.SERVER_URL">
 
-      <link rel="icon" type="image/png" href="https://www.quest-mill.com/geoquest/favicon.png" />
-      <link href='http://fonts.googleapis.com/css?family=Merriweather+Sans:300,400' rel='stylesheet' type='text/css'>
+      <link rel="icon" type="image/png" href="https:/quest-mill.intertech.de/assets/favicon.png" />
+      <link href='https://fonts.googleapis.com/css?family=Merriweather+Sans:300,400' rel='stylesheet' type='text/css'>
 
       <!-- Le styles -->
     <link href="@Global.SERVER_URL_2@routes.Assets.at("css/bootstrap.css")" rel="stylesheet">
@@ -95,7 +95,7 @@ success: function(data){
    }
 
 </script>
-<img src="https://quest-mill.com/geoquest/setlanguage.php?lang=@Application.getLanguageCode()" style="display:none" />
+<img src="https://quest-mill-web-intertech.de/geoquest/setlanguage.php?lang=@Application.getLanguageCode()" style="display:none" />
 <span>
 <img style="cursor:pointer;" onClick="javascript:SetLanguage('de');" alt="Deutsch" src="@Global.SERVER_URL_2@routes.Assets.at("img/flags/de.png")" width="20" />
 </span><span><img style="cursor:pointer;" onClick="javascript:SetLanguage('en');" alt="English" src="@Global.SERVER_URL_2@routes.Assets.at("img/flags/en.jpg")" width="20" />
@@ -157,7 +157,7 @@ Abbrechen
       @defining(Application.getLocalPortal()) { portal =>
 
 
-<div style="position:fixed; top:0px; height:80px; @if(portal.getId().equals(61L)){ background-position: -500px 900px; background-image:url('https://quest-mill.com/geoquest/bg_login.jpg'); } else { background-color:#FFFFFF;} width:100%; z-index:1000000;">
+<div style="position:fixed; top:0px; height:80px; @if(portal.getId().equals(61L)){ background-position: -500px 900px; background-image:url('https://quest-mill-web-intertech.de/geoquest/bg_login.jpg'); } else { background-color:#FFFFFF;} width:100%; z-index:1000000;">
 
 
 <div class="options">
@@ -173,7 +173,7 @@ Abbrechen
 	
 	                    <div style="  cursor:pointer; left:100px; z-index:10000000; width:200px;  height:80px; position:absolute; top:5px; height:50px;" onClick="javascript:window.location.href = '@portal.getTemplateServerURLDropSlash';" > </div>	
 	
-												<img src="https://quest-mill.com/geoquest/logo_wide.png" style="display:inline-block; position:relative; left:100px; top:15px; height:50px; width:200px; padding-right:10px;  ">
+												<img src="https://quest-mill-web-intertech.de/geoquest/logo_wide.png" style="display:inline-block; position:relative; left:100px; top:15px; height:50px; width:200px; padding-right:10px;  ">
 
 	
 	
@@ -379,8 +379,8 @@ Abbrechen
 </div>
 	<div id="unityPlayer" style="position:absolute; top:100px; left: 200px; width: 375px; height: 500px; background-color:#FFF; margin: 0px auto; z-index:1000000;">
 				<div class="missing" style="position:relative; left:50px; top:200px;">
-					<a href="http://unity3d.com/webplayer/" title="Unity Web Player. Install now!">
-						<img alt="Unity Web Player. Install now!" src="http://webplayer.unity3d.com/installation/getunity.png" width="193" height="63" />
+					<a href="https://unity3d.com/webplayer/" title="Unity Web Player. Install now!">
+						<img alt="Unity Web Player. Install now!" src="https://webplayer.unity3d.com/installation/getunity.png" width="193" height="63" />
 					</a>
 				</div>
 			</div>
@@ -496,7 +496,7 @@ Wilkommen bei dieser kurzen Einführung zum GeoQuest Editor für mobile Android-
 <script type='text/javascript' src='https://ssl-webplayer.unity3d.com/download_webplayer-3.x/3.0/uo/jquery.min.js'></script>
         <script type="text/javascript">
 		<!--
-		var unityObjectUrl = "http://webplayer.unity3d.com/download_webplayer-3.x/3.0/uo/UnityObject2.js";
+		var unityObjectUrl = "https://webplayer.unity3d.com/download_webplayer-3.x/3.0/uo/UnityObject2.js";
 		if (document.location.protocol == 'https:')
 			unityObjectUrl = unityObjectUrl.replace("http://", "https://ssl-");
 		document.write('<script type="text\/javascript" src="' + unityObjectUrl + '"><\/script>');

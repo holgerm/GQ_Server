@@ -86,7 +86,7 @@ public class Portal extends Controller {
 
 		if (pid == 1L) {
 
-			return redirect("https://quest-mill.com/geoquest/private.php");
+			return redirect("https://quest-mill-web-intertech.de/geoquest/private.php");
 
 		} else if (pid == 61L || !oeffentlichespiele) {
 
@@ -115,7 +115,7 @@ public class Portal extends Controller {
 		long pid = Application.getLocalPortal().getId();
 		if (pid == 1L) {
 
-			return redirect("https://quest-mill.com/geoquest/private.php");
+			return redirect("https://quest-mill-web-intertech.de/geoquest/private.php");
 
 		} else if (pid == 61L) {
 
@@ -2364,7 +2364,7 @@ public class Portal extends Controller {
 
 		if (pid == 1L) {
 
-			return redirect("https://quest-mill.com/geoquest/private.php");
+			return redirect("https://quest-mill-web-intertech.de/geoquest/private.php");
 
 		} else 
 			if (pid == 61L

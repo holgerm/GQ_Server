@@ -1,0 +1,80 @@
+
+<h1>Frage (Text)<br />
+  <br />
+</h1>
+<p>Unter einer Textfrage versteht man eine Frage mit einem Texteingabefeld, in die der Spieler einen beliebigen Antworttext eingeben kann.<br />
+Das sieht in der einfachsten Version so aus:<br />
+<br />
+</p>
+<p><img src="001.png" width="351" height="469" border="1"/><br />
+  <br />
+  <br />
+Zunächst blicken wir auf die Einstellungsmöglichkeiten dieses Seitentyps:</p>
+<table width="100%" border="0" cellspacing="0" cellpadding="10">
+  <tr>
+    <td width="210"><img src="002.png" width="254" height="317" border="1" /></td>
+    <td width="80%" valign="top"><p><strong>Fragetext:</strong> Der Text, welcher im oberen Bereich der Seite angezeigt wird.</p>
+      <p><strong>Antwortfeld, wenn keine Antwort:</strong> Der Text, welcher im Textfeld zu sehen ist, bevor etwas eingegeben wurde.<br />
+        <strong><br />
+    Bis zum Erfolg wiederholen?:</strong><strong></strong> Wenn hier ein Haken gesetzt ist, führt die falsche Beantwortung der Frage des Spielers automatisch zu einem erneuten Aufruf der Seite. Die Frage wird so lange neu angezeigt, bis der Spieler die richtige Antwort eingibt.</p>
+    <p><strong>Hintergrund:</strong> wird aktuell ignoriert.</p></td>
+  </tr>
+</table>
+<p><br />
+</p>
+<p><br />
+  Um zu definieren, welche Eingaben als richtig und welche als falsch deklariert werden, befolge die folgenden Schritte:<br />
+  <br />
+<br />
+  1. Unter Inhalt, stelle so viele richtige Antworten, wie du willst ein. Diese können entweder direkt als Text oder als reguläre Ausdrücke eingegeben werden. (Mehr dazu später.)<br />
+  <br />
+<img src="004.png" alt="" width="383" height="261" border="1" /><br />
+<br />
+<br />
+2. Auf &quot;Ereignisse&quot; klicken<br />
+<br />
+<img src="003.png" alt="" width="390" height="98" border="1" /><br />
+<br />
+3A. Falls nur zwischen Richtig oder Falsch entschieden werden soll, bei erfolgreiche Interaktion (richtiger Text eingegeben) und erfolgloser Interaktion (nicht der richtige Text eingegeben) mit einem Klick auf &quot;+&quot; die gewünschten Aktionen hinzufügen.</p>
+<p><img src="../FrageMultipleChoice/003.jpg" alt="" width="357" height="360" border="1" /><br />
+  <br />
+  Falls es gewünschte Aktionen für beide Fälle gibt (z.B. ein Seitenwechsel) können diese unter &quot;Ende der Mission&quot; hinzugefügt werden.
+<br />
+  <br />
+  <br />
+  3B. Falls zwischen den verschiedenen Einzel-Antworten genauer unterschieden werden soll, so muss nun unter &quot;Ende der Mission&quot; für jede mögliche Eingabe ein Fall angelegt werden.<br />
+  <br />
+Dazu geht man folgendermaßen vor:</p>
+<p>4B.1 Unter &quot;Ende der Mission&quot; auf das + Klicken und in der Liste &quot;Wenn-Dann-Bedingung&quot; auswählen und hinzufügen.</p>
+<p><img src="../FrageMultipleChoice/004.jpg" alt="" width="427" height="192" border="1" /><br />
+  <br />
+  4B.2 Wieder zu &quot;Ende der Mission herunterscrollen&quot; und auf die neu angelegte &quot;Wenn-Dann-Bedingung&quot; klicken.<br />
+  <br />
+  <img src="../FrageMultipleChoice/005.jpg" alt="" width="441" height="215" border="1" /><br />
+  <br />
+  4B.3 In dem nun geöffneten Fenster gibt es nun zwei Interaktionsmöglichkeiten: Eine Bedinung und eine Aktion die darauf folgt definieren.<br />
+  Für die Bedinung gibt es vorgefertigte Einstellungen, die mit einem Klick auf &quot;+Inhalte&quot; oder &quot;+Erweitert&quot; aufgerufen werden können.<br />
+  <br />
+  Für den hier vorliegenden Fall, klicken wir nun auf &quot;+Inhalte&quot; und wählen die gewünschte Antwort aus. Hierbei können allerdings keine regulären Ausdrücke verwendet werden, sondern nur direkte Texteingaben.<br />
+  <br />
+  <img src="../FrageMultipleChoice/006.jpg" alt="" width="420" height="227" border="1" /><br />
+  <br />
+  <br />
+  <br />
+  4B.4
+  Das Fenster müsste nun ungefähr so aussehen:<br />
+  <br />
+  <img src="../FrageMultipleChoice/007.jpg" alt="" width="526" height="165" border="1" /></p>
+<p><strong>ACHTUNG! Wenn du den Antworttext abänderst, musst du diese Änderung auch in der Wenn-Dann-Bedingung angeben.</strong></p>
+<p><br />
+  <br />
+  4B.5 Nun können weiter unten in dem Fenster die Aktionen, die bei der Auswahl dieser Antwort ausgeführt werden sollen, definiert werden.<br />
+  <br />
+  <img src="../FrageMultipleChoice/008.jpg" alt="" width="472" height="150" border="1" /><br />
+  <br />
+  Wenn also zum Beispiel bei der Auswahl einer bestimmten Antwort, eine bestimmte Seite aufgerufen werden soll, kann hier die Aktion &quot;Seite aufrufen&quot; und darin die gesuchte Seite spezifiziert werden.
+  <br />
+  <br />
+  <img src="../FrageMultipleChoice/009.jpg" alt="" width="362" height="167" border="1" /><strong><br />
+  <br />
+  </strong></p>

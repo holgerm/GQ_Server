@@ -1,0 +1,57 @@
+
+<h1>NPC Dialog</h1>
+<p><br />
+  Mit diesem Seitentyp ist es möglich den Spieler an einem Gespräch mit einem oder mehreren &quot;Non-Player-Characters&quot; , also virtuellen Personen teilhaben zu lassen.<br />
+  Im Grunde handelt es sich dabei um eine Kombination aus Bild und Text-Absätzen, wobei letzere einer nach dem Anderen nach einem Klick auf einen Button aufgerufen werden.<br />
+  In Kombination mit den Fragen-Seitentypen lassen sich auch komplexe Dialogsysteme aufbauen.
+  <br />
+<br />
+  Auf Adnroid sieht dieser Seitentyp ungefähr so aus:<br />
+  <br />
+<img src="001.png" width="311" height="412" border="1" /><br />
+</p>
+<p>Um Absätze zu definieren, lege unter dem Reiter &quot;Inhalt&quot; Objekte vom Typ &quot;Dialog-Item&quot; an. Ein Dialog-Item steht jeweils für einen Absatz und der Inhalt des Textfeldes ist der angezeigte Text. Durch einen Klick auf den Text &quot;Dialog-Item&quot; vor einem jeweiligen Textfeld, erhälst du ein Fenster mit weiteren Einstellungen zu diesem Dialog-Item, welche weiter unten genauer definiert sind.</p>
+<p><img src="002.png" width="402" height="267" /></p>
+<p>Bei der Benutzung von mehreren Dialog-Iems sieht die Seite dann so aus:<br />
+  <br />
+  <img src="004.png" alt="" width="354" height="476" /><br />
+  <br />
+  <br />
+  Folgende Einstellungsmöglichkeiten gibt es für diesen Seitentyp:<br />
+</p>
+<table width="100%" border="0" cellspacing="0" cellpadding="10">
+  <tr>
+    <td width="210"><img src="003.png" alt="" width="283" height="647" /></td>
+    <td width="80%" valign="top"><p><strong>Bild:</strong> Die Bilddatei, die im oberen Teil der Seite angezeigt wird. Diese Datei kannst du auch direkt von einer Webseite per URL verknüpfen oder eine Variable von einem bereits aufgenommenen Foto benutzen. Klicke dazu auf &quot;Variabel&quot; neben dem Dateifeld und gib die URL (mit &quot;https://&quot; vorne) oder die Variable (mit &quot;@_&quot; vorne) in das nun sichtbare Textfeld ein. Mit einem Klick auf &quot;Datei&quot; gelangst du zurück zu der Möglichkeit eine Bilddatei hochzuladen.<br />
+        <img src="005.png" alt="" width="182" height="66" /></p>
+      <p><strong>Modus: </strong>Die Art und Weise, wie die einzelnen Absätze eingeblendet werden.<br />
+        <br />
+        Komplett anzeigen -&gt; sofortige Anzeige<br />
+        Wordticker -&gt; Einen Buchstaben nach dem anderen einblenden, als würde der Text gerade live getippt werden. Für diesen Modus sind weiter unten noch weitere Einstellungsmöglichkeiten vorhanden.</p>
+      <p><strong>Weiter-Button-Beschriftung: </strong>Die Beschriftung des Buttons, falls der gerade aktuelle Absatz nicht der Letzte ist.</p>
+      <p><strong>Beenden-Button-Beschriftung: </strong>Die Beschriftung des Buttons, falls der gerade aktuelle Absatz der Letzte ist.</p>
+      <p><strong>Textgröße: </strong>Die Größe des Textes der Absätze.</p>
+      <p><strong>Wordticker überspringbar?: </strong>Wenn dies gesetzt ist, lässt sich der Wordticker mit einem Tippen auf den Button sofort überspringen, sodass der gesamte Absatz sofort sichtbar ist.</p>
+      <p><strong>Wordticker-Geschwindigkeit: </strong>Die Geschwindigkeit in Millisekunden in der der Wordticker einen neuen Buchstaben anzeigt. Eine kleinere Zahl führt zu einem schnelleren Aufdecken des Absatzes, eine größere Zahl zu einem langsameren Aufdecken.<br />
+        <br />
+    </p></td>
+  </tr>
+</table>
+<p><br />
+  Zusätzlich gibt es noch Einstellungsmöglichkeiten für jeden Absatz. So kann jeder Absatz einen Sprecher und eine dazugehörige Audio-Datei erhalten, die abgespielt wird, sobald dieser Absatz angezeigt wird. So kann zum Beispiel eine Audio-Tour zum Mitlesen erstellt werden.<br />
+</p>
+<table width="100%" border="0" cellspacing="0" cellpadding="10">
+  <tr>
+    <td width="210" valign="top"><img src="007.png" width="403" height="271" /></td>
+    <td width="80%" valign="top"><p><strong>Sprecher:</strong> Der Text, der in dicker Schrift vor dem jeweiligen Absatz steht. Dies ist als Anzeige des Namen der Person gedacht, kann aber auch anderweitig benutzt werden.</p>
+      <p><strong>Audio-Datei: </strong>Die Datei, welche abgespielt wird, sobald der Absatz angezeigt wird (oder der Wordticker für diesen Abstaz startet).</p>
+      <p><strong>Bis Ende von Audio-Datei blockieren?: </strong>Wenn dieses Häkchen gesetzt ist, lässt sich der Button unten auf der Seite erst betätigen, wenn die Audio-Datei fertig abgespielt ist. Dies empfiehlt sich zum Beispiel bei Audio-Touren.<br />
+        <br />
+      </p></td>
+  </tr>
+</table>
+<p>  <br />
+  <br />
+  <strong><br />
+  <br />
+</strong></p>

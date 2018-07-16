@@ -49,7 +49,7 @@ public class Signup extends Controller {
 
 		if (pid == 61L) {
 
-			return redirect("https://www.quest-mill.com/geoquest/unverified.php");
+			return redirect("https:/quest-mill.intertech.de/assets/unverified.php");
 
 		} else {
 			return ok(unverified.render());

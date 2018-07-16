@@ -22,6 +22,7 @@ import models.GameParts.MissionType;
 
 import java.awt.Color;
 import java.awt.Image;
+import java.io.Console;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -1863,20 +1864,23 @@ public class ProviderPortal extends Model {
 	public String getPathTo(play.api.mvc.Call x) {
 
 		String z = x.url();
-
-		if (!(TemplateServerURL.equals(""))) {
-			if ((!TemplateServerURL.contains(Global.SERVER_URL))) {
-
-				System.out.println("Rearranging path string");
-				if (z.startsWith("/" + String.valueOf(id))) {
-
-					String y = String.valueOf(z.subSequence(String.valueOf(id).length() + 1, z.length()));
-
-					return y;
-				}
-			}
-		}
-
+		
+//		if (!(TemplateServerURL.equals(""))) {
+//			if ((!TemplateServerURL.contains(Global.SERVER_URL))) {
+//
+//				System.out.println("Rearranging path string (TMPL_Server_URL: " + TemplateServerURL + " != Global_Server_URL: " + Global.SERVER_URL);
+//				if (z.startsWith("/" + String.valueOf(id))) {
+//
+//					String y = String.valueOf(z.subSequence(String.valueOf(id).length() + 1, z.length()));
+//					System.out.println("  getPathTo(" + x.toString() + ") -> " + y);
+//					System.out.println("ProviserPortal.getPathTo(): z = " + z + " --> " + y);
+//
+//					return y;
+//				}
+//			}
+//		}
+//
+//		System.out.println("ProviserPortal.getPathTo(): z = " + z);
 		return z;
 
 	}

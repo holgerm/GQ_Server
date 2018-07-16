@@ -42,7 +42,7 @@ public class Global extends GlobalSettings {
 		}
 	}
 
-	private static String SERVER_URL_2_FALLBACK = "http://qeevee.org:9091";
+	private static String SERVER_URL_2_FALLBACK = "https://quest-mill.intertech.de"; 
 	public static String SERVER_URL_2;
 	public static String SERVER_URL;
 	

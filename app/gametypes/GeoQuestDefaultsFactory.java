@@ -1223,7 +1223,7 @@ public class GeoQuestDefaultsFactory {
 		AttributeType att5 = new AttributeType(
 				"Bild (*.jpg, *.png, *.gif, *.zip)", "image", "file");
 		att5.setMimeType("image");
-		att5.setDefaultValue("http://qeevee.org:9091/assets/img/gq_defaults/startandexit.png");
+		att5.setDefaultValue(Global.SERVER_URL + "assets/img/gq_defaults/startandexit.png");
 		att5.save();
 		screen.setAttributeType(att5);
 		screen.update();
