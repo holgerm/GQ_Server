@@ -2396,6 +2396,16 @@ public class GeoQuestDefaultsFactory {
 
 		videoplay.setAttributeType(att32);
 
+		AttributeType attVideoType = new AttributeType("Video Typ", "videotype", "String");
+		attVideoType.setOptional(false);
+		attVideoType.save();
+		attVideoType.setDefaultValue("Normal");
+		attVideoType.addPossibleValue("Normal");
+		attVideoType.addPossibleValue("360 Grad");
+		attVideoType.update();
+
+		videoplay.setAttributeType(attVideoType);
+
 		// RULES
 
 		videoplay.addPossibleRuleTypes(rtOnStart);
