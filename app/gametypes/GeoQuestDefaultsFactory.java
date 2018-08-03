@@ -112,6 +112,11 @@ public class GeoQuestDefaultsFactory {
 
 		gt.setAttributeType(gt_att6);
 
+		gt_att6 = new AttributeType("TopLogo", "toplogo", "file");
+		gt_att6.save();
+
+		gt.setAttributeType(gt_att6);
+
 		AttributeType gt_att7 = new AttributeType("Featured Bild",
 				"featuredimage", "file");
 		gt_att7.save();
