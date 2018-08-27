@@ -2407,6 +2407,7 @@ public class GeoQuestDefaultsFactory {
 		attVideoType.setDefaultValue("Normal");
 		attVideoType.addPossibleValue("Normal");
 		attVideoType.addPossibleValue("360 Grad");
+		attVideoType.addPossibleValue("YouTube");
 		attVideoType.update();
 
 		videoplay.setAttributeType(attVideoType);

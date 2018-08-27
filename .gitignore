@@ -18,4 +18,4 @@ RUNNING_PID
 /test-db.trace.db
 /dump/
 
-*.DS_Store
+**/.DS_Store
