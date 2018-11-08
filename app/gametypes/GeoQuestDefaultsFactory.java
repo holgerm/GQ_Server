@@ -131,10 +131,14 @@ public class GeoQuestDefaultsFactory {
 
 		AttributeType att61 = new AttributeType("Hintergrundfarbe", "bgcolor",
 				"Color");
-
 		att61.save();
 
 		gt.setAttributeType(att61);
+
+		gt_att6 = new AttributeType("Marker", "marker", "file");
+		gt_att6.save();
+
+		gt.setAttributeType(gt_att6);
 
 		AttributeType gt_att8 = new AttributeType(
 				"Rückkehrverhalten selbst definieren",
