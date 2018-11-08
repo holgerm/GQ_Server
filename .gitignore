@@ -20,7 +20,7 @@ RUNNING_PID
 
 **/.DS_Store
 
-/.metadata/
+.metadata/
 bin/
 tmp/
 *.tmp
@@ -55,15 +55,6 @@ local.properties
 
 # sbteclipse plugin
 .target
-
-# Tern plugin
-.tern-project
-
-# TeXlipse plugin
-.texlipse
-
-# STS (Spring Tool Suite)
-.springBeans
 
 # Code Recommenders
 .recommenders/
