@@ -46,6 +46,8 @@ public class Global extends GlobalSettings {
 	public static String SERVER_URL_2;
 	public static String SERVER_URL;
 	
+	public static String TEMPLATE_BASE_URL = "http://qeevee.org:9091";
+	
 	public static boolean SECURED_MODE = true;
 
 	static {

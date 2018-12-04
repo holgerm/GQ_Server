@@ -155,7 +155,7 @@ public class ProviderPortal extends Model {
 		name = startName;
 
 		System.out.println("Adding new Portal");
-		TemplateURL = Global.SERVER_URL + "/defaulttemplate";
+		TemplateURL = Global.TEMPLATE_BASE_URL + "/defaulttemplate";
 
 		TemplateMappingURL = "";
 		TemplateForm = "";
@@ -255,7 +255,7 @@ public class ProviderPortal extends Model {
 		boolean done = updateHtmlByTemplateNoPassword();
 
 		if (done == false) {
-			TemplateURL = Global.SERVER_URL + "/defaulttemplate";
+			TemplateURL = Global.TEMPLATE_BASE_URL + "/defaulttemplate";
 			updateHtmlByTemplateNoPassword();
 
 		}
@@ -279,7 +279,7 @@ public class ProviderPortal extends Model {
 
 		if (TemplateURL.equals("")) {
 
-			url = Global.SERVER_URL_2 + "/defaulttemplate";
+			url = Global.TEMPLATE_BASE_URL + "/defaulttemplate";
 
 		}
 
@@ -812,7 +812,7 @@ public class ProviderPortal extends Model {
 
 		} else if (Html.isEmpty()) {
 
-			if (TemplateURL.equals(Global.SERVER_URL_2 + "/defaulttemplate")) {
+			if (TemplateURL.equals(Global.TEMPLATE_BASE_URL + "/defaulttemplate")) {
 
 				SortedHtml ns = new SortedHtml("Template-Seite wurde nicht erkannt.", 1, "%errortemplate:=true%");
 				ns.save();
@@ -828,7 +828,7 @@ public class ProviderPortal extends Model {
 					done = true;
 					Html.add(ns);
 				} else {
-					TemplateURL = Global.SERVER_URL_2 + "defaulttemplate";
+					TemplateURL = Global.TEMPLATE_BASE_URL + "/defaulttemplate";
 					updateHtmlByTemplateNoPassword();
 				}
 
