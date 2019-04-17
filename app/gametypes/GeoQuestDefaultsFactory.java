@@ -83,88 +83,92 @@ public class GeoQuestDefaultsFactory {
 
 		gt.setAttributeType(att62);
 
-		AttributeType gt_att2 = new AttributeType("Autor", "author", "String");
-		gt_att2.save();
+		AttributeType gt_att = new AttributeType("Autor", "author", "String");
+		gt_att.save();
+		gt.setAttributeType(gt_att);
 
-		gt.setAttributeType(gt_att2);
-
-		AttributeType gt_att3 = new AttributeType("Version", "version",
+		gt_att = new AttributeType("Version", "version",
 				"String");
-		gt_att3.save();
+		gt_att.save();
+		gt.setAttributeType(gt_att);
 
-		gt.setAttributeType(gt_att3);
-
-		AttributeType gt_att4 = new AttributeType("Impressum", "imprint",
+		gt_att = new AttributeType("Impressum", "imprint",
 				"TextArea");
-		gt_att4.save();
+		gt_att.save();
+		gt.setAttributeType(gt_att);
 
-		gt.setAttributeType(gt_att4);
+		gt_att = new AttributeType("Info", "info",
+				"TextArea");
+		gt_att.save();
+		gt.setAttributeType(gt_att);
 
-		AttributeType gt_att5 = new AttributeType("Altersfreigabe", "age",
+		gt_att = new AttributeType(
+				"Verstecktes Quest",
+				"hidden", "boolean");
+		gt_att.save();
+		gt_att.setDefaultValue("false");
+		gt_att.update();
+		gt.setAttributeType(gt_att);
+		
+		gt_att = new AttributeType("Altersfreigabe", "age",
 				"int");
-		gt_att5.save();
-		gt_att5.setDefaultValue("0");
-		gt_att5.update();
-		gt.setAttributeType(gt_att5);
+		gt_att.save();
+		gt_att.setDefaultValue("0");
+		gt_att.update();
+		gt.setAttributeType(gt_att);
 
-		AttributeType gt_att6 = new AttributeType("Icon", "icon", "file");
-		gt_att6.save();
+		gt_att = new AttributeType("Icon", "icon", "file");
+		gt_att.save();
+		gt.setAttributeType(gt_att);
 
-		gt.setAttributeType(gt_att6);
+		gt_att = new AttributeType("TopLogo", "toplogo", "file");
+		gt_att.save();
+		gt.setAttributeType(gt_att);
 
-		gt_att6 = new AttributeType("TopLogo", "toplogo", "file");
-		gt_att6.save();
-
-		gt.setAttributeType(gt_att6);
-
-		AttributeType gt_att7 = new AttributeType("Featured Bild",
+		gt_att = new AttributeType("Featured Bild",
 				"featuredimage", "file");
-		gt_att7.save();
+		gt_att.save();
+		gt.setAttributeType(gt_att);
 
-		gt.setAttributeType(gt_att7);
-
-		AttributeType gt_att1 = new AttributeType("Hintergrundbild", "bgimage",
+		gt_att = new AttributeType("Hintergrundbild", "bgimage",
 				"file");
-		gt_att1.save();
+		gt_att.save();
+		gt.setAttributeType(gt_att);
 
-		gt.setAttributeType(gt_att1);
-
-		AttributeType att61 = new AttributeType("Hintergrundfarbe", "bgcolor",
+		gt_att = new AttributeType("Hintergrundfarbe", "bgcolor",
 				"Color");
-		att61.save();
+		gt_att.save();
+		gt.setAttributeType(gt_att);
 
-		gt.setAttributeType(att61);
+		gt_att = new AttributeType("Marker", "marker", "file");
+		gt_att.save();
+		gt.setAttributeType(gt_att);
 
-		gt_att6 = new AttributeType("Marker", "marker", "file");
-		gt_att6.save();
-
-		gt.setAttributeType(gt_att6);
-
-		AttributeType gt_att8 = new AttributeType(
+		gt_att = new AttributeType(
 				"Rückkehrverhalten selbst definieren",
 				"individualReturnDefinitions", "boolean");
-		gt_att8.save();
-		gt_att8.setDefaultValue("false");
-		gt_att8.update();
-		gt.setAttributeType(gt_att8);
+		gt_att.save();
+		gt_att.setDefaultValue("false");
+		gt_att.update();
+		gt.setAttributeType(gt_att);
 
-		AttributeType gt_att9 = new AttributeType("Start Hotspot",
+		gt_att = new AttributeType("Start Hotspot",
 				"startHotspot", "hotspot");
-		gt_att9.save();
-		gt.setAttributeType(gt_att9);
+		gt_att.save();
+		gt.setAttributeType(gt_att);
 
-		AttributeType gt_att10 = new AttributeType(
+		gt_att = new AttributeType(
 				"An Ort des Benutzers transferieren", "transferToUserPosition",
 				"boolean");
-		gt_att10.save();
-		gt_att10.setDefaultValue("false");
-		gt_att10.update();
-		gt.setAttributeType(gt_att10);
+		gt_att.save();
+		gt_att.setDefaultValue("false");
+		gt_att.update();
+		gt.setAttributeType(gt_att);
 
-		AttributeType gt_att11 = new AttributeType("Transfer Hotspot",
+		gt_att = new AttributeType("Transfer Hotspot",
 				"transferHotspot", "hotspot");
-		gt_att11.save();
-		gt.setAttributeType(gt_att11);
+		gt_att.save();
+		gt.setAttributeType(gt_att);
 
 		gt.update();
 
