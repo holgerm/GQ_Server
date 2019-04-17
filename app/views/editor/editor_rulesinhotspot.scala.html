@@ -4,54 +4,32 @@
 @import util.Global;
 
 @if(m.getType != null){
-
-@for(rt <- m.getType.getPossibleRuleTypes){
-	
-	@if(m.hasRule(rt)){
-		
-		@if(!m.getRule(rt).getSubRules().isEmpty()){
-		@for(r <- m.getRule(rt).getSubRules()){
-		
-		<div id="actioninfocontainer_r@r.getId">
-		
-		
-		              	@if(r.getActions() != null){
-		
-              	@if(!r.getActions().isEmpty()){
-              		
-              		
-              		
-              		
-							              		
-							              		
-							       @for(ac <- r.getActions){
-		
-		
-		@editor_actionedit(g,ac,String.valueOf(rt.getId()),10000000)
-	
-	
+	@for(rt <- m.getType.getPossibleRuleTypes){
+		@if(m.hasRule(rt)){
+			@if(!m.getRule(rt).getSubRules().isEmpty()){
+				@for(r <- m.getRule(rt).getSubRules()){
+					<div id="actioninfocontainer_r@r.getId">
+						@if(r.getActions() != null){
+							@if(!r.getActions().isEmpty()){
+              					@for(ac <- r.getActions){
+              						@Portal.sayTime("rulesinhotspot #1 before actionedit")
+              					
+									@editor_actionedit(g,ac,String.valueOf(rt.getId()),10000000)
+              						
+              						@Portal.sayTime("rulesinhotspot #2 after actionedit")
+								}
+							}
+						}
+					</div>
+				}
+			}
 		}
-		
-		}
-		
-		}
-		
-		</div>
-		
-		
-		}
-		}
-		}
-		}
-		
 	}
-	
-	
-	
+}
 
-	 		
-             
-	<div class="inneredit" id="ruleedit_h@m.getId()" name="ruleedit_h@m.getId()">
+@Portal.sayTime("rulesinhotspot #3 after div actioninfocontainer")
+	
+<div class="inneredit" id="ruleedit_h@m.getId()" name="ruleedit_h@m.getId()">
 			 				              				<div class="scrollable-content" id="rulescroll_h@m.getId()" style="overflow-y:scroll; overflow-x:scroll; height:100%; width:100%;">
 	
 									        				<div class="options">
@@ -327,6 +305,7 @@
               					</div>
 									              			</div>
               		
+ @Portal.sayTime("rulesinhotspot #4 END")
               		
 	 		
 	 		
