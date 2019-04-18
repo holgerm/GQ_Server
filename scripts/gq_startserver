@@ -1,11 +1,24 @@
 #!/bin/bash
 
+# Qeevees-MacBook-Air-2:~ admin$ /usr/libexec/java_home -V
+# Matching Java Virtual Machines (5):
+#     1.8.0_131, x86_64:	"Java SE 8"	/Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home
+#     1.8.0_05, x86_64:	"Java SE 8"	/Library/Java/JavaVirtualMachines/jdk1.8.0_05.jdk/Contents/Home
+#     1.7.0_79, x86_64:	"Java SE 7"	/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home
+#     1.6.0_65-b14-468, x86_64:	"Java SE 6"	/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home
+#     1.6.0_65-b14-468, i386:	"Java SE 6"	/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home
+
+# /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home
+# Qeevees-MacBook-Air-2:~ admin$ export JAVA_HOME=`/usr/libexec/java_home -v 1.7`
+# Qeevees-MacBook-Air-2:~ admin$ echo $JAVA_HOME
+# /Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home
+
 echo "Starting GeoQuest Server ..."
 
 #TODO: Check that Java 1.7 is available and set it active.
 echo "  switching to Java Version 1.7 ..."
 JAVA_HOME_OLD=$JAVA_HOME
-JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_25.jdk/Contents/Home/
+JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/
 
 GQ_EDITOR_MODE_INSECURE=true
 export GQ_EDITOR_MODE_INSECURE
@@ -50,13 +63,13 @@ fi
 # DO it:
 if [ $# -gt 0 ] && [ $1 = "run" ]; then
 	echo "  running play ..."
-	play -Dconfig.file=$APP_CONF $ADDITIONAL_PARAM run
+	play -Dconfig.file=$APP_CONF $ADDITIONAL_PARAM -DapplyEvolutions.default=true run
 elif [ $# -gt 0 ] && [ $1 = "debug" ]; then
 	echo "  running play in debug mode ..."
-	play debug -Dconfig.file=$APP_CONF $ADDITIONAL_PARAM run
+	play debug -Dconfig.file=$APP_CONF $ADDITIONAL_PARAM -DapplyEvolutions.default=true run
 else
 	echo "  starting play ..."
-	play -Dconfig.file=$APP_CONF $ADDITIONAL_PARAM start
+	play -Dconfig.file=$APP_CONF $ADDITIONAL_PARAM -DapplyEvolutions.default=true start
 fi
 
 # Afterwards:
