@@ -2500,6 +2500,14 @@ public class GeoQuestDefaultsFactory {
 
 		imagecapture.setAttributeType(att46);
 
+		gt_att = new AttributeType("Frontkamera bevorzugen (Selfies)?",
+				"preferfrontfacing", "boolean");
+		gt_att.setOptional(true);
+		gt_att.setDefaultValue("false");
+		gt_att.save();
+
+		imagecapture.setAttributeType(gt_att);
+
 		// RULES
 		imagecapture.addPossibleRuleTypes(rtOnStart);
 		imagecapture.addPossibleRuleTypes(rtOnEnd);
