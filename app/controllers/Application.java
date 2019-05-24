@@ -478,7 +478,7 @@ public class Application extends Controller {
 
 		if (pid == 1L && Global.SECURED_MODE) {
 
-			return redirect("https://quest-mill-web.intertech.de/geoquest/private.php");
+			return redirect("https://quest-mill-web.intertech.de/gqdocs/private.php");
 		} else if (pid == 61L) {
 
 			return ok(views.html.portal.publicportal_login.render());
