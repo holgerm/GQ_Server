@@ -2409,6 +2409,13 @@ public class GeoQuestDefaultsFactory {
 
 		videoplay.setAttributeType(att32);
 
+		att32 = new AttributeType("Streamen?",
+				"stream", "boolean");
+		att32.setDefaultValue("true");
+		att32.save();
+
+		videoplay.setAttributeType(att32);
+
 		AttributeType attVideoType = new AttributeType("Video Typ", "videotype", "String");
 		attVideoType.setOptional(false);
 		attVideoType.save();
