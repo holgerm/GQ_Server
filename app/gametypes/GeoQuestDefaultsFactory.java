@@ -2455,15 +2455,41 @@ public class GeoQuestDefaultsFactory {
 		AttributeType att42 = new AttributeType("Lokale Datei", "file", "file");
 		att42.setMimeType("html");
 		att42.save();
-
 		webpage.setAttributeType(att42);
 
 		AttributeType webpage_att1 = new AttributeType(
 				"Beenden-Button-Beschriftung", "endbuttontext", "String");
 		webpage_att1.setDefaultValue(">");
 		webpage_att1.save();
-
 		webpage.setAttributeType(webpage_att1);
+
+		webpage_att1 = new AttributeType(
+				"Beenden-Button-Beschriftung solange gesperrt", "endbuttontextwhenclosed", "String");
+		webpage_att1.setDefaultValue("- - -");
+		webpage_att1.save();
+		webpage.setAttributeType(webpage_att1);
+
+		att42 = new AttributeType("Entsperren wenn URL enthält", "allowleaveonurlcontains", "String");
+		att42.save();
+		webpage.setAttributeType(att42);
+
+		att42 = new AttributeType("Entsperren wenn URL NICHT enthält", "allowleaveonurldoesnotcontain", "String");
+		att42.save();
+		webpage.setAttributeType(att42);
+
+		att42 = new AttributeType("Entsperren wenn HTML enthält", "allowleaveonhtmlcontains", "String");
+		att42.save();
+		webpage.setAttributeType(att42);
+
+		att42 = new AttributeType("Entsperren wenn HTML NICHT enthält", "allowleaveonhtmldoesnotcontain", "String");
+		att42.save();
+		webpage.setAttributeType(att42);
+		
+		att42 = new AttributeType("Bei Entsperren sofort weiter gehen", "leaveOnAllow",
+				"boolean");
+		att42.setDefaultValue("false");
+		att42.save();
+		webpage.setAttributeType(att42);
 
 		// RULES
 		webpage.addPossibleRuleTypes(rtOnStart);
