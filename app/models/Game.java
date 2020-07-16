@@ -1515,7 +1515,8 @@ public class Game extends Model {
 
 				} else {
 
-					if (!p.getMission().getType().getXMLType().equals("MetaData")) {
+					if (!p.getMission().getType().getXMLType().equals("MetaData") &&
+						!p.getMission().getType().getXMLType().equals("Timer")) {
 						n = p.getMission();
 						current = false;
 						done = true;
@@ -1539,10 +1540,12 @@ public class Game extends Model {
 			int i = 1;
 			System.out.println("parts.size: " + parts.size());
 
-			while (((m == null) || i <= parts.size() || m.getType().getXMLType().equals("MetaData"))
+			while (((m == null) || i <= parts.size() 
+				|| m.getType().getXMLType().equals("MetaData")
+				|| m.getType().getXMLType().equals("Timer"))
 					&& (parts.size() - i) >= 0) {
 
-				System.out.println("looking for: " + (parts.size() - i));
+				// System.out.println("looking for: " + (parts.size() - i));
 
 				if (parts.get(parts.size() - i) != null) {
 					Part p = parts.get(parts.size() - i);

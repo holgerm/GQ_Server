@@ -32,6 +32,7 @@ public class GeoQuestDefaultsFactory {
 	public MissionType imagecapture;
 	public MissionType questlist;
 	public MissionType readNFC;
+	public MissionType timer;
 
 	public MissionType metadata;
 
@@ -234,6 +235,28 @@ public class GeoQuestDefaultsFactory {
 		rtOnRead.save();
 		allMissionRuleTypes.add(rtOnRead);
 
+
+		RuleType rtOnTimerStarted = new RuleType("Timer gestartet", "onTimerStarted");
+		rtOnTimerStarted.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/onTimerStarted.png");
+		rtOnTimerStarted.save();
+		allMissionRuleTypes.add(rtOnTimerStarted);
+
+		RuleType rtOnTimerPreAlert = new RuleType("Timer Vorwarnung", "onTimerPreAlert");
+		rtOnTimerPreAlert.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/onTimerPreAlert.png");
+		rtOnTimerPreAlert.save();
+		allMissionRuleTypes.add(rtOnTimerPreAlert);
+
+		RuleType rtOnTimerExpired = new RuleType("Timer abgelaufen", "onTimerExpired");
+		rtOnTimerExpired.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/onTimerExpired.png");
+		rtOnTimerExpired.save();
+		allMissionRuleTypes.add(rtOnTimerExpired);
+		
+		RuleType rtOnTimerStopped = new RuleType("Timer angehalten", "onTimerStopped");
+		rtOnTimerStopped.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/onTimerStopped.png");
+		rtOnTimerStopped.save();
+		allMissionRuleTypes.add(rtOnTimerStopped);
+
+
 		// ACTION TYPES
 
 		allActionTypes = new ArrayList<ActionType>();
@@ -303,9 +326,51 @@ public class GeoQuestDefaultsFactory {
 		at5.setCategory("other");
 		at5.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/vibrate.png");
 		at5.save();
-
 		allActionTypes.add(at5);
 		hotspotActionTypes.add(at5);
+
+
+		at5 = new ActionType("Timer starten", "StartTimer");
+		at5.setCategory("other");
+		at5.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/startTimer.png");
+		at5.save();
+		AttributeType at5a = new AttributeType("Timer Name", "timerName", "String");
+		at5a.save();
+		at5a.setDefaultValue("Timer");
+		at5a.update();
+		at5.setAttributeType(at5a);
+		at5.update();
+		allActionTypes.add(at5);
+		hotspotActionTypes.add(at5);
+
+		at5 = new ActionType("Timer anhalten", "StopTimer");
+		at5.setCategory("other");
+		at5.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/stopTimer.png");
+		at5.save();
+		at5a = new AttributeType("Timer Name", "timerName",
+				"String");
+		at5a.save();
+		at5a.setDefaultValue("Timer");
+		at5a.update();
+		at5.setAttributeType(at5a);
+		at5.update();
+		allActionTypes.add(at5);
+		hotspotActionTypes.add(at5);
+
+		at5 = new ActionType("Timer zurücksetzen", "ResetTimer");
+		at5.setCategory("other");
+		at5.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/resetTimer.png");
+		at5.save();
+		at5a = new AttributeType("Timer Name", "timerName",
+				"String");
+		at5a.save();
+		at5a.setDefaultValue("Timer");
+		at5a.update();
+		at5.setAttributeType(at5a);
+		at5.update();
+		allActionTypes.add(at5);
+		hotspotActionTypes.add(at5);
+
 
 		ActionType at6 = new ActionType("Variable um 1 verringern",
 				"DecrementVariable");
@@ -634,66 +699,7 @@ public class GeoQuestDefaultsFactory {
 		allActionTypes.add(at19);
 		hotspotActionTypes.add(at19);
 
-		// ActionType at20 = new ActionType("Antwort hinzufügen","AddAnswer");
-		// at20.setSymbol(Global.SERVER_URL_2+"/assets/icons/actions/addanswer.png");
-		// at20.save();
 
-		// AttributeType at20a1 = new
-		// AttributeType("Seite","mission","mission");
-
-		// at20a1.save();
-
-		// at20.setAttributeType(at20a1);
-		// at20.update();
-
-		// AttributeType at20a2 = new
-		// AttributeType("Antworttyp","answertype","String");
-
-		// at20a2.save();
-
-		// at20a2.addPossibleValue("answer");
-		// at20a2.addPossibleValue("imageanswer");
-		// at20a2.update();
-
-		// at20.setAttributeType(at20a2);
-		// at20.update();
-
-		// AttributeType at20a3 = new
-		// AttributeType("Korrekt?","correct","boolean");
-
-		// at20a3.save();
-
-		// at20a3.setDefaultValue("false");
-		// at20a3.update();
-
-		// at20.setAttributeType(at20a3);
-		// at20.update();
-
-		// AttributeType at20a4 = new AttributeType("Bild","image","file");
-
-		// at20a4.save();
-
-		// at20.setAttributeType(at20a4);
-		// at20.update();
-
-		// AttributeType at20a5 = new
-		// AttributeType("Bei Auswahl anzeigen","onChoose","String");
-
-		// at20a5.save();
-
-		// at20.setAttributeType(at20a5);
-		// at20.update();
-
-		// AttributeType at20a6 = new
-		// AttributeType("Buttontext","nextbuttontext","String");
-
-		// at20a6.save();
-
-		// at20.setAttributeType(at20a6);
-		// at20.update();
-
-		// allActionTypes.add(at20);
-		// hotspotActionTypes.add(at20);
 
 		ActionType at21 = new ActionType("Routing anzeigen", "AddRoute");
 		at21.setCategory("map");
@@ -2633,6 +2639,37 @@ public class GeoQuestDefaultsFactory {
 
 				readNFC.update();
 
+
+		// Mission Type TIMER:
+		timer = new MissionType("Timer", "Timer");
+		timer.save();
+
+		// SAVE MISSIONTYPE TO GAMETYPE
+		PartType pt_timer = new PartType(timer);
+		pt_timer.save();
+
+		// ATTRIBIUTEs:
+		att32 = new AttributeType("Dauer (sec)",
+				"duration", "int");
+		att32.setDefaultValue("100");
+		att32.save();
+		timer.setAttributeType(att32);
+
+		att32 = new AttributeType("Warnung vor Ablauf (sec)",
+				"preAlertTime", "int");
+		att32.setDefaultValue("0");
+		att32.save();
+		timer.setAttributeType(att32);
+
+		// Rule Types:
+		timer.addPossibleRuleTypes(rtOnTimerStarted);
+		timer.addPossibleRuleTypes(rtOnTimerPreAlert);
+		timer.addPossibleRuleTypes(rtOnTimerExpired);
+		timer.addPossibleRuleTypes(rtOnTimerStopped);
+		timer.update();
+
+		// Add this Part Type to the general GameType:
+		gt.addPossiblePartType(pt_timer);
 		
 		
 
