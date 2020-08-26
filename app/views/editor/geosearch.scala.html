@@ -86,9 +86,19 @@ L.Control.GeoSearch = L.Control.extend({
 
     geosearch: function (qry) {
 
+        const regex = /^\s*((\d*)(\.(\d+))?)\s*[,;\s]\s*((\d*)(\.(\d+))?)\s*$/;
+        var decimalFound = qry.match(regex);
+
         console.log("In geosearch: %o", qry);
         
-        if (qry != '0,0'){
+        if (decimalFound){
+            var latVal = parseFloat(decimalFound[1]);
+            var longVal = parseFloat(decimalFound[5]);
+
+            this._showLocation(null, longVal, latVal);
+            this._map.fireEvent('geosearch_foundlocations', {Locations: null});
+        }
+        else {
             try {
                 var provider = this._config.provider;
 
@@ -105,12 +115,6 @@ L.Control.GeoSearch = L.Control.extend({
             catch (error) {
                 this._printError(error);
             }
-        } else {
-            this._showLocation(null,0,0);
-            this._map.fireEvent('geosearch_foundlocations', {Locations: null});
-                        
-            
-            
         }
     },
 
