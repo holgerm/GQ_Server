@@ -369,7 +369,9 @@ public class Game extends Model {
 		// HOTSPOTS
 		counter = 1;
 		for (Hotspot ah : hotspots) {
-			s.addHotspot(ah.copyMe("" + counter));
+			Hotspot newHotspot = ah.copyMe("" + counter);
+			s.addHotspot(newHotspot);
+			hotspotbinder.put(ah, newHotspot);
 			counter++;
 		}
 
