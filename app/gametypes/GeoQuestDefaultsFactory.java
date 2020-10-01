@@ -2497,6 +2497,12 @@ public class GeoQuestDefaultsFactory {
 		att42.save();
 		webpage.setAttributeType(att42);
 
+		att42 = new AttributeType("Vollbild Landscape Modus", "fullscreensLandscape",
+				"boolean");
+		att42.setDefaultValue("false");
+		att42.save();
+		webpage.setAttributeType(att42);
+
 		// RULES
 		webpage.addPossibleRuleTypes(rtOnStart);
 		webpage.addPossibleRuleTypes(rtOnEnd);
