@@ -108,8 +108,7 @@ public class Hotspot extends Model {
 
 	}
 
-	public int getMarkerHeight(Game g) {
-
+	private Image getMarkerImage(Game g) {
 		try {
 
 			String path = getAttributeValue(getAttributeType("img"));
@@ -122,7 +121,7 @@ public class Hotspot extends Model {
 
 				Image image = ImageIO.read(new File("public/img", path));
 
-				return image.getHeight(null);
+				return image;
 
 			} else {
 
@@ -139,13 +138,59 @@ public class Hotspot extends Model {
 				}
 				Image image = ImageIO.read(new File("public/uploads/" + portal + "/editor/" + gameid + "/", path));
 
-				return image.getHeight(null);
+				return image;
 			}
 
 		} catch (IOException e) {
-			return 60;
+			return null;
+		}
+	}
+
+	private float getMarkerScale(Game g) {
+		final int RESULTING_MAX_MARKER_SIZE = 60;
+
+		Image image = getMarkerImage(g);
+
+		if (image == null) {
+			return 1f;
 		}
 
+		int maxSize = (image.getHeight(null) >= image.getWidth(null))
+				? image.getHeight(null)
+				: image.getWidth(null);
+		System.out.println("maxSize: " + maxSize);
+		float scale = ((float) RESULTING_MAX_MARKER_SIZE) / maxSize;
+		System.out.println("scale: " + scale);
+		return scale;
+	}
+
+	public int getMarkerHeight(Game g) {
+		final int RESULTING_MAX_MARKER_SIZE = 60;
+
+		Image image = getMarkerImage(g);
+
+		if (image == null) {
+			return RESULTING_MAX_MARKER_SIZE;
+		}
+
+		float scaledHeight = image.getHeight(null) * getMarkerScale(g);
+		System.out.println("scaledHeight: " + scaledHeight);
+
+		return (int) scaledHeight;
+	}
+
+	public int getMarkerWidth(Game g) {
+		final int RESULTING_MAX_MARKER_SIZE = 60;
+
+		Image image = getMarkerImage(g);
+		if (image == null) {
+			return (int) (RESULTING_MAX_MARKER_SIZE * 0.8f);
+		}
+
+		float scaledWidth = image.getWidth(null) * getMarkerScale(g);
+		System.out.println("scaledWidth: " + scaledWidth);
+
+		return (int) scaledWidth;
 	}
 
 	public int getMarkerAnchorWidth(Game g) {
@@ -156,46 +201,6 @@ public class Hotspot extends Model {
 	public int getMarkerAnchorHeight(Game g) {
 
 		return getMarkerHeight(g) - 1;
-	}
-
-	public int getMarkerWidth(Game g) {
-
-		try {
-
-			String path = getAttributeValue(getAttributeType("img"));
-
-			if (path.equals("/assets/img/marker.png")) {
-
-				String[] splitResult = path.split("/");
-
-				path = splitResult[splitResult.length - 1];
-
-				Image image = ImageIO.read(new File("public/img", path));
-
-				return image.getWidth(null);
-
-			} else {
-
-				String[] splitResult = path.split("/");
-
-				path = splitResult[splitResult.length - 1];
-
-				String portal = String.valueOf(Application.getLocalPortal().getId());
-				String gameid = String.valueOf(g.getId());
-				if (splitResult.length > 4) {
-					portal = splitResult[splitResult.length - 4];
-					gameid = splitResult[splitResult.length - 2];
-
-				}
-				Image image = ImageIO.read(new File("public/uploads/" + portal + "/editor/" + gameid + "/", path));
-
-				return image.getWidth(null);
-			}
-
-		} catch (IOException e) {
-			return 48;
-		}
-
 	}
 
 	@JSON(include = false)
