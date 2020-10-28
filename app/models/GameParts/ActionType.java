@@ -104,23 +104,19 @@ category = s;
     public void setAttributeType(AttributeType t){
     	
     	 try{
-    	 List<AttributeType> copyOfAttributes =  new ArrayList<AttributeType>(attributeTypes.size());;
- 	     for(AttributeType item: attributeTypes) copyOfAttributes.add(item);	
+             List<AttributeType> copyOfAttributes =  new ArrayList<AttributeType>(attributeTypes.size());
+             for(AttributeType item: attributeTypes) copyOfAttributes.add(item);
 
-    	 for(AttributeType aatr: copyOfAttributes){  		 
-    		 if(aatr.getXMLType() == t.getXMLType()){	 
-    			attributeTypes.remove(aatr);
-    		 }
-    	 }
-    	 attributeTypes.add(t);
-    	 
-    		} catch (RuntimeException e) {
-
-				System.out.println("Problem setting AttributeType.");
-				e.printStackTrace();
-
-			}
-
+             for(AttributeType aatr: copyOfAttributes){
+                 if(aatr.getXMLType() == t.getXMLType()){
+                    attributeTypes.remove(aatr);
+                 }
+             }
+             attributeTypes.add(t);
+        } catch (RuntimeException e) {
+            System.out.println("Problem setting AttributeType.");
+            e.printStackTrace();
+        }
     }
 
 

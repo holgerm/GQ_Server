@@ -454,6 +454,46 @@ public class GeoQuestDefaultsFactory {
 		allActionTypes.add(at10);
 		hotspotActionTypes.add(at10);
 
+
+		// Datei-Upload Action:
+		at10 = new ActionType("Datei-Upload", "UploadFile");
+		at10.setCategory("other");
+		at10.setSymbol(Global.SERVER_URL_2
+				+ "/assets/icons/actions/uploadfile.png");
+		at10.save();
+		at10a1 = new AttributeType("Dateireferenz", "fileref",
+				"String");
+		at10a1.save();
+		at10.setAttributeType(at10a1);
+		at10.update();
+
+		at10a1 = new AttributeType("HTTP Methode", "method", "String");
+		at10a1.save();
+		at10a1.setDefaultValue("POST");
+		at10a1.addPossibleValue("PUT");
+		at10a1.addPossibleValue("POST");
+		at10a1.update();
+		at10.setAttributeType(at10a1);
+		at10.update();
+
+		at10a1 = new AttributeType("Link Url", "url",
+				"String");
+		at10a1.save();
+		at10.setAttributeType(at10a1);
+		at10.update();
+
+		at10a1 = new AttributeType("Basic Athentication Token", "auth",
+				"String");
+		at10a1.save();
+		at10.setAttributeType(at10a1);
+		at10.update();
+
+		allActionTypes.add(at10);
+		hotspotActionTypes.add(at10);
+		// Ende Datei-Upload Action.
+
+
+
 		ActionType hotspotzustand = new ActionType("Hotspot-Zustand verändern",
 				"SetHotspotState");
 		hotspotzustand.setCategory("map");
@@ -813,58 +853,6 @@ public class GeoQuestDefaultsFactory {
 		allActionTypes.add(at27);
 		hotspotActionTypes.add(at27);
 
-		ActionType at28 = new ActionType("Variable an Server senden",
-				"SendVarToServer");
-		at28.setCategory("var");
-		at28.setSymbol(Global.SERVER_URL_2
-				+ "/assets/icons/actions/savevar.png");
-
-		at28.save();
-
-		AttributeType at28a1 = new AttributeType("Variable", "var", "String");
-
-		at28a1.save();
-
-		at28.setAttributeType(at28a1);
-		at28.update();
-
-		AttributeType at28a2 = new AttributeType("IP-Adresse", "ip", "String");
-
-		at28a2.save();
-
-		at28.setAttributeType(at28a2);
-		at28.update();
-
-		allActionTypes.add(at28);
-		hotspotActionTypes.add(at28);
-
-		ActionType at29 = new ActionType("Variable von Server laden",
-				"SendVarToServer");
-		at29.setCategory("var");
-		at29.setSymbol(Global.SERVER_URL_2
-				+ "/assets/icons/actions/savevar.png");
-
-		at29.save();
-
-		AttributeType at29a1 = new AttributeType("Variable", "var", "String");
-
-		at29a1.save();
-
-		at29.setAttributeType(at29a1);
-		at29.update();
-
-		AttributeType at29a2 = new AttributeType("IP-Adresse", "ip", "String");
-
-		at29a2.save();
-
-		at29.setAttributeType(at29a2);
-		at29.update();
-
-		allActionTypes.add(at29);
-		hotspotActionTypes.add(at29);
-		
-		
-		
 		
 		
 		
