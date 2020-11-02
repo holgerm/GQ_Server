@@ -33,6 +33,7 @@ public class GeoQuestDefaultsFactory {
 	public MissionType questlist;
 	public MissionType readNFC;
 	public MissionType timer;
+	public MissionType platformer;
 
 	public MissionType metadata;
 
@@ -462,6 +463,12 @@ public class GeoQuestDefaultsFactory {
 				+ "/assets/icons/actions/uploadfile.png");
 		at10.save();
 		at10a1 = new AttributeType("Dateireferenz", "fileref",
+				"String");
+		at10a1.save();
+		at10.setAttributeType(at10a1);
+		at10.update();
+
+		at10a1 = new AttributeType("Präfix für Dateinamen", "nameprefix",
 				"String");
 		at10a1.save();
 		at10.setAttributeType(at10a1);
@@ -2496,6 +2503,39 @@ public class GeoQuestDefaultsFactory {
 		webpage.addPossibleRuleTypes(rtOnEnd);
 
 		webpage.update();
+
+
+		// MISSION TYPE: Platformer
+
+		platformer = new MissionType("Platformer", "Platformer");
+		platformer.save();
+
+		mt.add(platformer);
+
+		// SAVE MISSIONTYPE TO GAMETYPE
+		pt11 = new PartType(platformer);
+		pt11.save();
+
+		// ATTRIBUTES
+
+		// CONTENTTYPES
+
+		ContentType interaction = new ContentType("Element zur Interaktion", "interaction");
+		interaction.save();
+
+		att15 = new AttributeType("Link", "link", "String");
+		att15.setOptional(true);
+		att15.save();
+		interaction.setAttributeType(att15);
+
+		interaction.update();
+		platformer.addPossibleContentTypes(interaction);
+
+		// RULES
+		platformer.addPossibleRuleTypes(rtOnStart);
+		platformer.addPossibleRuleTypes(rtOnEnd);
+		platformer.update();
+
 
 		// MISSION TYPE: ImageCapture
 
