@@ -488,7 +488,7 @@ public class GeoQuestDefaultsFactory {
         at10.setAttributeType(at10a1);
         at10.update();
 
-        at10a1 = new AttributeType("Basic Athentication Token", "auth",
+        at10a1 = new AttributeType("Basic Authentication Token", "auth",
                 "String");
         at10a1.save();
         at10.setAttributeType(at10a1);
@@ -539,45 +539,6 @@ public class GeoQuestDefaultsFactory {
 
         allActionTypes.add(hotspotzustand);
         hotspotActionTypes.add(hotspotzustand);
-
-        ActionType at11 = new ActionType(
-                "Hotspot-Aktivität verändern (veraltet)", "SetHotspotActivity");
-        at11.setCategory("hidden");
-        at11.setSymbol(Global.SERVER_URL_2
-                + "/assets/icons/actions/hotspotactivity.png");
-        at11.save();
-        AttributeType at11a1 = new AttributeType("Neue Aktivität", "mode",
-                "boolean");
-        at11a1.setDefaultValue("false");
-
-        at11a1.save();
-        at11.setAttributeType(at11a1);
-        AttributeType at11a2 = new AttributeType("Hotspot", "id", "hotspot");
-        at11a2.save();
-        at11.setAttributeType(at11a2);
-        at11.update();
-        allActionTypes.add(at11);
-        hotspotActionTypes.add(at11);
-
-        ActionType at12 = new ActionType(
-                "Hotspot-Sichtbarkeit verändern (veraltet)",
-                "SetHotspotVisibility");
-        at12.setCategory("hidden");
-        at12.setSymbol(Global.SERVER_URL_2
-                + "/assets/icons/actions/hotspotvisibility.png");
-        at12.save();
-        AttributeType at12a1 = new AttributeType("Neue Sichtbarkeit",
-                "visible", "boolean");
-        at12a1.setDefaultValue("false");
-
-        at12a1.save();
-        at12.setAttributeType(at12a1);
-        AttributeType at12a2 = new AttributeType("Hotspot", "id", "hotspot");
-        at12a2.save();
-        at12.setAttributeType(at12a2);
-        at12.update();
-        allActionTypes.add(at12);
-        hotspotActionTypes.add(at12);
 
         ActionType at13 = new ActionType("Score erhöhen", "AddToScore");
         at13.setCategory("var");
@@ -2285,83 +2246,6 @@ public class GeoQuestDefaultsFactory {
 
         tagreading.update();
 
-        // MISSION TYPE: QRTagReading
-
-        qrtagreading = new MissionType("QR Tag Scanner (veraltet)",
-                "QRTagReading");
-        qrtagreading.save();
-
-        mt.add(qrtagreading);
-
-        // SAVE MISSIONTYPE TO GAMETYPE
-        PartType pt9 = new PartType(qrtagreading);
-        pt9.save();
-
-        // ATTRIBIUTE
-
-        AttributeType att26 = new AttributeType("Modus", "mode", "String");
-        att26.save();
-        att26.setDefaultValue("bestimmter Tag (mit onSuccess)");
-        att26.addPossibleValue("bestimmter Tag (mit onSuccess)");
-        att26.addPossibleValue("beliebiger Tag (mit Wenn-Dann-Bedingung)");
-        att26.update();
-
-        qrtagreading.setAttributeType(att26);
-
-        AttributeType att29 = new AttributeType("Aufgabenbeschreibung",
-                "taskdescription", "String");
-        att29.save();
-
-        qrtagreading.setAttributeType(att29);
-
-        AttributeType att112 = new AttributeType("Erwarteter Inhalt",
-                "expected_content", "String");
-        att112.save();
-
-        qrtagreading.setAttributeType(att112);
-
-        AttributeType att25 = new AttributeType("Bild zu Beginn",
-                "initial_image", "file");
-        att25.setMimeType("image");
-        att25.save();
-
-        qrtagreading.setAttributeType(att25);
-
-        AttributeType att27 = new AttributeType("Bild bei richtigem Code",
-                "if_right_image", "file");
-        att27.setMimeType("image");
-        att27.save();
-
-        qrtagreading.setAttributeType(att27);
-
-        AttributeType att28 = new AttributeType("Bild bei falschem Code",
-                "if_wrong_image", "file");
-        att28.setMimeType("image");
-        att28.save();
-
-        qrtagreading.setAttributeType(att28);
-
-        AttributeType att30 = new AttributeType("Scanner-Button-Beschriftung",
-                "buttontext", "String");
-        att30.setDefaultValue("Scannen");
-        att30.save();
-
-        qrtagreading.setAttributeType(att30);
-
-        AttributeType att31 = new AttributeType("Beenden-Button-Beschriftung",
-                "endbuttontext", "String");
-        att31.setDefaultValue("Weiter");
-        att31.save();
-
-        qrtagreading.setAttributeType(att31);
-
-        // RULES
-        qrtagreading.addPossibleRuleTypes(rtOnSuccess);
-        qrtagreading.addPossibleRuleTypes(rtOnFailure);
-        qrtagreading.addPossibleRuleTypes(rtOnStart);
-        qrtagreading.addPossibleRuleTypes(rtOnEnd);
-
-        qrtagreading.update();
 
         // MISSION TYPE: VideoPlay
 
@@ -2414,7 +2298,7 @@ public class GeoQuestDefaultsFactory {
 
         videoplay.update();
 
-        //////////////////////////  
+        //////////////////////////
         // MISSION TYPE: WebPage
 
         webpage = new MissionType("Webseite", "WebPage");
@@ -2483,38 +2367,6 @@ public class GeoQuestDefaultsFactory {
         webpage.addPossibleRuleTypes(rtOnEnd);
 
         webpage.update();
-
-
-        // MISSION TYPE: Platformer
-
-        platformer = new MissionType("Platformer", "Platformer");
-        platformer.save();
-
-        mt.add(platformer);
-
-        // SAVE MISSIONTYPE TO GAMETYPE
-        pt11 = new PartType(platformer);
-        pt11.save();
-
-        // ATTRIBUTES
-
-        // CONTENTTYPES
-
-        ContentType interaction = new ContentType("Element zur Interaktion", "interaction");
-        interaction.save();
-
-        att15 = new AttributeType("Link", "link", "String");
-        att15.setOptional(true);
-        att15.save();
-        interaction.setAttributeType(att15);
-
-        interaction.update();
-        platformer.addPossibleContentTypes(interaction);
-
-        // RULES
-        platformer.addPossibleRuleTypes(rtOnStart);
-        platformer.addPossibleRuleTypes(rtOnEnd);
-        platformer.update();
 
 
         // MISSION TYPE: ImageCapture
@@ -2681,55 +2533,8 @@ public class GeoQuestDefaultsFactory {
         gt.addPossiblePartType(pt_timer);
 
 
-        // MISSION TYPE: QuestList
 
-        // questlist = new MissionType("Quest-Liste","QuestList");
-        // questlist.save();
-
-        // mt.add(questlist);
-
-        // SAVE MISSIONTYPE TO GAMETYPE
-        // PartType pt120 = new PartType(questlist);
-        // pt120.save();
-
-        // gt.addPossiblePartType(pt120);
-        // gt.update();
-
-        // ATTRIBIUTE
-
-        // AttributeType att42pt120 = new AttributeType("Titel","title",
-        // "String");
-        // att42pt120.save();
-
-        // questlist.setAttributeType(att42pt120);
-
-        // AttributeType att44pt120 = new
-        // AttributeType("Quests von Portal","portal_id", "int");
-        // att44pt120.save();
-
-        // questlist.setAttributeType(att44pt120);
-
-        // ATTRIBIUTE
-
-        // AttributeType att43pt120 = new
-        // AttributeType("Spieltyp-Filter","gametype_id", "int");
-        // att43pt120.save();
-
-        // questlist.setAttributeType(att43pt120);
-
-        // AttributeType att41pt120 = new
-        // AttributeType("Hintergrund-Bild","background-image", "file");
-        // att41pt120.save();
-
-        // questlist.setAttributeType(att41pt120);
-
-        // RULES
-        // questlist.addPossibleRuleTypes(rt4);
-        // questlist.addPossibleRuleTypes(rt3);
-
-        // questlist.update();
-
-        // / ADD ALL MISSION TYPES IN ORDER TO GAME TYPE
+        // ADD ALL MISSION TYPES IN ORDER TO GAME TYPE
 
         // Auswahlmenü [Multiple Choice Question]
         gt.addPossiblePartType(pt2111);
@@ -2757,9 +2562,6 @@ public class GeoQuestDefaultsFactory {
 
         // NPC Dialog [NPCTalk]
         gt.addPossiblePartType(pt4);
-
-        // QR Tag Scanner [QRTagReading]
-        gt.addPossiblePartType(pt9);
 
         // Tag Scanner [TagScanner]
         gt.addPossiblePartType(tagreading_pt);
