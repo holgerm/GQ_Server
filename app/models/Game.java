@@ -1285,92 +1285,69 @@ public class Game extends Model {
 		for (Part ap : parts) {
 
 			if (!ap.isScene()) {
-				// // MISSION
-
+				// MISSION
 				Mission am = ap.getMission();
 				all.addAll(am.getAttributes());
 
-				// /// CONTENTS
-
+				// CONTENTS
 				for (Content ac : am.getContents()) {
-
 					for (AttributeType act : ac.getAllAttributes()) {
-
 						if (ac.getAttribute(act) != null) {
 							all.add(ac.getAttribute(act));
 						}
 					}
 
+					// /// TRIGGER RULES:
+					for (Rule atr : ac.getRules()) {
+						for (Rule ar : atr.getSubRules()) {
+							for (Action aa : ar.getActions()) {
+								all.addAll(aa.getAllSubAttributes());
+							}
+						}
+					}
+
 					for (Content asc : ac.getSubContent()) {
-
 						for (AttributeType act : asc.getAllAttributes()) {
-
 							if (asc.getAttribute(act) != null) {
 								all.add(asc.getAttribute(act));
 							}
 						}
 					}
-
 				}
 
-				// /// TRIGGER RULES
-
+				// /// TRIGGER RULES:
 				for (Rule atr : am.getRules()) {
-
-					// //// RULES
-
 					for (Rule ar : atr.getSubRules()) {
-
-						// ///// ACTIONS
-
 						for (Action aa : ar.getActions()) {
-
 							all.addAll(aa.getAllSubAttributes());
-
 						}
-
 					}
-
 				}
 
 			} else {
-				// // SCENES
+				// SCENES
 				Scene as = ap.getScene();
 				all.addAll(as.getAllSubAttributes());
-
 			}
 		}
 
 		// / HOTSPOTS
 
 		for (Hotspot ah : hotspots) {
-
 			all.addAll(ah.getAttributes());
-
-			// /// TRIGGER RULES
-
+			// TRIGGER RULES
 			for (Rule atr : ah.getRules()) {
-
 				// //// RULES
-
 				for (Rule ar : atr.getSubRules()) {
-
 					// ///// ACTIONS
-
 					for (Action aa : ar.getActions()) {
-
 						all.addAll(aa.getAttributes());
-
 					}
-
 				}
-
 			}
-
 		}
 
 		return all;
-
 	}
 
 	@JSON(include = true)

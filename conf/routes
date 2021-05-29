@@ -207,6 +207,7 @@ GET    /editor/:gid/add/menuitem/:title                                       co
 
 
 GET    /editor/:gid/mission/:mid/add/rule/:rtype                              controllers.Editor.addRuleInMission(gid: Long, mid: Long, rtype: Long)
+GET    /editor/:gid/content/:mid/add/rule/:rtype                              controllers.Editor.addRuleInContent(gid: Long, mid: Long, rtype: Long)
 GET    /editor/:gid/hotspot/:hid/add/rule/:rtype                              controllers.Editor.addRuleInHotspot(gid: Long, hid: Long, rtype: Long)
 
 
@@ -323,6 +324,7 @@ GET    /editor/:gid/fragments/Action/:aid/allinfo/:rtype/:z                   co
 GET    /editor/:gid/fragments/Action/:aid/inrule/:rid                         controllers.Editor.getActionInRuleForEditor(gid: Long, aid: Long,rid: Long)
 
 GET    /editor/:gid/fragments/Mission/:mid/Rule/:rid/oftype/:rtype            controllers.Editor.getMissionRuleForEditor(gid: Long,rid: Long,rtype:Long,mid: Long)
+GET    /editor/:gid/fragments/Content/:mid/Rule/:rid/oftype/:rtype            controllers.Editor.getContentRuleForEditor(gid: Long,rid: Long,rtype:Long,mid: Long)
 GET    /editor/:gid/fragments/Rule/:rid/oftype/:rtype                         controllers.Editor.getRuleForEditor(gid: Long,rid: Long,rtype:Long)
 GET    /editor/:gid/fragments/Rule/:rid/allactions                            controllers.Editor.getActionsForRuleForEditor(gid: Long,rid: Long)
 
@@ -342,6 +344,7 @@ GET    /editor/:gid/fragments/Part/:pid/allinfo                               co
 GET    /editor/:gid/fragments/Scene/:pid/allinfo                              controllers.Editor.getSceneInfoForEditor(gid: Long, pid: Long)
 GET    /editor/:gid/fragments/Mission/:pid/allinfo                            controllers.Editor.getMissionInfoForEditor(gid: Long, pid: Long)
 GET    /editor/:gid/fragments/Mission/:pid/ruleedit                           controllers.Editor.getMissionRulesForEditor(gid: Long, pid: Long)
+GET    /editor/:gid/fragments/Content/:pid/ruleedit                           controllers.Editor.getContentRulesForEditor(gid: Long, pid: Long)
 
 GET    /editor/:gid/fragments/leaflet/:pid/addmarker/:last                    controllers.Editor.getMarkerAddScriptForEditor(gid: Long, pid: Long,last:Boolean)
 

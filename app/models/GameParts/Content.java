@@ -40,504 +40,554 @@ import java.util.zip.ZipOutputStream;
 @Entity
 public class Content extends Model {
 
-	@Id
-	private Long id;
-	private String name;
+    @Id
+    private Long id;
+    private String name;
 
-	@ManyToOne
-	private ContentType type;
+    @ManyToOne
+    private ContentType type;
 
-	@Lob
-	private String content;
+    @Lob
+    private String content;
 
-	@OneToOne
-	private Content parent;
+    @OneToOne
+    private Content parent;
 
-	@ManyToOne
-	private ContentSet subcontent;
+    @ManyToOne
+    private ContentSet subcontent;
 
-	@ManyToMany
-	private List<Rule> rules;
+    @ManyToMany
+    private List<Rule> rules;
 
-	@ManyToMany
-	private List<Attribute> attributes;
+    @ManyToMany
+    private List<Attribute> attributes;
 
-	public Content(String n, ContentType t) {
+    public Content(String n, ContentType t) {
 
-		name = n;
-		type = t;
-		subcontent = new ContentSet();
-		subcontent.save();
-	}
+        name = n;
+        type = t;
+        subcontent = new ContentSet();
+        subcontent.save();
+    }
 
-	/// SETTER
+    /// SETTER
 
-	public void setParent(Content x) {
-		parent = x;
-	}
+    public void setParent(Content x) {
+        parent = x;
+    }
 
-	public void setContent(String x) {
-		content = x;
-	}
+    public void setContent(String x) {
+        content = x;
+    }
 
-	public void setAttribute(Attribute t) {
+    public void setAttribute(Attribute t) {
 
-		try {
-			List<Attribute> copyOfAttributes = new ArrayList<Attribute>(attributes.size());
-			;
-			for (Attribute item : attributes)
-				copyOfAttributes.add(item);
+        try {
+            List<Attribute> copyOfAttributes = new ArrayList<Attribute>(attributes.size());
+            ;
+            for (Attribute item : attributes)
+                copyOfAttributes.add(item);
 
-			for (Attribute aatr : copyOfAttributes) {
-				if (aatr.getXMLType().equals(t.getXMLType())) {
-					attributes.remove(aatr);
-				}
-			}
-			attributes.add(t);
+            for (Attribute aatr : copyOfAttributes) {
+                if (aatr.getXMLType().equals(t.getXMLType())) {
+                    attributes.remove(aatr);
+                }
+            }
+            attributes.add(t);
 
-		} catch (RuntimeException e) {
+        } catch (RuntimeException e) {
 
-			System.out.println("Problem setting Attribute.");
-			e.printStackTrace();
+            System.out.println("Problem setting Attribute.");
+            e.printStackTrace();
 
-		}
+        }
 
-	}
+    }
 
-	public void addSubContent(Content c) {
-		subcontent.addContent(c);
-		subcontent.update();
-	}
+    public void addSubContent(Content c) {
+        subcontent.addContent(c);
+        subcontent.update();
+    }
 
-	public void removeSubContent(Content c) {
+    public void removeSubContent(Content c) {
 
-		if (subcontent.contains(c)) {
-			subcontent.remove(c);
-			subcontent.update();
-		}
+        if (subcontent.contains(c)) {
+            subcontent.remove(c);
+            subcontent.update();
+        }
 
-	}
+    }
 
-	// GETTER
+    // GETTER
 
-	@JSON(include = false)
-	public List<Content> getSubContent() {
-		return subcontent.getContents();
-	}
+    @JSON(include = false)
+    public List<Content> getSubContent() {
+        return subcontent.getContents();
+    }
 
-	@JSON(include = false)
-	public List<AttributeType> getAllAttributes() {
-		return type.getAttributeTypes();
+    @JSON(include = false)
+    public List<AttributeType> getAllAttributes() {
+        return type.getAttributeTypes();
 
-	}
+    }
 
-	public String getAttributeValue(AttributeType at) {
+    public String getAttributeValue(AttributeType at) {
 
-		String x = at.getDefaultValue();
+        String x = at.getDefaultValue();
 
-		for (Attribute aa : attributes) {
+        for (Attribute aa : attributes) {
 
-			if (aa.getXMLType().equals(at.getXMLType())) {
+            if (aa.getXMLType().equals(at.getXMLType())) {
 
-				x = aa.getValue();
+                x = aa.getValue();
 
-			}
+            }
 
-		}
+        }
 
-		return x;
+        return x;
 
-	}
+    }
 
-	@JSON(include = false)
-	public ContentType getType() {
-		return type;
-	}
+    @JSON(include = false)
+    public ContentType getType() {
+        return type;
+    }
 
-	@JSON(include = true)
-	public boolean hasSubContent() {
-		if (subcontent.getContents().isEmpty()) {
-			return false;
-		} else {
-			return true;
-		}
-	}
+    @JSON(include = true)
+    public boolean hasSubContent() {
+        if (subcontent.getContents().isEmpty()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
-	@JSON(include = true)
-	public String getName() {
-		return name;
-	}
+    @JSON(include = true)
+    public String getName() {
+        return name;
+    }
 
-	@JSON(include = false)
-	public List<Attribute> getAttributes() {
-		return attributes;
-	}
+    @JSON(include = false)
+    public List<Attribute> getAttributes() {
+        return attributes;
+    }
 
-	@JSON(include = true)
-	public List<Attribute> getComputedAttributes() {
+    @JSON(include = true)
+    public List<Attribute> getComputedAttributes() {
 
-		List<Attribute> aMap = new ArrayList<Attribute>();
+        List<Attribute> aMap = new ArrayList<Attribute>();
 
-		for (AttributeType x : getAllAttributes()) {
+        for (AttributeType x : getAllAttributes()) {
 
-			aMap.add(getComputedAttribute(x));
+            aMap.add(getComputedAttribute(x));
 
-		}
+        }
 
-		return aMap;
+        return aMap;
 
-	}
+    }
 
-	@JSON(include = false)
-	public Attribute getComputedAttribute(AttributeType at) {
+    @JSON(include = false)
+    public Attribute getComputedAttribute(AttributeType at) {
 
-		Attribute x = null;
+        Attribute x = null;
 
-		for (Attribute aa : attributes) {
+        for (Attribute aa : attributes) {
 
-			if (aa.getXMLType().equals(at.getXMLType())) {
+            if (aa.getXMLType().equals(at.getXMLType())) {
 
-				x = aa;
+                x = aa;
 
-			}
+            }
 
-		}
+        }
 
-		if (x == null) {
+        if (x == null) {
 
-			x = new Attribute(at);
-			x.setValue(at.getDefaultValue());
+            x = new Attribute(at);
+            x.setValue(at.getDefaultValue());
 
-		}
+        }
 
-		return x;
+        return x;
 
-	}
+    }
 
-	@JSON(include = true)
-	public String getContent() {
-		return content;
-	}
+    @JSON(include = true)
+    public String getContent() {
+        return content;
+    }
 
-	@JSON(include = false)
-	public List<Content> getSubContents() {
-		return subcontent.getContents();
-	}
+    @JSON(include = false)
+    public List<Content> getSubContents() {
+        return subcontent.getContents();
+    }
 
-	@JSON(include = true)
-	public Long getId() {
-		return id;
-	}
+    @JSON(include = true)
+    public Long getId() {
+        return id;
+    }
 
-	public static final Finder<Long, Content> find = new Finder<Long, Content>(Long.class, Content.class);
+    public static final Finder<Long, Content> find = new Finder<Long, Content>(Long.class, Content.class);
 
-	public Content copyMe(String n) {
+    public Content copyMe(String n) {
 
-		Content c = new Content(name + " " + n, type);
+        Content c = new Content(name + " " + n, type);
 
-		// CONTENT
+        // CONTENT
 
-		c.setContent(content);
-		c.setParent(this);
-		c.save();
+        c.setContent(content);
+        c.setParent(this);
+        c.save();
 
-		// ATTRIBUTES
+        // ATTRIBUTES
 
-		for (Attribute aatr : attributes) {
+        for (Attribute aatr : attributes) {
 
-			c.setAttribute(aatr.copyMe());
-			c.update();
-		}
+            c.setAttribute(aatr.copyMe());
+            c.update();
+        }
 
-		// SUBCONTENT
+        // SUBCONTENT
 
-		for (Content sc : subcontent.getContents()) {
-			c.addSubContent(sc.copyMe(""));
-		}
-		c.save();
+        for (Content sc : subcontent.getContents()) {
+            c.addSubContent(sc.copyMe(""));
+        }
+        c.save();
 
-		return c;
-	}
+        return c;
+    }
 
-	public void setName(String n) {
-		name = n;
-	}
+    public void setName(String n) {
+        name = n;
+    }
 
-	@JSON(include = false)
-	public void removeMe() {
-		Set<Attribute> atrs = new HashSet<Attribute>();
-		atrs.addAll(attributes);
+    @JSON(include = false)
+    public void removeMe() {
+        Set<Attribute> atrs = new HashSet<Attribute>();
+        atrs.addAll(attributes);
 
-		try {
-			for (Attribute aa : atrs) {
-				attributes.remove(aa);
-				this.update();
-				aa.delete();
-			}
+        try {
+            for (Attribute aa : atrs) {
+                attributes.remove(aa);
+                this.update();
+                aa.delete();
+            }
 
-		} catch (RuntimeException e) {
+        } catch (RuntimeException e) {
 
-			System.out.println("Can't delete Mission.");
-			e.printStackTrace();
+            System.out.println("Can't delete Mission.");
+            e.printStackTrace();
 
-		}
+        }
 
-	}
+    }
 
-	public Element createXMLForWeb(Document doc, Game g) {
-		Element content = null;
+    public Element createXMLForWeb(Document doc, Mission m, Game g) {
+        Element content = doc.createElement(type.getXMLType());
 
-		content = doc.createElement(type.getXMLType());
+        for (Content c : subcontent.getContents()) {
+            Element sub = c.createXMLForWeb(doc, m, g);
+            content.appendChild(sub);
+        }
 
-		content.setTextContent(getContent());
+        Attr attr = doc.createAttribute("id");
+        attr.setValue(String.valueOf(id));
+        content.setAttributeNode(attr);
 
-		for (Content c : subcontent.getContents()) {
-			Element sub = c.createXMLForWeb(doc, g);
+        for (AttributeType aa : getAllAttributes()) {
+            if (getAttributeValue(aa) != null) {
+                if ((!getAttributeValue(aa).equals("")) && (!getAttributeValue(aa).equals(" "))) {
 
-			content.appendChild(sub);
+                    Attr attr4 = doc.createAttribute(aa.getXMLType());
 
-		}
+                    if (aa.getFileType().equals("boolean") && aa.getXMLType().equals("correct")) {
+                        if (getAttributeValue(aa).equals("true")) {
+                            attr4.setValue("1");
+                        } else {
+                            attr4.setValue("0");
+                        }
+                    } else if (aa.getRealFileType().equals("seconds") || aa.getRealFileType().equals("stringseconds")) {
 
-		Attr attr = doc.createAttribute("id");
-		attr.setValue(String.valueOf(id));
-		content.setAttributeNode(attr);
+                        try {
+                            int seconds = Integer.parseInt(getAttributeValue(aa));
+                            seconds = seconds * 1000;
+                            attr4.setValue(String.valueOf(seconds));
+                        } catch (NumberFormatException e) {
+                            attr4.setValue(getAttributeValue(aa));
+                        }
+                    } else {
+                        attr4.setValue(getAttributeValue(aa));
+                    }
+                    content.setAttributeNode(attr4);
+                }
+            }
+        }
 
-		for (AttributeType aa : getAllAttributes()) {
+        if (isOldKindOfContent()) {
+            // old kinds of content have the string content directly as xml text content of the tag and
+            // do not support any rules:
+            content.setTextContent(getContent());
+        } else {
+            // for new kinds of contents we put the string content in a special attribute named "content" and
+            // support rules within the content xml tag:
+            Element innerContent = doc.createElement("content");
+            innerContent.setTextContent(getContent());
+            content.appendChild(innerContent);
 
-			if (getAttributeValue(aa) != null) {
-				if ((!getAttributeValue(aa).equals("")) && (!getAttributeValue(aa).equals(" "))) {
+            for (Rule r : rules) {
+                if (!r.getFirstAction().equals("Keine") && !r.getFirstAction().equals("Deep")) {
+                    Element rule = r.createXMLForWeb(doc, 0, m, g);
+                    content.appendChild(rule);
+                }
+            }
+        }
 
-					Attr attr4 = doc.createAttribute(aa.getXMLType());
+        return content;
+    }
 
-					if (aa.getFileType().equals("boolean") && aa.getXMLType().equals("correct")) {
+    private boolean isOldKindOfContent() {
+        switch (type.getXMLType()) {
+            case "dialogitem":
+            case "expectedCode":
+            case "answer":
+            case "stringmeta":
+                return true;
+            default:
+                return false;
+        }
+    }
 
-						if (getAttributeValue(aa).equals("true")) {
-							attr4.setValue("1");
-						} else {
-							attr4.setValue("0");
-						}
+    public Element createXML(Document doc, ZipOutputStream zout, Game g) {
+        Element content = null;
 
-					} else if (aa.getRealFileType().equals("seconds") || aa.getRealFileType().equals("stringseconds")) {
+        content = doc.createElement(type.getXMLType());
 
-						try {
-							int seconds = Integer.parseInt(getAttributeValue(aa));
-							seconds = seconds * 1000;
-							attr4.setValue(String.valueOf(seconds));
-						} catch (NumberFormatException e) {
-							attr4.setValue(getAttributeValue(aa));
-						}
+        content.setTextContent(getContent());
 
-					} else {
-						attr4.setValue(getAttributeValue(aa));
+        for (Content c : subcontent.getContents()) {
+            Element sub = c.createXML(doc, zout, g);
 
-					}
-					content.setAttributeNode(attr4);
-				}
-			}
+            content.appendChild(sub);
 
-		}
+        }
 
-		return content;
-	}
+        Attr attr = doc.createAttribute("id");
+        attr.setValue(String.valueOf(id));
+        content.setAttributeNode(attr);
 
-	public Element createXML(Document doc, ZipOutputStream zout, Game g) {
-		Element content = null;
+        for (AttributeType aa : getAllAttributes()) {
 
-		content = doc.createElement(type.getXMLType());
+            if (getAttributeValue(aa) != null) {
+                if ((!getAttributeValue(aa).equals("")) && (!getAttributeValue(aa).equals(" "))) {
 
-		content.setTextContent(getContent());
+                    Attr attr4 = doc.createAttribute(aa.getXMLType());
 
-		for (Content c : subcontent.getContents()) {
-			Element sub = c.createXML(doc, zout, g);
+                    if (aa.getFileType().equals("boolean") && aa.getXMLType().equals("correct")) {
 
-			content.appendChild(sub);
+                        if (getAttributeValue(aa).equals("true")) {
+                            attr4.setValue("1");
+                        } else {
+                            attr4.setValue("0");
+                        }
 
-		}
+                    } else if (aa.getFileType().equals("file")) {
 
-		Attr attr = doc.createAttribute("id");
-		attr.setValue(String.valueOf(id));
-		content.setAttributeNode(attr);
+                        System.out.println("is File!");
+                        URL url;
+                        try {
+                            url = new URL(getAttributeValue(aa));
 
-		for (AttributeType aa : getAllAttributes()) {
+                            String path = getAttributeValue(aa);
+                            String[] splitResult = path.split("/");
 
-			if (getAttributeValue(aa) != null) {
-				if ((!getAttributeValue(aa).equals("")) && (!getAttributeValue(aa).equals(" "))) {
+                            path = splitResult[splitResult.length - 1];
 
-					Attr attr4 = doc.createAttribute(aa.getXMLType());
+                            File file = new File("public/uploads/" + Application.getLocalPortal().getId() + "/editor/"
+                                    + g.getId() + "/files", path);
+                            file.deleteOnExit();
 
-					if (aa.getFileType().equals("boolean") && aa.getXMLType().equals("correct")) {
+                            FileUtils.copyURLToFile(url, file);
 
-						if (getAttributeValue(aa).equals("true")) {
-							attr4.setValue("1");
-						} else {
-							attr4.setValue("0");
-						}
+                            attr4.setValue("files/" + path);
 
-					} else if (aa.getFileType().equals("file")) {
+                            final int BUFFER = 2048;
 
-						System.out.println("is File!");
-						URL url;
-						try {
-							url = new URL(getAttributeValue(aa));
+                            byte data[] = new byte[BUFFER];
 
-							String path = getAttributeValue(aa);
-							String[] splitResult = path.split("/");
+                            FileInputStream fis = new FileInputStream(file);
+                            BufferedInputStream bis = new BufferedInputStream(fis, BUFFER);
 
-							path = splitResult[splitResult.length - 1];
+                            ZipEntry ze = new ZipEntry("files/" + path);
+                            zout.putNextEntry(ze);
 
-							File file = new File("public/uploads/" + Application.getLocalPortal().getId() + "/editor/"
-									+ g.getId() + "/files", path);
-							file.deleteOnExit();
+                            int size = -1;
+                            while ((size = bis.read(data, 0, BUFFER)) != -1) {
+                                zout.write(data, 0, size);
+                            }
 
-							FileUtils.copyURLToFile(url, file);
+                            zout.closeEntry();
 
-							attr4.setValue("files/" + path);
+                        } catch (MalformedURLException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
 
-							final int BUFFER = 2048;
+                    } else if (aa.getRealFileType().equals("seconds") || aa.getRealFileType().equals("stringseconds")) {
 
-							byte data[] = new byte[BUFFER];
+                        try {
+                            int seconds = Integer.parseInt(getAttributeValue(aa));
+                            seconds = seconds * 1000;
+                            attr4.setValue(String.valueOf(seconds));
+                        } catch (NumberFormatException e) {
+                            attr4.setValue(getAttributeValue(aa));
+                        }
 
-							FileInputStream fis = new FileInputStream(file);
-							BufferedInputStream bis = new BufferedInputStream(fis, BUFFER);
+                    } else {
+                        attr4.setValue(getAttributeValue(aa));
 
-							ZipEntry ze = new ZipEntry("files/" + path);
-							zout.putNextEntry(ze);
+                    }
+                    content.setAttributeNode(attr4);
+                }
+            }
 
-							int size = -1;
-							while ((size = bis.read(data, 0, BUFFER)) != -1) {
-								zout.write(data, 0, size);
-							}
+        }
 
-							zout.closeEntry();
+        return content;
 
-						} catch (MalformedURLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+    }
 
-					} else if (aa.getRealFileType().equals("seconds") || aa.getRealFileType().equals("stringseconds")) {
+    public List<Rule> getRules() {
+        return rules;
+    }
 
-						try {
-							int seconds = Integer.parseInt(getAttributeValue(aa));
-							seconds = seconds * 1000;
-							attr4.setValue(String.valueOf(seconds));
-						} catch (NumberFormatException e) {
-							attr4.setValue(getAttributeValue(aa));
-						}
+    public Rule getRule(RuleType rt) {
+        for (Rule r : rules) {
+            if (r.getTrigger().equals(rt.getTrigger())) {
+                return r;
+            }
+        }
 
-					} else {
-						attr4.setValue(getAttributeValue(aa));
+        return null;
+    }
 
-					}
-					content.setAttributeNode(attr4);
-				}
-			}
+    public boolean hasRule(RuleType rt) {
+        for (Rule r : rules) {
+            if (r.getTrigger().equals(rt.getTrigger())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-		}
+    public void addRule(Rule r) {
+        rules.add(r);
+    }
 
-		return content;
+    public Content migrateTo(ContentType nct) {
+        Content c = new Content(name, nct);
 
-	}
+        // CONTENT
+        c.setContent(content);
+        c.setParent(parent);
+        c.save();
 
-	public Content migrateTo(ContentType nct) {
-		Content c = new Content(name, nct);
+        // ATTRIBUTES
+        for (Attribute at : attributes) {
+            boolean done = false;
+            AttributeType attt = at.getType();
 
-		// CONTENT
-
-		c.setContent(content);
-		c.setParent(parent);
-		c.save();
-
-		// ATTRIBUTES
-		for (Attribute at : attributes) {
-
-			boolean done = false;
-			AttributeType attt = at.getType();
-
-			for (AttributeType atrt : nct.getAttributeTypes()) {
-
+            for (AttributeType atrt : nct.getAttributeTypes()) {
 //				if (atrt.getXMLType().equals(attt.getXMLType())) {
-				if (atrt.getName().equals(attt.getName())) {
-					c.setAttribute(at.migrateTo(atrt));
-					c.update();
-					done = true;
-				}
+                if (atrt.getName().equals(attt.getName())) {
+                    c.setAttribute(at.migrateTo(atrt));
+                    c.update();
+                    done = true;
+                }
+            }
 
-			}
+            if (done == false) {
+                System.out.println("Didn't find AttributeType (Content) " + at.getName());
+            }
 
-			if (done == false) {
+            c.update();
+        }
 
-				System.out.println("Didn't find AttributeType (Content) " + at.getName());
-			}
+        // SUBCONTENT
+        for (Content sc : subcontent.getContents()) {
+            boolean done = false;
+            ContentType sct = sc.getType();
+            for (ContentType nsct : nct.getPossibleContentTypes()) {
+                if (sct.getXMLType().equals(nsct.getXMLType())) {
+                    c.addSubContent(sc.migrateTo(nsct));
+                    c.update();
+                    done = true;
+                }
+            }
+        }
 
-			c.update();
+        // RULES
+        for (Rule r : rules) {
+            String oldtrigger = r.getTrigger();
+            boolean done = false;
 
-		}
+            for (RuleType nrt : type.getPossibleRuleTypes()) {
+                if (nrt.getTrigger().equals(oldtrigger)) {
+                    c.addRule(r.migrateTo(nrt));
+                    c.update();
+                    done = true;
+                    break;
+                }
+            }
 
-		// SUBCONTENT
+            if (done == false) {
+                System.out.println("Error during Migration: Didn't find RuleType " + oldtrigger);
+            }
+        }
 
-		for (Content sc : subcontent.getContents()) {
+        c.update();
+        return c;
+    }
 
-			boolean done = false;
+    public Attribute getAttribute(AttributeType at) {
 
-			ContentType sct = sc.getType();
+        Attribute x = null;
 
-			for (ContentType nsct : nct.getPossibleContentTypes()) {
+        for (Attribute aa : attributes) {
 
-				if (sct.getXMLType().equals(nsct.getXMLType())) {
+            if (aa.getXMLType().equals(at.getXMLType())) {
 
-					c.addSubContent(sc.migrateTo(nsct));
-					c.update();
-					done = true;
+                x = aa;
 
-				}
+            }
 
-			}
+        }
 
-		}
-		c.update();
+        return x;
+    }
 
-		return c;
-	}
+    @JSON(include = false)
+    public Content getParent() {
+        return parent;
+    }
 
-	public Attribute getAttribute(AttributeType at) {
+    @JSON(include = true)
+    public String getTypeDescription() {
+        return type.getXMLType();
+    }
 
-		Attribute x = null;
+    @JSON(include = false)
+    public Long getParentId() {
+        if (parent != null) {
+            return parent.getId();
+        } else {
 
-		for (Attribute aa : attributes) {
-
-			if (aa.getXMLType().equals(at.getXMLType())) {
-
-				x = aa;
-
-			}
-
-		}
-
-		return x;
-	}
-
-	@JSON(include = false)
-	public Content getParent() {
-		return parent;
-	}
-
-	@JSON(include = true)
-	public String getTypeDescription() {
-		return type.getXMLType();
-	}
-
-	@JSON(include = false)
-	public Long getParentId() {
-		if (parent != null) {
-			return parent.getId();
-		} else {
-
-			return 0L;
-		}
-	}
+            return 0L;
+        }
+    }
 
 }

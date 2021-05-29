@@ -640,65 +640,73 @@ $.ajax({
 }
 
 
+function openMissionRule(id) {
+	if (document.getElementById('ruleedit_m' + id)) {
+		hidePlayer();
+		document.getElementById('ruleedit_m' + id).style.display = 'block';
+	} else {
+		document.getElementById('loadingpic').style.display = 'block';
 
-function openMissionRule(id){
+		var url = "@Global.SERVER_URL_2/editor/@g.getId/fragments/Mission/" + id + "/ruleedit";
+		$.ajax({
+			url: url,
+			dataType: 'html',
+			success: function (data) {
+				document.getElementById('rulesinmissioncontainer' + id).innerHTML += data;
+				document.getElementById('loadingpic').style.display = 'none';
 
+				/*
+                 * OPEN NEW DIV
+                 */
+				hideAddEditMissions();
+				hidePlayer();
 
-if(document.getElementById('ruleedit_m'+id)){
-
-
-
-	hidePlayer();
-document.getElementById('ruleedit_m'+id).style.display = 'block';
-
-} else {
-
-
-document.getElementById('loadingpic').style.display='block';
-
-	var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Mission/"+id+"/ruleedit";
-$.ajax({
-  url: url,
-  dataType: 'html',
-  success: function(data){
-            document.getElementById('rulesinmissioncontainer'+id).innerHTML += data;
-           
-    document.getElementById('loadingpic').style.display='none';
-    
-    
-    
-    
-    /*
-	 * OPEN NEW DIV
-	 */
-  		 
-  
-  hideAddEditMissions();
-	hidePlayer();
-
-  document.getElementById('ruleedit_m'+id).style.display='block';
-  
-  
-  		 
-    
-
-    
-    
-    
-    
-    
-           }
-
-});
-  	
-  		
-
+				document.getElementById('ruleedit_m' + id).style.display = 'block';
+			}
+		});
+	}
 }
 
+function openContentRule(id) {
+	console.log("openContentRule(" + id + ")");
+	if (document.getElementById('ruleedit_m' + id)) {
+		hidePlayer();
+		document.getElementById('ruleedit_m' + id).style.display = 'block';
+		console.log("openContentRule ### 1 if");
 
+	} else {
+		document.getElementById('loadingpic').style.display = 'block';
 
+		var url = "@Global.SERVER_URL_2/editor/@g.getId/fragments/Content/" + id + "/ruleedit";
 
+		console.log("openContentRule ### 2 else --- url: " + url);
+		$.ajax({
+			url: url,
+			dataType: 'html',
+			success: function (data) {
+				var container = document.getElementById('contentviewcontainer');
+				// TODO find correct div to place html fragment into innerhtml:
+				if (container == null) {
+					console.log("contentviewcontainer == null");
+				} else {
+					console.log("found contentviewcontainer");
+					container.innerHTML += data;
+				}
+				document.getElementById('loadingpic').style.display = 'none';
 
+				/*
+                 * OPEN NEW DIV
+                 */
+				hideAddEditMissions();
+				hidePlayer();
+
+				if (container != null) {
+					container.style.display = 'block';
+				}
+				document.getElementById('ruleedit_c' + id).style.display = 'block';
+			}
+		});
+	}
 }
 
 
@@ -716,61 +724,47 @@ document.getElementById("iewarning").style.display ='block';
 }
 
 
-function connectionTester(){
+function connectionTester() {
+	if (document.getElementById('connection_half').style.display == 'block') {
+		document.getElementById('connection_half').style.display = 'none';
+		document.getElementById('connection_yellow_trying').style.display = 'block';
+	} else if (document.getElementById('connection_full').style.display == 'block') {
+		document.getElementById('connection_full').style.display = 'none';
+		document.getElementById('connection_green_trying').style.display = 'block';
+	} else if (document.getElementById('connection_no').style.display == 'block') {
+		document.getElementById('connection_no').style.display = 'none';
+		document.getElementById('connection_red_trying').style.display = 'block';
+	}
 
-if(document.getElementById('connection_half').style.display=='block'){
-document.getElementById('connection_half').style.display='none';
-document.getElementById('connection_yellow_trying').style.display = 'block';
-             
-} else if(document.getElementById('connection_full').style.display=='block'){
-document.getElementById('connection_full').style.display='none';
-document.getElementById('connection_green_trying').style.display = 'block';
-} else if(document.getElementById('connection_no').style.display=='block'){
-document.getElementById('connection_no').style.display='none';
-document.getElementById('connection_red_trying').style.display = 'block';
-}
-
-var ajaxTime= new Date().getTime();
-var url ="@Global.SERVER_URL_2/testConnection";
-$.ajax({
-  url: url,
-  dataType: 'html',
-  timeout: 10000,
-    error: function(jqXHR, textStatus, errorThrown) {
-       
-       
-       document.getElementById('connection_yellow_trying').style.display='none';
-       document.getElementById('connection_green_trying').style.display='none';
-       document.getElementById('connection_red_trying').style.display='none';
-       
-       
-          		document.getElementById('connection_no').style.display='block';
-          		
-      
-        
-    },
-  success: function(data){
-   document.getElementById('connection_yellow_trying').style.display='none';
-       document.getElementById('connection_green_trying').style.display='none';
-       document.getElementById('connection_red_trying').style.display='none';
-  var totalTime = new Date().getTime()-ajaxTime;
-  if(totalTime< 2000){
-		document.getElementById('connection_full').style.display='block';
-
-		  } else {
-		document.getElementById('connection_half').style.display='block';
-		  
-		  }
-           }
-
-});
+	var ajaxTime = new Date().getTime();
+	var url = "@Global.SERVER_URL_2/testConnection";
+	$.ajax({
+		url: url,
+		dataType: 'html',
+		timeout: 10000,
+		error: function (jqXHR, textStatus, errorThrown) {
+			document.getElementById('connection_yellow_trying').style.display = 'none';
+			document.getElementById('connection_green_trying').style.display = 'none';
+			document.getElementById('connection_red_trying').style.display = 'none';
+			document.getElementById('connection_no').style.display = 'block';
+		},
+		success: function (data) {
+			document.getElementById('connection_yellow_trying').style.display = 'none';
+			document.getElementById('connection_green_trying').style.display = 'none';
+			document.getElementById('connection_red_trying').style.display = 'none';
+			var totalTime = new Date().getTime() - ajaxTime;
+			if (totalTime < 2000) {
+				document.getElementById('connection_full').style.display = 'block';
+			} else {
+				document.getElementById('connection_half').style.display = 'block';
+			}
+		}
+	});
 
 
-
-
-setTimeout(function(){connectionTester()}, 10000);
-
-
+	setTimeout(function () {
+		connectionTester()
+	}, 10000);
 }
 
 
@@ -1432,95 +1426,68 @@ function textareaLengthCheck(textareaId,countId) {
 }
 
 
+function newRuleInMission(m, rt, a) {
+	var a = a || document.getElementById('actiontypert_' + rt + '_m' + m).value;
 
-function newRuleInMission(m,rt,a){
+	var xmlhttp;
+	if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+		xmlhttp = new XMLHttpRequest();
+	} else {// code for IE6, IE5
+		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
 
+	var xmlhttp2;
+	if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+		xmlhttp2 = new XMLHttpRequest();
+	} else {// code for IE6, IE5
+		xmlhttp2 = new ActiveXObject("Microsoft.XMLHTTP");
+	}
 
-
-            var a = a || document.getElementById('actiontypert_'+rt+'_m'+m).value;
-
-
-var xmlhttp;
-if (window.XMLHttpRequest)
-  {// code for IE7+, Firefox, Chrome, Opera, Safari
-  xmlhttp=new XMLHttpRequest();
-  }
-else
-  {// code for IE6, IE5
-  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  }
-  
-  
-var xmlhttp2;
-if (window.XMLHttpRequest)
-  {// code for IE7+, Firefox, Chrome, Opera, Safari
-  xmlhttp2=new XMLHttpRequest();
-  }
-else
-  {// code for IE6, IE5
-  xmlhttp2=new ActiveXObject("Microsoft.XMLHTTP");
-  }
-  
-
-
-
-xmlhttp.onreadystatechange=function()
-  {
-  	if (xmlhttp.readyState==4 && xmlhttp.status==200)
-  	{
-  		
-		
-		
-  		var url ="@Global.SERVER_URL_2/editor/@g.getId/fragments/Mission/"+m+"/Rule/"+xmlhttp.responseText+"/oftype/"+rt;
-$.ajax({
-  url: url,
-  dataType: 'html',
-  success: function(data){
-           
-            
-            
-            
-            
-            
-            
-             document.getElementById('trigger_m'+m+'_'+rt).innerHTML = data;
-            
-             
-             
-newActionInRule(xmlhttp.responseText,rt,a,m);
-            
-           }
-
-});
-  		
-
-
-
-
-
-
-
-
-
-
-       
-  		
-  		
+	xmlhttp.onreadystatechange = function () {
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			var url = "@Global.SERVER_URL_2/editor/@g.getId/fragments/Mission/" + m + "/Rule/" + xmlhttp.responseText + "/oftype/" + rt;
+			$.ajax({
+				url: url,
+				dataType: 'html',
+				success: function (data) {
+					document.getElementById('trigger_m' + m + '_' + rt).innerHTML = data;
+					newActionInRule(xmlhttp.responseText, rt, a, m);
+				}
+			});
 		}
 	}
-    
-    
- 
-  
-xmlhttp.open("GET",'@Global.SERVER_URL_2/editor/@g.getId/mission/'+m+'/add/rule/'+rt,true);
-xmlhttp.send();
 
+	xmlhttp.open("GET", '@Global.SERVER_URL_2/editor/@g.getId/mission/' + m + '/add/rule/' + rt, true);
+	xmlhttp.send();
+}
 
-  
+function newRuleInContent(c, rt, a) {
+	// adapted from newRuleInMission from which it was copied.
+	var a = a || document.getElementById('actiontypert_' + rt + '_c' + c).value;
 
+	var xmlhttp;
+	if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+		xmlhttp = new XMLHttpRequest();
+	} else {// code for IE6, IE5
+		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
 
+	xmlhttp.onreadystatechange = function () {
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			var url = "@Global.SERVER_URL_2/editor/@g.getId/fragments/Content/" + c + "/Rule/" + xmlhttp.responseText + "/oftype/" + rt;
+			$.ajax({
+				url: url,
+				dataType: 'html',
+				success: function (data) {
+					document.getElementById('trigger_c' + c + '_' + rt).innerHTML = data;
+					newActionInRule(xmlhttp.responseText, rt, a, c);
+				}
+			});
+		}
+	}
 
-
+	xmlhttp.open("GET", '@Global.SERVER_URL_2/editor/@g.getId/content/' + c + '/add/rule/' + rt, true);
+	xmlhttp.send();
 }
 
 function newRuleInHotspot(h,rt,a){

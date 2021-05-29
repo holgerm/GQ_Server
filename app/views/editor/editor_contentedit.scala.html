@@ -6,40 +6,37 @@
 
 		<div class="inneredit" id="contentedit@c.getId" name="contentedit@c.getId">
 		
-		 				              				<div class="scrollable-content" style="overflow:auto; height:100%; width:100%;">
+			<div class="scrollable-content" style="overflow:auto; height:100%; width:100%;">
 		
-									        				<div class="options">
+				<div class="options">
 									        				
-									        				<i class="icon-resize-full" onClick="javascript:toggleFullscreen('contentedit@c.getId','90%','60%','200px','5%','25px')"></i>
-									        				<i class="icon-remove" onClick="javascript:document.getElementById('contentedit@c.getId').style.display = 'none';deactiveFullscreen('contentedit@c.getId','90%','60%','200px','5%','25px')"></i>
+					<i class="icon-resize-full"
+						onClick="javascript:toggleFullscreen('contentedit@c.getId','90%','60%','200px','5%','25px')"></i>
+					<i class="icon-remove"
+						onClick="javascript:document.getElementById('contentedit@c.getId').style.display = 'none';deactiveFullscreen('contentedit@c.getId','90%','60%','200px','5%','25px')"></i>
 									        				
-									        				</div>
+				</div>
 									        				
-									        				
-									        				<input type="text" class="h2textfield" id="contentname@c.getId" value="@c.getName()"
-              				onchange="javascript:syncName('content',@c.getId)" onkeydown="document.getElementById('status_contentname@c.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");">
-                      		<img id="status_contentname@c.getId" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
+				<input type="text" class="h2textfield" id="contentname@c.getId" value="@c.getName()"
+					onchange="javascript:syncName('content',@c.getId)"
+					onkeydown="document.getElementById('status_contentname@c.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");">
+
+				<img id="status_contentname@c.getId" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
         
+				<br/>
+
+				<p><!-- TODO: Ereignisse Link einbauen -->
+				@Application.getLanguage("Optionen"):<span style="cursor:pointer;" onClick="javascript:hideAddEditMissions();openContentRule(@c.getId());"> <icon style="height:20px; width:20px; background-image:url('@Global.SERVER_URL_2/assets/icons/actions/default.png'); background-size:20px 20px; background-position:0px 24px; display:inline-block;"></icon> @Application.getLanguage("Ereignisse")</span>
+				</p>
 									        				
-									        				
-									        				
-									        				
-									        				<br/>
-									        				
-									        				
-									        				
-									        				
-									        				
-							<textarea id="contentvaluename@c.getId"
-              				onchange="javascript:syncName('contentvalue',@c.getId)" onkeydown="document.getElementById('status_contentvaluename@c.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");"
-              				 rows = "3" cols = "80">@c.getContent</textarea>
-                      		<img id="status_contentvaluename@c.getId" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
+				<textarea id="contentvaluename@c.getId"
+					onchange="javascript:syncName('contentvalue',@c.getId)"
+					onkeydown="document.getElementById('status_contentvaluename@c.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");"
+					rows = "3" cols = "80">@c.getContent</textarea>
+				<img id="status_contentvaluename@c.getId"
+					src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
         
-									        				
-									        				
-									        				
-									        				
-									        				<br/>
+				<br/>
 									        				
 									        				<h4>@Application.getLanguage("Einstellungen")</h4>
 									        				

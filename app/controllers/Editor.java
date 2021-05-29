@@ -48,4361 +48,4441 @@ import be.objectify.deadbolt.java.actions.Restrict;
 
 public class Editor extends Controller {
 
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getEditor(Long gid) {
+
+        System.out.println("getEditor ### 1");
+
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+
+        } else {
+
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
+
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+            } else {
+                Game game = Game.find.byId(gid);
+                return ok(views.html.editor.editormain.render(game));
+            }
+
+        }
+
+    }
+
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getEditorRedirect(Long gid, Long pid) {
+
+        return redirect(Global.SERVER_URL_2 + "/editor/" + gid);
+
+    }
+
+    /*
+     * FRAGMENTS FOR EDITOR-RELOAD
+     */
+
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getPartInSideMenuForEditor(Long gid, Long pid) {
+
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+
+        } else {
+
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
+
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+            } else {
+
+                if (Part.find.where().eq("id", pid).findRowCount() != 1) {
+
+                    return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+
+                } else {
+
+                    return ok(
+                            views.html.editor.editor_apartinsidemenu.render(Game.find.byId(gid), Part.find.byId(pid)));
+
+                }
+            }
+
+        }
+
+    }
+
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getMissionListInSideMenuForEditor(Long gid) {
+
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+
+        } else {
+
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
+
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+            } else {
+
+                return ok(views.html.editor.editor_sidemenu_missionlist.render(Game.find.byId(gid)));
+
+            }
+
+        }
+    }
+
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getMenuItemInSideMenuForEditor(Long gid, Long pid) {
+
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+
+        } else {
+
+            if (MenuItem.find.where().eq("id", pid).findRowCount() != 1) {
+
+                return badRequest(views.html.norights.render("Das Menu-Item existiert nicht"));
+
+            } else {
+
+                if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                        Game.find.byId(gid)) == false) {
+
+                    return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+                } else {
+
+                    return ok(views.html.editor.editor_amenuiteminsidemenu.render(Game.find.byId(gid),
+                            MenuItem.find.byId(pid)));
+
+                }
+
+            }
+
+        }
+    }
+
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getHotspotInSideMenuForEditor(Long gid, Long pid) {
+
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+
+        } else {
+
+            if (Hotspot.find.where().eq("id", pid).findRowCount() != 1) {
+
+                return badRequest(views.html.norights.render("Der Hotspot existiert nicht"));
+
+            } else {
+
+                if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                        Game.find.byId(gid)) == false) {
+
+                    return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+                } else {
+
+                    return ok(views.html.editor.editor_ahotspotinsidemenu.render(Game.find.byId(gid),
+                            Hotspot.find.byId(pid)));
+
+                }
+
+            }
+
+        }
+
+    }
+
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getHotspotRulesForEditor(Long gid, Long pid) {
+
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+
+        } else {
+
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
+
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+            } else {
+
+                if (Hotspot.find.where().eq("id", pid).findRowCount() != 1) {
+
+                    return badRequest(views.html.norights.render("Der Hotspot existiert nicht"));
+
+                } else {
+
+                    return ok(views.html.editor.editor_rulesinhotspot.render(Game.find.byId(gid),
+                            Hotspot.find.byId(pid)));
+
+                }
+
+            }
+
+        }
+
+    }
+
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getMissionRulesForEditor(Long gid, Long pid) {
+
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+
+        } else {
+
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
+
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+
+            } else {
+
+                if (Mission.find.where().eq("id", pid).findRowCount() != 1) {
+
+                    return badRequest(views.html.norights.render("Die Mission existiert nicht"));
+
+                } else {
+                    System.out.println("editor_rulesinmission.render(" + gid + ", " + pid + ")");
+                    return ok(views.html.editor.editor_rulesinmission.render(Game.find.byId(gid),
+                            Mission.find.byId(pid)));
+                }
+            }
+        }
+
+    }
+
 	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getEditor(Long gid) {
-
+	public static Result getContentRulesForEditor(Long gid, Long pid) {
 		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
-
 			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
-
-		} else {
-
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
-
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
-
-			} else {
-				Game game = Game.find.byId(gid);
-				return ok(views.html.editor.editormain.render(game));
-			}
-
-		}
-
-	}
-
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getEditorRedirect(Long gid, Long pid) {
-
-		return redirect(Global.SERVER_URL_2 + "/editor/" + gid);
-
-	}
-
-	/*
-	 * FRAGMENTS FOR EDITOR-RELOAD
-	 */
-
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getPartInSideMenuForEditor(Long gid, Long pid) {
-
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
-
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
-
-		} else {
-
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
-
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
-
-			} else {
-
-				if (Part.find.where().eq("id", pid).findRowCount() != 1) {
-
-					return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
-
-				} else {
-
-					return ok(
-							views.html.editor.editor_apartinsidemenu.render(Game.find.byId(gid), Part.find.byId(pid)));
-
-				}
-			}
-
-		}
-
-	}
-
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getMissionListInSideMenuForEditor(Long gid) {
-
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
-
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
-
-		} else {
-
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
-
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
-
-			} else {
-
-				return ok(views.html.editor.editor_sidemenu_missionlist.render(Game.find.byId(gid)));
-
-			}
-
-		}
-	}
-
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getMenuItemInSideMenuForEditor(Long gid, Long pid) {
-
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
-
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
-
-		} else {
-
-			if (MenuItem.find.where().eq("id", pid).findRowCount() != 1) {
-
-				return badRequest(views.html.norights.render("Das Menu-Item existiert nicht"));
-
-			} else {
-
-				if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-						Game.find.byId(gid)) == false) {
-
-					return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
-
-				} else {
-
-					return ok(views.html.editor.editor_amenuiteminsidemenu.render(Game.find.byId(gid),
-							MenuItem.find.byId(pid)));
-
-				}
-
-			}
-
-		}
-	}
-
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getHotspotInSideMenuForEditor(Long gid, Long pid) {
-
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
-
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
-
 		} else {
-
-			if (Hotspot.find.where().eq("id", pid).findRowCount() != 1) {
-
-				return badRequest(views.html.norights.render("Der Hotspot existiert nicht"));
-
-			} else {
-
-				if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-						Game.find.byId(gid)) == false) {
-
-					return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
-
-				} else {
-
-					return ok(views.html.editor.editor_ahotspotinsidemenu.render(Game.find.byId(gid),
-							Hotspot.find.byId(pid)));
-
-				}
-
-			}
-
-		}
-
-	}
-
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getHotspotRulesForEditor(Long gid, Long pid) {
-
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
-
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
-
-		} else {
-
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
-
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
-
-			} else {
-
-				if (Hotspot.find.where().eq("id", pid).findRowCount() != 1) {
-
-					return badRequest(views.html.norights.render("Der Hotspot existiert nicht"));
-
-				} else {
-
-					return ok(views.html.editor.editor_rulesinhotspot.render(Game.find.byId(gid),
-							Hotspot.find.byId(pid)));
-
-				}
-
-			}
-
-		}
-
-	}
-
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getMissionRulesForEditor(Long gid, Long pid) {
-
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
-
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
-
-		} else {
-
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
-
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
-
-			} else {
-
-				if (Mission.find.where().eq("id", pid).findRowCount() != 1) {
-
-					return badRequest(views.html.norights.render("Die Mission existiert nicht"));
-
-				} else {
-
-					return ok(views.html.editor.editor_rulesinmission.render(Game.find.byId(gid),
-							Mission.find.byId(pid)));
-
-				}
-			}
-		}
-
-	}
-
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getMarkerAddScriptForEditor(Long gid, Long pid, boolean last) {
-
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
-
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
-
-		} else {
-
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
 					Game.find.byId(gid)) == false) {
-
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
-
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 			} else {
-
-				if (Hotspot.find.where().eq("id", pid).findRowCount() != 1) {
-
-					return badRequest(views.html.norights.render("Der Hotspot existiert nicht"));
-
+                if (Content.find.where().eq("id", pid).findRowCount() != 1) {
+                     return badRequest(views.html.norights.render("Dieser Content existiert nicht"));
 				} else {
-
-					return ok(views.html.editor.leaflet_addmarker.render(Game.find.byId(gid), Hotspot.find.byId(pid),
-							last));
-
+                    Game game = Game.find.byId(gid);
+                    Content content = Content.find.byId(pid);
+                    return ok(views.html.editor.editor_rulesincontent.render(game, content));
 				}
 			}
-
 		}
-
 	}
-
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getPartInfoForEditor(Long gid, Long pid) {
-
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
-
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
-
-		} else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
-
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
-
-			} else {
-				if (Part.find.where().eq("id", pid).findRowCount() != 1) {
-
-					return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
-
-				} else {
-
-					return ok(views.html.editor.editor_allmissioninfo.render(Game.find.byId(gid),
-							Part.find.byId(pid).getMission()));
-
-				}
-			}
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getMarkerAddScriptForEditor(Long gid, Long pid, boolean last) {
 
-		}
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-	}
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getMissionInfoForEditor(Long gid, Long pid) {
+        } else {
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		} else {
+            } else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+                if (Hotspot.find.where().eq("id", pid).findRowCount() != 1) {
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    return badRequest(views.html.norights.render("Der Hotspot existiert nicht"));
 
-			} else {
+                } else {
 
-				if (Mission.find.where().eq("id", pid).findRowCount() != 1) {
+                    return ok(views.html.editor.leaflet_addmarker.render(Game.find.byId(gid), Hotspot.find.byId(pid),
+                            last));
 
-					return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+                }
+            }
 
-				} else {
+        }
 
-					return ok(views.html.editor.editor_allmissioninfo.render(Game.find.byId(gid),
-							Mission.find.byId(pid)));
+    }
 
-				}
-			}
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getPartInfoForEditor(Long gid, Long pid) {
 
-		}
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-	}
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getSceneInfoForEditor(Long gid, Long pid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+        } else {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-		}
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+            } else {
+                if (Part.find.where().eq("id", pid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+                    return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-		} else {
+                } else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+                    return ok(views.html.editor.editor_allmissioninfo.render(Game.find.byId(gid),
+                            Part.find.byId(pid).getMission()));
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                }
+            }
 
-			} else {
+        }
 
-				if (Part.find.where().eq("id", pid).findRowCount() != 1) {
+    }
 
-					return badRequest(views.html.norights.render("Die Szene existiert nicht"));
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getMissionInfoForEditor(Long gid, Long pid) {
 
-				} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-					return ok(views.html.editor.editor_allsceneinfo.render(Game.find.byId(gid),
-							Part.find.byId(pid).getScene()));
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				}
-			}
+        } else {
 
-		}
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-	}
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getHotspotPopupContent(Long gid, Long hid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+            } else {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                if (Mission.find.where().eq("id", pid).findRowCount() != 1) {
 
-		}
+                    return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+                } else {
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+                    return ok(views.html.editor.editor_allmissioninfo.render(Game.find.byId(gid),
+                            Mission.find.byId(pid)));
 
-		} else {
+                }
+            }
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+        }
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+    }
 
-			} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getSceneInfoForEditor(Long gid, Long pid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-				if (Hotspot.find.where().eq("id", hid).findRowCount() != 1) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					return badRequest(views.html.norights.render("Der Hotspot existiert nicht"));
+        }
 
-				} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-					return ok(
-							views.html.editor.editor_ahotspotpopup.render(Game.find.byId(gid), Hotspot.find.byId(hid)));
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				}
-			}
+        } else {
 
-		}
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-	}
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getIdFromPart(Long gid, Long pid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+            } else {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                if (Part.find.where().eq("id", pid).findRowCount() != 1) {
 
-		}
+                    return badRequest(views.html.norights.render("Die Szene existiert nicht"));
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+                } else {
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+                    return ok(views.html.editor.editor_allsceneinfo.render(Game.find.byId(gid),
+                            Part.find.byId(pid).getScene()));
 
-		} else {
+                }
+            }
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+        }
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+    }
 
-			} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getHotspotPopupContent(Long gid, Long hid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-				if (Part.find.where().eq("id", pid).findRowCount() != 1) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+        }
 
-				} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-					Part x = Part.find.byId(pid);
-					if (x.isScene()) {
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-						return ok(String.valueOf(x.getScene().getId()));
+        } else {
 
-					} else {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-						return ok(String.valueOf(x.getMission().getId()));
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					}
+            } else {
 
-				}
-			}
+                if (Hotspot.find.where().eq("id", hid).findRowCount() != 1) {
 
-		}
+                    return badRequest(views.html.norights.render("Der Hotspot existiert nicht"));
 
-	}
+                } else {
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getIdFromSceneHotspot(Long gid, Long pid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                    return ok(
+                            views.html.editor.editor_ahotspotpopup.render(Game.find.byId(gid), Hotspot.find.byId(hid)));
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                }
+            }
 
-		}
+        }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+    }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getIdFromPart(Long gid, Long pid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-		} else {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+        }
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			} else {
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				if (Scene.find.where().eq("id", pid).findRowCount() != 1) {
+        } else {
 
-					return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				} else {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					Scene x = Scene.find.byId(pid);
-					if (!x.getHotspots().isEmpty()) {
+            } else {
 
-						return ok(String.valueOf(x.getHotspots().get(0).getId()));
+                if (Part.find.where().eq("id", pid).findRowCount() != 1) {
 
-					} else {
+                    return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-						return ok("NO");
+                } else {
 
-					}
+                    Part x = Part.find.byId(pid);
+                    if (x.isScene()) {
 
-				}
-			}
+                        return ok(String.valueOf(x.getScene().getId()));
 
-		}
-	}
+                    } else {
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getNewContentInContentForEditor(Long gid, Long cid, Long mid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                        return ok(String.valueOf(x.getMission().getId()));
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    }
 
-		}
+                }
+            }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    }
 
-		} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getIdFromSceneHotspot(Long gid, Long pid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-			} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-					return badRequest(views.html.norights.render("Die Mission existiert nicht"));
+        } else {
 
-				} else {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-					if (Content.find.where().eq("id", cid).findRowCount() != 1) {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-						return badRequest(views.html.norights.render("Der Inhalt existiert nicht"));
+            } else {
 
-					} else {
+                if (Scene.find.where().eq("id", pid).findRowCount() != 1) {
 
-						return ok(views.html.editor.editor_contentincontent.render(Game.find.byId(gid),
-								Mission.find.byId(mid), Content.find.byId(cid)));
+                    return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-					}
+                } else {
 
-				}
-			}
+                    Scene x = Scene.find.byId(pid);
+                    if (!x.getHotspots().isEmpty()) {
 
-		}
+                        return ok(String.valueOf(x.getHotspots().get(0).getId()));
 
-	}
+                    } else {
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getRuleInMissionForEditor(Long gid, Long rtype, Long mid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                        return ok("NO");
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    }
 
-		}
+                }
+            }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        }
+    }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getNewContentInContentForEditor(Long gid, Long cid, Long mid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-		} else {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+        }
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			} else {
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
+        } else {
 
-					return badRequest(views.html.norights.render("Die Mission existiert nicht"));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				} else {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					if (RuleType.find.where().eq("id", rtype).findRowCount() != 1) {
+            } else {
 
-						return badRequest(views.html.norights.render("Der Inhalt existiert nicht"));
+                if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
-					} else {
+                    return badRequest(views.html.norights.render("Die Mission existiert nicht"));
 
-						return ok(views.html.editor.editor_rulesinmission.render(Game.find.byId(gid),
-								Mission.find.byId(mid)));
+                } else {
 
-					}
+                    if (Content.find.where().eq("id", cid).findRowCount() != 1) {
 
-				}
-			}
+                        return badRequest(views.html.norights.render("Der Inhalt existiert nicht"));
 
-		}
+                    } else {
 
-	}
+                        return ok(views.html.editor.editor_contentincontent.render(Game.find.byId(gid),
+                                Mission.find.byId(mid), Content.find.byId(cid)));
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getMissionSelectorForEditor(Long gid, String v) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                    }
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                }
+            }
 
-		}
+        }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+    }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getRuleInMissionForEditor(Long gid, Long rtype, Long mid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-		} else {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+        }
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			} else {
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				return ok(views.html.editor.editor_missionselector.render(Game.find.byId(gid), v));
+        } else {
 
-			}
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-		}
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-	}
+            } else {
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getHotspotSelectorForEditor(Long gid, String selectedValue) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    return badRequest(views.html.norights.render("Die Mission existiert nicht"));
 
-		}
+                } else {
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+                    if (RuleType.find.where().eq("id", rtype).findRowCount() != 1) {
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+                        return badRequest(views.html.norights.render("Der Inhalt existiert nicht"));
 
-		} else {
+                    } else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+                        return ok(views.html.editor.editor_rulesinmission.render(Game.find.byId(gid),
+                                Mission.find.byId(mid)));
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    }
 
-			} else {
+                }
+            }
 
-				return ok(views.html.editor.editor_hotspotselector.render(Game.find.byId(gid), selectedValue));
+        }
 
-			}
+    }
 
-		}
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getMissionSelectorForEditor(Long gid, String v) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-	}
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getContentListItemForEditor(Long gid, Long cid, Long mid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+        }
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-		}
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        } else {
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-		} else {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            } else {
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                return ok(views.html.editor.editor_missionselector.render(Game.find.byId(gid), v));
 
-			} else {
+            }
 
-				if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
+        }
 
-					return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    }
 
-				} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getHotspotSelectorForEditor(Long gid, String selectedValue) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-					if (Content.find.where().eq("id", cid).findRowCount() != 1) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-						return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+        }
 
-					} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-						return ok(views.html.editor.editor_acontentinmissionedit.render(Game.find.byId(gid),
-								Content.find.byId(cid), Mission.find.byId(mid)));
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-					}
+        } else {
 
-				}
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-			}
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		}
+            } else {
 
-	}
+                return ok(views.html.editor.editor_hotspotselector.render(Game.find.byId(gid), selectedValue));
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getContentInContentListForEditor(Long gid, Long cid, Long scid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+            }
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-		}
+    }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getContentListItemForEditor(Long gid, Long cid, Long mid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		} else {
+        }
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-			} else {
+        } else {
 
-				if (Content.find.where().eq("id", scid).findRowCount() != 1) {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-					return badRequest(views.html.norights.render("Der Sub-Content existiert nicht"));
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				} else {
+            } else {
 
-					if (Content.find.where().eq("id", cid).findRowCount() != 1) {
+                if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
-						return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+                    return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-					} else {
+                } else {
 
-						return ok(views.html.editor.editor_acontentincontent.render(Game.find.byId(gid),
-								Content.find.byId(scid), Content.find.byId(cid)));
+                    if (Content.find.where().eq("id", cid).findRowCount() != 1) {
 
-					}
+                        return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				}
-			}
+                    } else {
 
-		}
+                        return ok(views.html.editor.editor_acontentinmissionedit.render(Game.find.byId(gid),
+                                Content.find.byId(cid), Mission.find.byId(mid)));
 
-	}
+                    }
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getAllContentInMissionForEditor(Long gid, Long mid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                }
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            }
 
-		}
+        }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+    }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getContentInContentListForEditor(Long gid, Long cid, Long scid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-		} else {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+        }
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			} else {
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
+        } else {
 
-					return badRequest(views.html.norights.render("Die Mission existiert nicht"));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				} else {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					return ok(views.html.editor.editor_contentlistinmission.render(Game.find.byId(gid),
-							Mission.find.byId(mid)));
+            } else {
 
-				}
+                if (Content.find.where().eq("id", scid).findRowCount() != 1) {
 
-			}
+                    return badRequest(views.html.norights.render("Der Sub-Content existiert nicht"));
 
-		}
+                } else {
 
-	}
+                    if (Content.find.where().eq("id", cid).findRowCount() != 1) {
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getContentInContentForEditor(Long gid, Long cid, Long mid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                        return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    } else {
 
-		}
+                        return ok(views.html.editor.editor_acontentincontent.render(Game.find.byId(gid),
+                                Content.find.byId(scid), Content.find.byId(cid)));
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+                    }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+                }
+            }
 
-		} else {
+        }
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+    }
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getAllContentInMissionForEditor(Long gid, Long mid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			} else {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
+        }
 
-					return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				} else {
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-					if (Content.find.where().eq("id", cid).findRowCount() != 1) {
+        } else {
 
-						return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-					} else {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-						return ok(views.html.editor.editor_contentincontent.render(Game.find.byId(gid),
-								Mission.find.byId(mid), Content.find.byId(cid)));
+            } else {
 
-					}
+                if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
-				}
+                    return badRequest(views.html.norights.render("Die Mission existiert nicht"));
 
-			}
+                } else {
 
-		}
+                    return ok(views.html.editor.editor_contentlistinmission.render(Game.find.byId(gid),
+                            Mission.find.byId(mid)));
 
-	}
+                }
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getContentInfoForEditor(Long gid, Long cid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+            }
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-		}
+    }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getContentInContentForEditor(Long gid, Long cid, Long mid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		} else {
+        }
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-			} else {
+        } else {
 
-				if (Content.find.where().eq("id", cid).findRowCount() != 1) {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-					return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				} else {
+            } else {
 
-					return ok(views.html.editor.editor_contentedit.render(Game.find.byId(gid), Content.find.byId(cid)));
+                if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
-				}
+                    return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-			}
+                } else {
 
-		}
+                    if (Content.find.where().eq("id", cid).findRowCount() != 1) {
 
-	}
+                        return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getDevicesForEditor() {
+                    } else {
 
-		return ok(views.html.editor.editor_devices.render());
+                        return ok(views.html.editor.editor_contentincontent.render(Game.find.byId(gid),
+                                Mission.find.byId(mid), Content.find.byId(cid)));
 
-	}
+                    }
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getMissionActionInfoForEditor(Long gid, Long cid, String rtype, Integer z, Long mid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                }
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            }
 
-		}
+        }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+    }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getContentInfoForEditor(Long gid, Long cid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-		} else {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+        }
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			} else {
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				if (Action.find.where().eq("id", cid).findRowCount() != 1) {
+        } else {
 
-					return badRequest(views.html.norights.render("Die Action existiert nicht"));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				} else {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
+            } else {
 
-						return badRequest(views.html.norights.render("Die Mission existiert nicht"));
+                if (Content.find.where().eq("id", cid).findRowCount() != 1) {
 
-					} else {
+                    return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-						return ok(views.html.editor.editor_actioninmissionedit.render(Game.find.byId(gid),
-								Action.find.byId(cid), rtype, z, Mission.find.byId(mid)));
+                } else {
 
-					}
-				}
-			}
+                    return ok(views.html.editor.editor_contentedit.render(Game.find.byId(gid), Content.find.byId(cid)));
 
-		}
+                }
 
-	}
+            }
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getActionInfoForEditor(Long gid, Long cid, String rtype, Integer z) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+        }
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+    }
 
-		}
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getDevicesForEditor() {
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        return ok(views.html.editor.editor_devices.render());
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    }
 
-		} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getMissionActionInfoForEditor(Long gid, Long cid, String rtype, Integer z, Long mid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-			} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				if (Action.find.where().eq("id", cid).findRowCount() != 1) {
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-					return badRequest(views.html.norights.render("Die Action existiert nicht"));
+        } else {
 
-				} else {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-					return ok(views.html.editor.editor_actionedit.render(Game.find.byId(gid), Action.find.byId(cid),
-							rtype, z));
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				}
+            } else {
 
-			}
+                if (Action.find.where().eq("id", cid).findRowCount() != 1) {
 
-		}
+                    return badRequest(views.html.norights.render("Die Action existiert nicht"));
 
-	}
+                } else {
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getActionInRuleForEditor(Long gid, Long cid, Long rid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                    if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                        return badRequest(views.html.norights.render("Die Mission existiert nicht"));
 
-		}
+                    } else {
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+                        return ok(views.html.editor.editor_actioninmissionedit.render(Game.find.byId(gid),
+                                Action.find.byId(cid), rtype, z, Mission.find.byId(mid)));
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+                    }
+                }
+            }
 
-		} else {
+        }
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+    }
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getActionInfoForEditor(Long gid, Long cid, String rtype, Integer z) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			} else {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				if (Action.find.where().eq("id", cid).findRowCount() != 1) {
+        }
 
-					return badRequest(views.html.norights.render("Die Action existiert nicht"));
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				} else {
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-					if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
+        } else {
 
-						return badRequest(views.html.norights.render("Die Regel existiert nicht"));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-					} else {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-						return ok(views.html.editor.editor_aactionintrigger.render(Game.find.byId(gid),
-								Action.find.byId(cid), Rule.find.byId(rid)));
+            } else {
 
-					}
-				}
+                if (Action.find.where().eq("id", cid).findRowCount() != 1) {
 
-			}
+                    return badRequest(views.html.norights.render("Die Action existiert nicht"));
 
-		}
+                } else {
 
-	}
+                    return ok(views.html.editor.editor_actionedit.render(Game.find.byId(gid), Action.find.byId(cid),
+                            rtype, z));
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getActionInActionAttributeForEditor(Long gid, Long aid, Long parent, Long atrid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                }
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            }
 
-		}
+        }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+    }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getActionInRuleForEditor(Long gid, Long cid, Long rid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-		} else {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+        }
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			} else {
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				if (Action.find.where().eq("id", aid).findRowCount() != 1) {
+        } else {
 
-					return badRequest(views.html.norights.render("Die Action existiert nicht"));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				} else {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					if (Action.find.where().eq("id", parent).findRowCount() != 1) {
+            } else {
 
-						return badRequest(views.html.norights.render("Die Parent-Action existiert nicht"));
+                if (Action.find.where().eq("id", cid).findRowCount() != 1) {
 
-					} else {
+                    return badRequest(views.html.norights.render("Die Action existiert nicht"));
 
-						if (AttributeType.find.where().eq("id", atrid).findRowCount() != 1) {
+                } else {
 
-							return badRequest(views.html.norights.render("Der AttributTyp existiert nicht"));
+                    if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
 
-						} else {
+                        return badRequest(views.html.norights.render("Die Regel existiert nicht"));
 
-							Action b = Action.find.byId(aid);
+                    } else {
 
-							Action d = Action.find.byId(parent);
-							AttributeType a = AttributeType.find.byId(atrid);
-							if (d.getAttribute(a) == null) {
+                        return ok(views.html.editor.editor_aactionintrigger.render(Game.find.byId(gid),
+                                Action.find.byId(cid), Rule.find.byId(rid)));
 
-								return badRequest(views.html.norights.render("Das Attribut existiert nicht"));
+                    }
+                }
 
-							} else {
+            }
 
-								Attribute c = d.getAttribute(a);
-								return ok(
-										views.html.editor.editor_aactioninattribute.render(Game.find.byId(gid), b, c));
+        }
 
-							}
-						}
-					}
+    }
 
-				}
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getActionInActionAttributeForEditor(Long gid, Long aid, Long parent, Long atrid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			}
-		}
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-	}
+        }
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getMissionRuleForEditor(Long gid, Long rid, Long rtype, Long mid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-		}
+        } else {
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		} else {
+            } else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+                if (Action.find.where().eq("id", aid).findRowCount() != 1) {
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    return badRequest(views.html.norights.render("Die Action existiert nicht"));
 
-			} else {
+                } else {
 
-				if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
+                    if (Action.find.where().eq("id", parent).findRowCount() != 1) {
 
-					return badRequest(views.html.norights.render("Die Regel existiert nicht"));
+                        return badRequest(views.html.norights.render("Die Parent-Action existiert nicht"));
 
-				} else {
+                    } else {
 
-					if (RuleType.find.where().eq("id", rtype).findRowCount() != 1) {
+                        if (AttributeType.find.where().eq("id", atrid).findRowCount() != 1) {
 
-						return badRequest(views.html.norights.render("Die Regel existiert nicht"));
+                            return badRequest(views.html.norights.render("Der AttributTyp existiert nicht"));
 
-					} else {
+                        } else {
 
-						if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
+                            Action b = Action.find.byId(aid);
 
-							return badRequest(views.html.norights.render("Die Mission existiert nicht"));
+                            Action d = Action.find.byId(parent);
+                            AttributeType a = AttributeType.find.byId(atrid);
+                            if (d.getAttribute(a) == null) {
 
-						} else {
+                                return badRequest(views.html.norights.render("Das Attribut existiert nicht"));
 
-							return ok(views.html.editor.editor_aruleinmission.render(Game.find.byId(gid),
-									Rule.find.byId(rid), RuleType.find.byId(rtype), Mission.find.byId(mid)));
+                            } else {
 
-						}
-					}
-				}
+                                Attribute c = d.getAttribute(a);
+                                return ok(
+                                        views.html.editor.editor_aactioninattribute.render(Game.find.byId(gid), b, c));
 
-			}
+                            }
+                        }
+                    }
 
-		}
+                }
 
-	}
+            }
+        }
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getRuleForEditor(Long gid, Long rid, Long rtype) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+    }
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getMissionRuleForEditor(Long gid, Long rid, Long rtype, Long mid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-		}
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+        } else {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            } else {
+                if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
+                    return badRequest(views.html.norights.render("Die Regel existiert nicht"));
+                } else {
+                    if (RuleType.find.where().eq("id", rtype).findRowCount() != 1) {
+                        return badRequest(views.html.norights.render("Die Regel existiert nicht"));
+                    } else {
+                        if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
+                            return badRequest(views.html.norights.render("Die Mission existiert nicht"));
+                        } else {
+                            return ok(views.html.editor.editor_aruleinmission.render(Game.find.byId(gid),
+                                    Rule.find.byId(rid), RuleType.find.byId(rtype), Mission.find.byId(mid)));
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getContentRuleForEditor(Long gid, Long rid, Long rtype, Long contentId) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+        } else {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            } else {
+                if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
+                    return badRequest(views.html.norights.render("Die Regel existiert nicht"));
+                } else {
+                    if (RuleType.find.where().eq("id", rtype).findRowCount() != 1) {
+                        return badRequest(views.html.norights.render("Die Regel existiert nicht"));
+                    } else {
+                        if (Content.find.where().eq("id", contentId).findRowCount() != 1) {
+                            return badRequest(views.html.norights.render("Die Mission existiert nicht"));
+                        } else {
+                            return ok(views.html.editor.editor_aruleincontent.render(Game.find.byId(gid),
+                                    Rule.find.byId(rid), RuleType.find.byId(rtype), Content.find.byId(contentId)));
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-		} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getRuleForEditor(Long gid, Long rid, Long rtype) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-			} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-					return badRequest(views.html.norights.render("Die Regel existiert nicht"));
+        } else {
 
-				} else {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-					if (RuleType.find.where().eq("id", rtype).findRowCount() != 1) {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-						return badRequest(views.html.norights.render("Die Regel existiert nicht"));
+            } else {
 
-					} else {
+                if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
 
-						return ok(views.html.editor.editor_arule.render(Game.find.byId(gid), Rule.find.byId(rid),
-								RuleType.find.byId(rtype)));
+                    return badRequest(views.html.norights.render("Die Regel existiert nicht"));
 
-					}
-				}
+                } else {
 
-			}
+                    if (RuleType.find.where().eq("id", rtype).findRowCount() != 1) {
 
-		}
+                        return badRequest(views.html.norights.render("Die Regel existiert nicht"));
 
-	}
+                    } else {
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getActionsForRuleForEditor(Long gid, Long rid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                        return ok(views.html.editor.editor_arule.render(Game.find.byId(gid), Rule.find.byId(rid),
+                                RuleType.find.byId(rtype)));
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    }
+                }
 
-		}
+            }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    }
 
-		} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getActionsForRuleForEditor(Long gid, Long rid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-			} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-					return badRequest(views.html.norights.render("Die Regel existiert nicht"));
+        } else {
 
-				} else {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-					return ok(
-							views.html.editor.editor_actionsintrigger.render(Game.find.byId(gid), Rule.find.byId(rid)));
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				}
+            } else {
 
-			}
+                if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
 
-		}
+                    return badRequest(views.html.norights.render("Die Regel existiert nicht"));
 
-	}
+                } else {
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getMapScript(Long gid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                    return ok(
+                            views.html.editor.editor_actionsintrigger.render(Game.find.byId(gid), Rule.find.byId(rid)));
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                }
 
-		}
+            }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    }
 
-		} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getMapScript(Long gid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-			} else {
-				return ok(views.html.editor.leafletMapfunction.render(Game.find.byId(gid)));
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			}
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-		}
+        } else {
 
-	}
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getMapSearchScript(Long gid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            } else {
+                return ok(views.html.editor.leafletMapfunction.render(Game.find.byId(gid)));
 
-		}
+            }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    }
 
-		} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getMapSearchScript(Long gid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-			} else {
-				return ok(views.html.editor.geosearch.render(Game.find.byId(gid)));
-			}
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-		}
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-	}
+        } else {
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result addMissionInSzene(Long gid, Long sid, Long mtype, String name) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		}
+            } else {
+                return ok(views.html.editor.geosearch.render(Game.find.byId(gid)));
+            }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    }
 
-		} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result addMissionInSzene(Long gid, Long sid, Long mtype, String name) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-			} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				if (Scene.find.where().eq("id", sid).findRowCount() != 1) {
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-					return badRequest(views.html.norights.render("Die Szene existiert nicht"));
+        } else {
 
-				} else {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-					Scene x = Scene.find.byId(sid);
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					if (MissionType.find.where().eq("id", mtype).findRowCount() != 1) {
+            } else {
 
-						return badRequest(views.html.norights.render("Der Missionstyp existiert nicht"));
+                if (Scene.find.where().eq("id", sid).findRowCount() != 1) {
 
-					} else {
+                    return badRequest(views.html.norights.render("Die Szene existiert nicht"));
 
-						MissionType y = MissionType.find.byId(mtype);
+                } else {
 
-						Mission nm = y.createMe(name);
-						nm.save();
+                    Scene x = Scene.find.byId(sid);
 
-						Part z = new Part(nm);
-						z.save();
+                    if (MissionType.find.where().eq("id", mtype).findRowCount() != 1) {
 
-						x.addPart(z);
-						x.update();
+                        return badRequest(views.html.norights.render("Der Missionstyp existiert nicht"));
 
-						return ok(String.valueOf(z.getId()));
-					}
+                    } else {
 
-				}
+                        MissionType y = MissionType.find.byId(mtype);
 
-			}
+                        Mission nm = y.createMe(name);
+                        nm.save();
 
-		}
+                        Part z = new Part(nm);
+                        z.save();
 
-	}
+                        x.addPart(z);
+                        x.update();
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result addMissionInGame(Long gid, Long mtype, String name) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                        return ok(String.valueOf(z.getId()));
+                    }
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                }
 
-		}
+            }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    }
 
-		} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result addMissionInGame(Long gid, Long mtype, String name) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-			} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				Game g = Game.find.byId(gid);
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				if (MissionType.find.where().eq("id", mtype).findRowCount() != 1) {
+        } else {
 
-					return badRequest(views.html.norights.render("Der Missionstyp existiert nicht"));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				} else {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					MissionType y = MissionType.find.byId(mtype);
-					try {
+            } else {
 
-						name = URLDecoder.decode(name, "UTF-8");
-					} catch (UnsupportedEncodingException e) {
-						// Will it ever be thrown?
-					}
+                Game g = Game.find.byId(gid);
 
-					if (name.equals("Hier Namen eingeben")) {
+                if (MissionType.find.where().eq("id", mtype).findRowCount() != 1) {
 
-						int i = g.getMissions().size() + 1;
-						name = Application.getLanguage("Neue Seite") + " (" + i + ")";
+                    return badRequest(views.html.norights.render("Der Missionstyp existiert nicht"));
 
-					}
+                } else {
 
-					Mission nm = y.createMe(name);
-					nm.save();
+                    MissionType y = MissionType.find.byId(mtype);
+                    try {
 
-					Part z = new Part(nm);
-					z.save();
+                        name = URLDecoder.decode(name, "UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        // Will it ever be thrown?
+                    }
 
-					g.addPart(z);
-					g.update();
+                    if (name.equals("Hier Namen eingeben")) {
 
-					return ok(String.valueOf(z.getId()));
-				}
+                        int i = g.getMissions().size() + 1;
+                        name = Application.getLanguage("Neue Seite") + " (" + i + ")";
 
-			}
+                    }
 
-		}
+                    Mission nm = y.createMe(name);
+                    nm.save();
 
-	}
+                    Part z = new Part(nm);
+                    z.save();
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result addMenuItemInGame(Long gid, String title) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                    g.addPart(z);
+                    g.update();
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    return ok(String.valueOf(z.getId()));
+                }
 
-		}
+            }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    }
 
-		} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result addMenuItemInGame(Long gid, String title) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-			} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				Game g = Game.find.byId(gid);
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				MenuItem z = new MenuItem(title);
+        } else {
 
-				z.save();
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				g.addMenuItem(z);
-				g.update();
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				return ok(String.valueOf(z.getId()));
+            } else {
 
-			}
+                Game g = Game.find.byId(gid);
 
-		}
+                MenuItem z = new MenuItem(title);
 
-	}
+                z.save();
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result duplicateMissionInGame(Long gid, Long mid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                g.addMenuItem(z);
+                g.update();
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                return ok(String.valueOf(z.getId()));
 
-		}
+            }
 
-		Map<Hotspot, Hotspot> hotspotbinder = new HashMap<Hotspot, Hotspot>();
+        }
 
-		Map<Mission, Mission> missionbinder = new HashMap<Mission, Mission>();
+    }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result duplicateMissionInGame(Long gid, Long mid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		} else {
+        }
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+        Map<Hotspot, Hotspot> hotspotbinder = new HashMap<Hotspot, Hotspot>();
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        Map<Mission, Mission> missionbinder = new HashMap<Mission, Mission>();
 
-			} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				Game g = Game.find.byId(gid);
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
+        } else {
 
-					return badRequest(views.html.norights.render("Die Mission existiert nicht"));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				} else {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					Mission y = Mission.find.byId(mid);
+            } else {
 
-					Mission nm = y.copyMe("Copy of " + y.getName(), missionbinder, false);
-					nm.save();
+                Game g = Game.find.byId(gid);
 
-					Part z = new Part(nm);
-					z.save();
+                if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
-					g.addPart(z);
-					g.update();
+                    return badRequest(views.html.norights.render("Die Mission existiert nicht"));
 
-					return ok(String.valueOf(z.getId()));
-				}
+                } else {
 
-			}
+                    Mission y = Mission.find.byId(mid);
 
-		}
+                    Mission nm = y.copyMe("Copy of " + y.getName(), missionbinder, false);
+                    nm.save();
 
-	}
+                    Part z = new Part(nm);
+                    z.save();
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result duplicateHotspotInGame(Long gid, Long mid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                    g.addPart(z);
+                    g.update();
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    return ok(String.valueOf(z.getId()));
+                }
 
-		}
+            }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    }
 
-		} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result duplicateHotspotInGame(Long gid, Long mid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-			} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				Game g = Game.find.byId(gid);
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				if (Hotspot.find.where().eq("id", mid).findRowCount() != 1) {
+        } else {
 
-					return badRequest(views.html.norights.render("Der hotspot existiert nicht"));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				} else {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					Hotspot y = Hotspot.find.byId(mid);
+            } else {
 
-					Hotspot nm = y.copyMe("Copy of " + y.getName());
-					nm.save();
+                Game g = Game.find.byId(gid);
 
-					g.addHotspot(nm);
-					g.update();
-					return ok(String.valueOf(nm.getId()));
+                if (Hotspot.find.where().eq("id", mid).findRowCount() != 1) {
 
-				}
+                    return badRequest(views.html.norights.render("Der hotspot existiert nicht"));
 
-			}
+                } else {
 
-		}
+                    Hotspot y = Hotspot.find.byId(mid);
 
-	}
+                    Hotspot nm = y.copyMe("Copy of " + y.getName());
+                    nm.save();
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result duplicateSubRuleInRule(Long gid, Long rid, Long srid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                    g.addHotspot(nm);
+                    g.update();
+                    return ok(String.valueOf(nm.getId()));
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                }
 
-		}
+            }
 
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+        }
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+    }
 
-		} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result duplicateSubRuleInRule(Long gid, Long rid, Long srid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				return badRequest(views.html.norights.render("Die Hauptregel existiert nicht"));
+        }
 
-			} else {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-				Rule r = Rule.find.byId(rid);
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				if (Rule.find.where().eq("id", srid).findRowCount() != 1) {
+        } else {
 
-					return badRequest(views.html.norights.render("Die Unterregel existiert nicht"));
+            if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
 
-				} else {
+                return badRequest(views.html.norights.render("Die Hauptregel existiert nicht"));
 
-					Rule sr = Rule.find.byId(srid);
+            } else {
 
-					Rule nr = sr.copyMe();
-					nr.save();
+                Rule r = Rule.find.byId(rid);
 
-					r.addSubRule(nr);
-					r.update();
+                if (Rule.find.where().eq("id", srid).findRowCount() != 1) {
 
-				}
+                    return badRequest(views.html.norights.render("Die Unterregel existiert nicht"));
 
-				return redirect(routes.Editor.getEditor(gid));
+                } else {
 
-			}
-		}
+                    Rule sr = Rule.find.byId(srid);
 
-	}
+                    Rule nr = sr.copyMe();
+                    nr.save();
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result duplicateSceneInGame(Long gid, Long sid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                    r.addSubRule(nr);
+                    r.update();
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                }
 
-		}
+                return redirect(routes.Editor.getEditor(gid));
 
-		Map<Mission, Mission> missionbinder = new HashMap<Mission, Mission>();
-		Map<Hotspot, Hotspot> hotspotbinder = new HashMap<Hotspot, Hotspot>();
+            }
+        }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+    }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result duplicateSceneInGame(Long gid, Long sid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-		} else {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+        }
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        Map<Mission, Mission> missionbinder = new HashMap<Mission, Mission>();
+        Map<Hotspot, Hotspot> hotspotbinder = new HashMap<Hotspot, Hotspot>();
 
-			} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				Game g = Game.find.byId(gid);
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				if (Scene.find.where().eq("id", sid).findRowCount() != 1) {
+        } else {
 
-					return badRequest(views.html.norights.render("Die Mission existiert nicht"));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				} else {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					Scene y = Scene.find.byId(sid);
+            } else {
 
-					Scene nm = y.copyMe("Copy of " + y.getName(), missionbinder, hotspotbinder);
-					nm.save();
+                Game g = Game.find.byId(gid);
 
-					Part z = new Part(nm);
-					z.save();
+                if (Scene.find.where().eq("id", sid).findRowCount() != 1) {
 
-					g.addPart(z);
-					g.update();
+                    return badRequest(views.html.norights.render("Die Mission existiert nicht"));
 
-				}
+                } else {
 
-				return redirect(routes.Editor.getEditor(gid));
-			}
-		}
+                    Scene y = Scene.find.byId(sid);
 
-	}
+                    Scene nm = y.copyMe("Copy of " + y.getName(), missionbinder, hotspotbinder);
+                    nm.save();
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result addHotspotInGame(Long gid, Long htype, String lon, String lat, String n) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                    Part z = new Part(nm);
+                    z.save();
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    g.addPart(z);
+                    g.update();
 
-		}
+                }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+                return redirect(routes.Editor.getEditor(gid));
+            }
+        }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    }
 
-		} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result addHotspotInGame(Long gid, Long htype, String lon, String lat, String n) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-			} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				Game g = Game.find.byId(gid);
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				if (HotspotType.find.where().eq("id", htype).findRowCount() != 1) {
+        } else {
 
-					return badRequest(views.html.norights.render("Der Missionstyp existiert nicht"));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				} else {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					HotspotType y = HotspotType.find.byId(htype);
+            } else {
 
-					Hotspot nm = y.createMe(Float.valueOf(lon), Float.valueOf(lat), n);
-					nm.save();
+                Game g = Game.find.byId(gid);
 
-					g.addHotspot(nm);
-					g.update();
+                if (HotspotType.find.where().eq("id", htype).findRowCount() != 1) {
 
-					return ok(String.valueOf(nm.getId()));
+                    return badRequest(views.html.norights.render("Der Missionstyp existiert nicht"));
 
-				}
-			}
+                } else {
 
-		}
+                    HotspotType y = HotspotType.find.byId(htype);
 
-	}
+                    Hotspot nm = y.createMe(Float.valueOf(lon), Float.valueOf(lat), n);
+                    nm.save();
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result addSceneInGame(Long gid, Long stype, String name) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                    g.addHotspot(nm);
+                    g.update();
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    return ok(String.valueOf(nm.getId()));
 
-		}
+                }
+            }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    }
 
-		} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result addSceneInGame(Long gid, Long stype, String name) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-			} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				Game g = Game.find.byId(gid);
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				if (SceneType.find.where().eq("id", stype).findRowCount() != 1) {
+        } else {
 
-					return badRequest(views.html.norights.render("Der Szenentyp existiert nicht"));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				} else {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					if (name.equals("Hier Namen eingeben")) {
+            } else {
 
-						int i = g.getMissions().size() + 1;
-						name = "Neuer Ordner (" + i + ")";
+                Game g = Game.find.byId(gid);
 
-					}
+                if (SceneType.find.where().eq("id", stype).findRowCount() != 1) {
 
-					SceneType y = SceneType.find.byId(stype);
+                    return badRequest(views.html.norights.render("Der Szenentyp existiert nicht"));
 
-					Scene nm = y.createMe(name, g);
+                } else {
 
-					Part z = new Part(nm);
-					z.save();
+                    if (name.equals("Hier Namen eingeben")) {
 
-					g.addPart(z);
-					g.update();
+                        int i = g.getMissions().size() + 1;
+                        name = "Neuer Ordner (" + i + ")";
 
-					return ok(String.valueOf(z.getId()));
+                    }
 
-				}
+                    SceneType y = SceneType.find.byId(stype);
 
-			}
+                    Scene nm = y.createMe(name, g);
 
-		}
+                    Part z = new Part(nm);
+                    z.save();
 
-	}
+                    g.addPart(z);
+                    g.update();
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result addNewSceneTypeInGameTypeFromGame(Long gid, Long gtid, String name) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                    return ok(String.valueOf(z.getId()));
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                }
 
-		}
+            }
 
-		System.out.println("Starting Scene Factory");
+        }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+    }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result addNewSceneTypeInGameTypeFromGame(Long gid, Long gtid, String name) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-		} else {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+        }
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        System.out.println("Starting Scene Factory");
 
-			} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				Game g = Game.find.byId(gid);
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				if (GameType.find.where().eq("id", gtid).findRowCount() != 1) {
+        } else {
 
-					return badRequest(views.html.norights.render("Der Gametyp existiert nicht"));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				} else {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					GameType gt = GameType.find.byId(gtid);
+            } else {
 
-					System.out.println("Creating Scene...");
-					SceneType s = new SceneType(name);
-					s.save();
-					s.addDefaultsFromGame(g);
-					s.update();
-					gt.addPossibleSceneType(s);
-					gt.update();
+                Game g = Game.find.byId(gid);
 
-					return ok(views.html.gteditor.gteditor_newscene.render(s, gt, ""));
+                if (GameType.find.where().eq("id", gtid).findRowCount() != 1) {
 
-				}
+                    return badRequest(views.html.norights.render("Der Gametyp existiert nicht"));
 
-			}
+                } else {
 
-		}
+                    GameType gt = GameType.find.byId(gtid);
 
-	}
+                    System.out.println("Creating Scene...");
+                    SceneType s = new SceneType(name);
+                    s.save();
+                    s.addDefaultsFromGame(g);
+                    s.update();
+                    gt.addPossibleSceneType(s);
+                    gt.update();
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result deleteSceneTypeInGameType(Long sid, Long gtid) {
+                    return ok(views.html.gteditor.gteditor_newscene.render(s, gt, ""));
 
-		System.out.println("Starting Scene Deletion");
+                }
 
-		if (SceneType.find.where().eq("id", sid).findRowCount() != 1) {
+            }
 
-			return badRequest(views.html.norights.render("Der SceneType existiert nicht"));
+        }
 
-		} else {
+    }
 
-			SceneType s = SceneType.find.byId(sid);
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result deleteSceneTypeInGameType(Long sid, Long gtid) {
 
-			if (GameType.find.where().eq("id", gtid).findRowCount() != 1) {
+        System.out.println("Starting Scene Deletion");
 
-				return badRequest(views.html.norights.render("Der Gametyp existiert nicht"));
+        if (SceneType.find.where().eq("id", sid).findRowCount() != 1) {
 
-			} else {
+            return badRequest(views.html.norights.render("Der SceneType existiert nicht"));
 
-				GameType gt = GameType.find.byId(gtid);
+        } else {
 
-				gt.deletePossibleSceneType(s);
+            SceneType s = SceneType.find.byId(sid);
 
-				gt.update();
+            if (GameType.find.where().eq("id", gtid).findRowCount() != 1) {
 
-				return ok("Deleted");
+                return badRequest(views.html.norights.render("Der Gametyp existiert nicht"));
 
-			}
+            } else {
 
-		}
+                GameType gt = GameType.find.byId(gtid);
 
-	}
+                gt.deletePossibleSceneType(s);
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result addSceneInGameWithPoints(Long gid, Long stype, String name, String lon, String lat) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                gt.update();
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                return ok("Deleted");
 
-		}
+            }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    }
 
-		} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result addSceneInGameWithPoints(Long gid, Long stype, String name, String lon, String lat) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-			} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				Game g = Game.find.byId(gid);
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				if (SceneType.find.where().eq("id", stype).findRowCount() != 1) {
+        } else {
 
-					return badRequest(views.html.norights.render("Der Szenentyp existiert nicht"));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				} else {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					if (name.equals("Hier Namen eingeben")) {
+            } else {
 
-						int i = g.getMissions().size() + 1;
-						name = "Neuer Ordner (" + i + ")";
+                Game g = Game.find.byId(gid);
 
-					}
+                if (SceneType.find.where().eq("id", stype).findRowCount() != 1) {
 
-					SceneType y = SceneType.find.byId(stype);
+                    return badRequest(views.html.norights.render("Der Szenentyp existiert nicht"));
 
-					Scene nm = y.createMe(name, Float.valueOf(lon), Float.valueOf(lat), g);
+                } else {
 
-					Part z = new Part(nm);
-					z.save();
+                    if (name.equals("Hier Namen eingeben")) {
 
-					g.addPart(z);
-					g.update();
+                        int i = g.getMissions().size() + 1;
+                        name = "Neuer Ordner (" + i + ")";
 
-					return ok(String.valueOf(z.getId()));
-				}
+                    }
 
-			}
+                    SceneType y = SceneType.find.byId(stype);
 
-		}
+                    Scene nm = y.createMe(name, Float.valueOf(lon), Float.valueOf(lat), g);
 
-	}
+                    Part z = new Part(nm);
+                    z.save();
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result addContentInMission(Long gid, Long mission, Long ctype, String name) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                    g.addPart(z);
+                    g.update();
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    return ok(String.valueOf(z.getId()));
+                }
 
-		}
+            }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    }
 
-		} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result addContentInMission(Long gid, Long mission, Long ctype, String name) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-			} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				Game g = Game.find.byId(gid);
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				if (ContentType.find.where().eq("id", ctype).findRowCount() != 1) {
+        } else {
 
-					return badRequest(views.html.norights.render("Der Inhaltstyp existiert nicht"));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				} else {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					if (Mission.find.where().eq("id", mission).findRowCount() != 1) {
+            } else {
 
-						return badRequest(views.html.norights.render("Die Mission existiert nicht"));
+                Game g = Game.find.byId(gid);
 
-					} else {
+                if (ContentType.find.where().eq("id", ctype).findRowCount() != 1) {
 
-						Mission mi = Mission.find.byId(mission);
+                    return badRequest(views.html.norights.render("Der Inhaltstyp existiert nicht"));
 
-						ContentType y = ContentType.find.byId(ctype);
+                } else {
 
-						Content nm = y.createMe(name);
+                    if (Mission.find.where().eq("id", mission).findRowCount() != 1) {
 
-						mi.addContent(nm);
-						mi.update();
+                        return badRequest(views.html.norights.render("Die Mission existiert nicht"));
 
-						return ok(String.valueOf(nm.getId()));
+                    } else {
 
-					}
-				}
+                        Mission mi = Mission.find.byId(mission);
 
-			}
+                        ContentType y = ContentType.find.byId(ctype);
 
-		}
+                        Content nm = y.createMe(name);
 
-	}
+                        mi.addContent(nm);
+                        mi.update();
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result addActionInRule(Long gid, Long rid, Long atype) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                        return ok(String.valueOf(nm.getId()));
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    }
+                }
 
-		}
+            }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    }
 
-		} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result addActionInRule(Long gid, Long rid, Long atype) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-			} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				Game g = Game.find.byId(gid);
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				if (ActionType.find.where().eq("id", atype).findRowCount() != 1) {
+        } else {
 
-					return badRequest(views.html.norights.render("Der Action-Typ existiert nicht"));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				} else {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
+            } else {
 
-						return badRequest(views.html.norights.render("Die Rule existiert nicht"));
+                Game g = Game.find.byId(gid);
 
-					} else {
+                if (ActionType.find.where().eq("id", atype).findRowCount() != 1) {
 
-						System.out.println("Trying to add action in: " + rid);
+                    return badRequest(views.html.norights.render("Der Action-Typ existiert nicht"));
 
-						Rule r = Rule.find.byId(rid);
+                } else {
 
-						ActionType y = ActionType.find.byId(atype);
+                    if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
 
-						Action a = new Action(y.getName(), y);
-						a.save();
+                        return badRequest(views.html.norights.render("Die Rule existiert nicht"));
 
-						r.addAction(a);
-						r.update();
+                    } else {
 
-						System.out.println("success..");
+                        System.out.println("Trying to add action in: " + rid);
 
-						return ok(String.valueOf(a.getId()));
+                        Rule r = Rule.find.byId(rid);
 
-					}
+                        ActionType y = ActionType.find.byId(atype);
 
-				}
+                        Action a = new Action(y.getName(), y);
+                        a.save();
 
-			}
+                        r.addAction(a);
+                        r.update();
 
-		}
+                        System.out.println("success..");
 
-	}
+                        return ok(String.valueOf(a.getId()));
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result moveActionInRule(Long gid, Long rid, Long aid, String direction) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                    }
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                }
 
-		}
+            }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    }
 
-		} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result moveActionInRule(Long gid, Long rid, Long aid, String direction) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-			} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				Game g = Game.find.byId(gid);
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				if (Action.find.where().eq("id", aid).findRowCount() != 1) {
+        } else {
 
-					return badRequest(views.html.norights.render("Der Action existiert nicht"));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				} else {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
+            } else {
 
-						return badRequest(views.html.norights.render("Die Rule existiert nicht"));
+                Game g = Game.find.byId(gid);
 
-					} else {
+                if (Action.find.where().eq("id", aid).findRowCount() != 1) {
 
-						Rule r = Rule.find.byId(rid);
+                    return badRequest(views.html.norights.render("Der Action existiert nicht"));
 
-						Action a = Action.find.byId(aid);
+                } else {
 
-						if (direction.equals("left")) {
-							System.out.println("moving left");
-							r.action_left(a);
-						} else if (direction.equals("right")) {
-							System.out.println("moving right");
+                    if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
 
-							r.action_right(a);
-						}
+                        return badRequest(views.html.norights.render("Die Rule existiert nicht"));
 
-						return ok("synced");
+                    } else {
 
-					}
+                        Rule r = Rule.find.byId(rid);
 
-				}
+                        Action a = Action.find.byId(aid);
 
-			}
+                        if (direction.equals("left")) {
+                            System.out.println("moving left");
+                            r.action_left(a);
+                        } else if (direction.equals("right")) {
+                            System.out.println("moving right");
 
-		}
+                            r.action_right(a);
+                        }
 
-	}
+                        return ok("synced");
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result addActionInActionAttribute(Long gid, Long aid, Long atrid, Long atype) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                    }
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                }
 
-		}
+            }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    }
 
-		} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result addActionInActionAttribute(Long gid, Long aid, Long atrid, Long atype) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-			} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				if (ActionType.find.where().eq("id", atype).findRowCount() != 1) {
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-					return badRequest(views.html.norights.render("Der Action-Typ existiert nicht"));
+        } else {
 
-				} else {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-					if (Action.find.where().eq("id", aid).findRowCount() != 1) {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-						return badRequest(views.html.norights.render("Die Action existiert nicht"));
+            } else {
 
-					} else {
+                if (ActionType.find.where().eq("id", atype).findRowCount() != 1) {
 
-						if (AttributeType.find.where().eq("id", atrid).findRowCount() != 1) {
+                    return badRequest(views.html.norights.render("Der Action-Typ existiert nicht"));
 
-							return badRequest(views.html.norights.render("Der Attributtyp existiert nicht"));
+                } else {
 
-						} else {
+                    if (Action.find.where().eq("id", aid).findRowCount() != 1) {
 
-							System.out.println("Trying to add action in: action " + aid + " (atr" + atrid + ")");
+                        return badRequest(views.html.norights.render("Die Action existiert nicht"));
 
-							AttributeType atr = AttributeType.find.byId(atrid);
+                    } else {
 
-							ActionType y = ActionType.find.byId(atype);
+                        if (AttributeType.find.where().eq("id", atrid).findRowCount() != 1) {
 
-							Action a = new Action(y.getName(), y);
-							a.save();
+                            return badRequest(views.html.norights.render("Der Attributtyp existiert nicht"));
 
-							Action b = Action.find.byId(aid);
+                        } else {
 
-							if (b.getAttribute(atr) == null) {
+                            System.out.println("Trying to add action in: action " + aid + " (atr" + atrid + ")");
 
-								Attribute c = new Attribute(atr);
-								c.save();
-								c.addAction(a);
-								c.update();
+                            AttributeType atr = AttributeType.find.byId(atrid);
 
-								b.setAttribute(c);
-								b.update();
+                            ActionType y = ActionType.find.byId(atype);
 
-							} else {
+                            Action a = new Action(y.getName(), y);
+                            a.save();
 
-								Attribute c = b.getAttribute(atr);
-								c.addAction(a);
-								c.update();
+                            Action b = Action.find.byId(aid);
 
-							}
+                            if (b.getAttribute(atr) == null) {
 
-							System.out.println("success..");
+                                Attribute c = new Attribute(atr);
+                                c.save();
+                                c.addAction(a);
+                                c.update();
 
-							return ok(String.valueOf(a.getId()));
+                                b.setAttribute(c);
+                                b.update();
 
-						}
+                            } else {
 
-					}
+                                Attribute c = b.getAttribute(atr);
+                                c.addAction(a);
+                                c.update();
 
-				}
+                            }
 
-			}
-		}
+                            System.out.println("success..");
 
-	}
+                            return ok(String.valueOf(a.getId()));
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result addConditionInRule(Long gid, Long rid, String text) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                        }
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    }
 
-		}
+                }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+            }
+        }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    }
 
-		} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result addConditionInRule(Long gid, Long rid, String text) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-			} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				Game g = Game.find.byId(gid);
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
+        } else {
 
-					return badRequest(views.html.norights.render("Die Rule existiert nicht"));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				} else {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					Rule r = Rule.find.byId(rid);
+            } else {
 
-					Condition x = new Condition(true, text);
-					x.save();
+                Game g = Game.find.byId(gid);
 
-					System.out.println(text);
+                if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
 
-					boolean done = false;
+                    return badRequest(views.html.norights.render("Die Rule existiert nicht"));
 
-					r.addCondition(x);
-					r.update();
+                } else {
 
-				}
+                    Rule r = Rule.find.byId(rid);
 
-			}
+                    Condition x = new Condition(true, text);
+                    x.save();
 
-		}
+                    System.out.println(text);
 
-		return redirect(routes.Editor.getEditor(gid));
+                    boolean done = false;
 
-	}
+                    r.addCondition(x);
+                    r.update();
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result editConditionInRule(Long gid, Long rid, String text) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                }
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            }
 
-		}
+        }
 
-		String help = "Error";
+        return redirect(routes.Editor.getEditor(gid));
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+    }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result editConditionInRule(Long gid, Long rid, String text) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-		} else {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+        }
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        String help = "Error";
 
-			} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				Game g = Game.find.byId(gid);
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				System.out.println(text);
+        } else {
 
-				if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-					System.out.println("Die Rule existiert nicht");
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				} else {
+            } else {
 
-					Rule r = Rule.find.byId(rid);
+                Game g = Game.find.byId(gid);
 
-					for (Condition c : r.getConditions()) {
+                System.out.println(text);
 
-						System.out.println(String.valueOf(c.isFull()));
-						if (c.isFull()) {
-							c.setFull(text);
+                if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
 
-							System.out.println(text);
-							c.update();
-							help = "synced";
-						} else {
+                    System.out.println("Die Rule existiert nicht");
 
-							Condition x = new Condition(true, text);
-							x.save();
+                } else {
 
-							r.addCondition(x);
-							r.update();
+                    Rule r = Rule.find.byId(rid);
 
-						}
+                    for (Condition c : r.getConditions()) {
 
-					}
+                        System.out.println(String.valueOf(c.isFull()));
+                        if (c.isFull()) {
+                            c.setFull(text);
 
-				}
+                            System.out.println(text);
+                            c.update();
+                            help = "synced";
+                        } else {
 
-			}
+                            Condition x = new Condition(true, text);
+                            x.save();
 
-		}
+                            r.addCondition(x);
+                            r.update();
 
-		return ok(help);
+                        }
 
-	}
+                    }
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result deleteActionFromRule(Long gid, Long rid, Long aid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                }
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            }
 
-		}
+        }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        return ok(help);
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    }
 
-		} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result deleteActionFromRule(Long gid, Long rid, Long aid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-			} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				Game g = Game.find.byId(gid);
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				if (Action.find.where().eq("id", aid).findRowCount() != 1) {
+        } else {
 
-					return badRequest(views.html.norights.render("Die Aktion existiert nicht"));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				} else {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
+            } else {
 
-						return badRequest(views.html.norights.render("Die Rule existiert nicht"));
+                Game g = Game.find.byId(gid);
 
-					} else {
+                if (Action.find.where().eq("id", aid).findRowCount() != 1) {
 
-						Rule r = Rule.find.byId(rid);
+                    return badRequest(views.html.norights.render("Die Aktion existiert nicht"));
 
-						Action a = Action.find.byId(aid);
+                } else {
 
-						if (r.isSimpleRule()) {
+                    if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
 
-							r.deleteAction(a);
+                        return badRequest(views.html.norights.render("Die Rule existiert nicht"));
 
-							r.update();
+                    } else {
 
-						} else {
+                        Rule r = Rule.find.byId(rid);
 
-							if (r.hasSubRules()) {
+                        Action a = Action.find.byId(aid);
 
-								for (Rule ar : r.getSubRules()) {
+                        if (r.isSimpleRule()) {
 
-									ar.deleteAction(a);
-									ar.update();
+                            r.deleteAction(a);
 
-								}
+                            r.update();
 
-							}
+                        } else {
 
-						}
+                            if (r.hasSubRules()) {
 
-					}
-				}
+                                for (Rule ar : r.getSubRules()) {
 
-				return redirect(routes.Editor.getEditor(gid));
+                                    ar.deleteAction(a);
+                                    ar.update();
 
-			}
+                                }
 
-		}
+                            }
 
-	}
+                        }
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result deleteActionFromAttribute(Long gid, Long atrid, Long aid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                    }
+                }
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                return redirect(routes.Editor.getEditor(gid));
 
-		}
+            }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    }
 
-		} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result deleteActionFromAttribute(Long gid, Long atrid, Long aid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-			} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				Game g = Game.find.byId(gid);
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				if (Action.find.where().eq("id", aid).findRowCount() != 1) {
+        } else {
 
-					return badRequest(views.html.norights.render("Die Aktion existiert nicht"));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				} else {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					if (Attribute.find.where().eq("id", atrid).findRowCount() != 1) {
+            } else {
 
-						return badRequest(views.html.norights.render("Das Attribut existiert nicht"));
+                Game g = Game.find.byId(gid);
 
-					} else {
+                if (Action.find.where().eq("id", aid).findRowCount() != 1) {
 
-						Attribute at = Attribute.find.byId(atrid);
+                    return badRequest(views.html.norights.render("Die Aktion existiert nicht"));
 
-						Action a = Action.find.byId(aid);
+                } else {
 
-						if (at.getActions() != null) {
+                    if (Attribute.find.where().eq("id", atrid).findRowCount() != 1) {
 
-							at.removeAction(a);
-							at.update();
+                        return badRequest(views.html.norights.render("Das Attribut existiert nicht"));
 
-						}
-					}
+                    } else {
 
-				}
+                        Attribute at = Attribute.find.byId(atrid);
 
-			}
-		}
+                        Action a = Action.find.byId(aid);
 
-		return ok("synced");
+                        if (at.getActions() != null) {
 
-	}
+                            at.removeAction(a);
+                            at.update();
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result deleteActionFromMenuItem(Long gid, Long atrid, Long aid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                        }
+                    }
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                }
 
-		}
+            }
+        }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        return ok("synced");
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    }
 
-		} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result deleteActionFromMenuItem(Long gid, Long atrid, Long aid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-			} else {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				Game g = Game.find.byId(gid);
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				if (Action.find.where().eq("id", aid).findRowCount() != 1) {
+        } else {
 
-					return badRequest(views.html.norights.render("Die Aktion existiert nicht"));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				} else {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					if (MenuItem.find.where().eq("id", atrid).findRowCount() != 1) {
+            } else {
 
-						return badRequest(views.html.norights.render("Das Menu-Item existiert nicht"));
+                Game g = Game.find.byId(gid);
 
-					} else {
+                if (Action.find.where().eq("id", aid).findRowCount() != 1) {
 
-						MenuItem mi = MenuItem.find.byId(atrid);
+                    return badRequest(views.html.norights.render("Die Aktion existiert nicht"));
 
-						Action a = Action.find.byId(aid);
+                } else {
 
-						if (mi.getOnSelect() != null) {
-							if (mi.getOnSelect().getActions() != null) {
+                    if (MenuItem.find.where().eq("id", atrid).findRowCount() != 1) {
 
-								mi.getOnSelect().deleteAction(a);
-								mi.getOnSelect().update();
+                        return badRequest(views.html.norights.render("Das Menu-Item existiert nicht"));
 
-							}
+                    } else {
 
-						}
-					}
+                        MenuItem mi = MenuItem.find.byId(atrid);
 
-				}
+                        Action a = Action.find.byId(aid);
 
-			}
-		}
+                        if (mi.getOnSelect() != null) {
+                            if (mi.getOnSelect().getActions() != null) {
 
-		return ok("synced");
+                                mi.getOnSelect().deleteAction(a);
+                                mi.getOnSelect().update();
 
-	}
+                            }
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result addRuleInMission(Long gid, Long mission, Long rtype) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                        }
+                    }
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                }
 
-		}
+            }
+        }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        return ok("synced");
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    }
 
-		} else {
+    /**
+     *
+     * @param gid
+     * @param mission
+     * @param rtype
+     * @return just the id of the newly added rule object (db id)
+     */
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result addRuleInMission(Long gid, Long mission, Long rtype) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+        } else {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            } else {
+                Game g = Game.find.byId(gid);
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                if (RuleType.find.where().eq("id", rtype).findRowCount() != 1) {
+                    return badRequest(views.html.norights.render("Der Rule-Typ existiert nicht"));
+                } else {
+                    if (Mission.find.where().eq("id", mission).findRowCount() != 1) {
+                        return badRequest(views.html.norights.render("Die Mission existiert nicht"));
+                    } else {
+                        Mission mi = Mission.find.byId(mission);
+                        RuleType y = RuleType.find.byId(rtype);
+                        Condition c = new Condition(y.getTrigger());
+                        c.save();
+                        Rule nm = new Rule();
+                        nm.addCondition(c);
+                        nm.save();
 
-			} else {
+                        Rule z = new Rule();
+                        z.save();
+                        nm.addSubRule(z);
+                        nm.update();
 
-				Game g = Game.find.byId(gid);
+                        mi.addRule(nm);
+                        mi.update();
 
-				if (RuleType.find.where().eq("id", rtype).findRowCount() != 1) {
+                        return ok(String.valueOf(z.getId()));
+                    }
+                }
+            }
+        }
+    }
 
-					return badRequest(views.html.norights.render("Der Rule-Typ existiert nicht"));
+    /**
+     *
+     * @param gid
+     * @param content
+     * @param rtype
+     * @return just the id of the newly added rule object to the given content (db id)
+     */
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result addRuleInContent(Long gid, Long content, Long rtype) {
+        System.out.println("addRuleInContent(" + gid + ", " + content + ", " + rtype);
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
+            System.out.println("addRuleInContent: Schreibrechte fehlen");
 
-				} else {
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        }
 
-					if (Mission.find.where().eq("id", mission).findRowCount() != 1) {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+            System.out.println("addRuleInContent: Spiel existiert nicht");
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+        } else {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
+                System.out.println("addRuleInContent: Schreibrechte fehlen 2");
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            } else {
+                Game g = Game.find.byId(gid);
 
-						return badRequest(views.html.norights.render("Die Mission existiert nicht"));
+                if (RuleType.find.where().eq("id", rtype).findRowCount() != 1) {
+                    System.out.println("addRuleInContent: Rule-Typ existiert nicht");
+                    return badRequest(views.html.norights.render("Der Rule-Typ existiert nicht"));
+                } else {
+                    if (Content.find.where().eq("id", content).findRowCount() != 1) {
+                        System.out.println("addRuleInContent: Content existiert nicht");
+                        return badRequest(views.html.norights.render("Der Content existiert nicht"));
+                    } else {
+                        Content ct = Content.find.byId(content);
+                        RuleType y = RuleType.find.byId(rtype);
+                        Condition c = new Condition(y.getTrigger());
+                        c.save();
+                        Rule nm = new Rule();
+                        nm.addCondition(c);
+                        nm.save();
 
-					} else {
+                        Rule z = new Rule();
+                        z.save();
+                        nm.addSubRule(z);
+                        nm.update();
 
-						Mission mi = Mission.find.byId(mission);
+                        ct.addRule(nm);
+                        ct.update();
 
-						RuleType y = RuleType.find.byId(rtype);
+                        return ok(String.valueOf(z.getId()));
+                    }
+                }
+            }
+        }
+    }
 
-						Condition c = new Condition(y.getTrigger());
-						c.save();
-						Rule nm = new Rule();
-						nm.addCondition(c);
-						nm.save();
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result addSubRuleInRule(Long gid, Long rule) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-						Rule z = new Rule();
-						z.save();
-						nm.addSubRule(z);
-						nm.update();
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-						mi.addRule(nm);
-						mi.update();
+        }
 
-						return ok(String.valueOf(z.getId()));
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-					}
-				}
-			}
-		}
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-	}
+        } else {
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result addSubRuleInRule(Long gid, Long rule) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		}
+            } else {
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+                Game g = Game.find.byId(gid);
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+                if (Rule.find.where().eq("id", rule).findRowCount() != 1) {
 
-		} else {
+                    return badRequest(views.html.norights.render("Die Rule existiert nicht"));
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+                } else {
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    Rule y = Rule.find.byId(rule);
 
-			} else {
+                    Rule z = new Rule();
+                    z.save();
+                    y.addSubRule(z);
+                    y.update();
 
-				Game g = Game.find.byId(gid);
+                }
 
-				if (Rule.find.where().eq("id", rule).findRowCount() != 1) {
+                return redirect(routes.Editor.getEditor(gid));
 
-					return badRequest(views.html.norights.render("Die Rule existiert nicht"));
+            }
+        }
 
-				} else {
+    }
 
-					Rule y = Rule.find.byId(rule);
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result addSubActionInAction(Long gid, Long action, Long atype) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-					Rule z = new Rule();
-					z.save();
-					y.addSubRule(z);
-					y.update();
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				}
+        }
 
-				return redirect(routes.Editor.getEditor(gid));
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			}
-		}
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-	}
+        } else {
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result addSubActionInAction(Long gid, Long action, Long atype) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		}
+            } else {
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+                Game g = Game.find.byId(gid);
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+                if (Action.find.where().eq("id", action).findRowCount() != 1) {
 
-		} else {
+                    return badRequest(views.html.norights.render("Die Action existiert nicht"));
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+                } else {
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    if (ActionType.find.where().eq("id", atype).findRowCount() != 1) {
 
-			} else {
+                        return badRequest(views.html.norights.render("Die Action existiert nicht"));
 
-				Game g = Game.find.byId(gid);
+                    } else {
 
-				if (Action.find.where().eq("id", action).findRowCount() != 1) {
+                        Action y = Action.find.byId(action);
+                        ActionType at = ActionType.find.byId(atype);
 
-					return badRequest(views.html.norights.render("Die Action existiert nicht"));
+                        Action z = new Action(at.getName(), at);
+                        z.save();
+                        y.addSubAction(z);
+                        y.update();
 
-				} else {
+                    }
 
-					if (ActionType.find.where().eq("id", atype).findRowCount() != 1) {
+                }
 
-						return badRequest(views.html.norights.render("Die Action existiert nicht"));
+                return redirect(routes.Editor.getEditor(gid));
 
-					} else {
+            }
+        }
 
-						Action y = Action.find.byId(action);
-						ActionType at = ActionType.find.byId(atype);
+    }
 
-						Action z = new Action(at.getName(), at);
-						z.save();
-						y.addSubAction(z);
-						y.update();
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result deleteSubRuleFromRule(Long gid, Long rid, Long srid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-					}
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				}
+        }
 
-				return redirect(routes.Editor.getEditor(gid));
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			}
-		}
+            return ok("Das Spiel existiert nicht");
 
-	}
+        } else {
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result deleteSubRuleFromRule(Long gid, Long rid, Long srid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		}
+            } else {
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+                Game g = Game.find.byId(gid);
 
-			return ok("Das Spiel existiert nicht");
+                if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
 
-		} else {
+                    return ok("Die Rule existiert nicht");
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+                } else {
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    if (Rule.find.where().eq("id", srid).findRowCount() != 1) {
 
-			} else {
+                        return ok("Die Sub-Rule existiert nicht");
 
-				Game g = Game.find.byId(gid);
+                    } else {
 
-				if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
+                        Rule y = Rule.find.byId(rid);
 
-					return ok("Die Rule existiert nicht");
+                        Rule z = Rule.find.byId(srid);
 
-				} else {
+                        try {
 
-					if (Rule.find.where().eq("id", srid).findRowCount() != 1) {
+                            y.deleteSubRule(z);
 
-						return ok("Die Sub-Rule existiert nicht");
+                            y.update();
+                        } catch (RuntimeException e) {
+                            return ok("Fehler #4784 beim Löschen der Regel.");
+                        }
 
-					} else {
+                        try {
+                            z.removeMe();
+                            z.delete();
+                        } catch (RuntimeException e) {
+                            System.out.println(
+                                    "Couldn't delete Subrule-Object. Will remain in database with id " + z.getId());
+                        }
 
-						Rule y = Rule.find.byId(rid);
+                    }
 
-						Rule z = Rule.find.byId(srid);
+                    return ok("synced");
 
-						try {
+                }
 
-							y.deleteSubRule(z);
+            }
+        }
 
-							y.update();
-						} catch (RuntimeException e) {
-							return ok("Fehler #4784 beim Löschen der Regel.");
-						}
+    }
 
-						try {
-							z.removeMe();
-							z.delete();
-						} catch (RuntimeException e) {
-							System.out.println(
-									"Couldn't delete Subrule-Object. Will remain in database with id " + z.getId());
-						}
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result addRuleInHotspot(Long gid, Long hotspot, Long rtype) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-					}
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					return ok("synced");
+        }
 
-				}
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			}
-		}
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-	}
+        } else {
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result addRuleInHotspot(Long gid, Long hotspot, Long rtype) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		}
+            } else {
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+                Game g = Game.find.byId(gid);
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+                if (RuleType.find.where().eq("id", rtype).findRowCount() != 1) {
 
-		} else {
+                    return badRequest(views.html.norights.render("Der Rule-Typ existiert nicht"));
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+                } else {
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    if (Hotspot.find.where().eq("id", hotspot).findRowCount() != 1) {
 
-			} else {
+                        return badRequest(views.html.norights.render("Die Mission existiert nicht"));
 
-				Game g = Game.find.byId(gid);
+                    } else {
 
-				if (RuleType.find.where().eq("id", rtype).findRowCount() != 1) {
+                        Hotspot hs = Hotspot.find.byId(hotspot);
 
-					return badRequest(views.html.norights.render("Der Rule-Typ existiert nicht"));
+                        RuleType y = RuleType.find.byId(rtype);
 
-				} else {
+                        Condition c = new Condition(y.getTrigger());
+                        c.save();
+                        Rule nm = new Rule();
+                        nm.addCondition(c);
+                        nm.save();
 
-					if (Hotspot.find.where().eq("id", hotspot).findRowCount() != 1) {
+                        Rule z = new Rule();
+                        z.save();
+                        nm.addSubRule(z);
+                        nm.update();
 
-						return badRequest(views.html.norights.render("Die Mission existiert nicht"));
+                        hs.addRule(nm);
+                        hs.update();
 
-					} else {
+                        return ok(String.valueOf(z.getId()));
 
-						Hotspot hs = Hotspot.find.byId(hotspot);
+                    }
+                }
+            }
+        }
 
-						RuleType y = RuleType.find.byId(rtype);
+    }
 
-						Condition c = new Condition(y.getTrigger());
-						c.save();
-						Rule nm = new Rule();
-						nm.addCondition(c);
-						nm.save();
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result addContentInContent(Long gid, Long cid, Long ctype, String name) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-						Rule z = new Rule();
-						z.save();
-						nm.addSubRule(z);
-						nm.update();
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-						hs.addRule(nm);
-						hs.update();
+        }
 
-						return ok(String.valueOf(z.getId()));
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-					}
-				}
-			}
-		}
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-	}
+        } else {
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result addContentInContent(Long gid, Long cid, Long ctype, String name) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		}
+            } else {
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+                Game g = Game.find.byId(gid);
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+                if (ContentType.find.where().eq("id", ctype).findRowCount() != 1) {
 
-		} else {
+                    return badRequest(views.html.norights.render("Der Inhaltstyp existiert nicht"));
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+                } else {
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    if (Content.find.where().eq("id", cid).findRowCount() != 1) {
 
-			} else {
+                        return badRequest(views.html.norights.render("Der Inhalt existiert nicht"));
 
-				Game g = Game.find.byId(gid);
+                    } else {
 
-				if (ContentType.find.where().eq("id", ctype).findRowCount() != 1) {
+                        Content co = Content.find.byId(cid);
 
-					return badRequest(views.html.norights.render("Der Inhaltstyp existiert nicht"));
+                        ContentType y = ContentType.find.byId(ctype);
 
-				} else {
+                        Content nm = y.createMe(name);
 
-					if (Content.find.where().eq("id", cid).findRowCount() != 1) {
+                        co.addSubContent(nm);
+                        co.update();
 
-						return badRequest(views.html.norights.render("Der Inhalt existiert nicht"));
+                        return ok(String.valueOf(nm.getId()));
 
-					} else {
+                    }
+                }
+            }
+        }
 
-						Content co = Content.find.byId(cid);
+    }
 
-						ContentType y = ContentType.find.byId(ctype);
+    // / EDITOR SETTERS: NAMES
 
-						Content nm = y.createMe(name);
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result setSceneName(Long gid, Long sid, String name) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-						co.addSubContent(nm);
-						co.update();
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-						return ok(String.valueOf(nm.getId()));
+        }
 
-					}
-				}
-			}
-		}
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-	}
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-	// / EDITOR SETTERS: NAMES
+        } else {
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result setSceneName(Long gid, Long sid, String name) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+            String help = "Error!";
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            if (Scene.find.where().eq("id", sid).findRowCount() != 1) {
 
-		}
+                help = "Scene " + sid + "not found";
+            } else {
 
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                Scene c = Scene.find.byId(sid);
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                c.setName(name);
+                c.update();
 
-		} else {
+                help = "synced";
 
-			String help = "Error!";
+            }
 
-			if (Scene.find.where().eq("id", sid).findRowCount() != 1) {
+            return ok(help);
 
-				help = "Scene " + sid + "not found";
-			} else {
+        }
 
-				Scene c = Scene.find.byId(sid);
+    }
 
-				c.setName(name);
-				c.update();
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result setGameName(Long gid, String name) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-				help = "synced";
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-			}
+        }
 
-			return ok(help);
+        String help = "Error!";
 
-		}
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-	}
+            help = "Game " + gid + "not found";
+        } else {
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result setGameName(Long gid, String name) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		}
+            } else {
 
-		String help = "Error!";
+                Game c = Game.find.byId(gid);
+                c.setName(name);
+                c.update();
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+                help = "synced";
 
-			help = "Game " + gid + "not found";
-		} else {
+            }
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+        }
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+        return ok(help);
 
-			} else {
+    }
 
-				Game c = Game.find.byId(gid);
-				c.setName(name);
-				c.update();
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result setHotspotName(Long gid, Long cid, String name) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-				help = "synced";
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-			}
+        }
 
-		}
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-		return ok(help);
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-	}
+        } else {
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result setHotspotName(Long gid, Long cid, String name) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+            String help = "Error!";
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            if (Hotspot.find.where().eq("id", cid).findRowCount() != 1) {
 
-		}
+                help = "Hotspot " + cid + "not found";
+            } else {
 
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                Hotspot c = Hotspot.find.byId(cid);
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                c.setName(name);
+                c.update();
 
-		} else {
+                help = "synced";
 
-			String help = "Error!";
+            }
 
-			if (Hotspot.find.where().eq("id", cid).findRowCount() != 1) {
+            return ok(help);
 
-				help = "Hotspot " + cid + "not found";
-			} else {
+        }
 
-				Hotspot c = Hotspot.find.byId(cid);
+    }
 
-				c.setName(name);
-				c.update();
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result setMenuItemName(Long gid, Long cid, String name) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-				help = "synced";
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-			}
+        }
 
-			return ok(help);
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-		}
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-	}
+        } else {
+            String help = "Error!";
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result setMenuItemName(Long gid, Long cid, String name) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+            if (MenuItem.find.where().eq("id", cid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                help = "MenuItem " + cid + "not found";
+            } else {
 
-		}
+                MenuItem c = MenuItem.find.byId(cid);
 
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                c.setTitle(name);
+                c.update();
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                help = "synced";
 
-		} else {
-			String help = "Error!";
+            }
 
-			if (MenuItem.find.where().eq("id", cid).findRowCount() != 1) {
+            return ok(help);
 
-				help = "MenuItem " + cid + "not found";
-			} else {
+        }
 
-				MenuItem c = MenuItem.find.byId(cid);
+    }
 
-				c.setTitle(name);
-				c.update();
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result setContentName(Long gid, Long cid, String name) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-				help = "synced";
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-			}
+        }
 
-			return ok(help);
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-		}
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-	}
+        } else {
+            String help = "Error!";
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result setContentName(Long gid, Long cid, String name) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+            if (Content.find.where().eq("id", cid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                help = "Content " + cid + "not found";
+            } else {
 
-		}
+                Content c = Content.find.byId(cid);
 
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                c.setName(name);
+                c.update();
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                help = "synced";
 
-		} else {
-			String help = "Error!";
+            }
 
-			if (Content.find.where().eq("id", cid).findRowCount() != 1) {
+            return ok(help);
+        }
 
-				help = "Content " + cid + "not found";
-			} else {
+    }
 
-				Content c = Content.find.byId(cid);
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result setContentValue(Long gid, Long cid, String name) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-				c.setName(name);
-				c.update();
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				help = "synced";
+        }
 
-			}
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			return ok(help);
-		}
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-	}
+        } else {
+            String help = "Error!";
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result setContentValue(Long gid, Long cid, String name) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+            if (Content.find.where().eq("id", cid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                help = "Content " + cid + "not found";
+            } else {
 
-		}
+                Content c = Content.find.byId(cid);
 
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                c.setContent(name);
+                c.update();
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                help = "synced";
 
-		} else {
-			String help = "Error!";
+            }
 
-			if (Content.find.where().eq("id", cid).findRowCount() != 1) {
+            return ok(help);
+        }
 
-				help = "Content " + cid + "not found";
-			} else {
+    }
 
-				Content c = Content.find.byId(cid);
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result setHotspotCoords(Long gid, Long hid, String lon, String lat) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-				c.setContent(name);
-				c.update();
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				help = "synced";
+        }
 
-			}
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			return ok(help);
-		}
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-	}
+        } else {
+            String help = "Error!";
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result setHotspotCoords(Long gid, Long hid, String lon, String lat) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+            if (Hotspot.find.where().eq("id", hid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                help = "Hotspot " + hid + " nicht gefunden.";
 
-		}
+            } else {
 
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                Hotspot h = Hotspot.find.byId(hid);
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                h.setLongitude(Float.valueOf(lon));
+                h.setLatitude(Float.valueOf(lat));
+                h.update();
 
-		} else {
-			String help = "Error!";
+                System.out.println(Float.valueOf(lon) + " " + Float.valueOf(lat));
+                help = "synced";
+            }
 
-			if (Hotspot.find.where().eq("id", hid).findRowCount() != 1) {
+            return ok(help);
+        }
 
-				help = "Hotspot " + hid + " nicht gefunden.";
+    }
 
-			} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result setMissionName(Long gid, Long mid, String name) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-				Hotspot h = Hotspot.find.byId(hid);
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				h.setLongitude(Float.valueOf(lon));
-				h.setLatitude(Float.valueOf(lat));
-				h.update();
+        }
 
-				System.out.println(Float.valueOf(lon) + " " + Float.valueOf(lat));
-				help = "synced";
-			}
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			return ok(help);
-		}
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-	}
+        } else {
+            String help = "Error!";
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result setMissionName(Long gid, Long mid, String name) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+            if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                help = "Mission " + mid + " nicht gefunden.";
 
-		}
+            } else {
 
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                Mission m = Mission.find.byId(mid);
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                try {
 
-		} else {
-			String help = "Error!";
+                    name = URLDecoder.decode(name, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    // Will it ever be thrown?
+                }
 
-			if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
+                m.setName(name);
+                m.update();
 
-				help = "Mission " + mid + " nicht gefunden.";
+                help = "synced";
+            }
 
-			} else {
+            return ok(help);
+        }
+    }
 
-				Mission m = Mission.find.byId(mid);
+    // / EDITOR SETTERS: UPLOADS
 
-				try {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result uploadAttributeFile(Long gid, String type, Long hid, Long cid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-					name = URLDecoder.decode(name, "UTF-8");
-				} catch (UnsupportedEncodingException e) {
-					// Will it ever be thrown?
-				}
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				m.setName(name);
-				m.update();
+        }
 
-				help = "synced";
-			}
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			return ok(help);
-		}
-	}
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-	// / EDITOR SETTERS: UPLOADS
+        } else {
+            String help = "Error!";
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result uploadAttributeFile(Long gid, String type, Long hid, Long cid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+            if (AttributeType.find.where().eq("id", cid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                help = "AttributeType " + cid + "not found";
+            } else {
 
-		}
+                AttributeType c = AttributeType.find.byId(cid);
 
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+                // // SAVE FILE
+                try {
+                    System.out.println(request().body().asText());
+                    MultipartFormData body = request().body().asMultipartFormData();
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    FilePart resourceFile = null;
+                    List<FilePart> files = body.getFiles();
 
-		} else {
-			String help = "Error!";
+                    if (!files.isEmpty()) {
 
-			if (AttributeType.find.where().eq("id", cid).findRowCount() != 1) {
+                        resourceFile = files.get(0);
 
-				help = "AttributeType " + cid + "not found";
-			} else {
+                    } else {
 
-				AttributeType c = AttributeType.find.byId(cid);
+                        return ok("No file uploaded");
+                    }
 
-				// // SAVE FILE
-				try {
-					System.out.println(request().body().asText());
-					MultipartFormData body = request().body().asMultipartFormData();
+                    if (resourceFile != null) {
 
-					FilePart resourceFile = null;
-					List<FilePart> files = body.getFiles();
+                        String fileName = resourceFile.getFilename();
+                        String destfilename = fileName.replaceAll(" ", "_");
+                        destfilename = destfilename.toLowerCase();
+                        destfilename = destfilename.replaceAll("ä", "ae");
+                        destfilename = destfilename.replaceAll("ö", "oe");
+                        destfilename = destfilename.replaceAll("ü", "ue");
+                        destfilename = destfilename.replaceAll("ß", "ss");
 
-					if (!files.isEmpty()) {
+                        File file = resourceFile.getFile();
 
-						resourceFile = files.get(0);
+                        int i = 0;
+                        boolean exists = true;
+                        while (exists == true) {
 
-					} else {
+                            i++;
+                            File f = new File(
+                                    "public/uploads/" + Application.getLocalPortal().getId() + "/editor/" + gid + "/",
+                                    i + "_" + destfilename);
+                            if (!f.exists()) {
+                                exists = false;
+                            }
 
-						return ok("No file uploaded");
-					}
+                        }
 
-					if (resourceFile != null) {
+                        File tosave = new File(
+                                "public/uploads/" + Application.getLocalPortal().getId() + "/editor/" + gid + "/",
+                                i + "_" + destfilename);
 
-						String fileName = resourceFile.getFilename();
-						String destfilename = fileName.replaceAll(" ", "_");
-						destfilename = destfilename.toLowerCase();
-						destfilename = destfilename.replaceAll("ä", "ae");
-						destfilename = destfilename.replaceAll("ö", "oe");
-						destfilename = destfilename.replaceAll("ü", "ue");
-						destfilename = destfilename.replaceAll("ß", "ss");
+                        try {
 
-						File file = resourceFile.getFile();
+                            FileUtils.moveFile(file, tosave);
 
-						int i = 0;
-						boolean exists = true;
-						while (exists == true) {
+                            String dest = Global.SERVER_URL_2 + "/uploadedassets/"
+                                    + Application.getLocalPortal().getId() + "/editor/" + gid + "/" + i + "_"
+                                    + destfilename;
 
-							i++;
-							File f = new File(
-									"public/uploads/" + Application.getLocalPortal().getId() + "/editor/" + gid + "/",
-									i + "_" + destfilename);
-							if (!f.exists()) {
-								exists = false;
-							}
+                            if (type.equals("hotspot")) {
 
-						}
+                                if (Hotspot.find.where().eq("id", hid).findRowCount() != 1) {
 
-						File tosave = new File(
-								"public/uploads/" + Application.getLocalPortal().getId() + "/editor/" + gid + "/",
-								i + "_" + destfilename);
+                                    help = "Hotspot " + hid + "not found";
+                                } else {
 
-						try {
+                                    Hotspot b = Hotspot.find.byId(hid);
 
-							FileUtils.moveFile(file, tosave);
+                                    Attribute atts = new Attribute(c);
+                                    atts.setValue(dest);
+                                    atts.save();
+                                    b.setAttribute(atts);
 
-							String dest = Global.SERVER_URL_2 + "/uploadedassets/"
-									+ Application.getLocalPortal().getId() + "/editor/" + gid + "/" + i + "_"
-									+ destfilename;
+                                    b.update();
 
-							if (type.equals("hotspot")) {
+                                    help = "" + atts.getId();
 
-								if (Hotspot.find.where().eq("id", hid).findRowCount() != 1) {
+                                }
 
-									help = "Hotspot " + hid + "not found";
-								} else {
+                            } else if (type.equals("mission")) {
 
-									Hotspot b = Hotspot.find.byId(hid);
+                                if (Mission.find.where().eq("id", hid).findRowCount() != 1) {
 
-									Attribute atts = new Attribute(c);
-									atts.setValue(dest);
-									atts.save();
-									b.setAttribute(atts);
+                                    help = "Mission " + hid + "not found";
+                                } else {
 
-									b.update();
+                                    Mission b = Mission.find.byId(hid);
 
-									help = "" + atts.getId();
+                                    Attribute atts = new Attribute(c);
+                                    atts.setValue(dest);
+                                    atts.save();
+                                    b.setAttribute(atts);
 
-								}
+                                    b.update();
 
-							} else if (type.equals("mission")) {
+                                    help = "" + atts.getId();
 
-								if (Mission.find.where().eq("id", hid).findRowCount() != 1) {
+                                }
 
-									help = "Mission " + hid + "not found";
-								} else {
+                            } else if (type.equals("content")) {
 
-									Mission b = Mission.find.byId(hid);
+                                if (Content.find.where().eq("id", hid).findRowCount() != 1) {
 
-									Attribute atts = new Attribute(c);
-									atts.setValue(dest);
-									atts.save();
-									b.setAttribute(atts);
+                                    help = "Content " + hid + "not found";
+                                } else {
 
-									b.update();
+                                    Content b = Content.find.byId(hid);
 
-									help = "" + atts.getId();
+                                    Attribute atts = new Attribute(c);
+                                    atts.setValue(dest);
+                                    atts.save();
+                                    b.setAttribute(atts);
 
-								}
+                                    b.update();
 
-							} else if (type.equals("content")) {
+                                    help = "" + atts.getId();
 
-								if (Content.find.where().eq("id", hid).findRowCount() != 1) {
+                                }
 
-									help = "Content " + hid + "not found";
-								} else {
+                            } else if (type.equals("action")) {
 
-									Content b = Content.find.byId(hid);
+                                if (Action.find.where().eq("id", hid).findRowCount() != 1) {
 
-									Attribute atts = new Attribute(c);
-									atts.setValue(dest);
-									atts.save();
-									b.setAttribute(atts);
+                                    help = "Action " + hid + "not found";
+                                } else {
 
-									b.update();
+                                    Action b = Action.find.byId(hid);
 
-									help = "" + atts.getId();
+                                    Attribute atts = new Attribute(c);
+                                    atts.setValue(dest);
+                                    atts.save();
+                                    b.setAttribute(atts);
 
-								}
+                                    b.update();
 
-							} else if (type.equals("action")) {
+                                    help = "" + atts.getId();
 
-								if (Action.find.where().eq("id", hid).findRowCount() != 1) {
+                                }
 
-									help = "Action " + hid + "not found";
-								} else {
+                            } else if (type.equals("scene")) {
 
-									Action b = Action.find.byId(hid);
+                                if (Scene.find.where().eq("id", hid).findRowCount() != 1) {
 
-									Attribute atts = new Attribute(c);
-									atts.setValue(dest);
-									atts.save();
-									b.setAttribute(atts);
+                                    help = "Scene " + hid + "not found";
+                                } else {
 
-									b.update();
+                                    Scene b = Scene.find.byId(hid);
 
-									help = "" + atts.getId();
+                                    if (b.getAttribute(c) != null) {
 
-								}
+                                        Attribute a = b.getAttribute(c);
+                                        a.setValue(dest);
+                                        a.update();
 
-							} else if (type.equals("scene")) {
+                                        if (a.hasLink()) {
 
-								if (Scene.find.where().eq("id", hid).findRowCount() != 1) {
+                                            a.getLink().setObjectValue(dest);
 
-									help = "Scene " + hid + "not found";
-								} else {
+                                        }
 
-									Scene b = Scene.find.byId(hid);
+                                    } else {
 
-									if (b.getAttribute(c) != null) {
+                                        Attribute atts = new Attribute(c);
+                                        atts.setValue(dest);
+                                        atts.save();
+                                        b.setAttribute(atts);
 
-										Attribute a = b.getAttribute(c);
-										a.setValue(dest);
-										a.update();
+                                        b.update();
 
-										if (a.hasLink()) {
+                                        help = "" + atts.getId();
 
-											a.getLink().setObjectValue(dest);
+                                    }
 
-										}
+                                }
 
-									} else {
+                            }
 
-										Attribute atts = new Attribute(c);
-										atts.setValue(dest);
-										atts.save();
-										b.setAttribute(atts);
+                        } catch (IOException ioe) {
+                            return ok("Error!");
+                        }
 
-										b.update();
+                    }
+                } catch (RuntimeException e) {
+                    System.out.println("Problem uploading file.");
+                    e.printStackTrace();
 
-										help = "" + atts.getId();
+                }
 
-									}
+            }
 
-								}
+            return ok(help);
+        }
+    }
 
-							}
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getFilePreview(Long gid, Long attr) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-						} catch (IOException ioe) {
-							return ok("Error!");
-						}
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					}
-				} catch (RuntimeException e) {
-					System.out.println("Problem uploading file.");
-					e.printStackTrace();
+        }
 
-				}
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			}
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-			return ok(help);
-		}
-	}
+        } else {
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getFilePreview(Long gid, Long attr) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		}
+            } else {
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+                if (Attribute.find.where().eq("id", attr).findRowCount() != 1) {
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+                    return badRequest(views.html.norights.render("Die Action existiert nicht"));
 
-		} else {
+                } else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+                    Attribute a = Attribute.find.byId(attr);
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    return ok(views.html.editor.editor_afilepreview.render(Game.find.byId(gid), attr, a.getValue()));
 
-			} else {
+                }
+            }
+        }
 
-				if (Attribute.find.where().eq("id", attr).findRowCount() != 1) {
+    }
 
-					return badRequest(views.html.norights.render("Die Action existiert nicht"));
+    // / EDITOR SETTERS: ATTRIBUTES
 
-				} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result setGameAttribute(Long gid, Long atype, String value) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-					Attribute a = Attribute.find.byId(attr);
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					return ok(views.html.editor.editor_afilepreview.render(Game.find.byId(gid), attr, a.getValue()));
+        }
 
-				}
-			}
-		}
+        String help = "Error!";
 
-	}
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-	// / EDITOR SETTERS: ATTRIBUTES
+            return ok("Game not found");
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result setGameAttribute(Long gid, Long atype, String value) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+        } else {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-		}
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		String help = "Error!";
+            } else {
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+                Game g = Game.find.byId(gid);
 
-			return ok("Game not found");
+                if (AttributeType.find.where().eq("id", atype).findRowCount() != 1) {
 
-		} else {
+                    return ok("Attribute not found");
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+                } else {
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    AttributeType at = AttributeType.find.byId(atype);
 
-			} else {
+                    Attribute a = at.createMe();
+                    a.save();
+                    a.setValue(value);
+                    a.update();
 
-				Game g = Game.find.byId(gid);
+                    g.setAttribute(a);
+                    g.update();
 
-				if (AttributeType.find.where().eq("id", atype).findRowCount() != 1) {
+                    if (g.getAttributeValue(at).equals(value)) {
+                        help = "synced";
+                    }
 
-					return ok("Attribute not found");
+                }
+            }
+        }
 
-				} else {
+        return ok(help);
 
-					AttributeType at = AttributeType.find.byId(atype);
+    }
 
-					Attribute a = at.createMe();
-					a.save();
-					a.setValue(value);
-					a.update();
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result setContentAttribute(Long gid, Long cid, Long atype, String value) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-					g.setAttribute(a);
-					g.update();
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-					if (g.getAttributeValue(at).equals(value)) {
-						help = "synced";
-					}
+        }
 
-				}
-			}
-		}
+        String help = "Error!";
 
-		return ok(help);
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-	}
+            return ok("Game not found");
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result setContentAttribute(Long gid, Long cid, Long atype, String value) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+        } else {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-		}
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		String help = "Error!";
+            } else {
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+                if (Content.find.where().eq("id", cid).findRowCount() != 1) {
 
-			return ok("Game not found");
+                    return ok("Content not found");
 
-		} else {
+                } else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+                    Content c = Content.find.byId(cid);
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    if (AttributeType.find.where().eq("id", atype).findRowCount() != 1) {
 
-			} else {
+                        return ok("Attribute not found");
 
-				if (Content.find.where().eq("id", cid).findRowCount() != 1) {
+                    } else {
 
-					return ok("Content not found");
+                        AttributeType at = AttributeType.find.byId(atype);
 
-				} else {
+                        Attribute a = at.createMe();
+                        a.save();
+                        a.setValue(value);
+                        a.update();
 
-					Content c = Content.find.byId(cid);
+                        c.setAttribute(a);
+                        c.update();
 
-					if (AttributeType.find.where().eq("id", atype).findRowCount() != 1) {
+                        if (c.getAttributeValue(at).equals(value)) {
+                            help = "synced";
+                        }
 
-						return ok("Attribute not found");
+                    }
+                }
+            }
+        }
 
-					} else {
+        return ok(help);
 
-						AttributeType at = AttributeType.find.byId(atype);
+    }
 
-						Attribute a = at.createMe();
-						a.save();
-						a.setValue(value);
-						a.update();
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result setMissionAttribute(Long gid, Long mid, Long atype, String value) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-						c.setAttribute(a);
-						c.update();
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-						if (c.getAttributeValue(at).equals(value)) {
-							help = "synced";
-						}
+        }
 
-					}
-				}
-			}
-		}
+        String help = "Error!";
 
-		return ok(help);
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-	}
+            return ok("Game not found");
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result setMissionAttribute(Long gid, Long mid, Long atype, String value) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+        } else {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-		}
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		String help = "Error!";
+            } else {
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+                if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
-			return ok("Game not found");
+                    return ok("Content not found");
 
-		} else {
+                } else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+                    Mission c = Mission.find.byId(mid);
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    if (AttributeType.find.where().eq("id", atype).findRowCount() != 1) {
 
-			} else {
+                        return ok("Attribute not found");
 
-				if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
+                    } else {
 
-					return ok("Content not found");
+                        AttributeType at = AttributeType.find.byId(atype);
 
-				} else {
+                        Attribute a = at.createMe();
+                        a.save();
+                        a.setValue(value);
+                        a.update();
 
-					Mission c = Mission.find.byId(mid);
+                        c.setAttribute(a);
+                        c.update();
 
-					if (AttributeType.find.where().eq("id", atype).findRowCount() != 1) {
+                        if (c.getAttributeValue(at).equals(value)) {
+                            help = "synced";
+                        }
 
-						return ok("Attribute not found");
+                    }
+                }
+            }
+        }
 
-					} else {
+        return ok(help);
 
-						AttributeType at = AttributeType.find.byId(atype);
+    }
 
-						Attribute a = at.createMe();
-						a.save();
-						a.setValue(value);
-						a.update();
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result setHotspotAttribute(Long gid, Long mid, Long atype, String value) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-						c.setAttribute(a);
-						c.update();
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-						if (c.getAttributeValue(at).equals(value)) {
-							help = "synced";
-						}
+        }
 
-					}
-				}
-			}
-		}
+        String help = "Error!";
 
-		return ok(help);
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-	}
+            return ok("Game not found");
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result setHotspotAttribute(Long gid, Long mid, Long atype, String value) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+        } else {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-		}
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		String help = "Error!";
+            } else {
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+                if (Hotspot.find.where().eq("id", mid).findRowCount() != 1) {
 
-			return ok("Game not found");
+                    return ok("Content not found");
 
-		} else {
+                } else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+                    Hotspot c = Hotspot.find.byId(mid);
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    if (AttributeType.find.where().eq("id", atype).findRowCount() != 1) {
 
-			} else {
+                        return ok("Attribute not found");
 
-				if (Hotspot.find.where().eq("id", mid).findRowCount() != 1) {
+                    } else {
 
-					return ok("Content not found");
+                        AttributeType at = AttributeType.find.byId(atype);
 
-				} else {
+                        Attribute a = at.createMe();
+                        a.save();
+                        a.setValue(value);
+                        a.update();
 
-					Hotspot c = Hotspot.find.byId(mid);
+                        c.setAttribute(a);
+                        c.update();
 
-					if (AttributeType.find.where().eq("id", atype).findRowCount() != 1) {
+                        if (c.getAttributeValue(at).equals(value)) {
+                            help = "synced";
+                        }
 
-						return ok("Attribute not found");
+                    }
+                }
+            }
+        }
 
-					} else {
+        return ok(help);
 
-						AttributeType at = AttributeType.find.byId(atype);
+    }
 
-						Attribute a = at.createMe();
-						a.save();
-						a.setValue(value);
-						a.update();
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result setActionAttribute(Long gid, Long mid, Long atype, String value) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-						c.setAttribute(a);
-						c.update();
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-						if (c.getAttributeValue(at).equals(value)) {
-							help = "synced";
-						}
+        }
 
-					}
-				}
-			}
-		}
+        String help = "Error!";
 
-		return ok(help);
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-	}
+            return ok("Game not found");
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result setActionAttribute(Long gid, Long mid, Long atype, String value) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+        } else {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-		}
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		String help = "Error!";
+            } else {
+                if (Action.find.where().eq("id", mid).findRowCount() != 1) {
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+                    return ok("Content not found");
 
-			return ok("Game not found");
+                } else {
 
-		} else {
+                    Action c = Action.find.byId(mid);
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+                    if (AttributeType.find.where().eq("id", atype).findRowCount() != 1) {
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                        return ok("Attribute not found");
 
-			} else {
-				if (Action.find.where().eq("id", mid).findRowCount() != 1) {
+                    } else {
 
-					return ok("Content not found");
+                        AttributeType at = AttributeType.find.byId(atype);
 
-				} else {
+                        Attribute a = at.createMe();
+                        a.save();
+                        a.setValue(value);
+                        a.update();
 
-					Action c = Action.find.byId(mid);
+                        c.setAttribute(a);
+                        c.update();
 
-					if (AttributeType.find.where().eq("id", atype).findRowCount() != 1) {
+                        if (c.getAttributeValue(at).equals(value)) {
+                            help = "synced";
+                        }
 
-						return ok("Attribute not found");
+                    }
+                }
+            }
+        }
 
-					} else {
+        return ok(help);
 
-						AttributeType at = AttributeType.find.byId(atype);
+    }
 
-						Attribute a = at.createMe();
-						a.save();
-						a.setValue(value);
-						a.update();
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result setSceneAttribute(Long gid, Long mid, Long atype, String value) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-						c.setAttribute(a);
-						c.update();
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-						if (c.getAttributeValue(at).equals(value)) {
-							help = "synced";
-						}
+        }
 
-					}
-				}
-			}
-		}
+        String help = "Error!";
 
-		return ok(help);
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-	}
+            return ok("Game not found");
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result setSceneAttribute(Long gid, Long mid, Long atype, String value) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+        } else {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-		}
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		String help = "Error!";
+            } else {
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+                if (Scene.find.where().eq("id", mid).findRowCount() != 1) {
 
-			return ok("Game not found");
+                    return ok("Scene not found");
 
-		} else {
+                } else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+                    Scene c = Scene.find.byId(mid);
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    if (AttributeType.find.where().eq("id", atype).findRowCount() != 1) {
 
-			} else {
+                        return ok("Attribute not found");
 
-				if (Scene.find.where().eq("id", mid).findRowCount() != 1) {
+                    } else {
 
-					return ok("Scene not found");
+                        AttributeType at = AttributeType.find.byId(atype);
 
-				} else {
+                        if (c.getAttribute(at) != null) {
 
-					Scene c = Scene.find.byId(mid);
+                            if (at.getFileType().equals("QuoteStringTextArea")) {
 
-					if (AttributeType.find.where().eq("id", atype).findRowCount() != 1) {
+                                value = value.replaceAll("\n", "<br>");
 
-						return ok("Attribute not found");
+                            }
 
-					} else {
+                            Attribute a = c.getAttribute(at);
+                            a.setValue(value);
+                            a.update();
 
-						AttributeType at = AttributeType.find.byId(atype);
+                            if (a.hasLink()) {
+                                System.out.println(a.getName() + " has link");
+                                a.getLink().setObjectValue(value);
 
-						if (c.getAttribute(at) != null) {
+                            } else {
 
-							if (at.getFileType().equals("QuoteStringTextArea")) {
+                                System.out.println(a.getName() + " has no link");
 
-								value = value.replaceAll("\n", "<br>");
+                            }
 
-							}
+                        } else {
 
-							Attribute a = c.getAttribute(at);
-							a.setValue(value);
-							a.update();
+                            Attribute a = at.createMe();
+                            a.save();
+                            a.setValue(value);
+                            a.update();
 
-							if (a.hasLink()) {
-								System.out.println(a.getName() + " has link");
-								a.getLink().setObjectValue(value);
+                            c.setAttribute(a);
+                            c.update();
 
-							} else {
+                        }
 
-								System.out.println(a.getName() + " has no link");
+                        if (at.getFileType().equals("QuoteString") || at.getFileType().equals("QuoteStringTextArea")) {
 
-							}
+                            help = "synced";
 
-						} else {
+                        } else {
+                            if (c.getAttributeValue(at).equals(value)) {
+                                help = "synced";
+                            }
 
-							Attribute a = at.createMe();
-							a.save();
-							a.setValue(value);
-							a.update();
+                        }
 
-							c.setAttribute(a);
-							c.update();
+                    }
+                }
+            }
+        }
 
-						}
+        return ok(help);
 
-						if (at.getFileType().equals("QuoteString") || at.getFileType().equals("QuoteStringTextArea")) {
+    }
 
-							help = "synced";
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result setMenuItemAttribute(Long gid, Long mid, String a, String value) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-						} else {
-							if (c.getAttributeValue(at).equals(value)) {
-								help = "synced";
-							}
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-						}
+        }
 
-					}
-				}
-			}
-		}
+        String help = "Error!";
 
-		return ok(help);
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-	}
+            return ok("Game not found");
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result setMenuItemAttribute(Long gid, Long mid, String a, String value) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+        } else {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-		}
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		String help = "Error!";
+            } else {
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+                if (MenuItem.find.where().eq("id", mid).findRowCount() != 1) {
 
-			return ok("Game not found");
+                    return ok("MenuItem not found");
 
-		} else {
+                } else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+                    MenuItem c = MenuItem.find.byId(mid);
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    if (a.equals("show")) {
 
-			} else {
+                        c.setShow(value);
+                        help = "synced";
 
-				if (MenuItem.find.where().eq("id", mid).findRowCount() != 1) {
+                    } else if (a.equals("activity")) {
 
-					return ok("MenuItem not found");
+                        if (value.equals("true")) {
+                            c.setActivity(true);
+                            help = "synced";
+                        } else {
+                            c.setActivity(false);
+                            help = "synced";
+                        }
 
-				} else {
+                    } else if (a.equals("priority")) {
 
-					MenuItem c = MenuItem.find.byId(mid);
+                        c.setPriority(Integer.valueOf(value));
+                        help = "synced";
 
-					if (a.equals("show")) {
+                    } else if (a.equals("icon")) {
 
-						c.setShow(value);
-						help = "synced";
+                        c.setIcon(value);
+                        help = "synced";
 
-					} else if (a.equals("activity")) {
+                    } else if (a.equals("showText")) {
 
-						if (value.equals("true")) {
-							c.setActivity(true);
-							help = "synced";
-						} else {
-							c.setActivity(false);
-							help = "synced";
-						}
+                        if (value.equals("true")) {
+                            c.setShowText(true);
+                            help = "synced";
+                        } else {
+                            c.setShowText(false);
+                            help = "synced";
+                        }
 
-					} else if (a.equals("priority")) {
+                    }
 
-						c.setPriority(Integer.valueOf(value));
-						help = "synced";
+                    c.update();
 
-					} else if (a.equals("icon")) {
+                }
+            }
+        }
 
-						c.setIcon(value);
-						help = "synced";
+        return ok(help);
 
-					} else if (a.equals("showText")) {
+    }
 
-						if (value.equals("true")) {
-							c.setShowText(true);
-							help = "synced";
-						} else {
-							c.setShowText(false);
-							help = "synced";
-						}
+    // / EDITOR: XML
 
-					}
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result createXML(Long gid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-					c.update();
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				}
-			}
-		}
+        }
 
-		return ok(help);
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-	}
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-	// / EDITOR: XML
+        } else {
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result createXML(Long gid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		}
+            } else {
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+                ProviderPortal p = Application.getLocalPortal();
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+                boolean doit = true;
+                String help1 = "false";
+                if (p.getContentHtmlParameter("general.games.adminshavetopublish") != null) {
 
-		} else {
+                    help1 = p.getContentHtmlParameter("general.games.adminshavetopublish");
+                }
+                if (help1.equals("true")) {
+                    if (Global.securityGuard.hasAdminRightsOnPortal(Application.getLocalUser(session())) == false) {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+                        doit = false;
+                    }
+                }
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                Game c = Game.find.byId(gid);
 
-			} else {
+                if (doit) {
 
-				ProviderPortal p = Application.getLocalPortal();
+                    if (p.getGame(c) != null) {
+                        p.getGame(c).setVisibility(true);
+                        p.getGame(c).update();
+                        p.update();
 
-				boolean doit = true;
-				String help1 = "false";
-				if (p.getContentHtmlParameter("general.games.adminshavetopublish") != null) {
+                    }
 
-					help1 = p.getContentHtmlParameter("general.games.adminshavetopublish");
-				}
-				if (help1.equals("true")) {
-					if (Global.securityGuard.hasAdminRightsOnPortal(Application.getLocalUser(session())) == false) {
-
-						doit = false;
-					}
-				}
+                    Game g = Game.find.byId(gid);
+                    g.userlastupdated = Application.getLocalUser().getId();
+                    g.lastUpdate = new Date();
+                    g.createXML();
 
-				Game c = Game.find.byId(gid);
+                } else {
 
-				if (doit) {
+                    String help = "false";
+                    if (p.getContentHtmlParameter("general.games.adminsgetnotified") != null) {
 
-					if (p.getGame(c) != null) {
-						p.getGame(c).setVisibility(true);
-						p.getGame(c).update();
-						p.update();
+                        help = p.getContentHtmlParameter("general.games.adminsgetnotified");
+                    }
+                    if (help.equals("true")) {
 
-					}
+                        for (ProviderUsers au : p.getUsers()) {
 
-					Game g = Game.find.byId(gid);
-					g.userlastupdated = Application.getLocalUser().getId();
-					g.lastUpdate = new Date();
-					g.createXML();
+                            if (au.getRights().equals("admin")) {
+                                System.out.println("trying to send an email to admin: " + au.getUser().getName());
+                                final MyUsernamePasswordAuthProvider provider = MyUsernamePasswordAuthProvider
+                                        .getProvider();
+                                String linkToUserRightsTable = Global.SERVER_URL + "/" + p.id + "/portal/rights/"
+                                        + p.id;
+                                String text = "Auf dem Geoquest Portal '" + p.name
+                                        + "' wurde eine neue Quest mit dem Namen'" + c.getName() + "' und der ID "
+                                        + c.getId()
+                                        + " erstellt. Solltest nur du die Berechtigung haben, diese Quest zu veröffentlichen, kümmere dich bitte darum: "
+                                        + linkToUserRightsTable;
 
-				} else {
+                                String html = "Auf dem Geoquest Portal '" + p.name
+                                        + "' wurde eine neue Quest mit dem Namen'" + c.getName() + "' und der ID "
+                                        + c.getId()
+                                        + " erstellt.<br/><br/> Solltest <b>nur du</b> die Berechtigung haben, diese Quest zu veröffentlichen, kümmere dich bitte darum: "
+                                        + "<a href=\"" + linkToUserRightsTable + "\">" + linkToUserRightsTable + "</a>";
+                                provider.sendEmailToUser(au.getUser(), "Neue Quest: " + c.getName(), text, html);
+                            }
 
-					String help = "false";
-					if (p.getContentHtmlParameter("general.games.adminsgetnotified") != null) {
-
-						help = p.getContentHtmlParameter("general.games.adminsgetnotified");
-					}
-					if (help.equals("true")) {
-
-						for (ProviderUsers au : p.getUsers()) {
-
-							if (au.getRights().equals("admin")) {
-								System.out.println("trying to send an email to admin: " + au.getUser().getName());
-								final MyUsernamePasswordAuthProvider provider = MyUsernamePasswordAuthProvider
-										.getProvider();
-								String linkToUserRightsTable = Global.SERVER_URL + "/" + p.id + "/portal/rights/"
-										+ p.id;
-								String text = "Auf dem Geoquest Portal '" + p.name
-										+ "' wurde eine neue Quest mit dem Namen'" + c.getName() + "' und der ID "
-										+ c.getId()
-										+ " erstellt. Solltest nur du die Berechtigung haben, diese Quest zu veröffentlichen, kümmere dich bitte darum: "
-										+ linkToUserRightsTable;
-
-								String html = "Auf dem Geoquest Portal '" + p.name
-										+ "' wurde eine neue Quest mit dem Namen'" + c.getName() + "' und der ID "
-										+ c.getId()
-										+ " erstellt.<br/><br/> Solltest <b>nur du</b> die Berechtigung haben, diese Quest zu veröffentlichen, kümmere dich bitte darum: "
-										+ "<a href=\"" + linkToUserRightsTable + "\">" + linkToUserRightsTable + "</a>";
-								provider.sendEmailToUser(au.getUser(), "Neue Quest: " + c.getName(), text, html);
-							}
-
-						}
-					}
-				}
-				return ok("synced");
+                        }
+                    }
+                }
+                return ok("synced");
 
-			}
+            }
 
-		}
+        }
 
-	}
+    }
 
-	@BodyParser.Of(Xml.class)
-	public static Result createXMLForWeb(Long gid, Long mid) {
+    @BodyParser.Of(Xml.class)
+    public static Result createXMLForWeb(Long gid, Long mid) {
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-		} else {
+        } else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-			} else {
+            } else {
 
-				if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
+                if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights.render("Die Mission existiert nicht"));
+                    return badRequest(views.html.norights.render("Die Mission existiert nicht"));
 
-				} else {
+                } else {
 
-					Game g = Game.find.byId(gid);
-					Mission m = Mission.find.byId(mid);
-					String result = g.createXMLForWeb(m);
+                    Game g = Game.find.byId(gid);
+                    Mission m = Mission.find.byId(mid);
+                    String result = g.createXMLForWeb(m);
 
-					return ok(result);
-				}
+                    return ok(result);
+                }
 
-			}
-		}
+            }
+        }
 
-	}
+    }
 
-	@BodyParser.Of(Xml.class)
-	public static Result getXMLForClient(Long gid) {
+    @BodyParser.Of(Xml.class)
+    public static Result getXMLForClient(Long gid) {
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-		} else {
+        } else {
 
-			Game g = Game.find.byId(gid);
+            Game g = Game.find.byId(gid);
 
-			if (g.zip == null) {
-				return ok("<error>No Pages defined</error>");
-			}
+            if (g.zip == null) {
+                return ok("<error>No Pages defined</error>");
+            }
 
-			File gameXMLFile = new File(g.zip);
+            File gameXMLFile = new File(g.zip);
 
-			if (!gameXMLFile.exists() || !gameXMLFile.canRead()) {
-				return ok("<error>No Pages defined</error>");
-			}
+            if (!gameXMLFile.exists() || !gameXMLFile.canRead()) {
+                return ok("<error>No Pages defined</error>");
+            }
 
-			if (gameXMLFile.getName().endsWith(".zip")) {
-				g.createXML();
-				gameXMLFile = new File(g.zip);
-			}
+            if (gameXMLFile.getName().endsWith(".zip")) {
+                g.createXML();
+                gameXMLFile = new File(g.zip);
+            }
 
-			if ("game.xml".equals(gameXMLFile.getName())) {
-				// Mission m = g.getFirstMission();
-				// String result = g.createXMLForWeb(m); // return file instead
+            if ("game.xml".equals(gameXMLFile.getName())) {
+                // Mission m = g.getFirstMission();
+                // String result = g.createXMLForWeb(m); // return file instead
 
-				response().setContentType("text/xml");
-				response().setHeader("Content-disposition", "attachment; filename=game.xml");
-				response().setHeader("Content-Length", gameXMLFile.length() + "");
+                response().setContentType("text/xml");
+                response().setHeader("Content-disposition", "attachment; filename=game.xml");
+                response().setHeader("Content-Length", gameXMLFile.length() + "");
 
-				return ok(gameXMLFile);
-			} else {
-				return ok("<error>No Pages defined</error>");
-			}
+                return ok(gameXMLFile);
+            } else {
+                return ok("<error>No Pages defined</error>");
+            }
 
-		}
+        }
 
-	}
+    }
 
-	@BodyParser.Of(Xml.class)
-	public static Result getTestXMLForClient(String deviceid) {
+    @BodyParser.Of(Xml.class)
+    public static Result getTestXMLForClient(String deviceid) {
 
-		if (Device.find.where().eq("deviceid", deviceid).findRowCount() != 1) {
+        if (Device.find.where().eq("deviceid", deviceid).findRowCount() != 1) {
 
-			return ok("<error>Invalid device id</error>");
+            return ok("<error>Invalid device id</error>");
 
-		} else {
+        } else {
 
-			Device d = Device.find.where().eq("deviceid", deviceid).findUnique();
+            Device d = Device.find.where().eq("deviceid", deviceid).findUnique();
 
-			if (d.quest == "") {
+            if (d.quest == "") {
 
-				return ok("");
-			} else {
+                return ok("");
+            } else {
 
-				File gameXMLFile = new File(d.quest);
+                File gameXMLFile = new File(d.quest);
 
-				if (!gameXMLFile.exists() || !gameXMLFile.canRead()) {
-					return ok("<error>No Pages defined</error>");
-				}
+                if (!gameXMLFile.exists() || !gameXMLFile.canRead()) {
+                    return ok("<error>No Pages defined</error>");
+                }
 
-				if ("game.xml".equals(gameXMLFile.getName())) {
-					// Mission m = g.getFirstMission();
-					// String result = g.createXMLForWeb(m); // return file
-					// instead
+                if ("game.xml".equals(gameXMLFile.getName())) {
+                    // Mission m = g.getFirstMission();
+                    // String result = g.createXMLForWeb(m); // return file
+                    // instead
 
-					response().setContentType("text/xml");
-					response().setHeader("Content-disposition", "attachment; filename=game.xml");
-					response().setHeader("Content-Length", gameXMLFile.length() + "");
+                    response().setContentType("text/xml");
+                    response().setHeader("Content-disposition", "attachment; filename=game.xml");
+                    response().setHeader("Content-Length", gameXMLFile.length() + "");
 
-					d.questpush = 0L;
-					d.update();
+                    d.questpush = 0L;
+                    d.update();
 
-					return ok(gameXMLFile);
+                    return ok(gameXMLFile);
 
-				} else {
-					return ok("<error>No Pages defined</error>");
-				}
+                } else {
+                    return ok("<error>No Pages defined</error>");
+                }
 
-			}
-		}
-	}
+            }
+        }
+    }
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result movePartInGame(Long gid, Long pid, String direction) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result movePartInGame(Long gid, Long pid, String direction) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		}
+        }
 
-		// CHECK RIGHTS ON GAME
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        // CHECK RIGHTS ON GAME
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest("Game not found");
+            return badRequest("Game not found");
 
-		} else {
+        } else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-			} else {
+            } else {
 
-				Game g = Game.find.byId(gid);
+                Game g = Game.find.byId(gid);
 
-				if (Part.find.where().eq("id", pid).findRowCount() != 1) {
+                if (Part.find.where().eq("id", pid).findRowCount() != 1) {
 
-					return badRequest("Part not found");
+                    return badRequest("Part not found");
 
-				} else {
+                } else {
 
-					Part p = Part.find.byId(pid);
+                    Part p = Part.find.byId(pid);
 
-					if (direction.equals("up")) {
-						System.out.println("moving up");
-						g.part_up(p);
-					} else if (direction.equals("down")) {
-						System.out.println("moving down");
-						g.part_down(p);
-					}
+                    if (direction.equals("up")) {
+                        System.out.println("moving up");
+                        g.part_up(p);
+                    } else if (direction.equals("down")) {
+                        System.out.println("moving down");
+                        g.part_down(p);
+                    }
 
-					return ok(views.html.editor.editor_sidemenu_missionlist.render(Game.find.byId(gid)));
+                    return ok(views.html.editor.editor_sidemenu_missionlist.render(Game.find.byId(gid)));
 
-				}
-			}
-		}
+                }
+            }
+        }
 
-	}
+    }
 
-	// / EDITOR: DELETERS
+    // / EDITOR: DELETERS
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result deletePartFromGame(Long gid, Long pid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result deletePartFromGame(Long gid, Long pid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		}
+        }
 
-		// CHECK RIGHTS ON GAME
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        // CHECK RIGHTS ON GAME
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return ok("Game not found");
+            return ok("Game not found");
 
-		} else {
+        } else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-			} else {
+            } else {
 
-				Game g = Game.find.byId(gid);
+                Game g = Game.find.byId(gid);
 
-				if (Part.find.where().eq("id", pid).findRowCount() != 1) {
+                if (Part.find.where().eq("id", pid).findRowCount() != 1) {
 
-					return ok("Part not found");
+                    return ok("Part not found");
 
-				} else {
+                } else {
 
-					Part p = Part.find.byId(pid);
+                    Part p = Part.find.byId(pid);
 
-					g.removePart(p);
+                    g.removePart(p);
 
-					g.update();
+                    g.update();
 
-					return ok("synced");
+                    return ok("synced");
 
-				}
-			}
-		}
+                }
+            }
+        }
 
-	}
+    }
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result deleteHotspotFromGame(Long gid, Long pid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result deleteHotspotFromGame(Long gid, Long pid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		}
+        }
 
-		// CHECK RIGHTS ON GAME
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        // CHECK RIGHTS ON GAME
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return ok("Game not found");
+            return ok("Game not found");
 
-		} else {
+        } else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-			} else {
+            } else {
 
-				Game g = Game.find.byId(gid);
+                Game g = Game.find.byId(gid);
 
-				if (Hotspot.find.where().eq("id", pid).findRowCount() != 1) {
+                if (Hotspot.find.where().eq("id", pid).findRowCount() != 1) {
 
-					return ok("Hotspot not found");
+                    return ok("Hotspot not found");
 
-				} else {
+                } else {
 
-					Hotspot p = Hotspot.find.byId(pid);
+                    Hotspot p = Hotspot.find.byId(pid);
 
-					g.removeHotspot(p);
+                    g.removeHotspot(p);
 
-					g.update();
+                    g.update();
 
-					return ok("synced");
+                    return ok("synced");
 
-				}
-			}
-		}
+                }
+            }
+        }
 
-	}
+    }
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result deleteMenuItemFromGame(Long gid, Long pid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result deleteMenuItemFromGame(Long gid, Long pid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		}
+        }
 
-		// CHECK RIGHTS ON GAME
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        // CHECK RIGHTS ON GAME
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return ok("Game not found");
+            return ok("Game not found");
 
-		} else {
+        } else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-			} else {
+            } else {
 
-				Game g = Game.find.byId(gid);
+                Game g = Game.find.byId(gid);
 
-				if (MenuItem.find.where().eq("id", pid).findRowCount() != 1) {
+                if (MenuItem.find.where().eq("id", pid).findRowCount() != 1) {
 
-					return ok("Menu Item not found");
+                    return ok("Menu Item not found");
 
-				} else {
+                } else {
 
-					MenuItem p = MenuItem.find.byId(pid);
+                    MenuItem p = MenuItem.find.byId(pid);
 
-					g.removeMenuItem(p);
+                    g.removeMenuItem(p);
 
-					g.update();
+                    g.update();
 
-					return ok("synced");
+                    return ok("synced");
 
-				}
-			}
-		}
+                }
+            }
+        }
 
-	}
+    }
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result deleteContentFromMission(Long gid, Long mid, Long cid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result deleteContentFromMission(Long gid, Long mid, Long cid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		}
+        }
 
-		// CHECK RIGHTS ON GAME
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        // CHECK RIGHTS ON GAME
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return ok("Game not found");
+            return ok("Game not found");
 
-		} else {
+        } else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-			} else {
+            } else {
 
-				Game g = Game.find.byId(gid);
+                Game g = Game.find.byId(gid);
 
-				if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
+                if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
-					return ok("Mission not found");
+                    return ok("Mission not found");
 
-				} else {
+                } else {
 
-					Mission m = Mission.find.byId(mid);
+                    Mission m = Mission.find.byId(mid);
 
-					if (Content.find.where().eq("id", cid).findRowCount() != 1) {
+                    if (Content.find.where().eq("id", cid).findRowCount() != 1) {
 
-						return ok("Content not found");
+                        return ok("Content not found");
 
-					} else {
+                    } else {
 
-						Content c = Content.find.byId(cid);
+                        Content c = Content.find.byId(cid);
 
-						m.removeContent(c);
-						m.update();
+                        m.removeContent(c);
+                        m.update();
 
-						return ok("synced");
+                        return ok("synced");
 
-					}
-				}
-			}
-		}
+                    }
+                }
+            }
+        }
 
-	}
+    }
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result setPositionInMission(Long gid, Long mid, Integer top, Integer left) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result setPositionInMission(Long gid, Long mid, Integer top, Integer left) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		}
+        }
 
-		// CHECK RIGHTS ON GAME
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        // CHECK RIGHTS ON GAME
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return ok("Game not found");
+            return ok("Game not found");
 
-		} else {
+        } else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-			} else {
+            } else {
 
-				Game g = Game.find.byId(gid);
+                Game g = Game.find.byId(gid);
 
-				if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
+                if (Mission.find.where().eq("id", mid).findRowCount() != 1) {
 
-					return ok("Mission not found");
+                    return ok("Mission not found");
 
-				} else {
+                } else {
 
-					Mission m = Mission.find.byId(mid);
+                    Mission m = Mission.find.byId(mid);
 
-					m.setTop(top);
-					m.setLeft(left);
-					m.update();
+                    m.setTop(top);
+                    m.setLeft(left);
+                    m.update();
 
-					return ok("synced");
+                    return ok("synced");
 
-				}
-			}
-		}
-	}
+                }
+            }
+        }
+    }
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result deleteContentFromContent(Long gid, Long ccid, Long cid) {
-		if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-				Game.find.byId(gid)) == false) {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result deleteContentFromContent(Long gid, Long ccid, Long cid) {
+        if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                Game.find.byId(gid)) == false) {
 
-			return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+            return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-		}
+        }
 
-		// CHECK RIGHTS ON GAME
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        // CHECK RIGHTS ON GAME
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return ok("Game not found");
+            return ok("Game not found");
 
-		} else {
+        } else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+            if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
+                    Game.find.byId(gid)) == false) {
 
-				return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-			} else {
+            } else {
 
-				Game g = Game.find.byId(gid);
+                Game g = Game.find.byId(gid);
 
-				if (Content.find.where().eq("id", ccid).findRowCount() != 1) {
+                if (Content.find.where().eq("id", ccid).findRowCount() != 1) {
 
-					return ok("Content-Folder not found");
+                    return ok("Content-Folder not found");
 
-				} else {
+                } else {
 
-					Content cc = Content.find.byId(ccid);
+                    Content cc = Content.find.byId(ccid);
 
-					if (Content.find.where().eq("id", cid).findRowCount() != 1) {
+                    if (Content.find.where().eq("id", cid).findRowCount() != 1) {
 
-						return ok("Content not found");
+                        return ok("Content not found");
 
-					} else {
+                    } else {
 
-						Content c = Content.find.byId(cid);
+                        Content c = Content.find.byId(cid);
 
-						cc.removeSubContent(c);
-						cc.update();
-						c.removeMe();
-						c.delete();
+                        cc.removeSubContent(c);
+                        cc.update();
+                        c.removeMe();
+                        c.delete();
 
-						return ok("synced");
+                        return ok("synced");
 
-					}
-				}
-			}
-		}
+                    }
+                }
+            }
+        }
 
-	}
+    }
 
 }

@@ -5,29 +5,33 @@
 
  				<div class="missionedit" id="missionedit@m.getId()" name="missionedit@m.getId()">
  				
- 				              				<div class="scrollable-content" style="overflow:auto; height:100%; width:100%;">
+                    <div class="scrollable-content" style="overflow:auto; height:100%; width:100%;">
  				
- 					<div class="options">
- 					<i class="icon-resize-full" onClick="javascript:toggleFullscreen('missionedit@m.getId()','90%','75%','120px','5%','35px')"></i>
- 					<i class="icon-remove" onClick="javascript:document.getElementById('missionedit@m.getId()').style.display = 'none';hideInnerMissions('missionedit@m.getId()');deactiveFullscreen('missionedit@m.getId()','90%','75%','120px','5%','35px');"></i>
- 					
- 					</div>
-              				<input type="text" class="h2textfield" id="missionname@m.getId" value="@m.getName()"
-              				onchange="javascript:syncName('mission',@m.getId)" onkeydown="document.getElementById('status_missionname@m.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
+ 					    <div class="options">
+ 					        <i class="icon-resize-full"
+                                onClick="javascript:toggleFullscreen('missionedit@m.getId()','90%','75%','120px','5%','35px')"></i>
+ 					        <i class="icon-remove"
+                                onClick="javascript:document.getElementById('missionedit@m.getId()').style.display = 'none';hideInnerMissions('missionedit@m.getId()');deactiveFullscreen('missionedit@m.getId()','90%','75%','120px','5%','35px');"></i>
+                        </div>
+
+                        <input type="text" class="h2textfield" id="missionname@m.getId" value="@m.getName()"
+              				onchange="javascript:syncName('mission',@m.getId)"
+                            onkeydown="document.getElementById('status_missionname@m.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
               			
-        <img id="status_missionname@m.getId" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
+                        <img id="status_missionname@m.getId" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
         
-              				<br />
-              				<p class="missionviewtext">
+                        <br/>
+
+                        <p class="missionviewtext">
               				<em>@Application.getLanguage(m.getType().getName())</em>
-              				</p>
-              				<p>
+                        </p>
+                        <p>
               				 @Application.getLanguage("Optionen"):<span style="cursor:pointer;" onClick="javascript:hideAddEditMissions();openMissionRule(@m.getId());"> <icon style="height:20px; width:20px; background-image:url('@Global.SERVER_URL_2/assets/icons/actions/default.png'); background-size:20px 20px; background-position:0px 24px; display:inline-block;"></icon> @Application.getLanguage("Ereignisse")</span>
               				 <span style="cursor:pointer;" onClick="javascript:duplicateMissionInGame(@m.getId());"> <icon class="icon-share" style="display:inline-block;"></icon> @Application.getLanguage("Duplizieren")</span>
               				 <span  style="cursor:pointer;" onClick="javascript:hideMapView(); hideAddEditMissions(); startUnityPreview('@Global.SERVER_URL_2/editor/@g.getId/webxml/@m.getId');"><icon class="icon-play" style="display:inline-block;"></icon> @Application.getLanguage("Vorschau")</span></p>
               				 <span  style="cursor:pointer;"><a href="https:/quest-mill.intertech.de/assets/index.php?content=@m.getType().getNameEncoded()@if(Application.getLocalPortal().getId() != 61L){&portal=@Application.getLocalPortal().getId()}" target="_blank"><icon class="icon-question-sign" style="display:inline-block;"></icon> @Application.getLanguage("Anleitung")</a></span></p>
               				
-              				<br/>
+                            <br/>
               				
               				
               				<div class="accordion" id="accordion-mission@m.getId()">

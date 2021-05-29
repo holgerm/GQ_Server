@@ -1954,6 +1954,12 @@ public class GeoQuestDefaultsFactory {
         npctalk.update();
 
 
+        // INTERACTIVE SPHERICAL IMAGE:
+        MissionType interactiveSphericalImage = declareMT_InteractiveSphericalImage(gt);
+        interactiveSphericalImage.addPossibleRuleTypes(rtOnStart);
+        interactiveSphericalImage.addPossibleRuleTypes(rtOnEnd);
+        interactiveSphericalImage.update();
+
         // MISSION TYPE: Navigation
 
         navi = new MissionType("Navigation", "Navigation");
@@ -2533,7 +2539,6 @@ public class GeoQuestDefaultsFactory {
         gt.addPossiblePartType(pt_timer);
 
 
-
         // ADD ALL MISSION TYPES IN ORDER TO GAME TYPE
 
         // Auswahlmenü [Multiple Choice Question]
@@ -2586,25 +2591,69 @@ public class GeoQuestDefaultsFactory {
 
         gt.update();
 
-        SceneType st = new SceneType("Missions-Container");
-        st.save();
-
-        for (MissionType amt : mt) {
-
-            PartType apt = new PartType(amt);
-            apt.save();
-            st.addPossiblePartTypes(apt);
-
-        }
-
-        st.update();
-
-        gt.addPossibleSceneType(st);
-        gt.update();
-
-        gt.update();
         return gt;
+    }
 
+    private MissionType declareMT_InteractiveSphericalImage(GameType gt) {
+
+        MissionType missionType = new MissionType("Interaktives Panoramabild", "InteractiveSphericalImage");
+        missionType.save();
+
+        // SAVE MISSIONTYPE TO GAMETYPE
+        PartType partType = new PartType(missionType);
+        partType.save();
+
+        // ATTRIBIUTE
+
+        AttributeType imageAttrType = new AttributeType("Bild", "image", "file");
+        imageAttrType.setMimeType("image");
+        imageAttrType.setOptional(false);
+        imageAttrType.save();
+        missionType.setAttributeType(imageAttrType);
+
+        // CONTENTTYPES
+
+        ContentType contentType = new ContentType("Interaktion", "interaction");
+        contentType.save();
+
+        AttributeType attributeType = new AttributeType("Horizontalwinkel (Promille)", "azimuth", "int");
+        attributeType.setOptional(false);
+        attributeType.save();
+        contentType.setAttributeType(attributeType);
+
+        attributeType = new AttributeType("Vertikalwinkel (Promille)", "altitude", "int");
+        attributeType.setOptional(false);
+        attributeType.save();
+        contentType.setAttributeType(attributeType);
+
+        attributeType = new AttributeType("Icon", "icon", "file");
+        attributeType.setMimeType("image");
+        attributeType.setOptional(false);
+        attributeType.save();
+        contentType.setAttributeType(attributeType);
+
+        RuleType ruleType = new RuleType("Im Fokus", "onFocus");
+        ruleType.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/onFocus.png");
+        for(ActionType at : allActionTypes) {
+            ruleType.addPossibleActionType(at);
+        }
+        ruleType.save();
+        contentType.addPossibleRuleTypes(ruleType);
+
+        ruleType = new RuleType("Bei Touch", "onTap");
+        ruleType.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/ontap.png");
+        for(ActionType at : allActionTypes) {
+            ruleType.addPossibleActionType(at);
+        }
+        ruleType.save();
+        contentType.addPossibleRuleTypes(ruleType);
+
+        contentType.update();
+        missionType.addPossibleContentTypes(contentType);
+        missionType.update();
+
+        gt.addPossiblePartType(partType);
+        return missionType;
     }
 
 }

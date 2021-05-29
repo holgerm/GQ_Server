@@ -156,6 +156,8 @@ public class Portal extends Controller {
 	// @Restrict(@Group(Application.USER_ROLE))
 	public static Result myGamesList(Long pid) {
 
+		System.out.println("myGamesList(" + pid + ") ### 1");
+
 		lastdate = System.currentTimeMillis();
 
 		session("currentportal", pid.toString());

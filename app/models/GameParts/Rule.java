@@ -405,10 +405,6 @@ public class Rule extends Model {
 
 			if (!actions.isEmpty()) {
 
-				System.out.println("Conditions");
-
-				// CONDITIONS
-
 				// SUBRULES
 
 				rule = doc.createElement("rule");
@@ -422,22 +418,14 @@ public class Rule extends Model {
 				}
 
 				// ACTIONS
-
-				System.out.println("Actions");
-
 				for (Action a : actions) {
-
 					Element act = a.createXMLForWeb(doc, m, g);
 					if (act != null) {
 						rule.appendChild(act);
 					}
-
 				}
-
 			}
-
 		} else {
-
 			String triggername = getTrigger();
 
 			if (triggername.equals("onFailure")) {
@@ -445,7 +433,6 @@ public class Rule extends Model {
 			}
 
 			rule = doc.createElement(triggername);
-			System.out.println("Trigger Rule");
 
 			// SUBRULES
 			if (subrules != null) {
@@ -456,10 +443,8 @@ public class Rule extends Model {
 					if (rule2 != null) {
 						rule.appendChild(rule2);
 					}
-
 				}
 			}
-
 		}
 
 		return rule;
@@ -634,11 +619,6 @@ public class Rule extends Model {
 		if (i != 0) {
 
 			if (!actions.isEmpty()) {
-
-				System.out.println("Conditions");
-
-				// CONDITIONS
-
 				// SUBRULES
 
 				rule = doc.createElement("rule");
@@ -742,7 +722,7 @@ public class Rule extends Model {
 	}
 
 	public Rule migrateTo(RuleType nrt) {
-
+		System.out.println("Rule.migrateTo: " + nrt.getName());
 		Rule r = new Rule();
 		r.save();
 

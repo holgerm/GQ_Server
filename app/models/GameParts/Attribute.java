@@ -329,6 +329,8 @@ public class Attribute extends Model {
 	}
 
 	public Attribute migrateTo(AttributeType atrt, RuleType rt) {
+		System.out.println("Attribute.migrateTo: " + id + " --> " +
+				atrt.getName() + " rule Type: " + rt.getName());
 
 		Attribute a = new Attribute(type);
 		a.save();

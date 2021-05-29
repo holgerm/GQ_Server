@@ -127,7 +127,6 @@ public class Mission extends Model {
 
 	public void addRule(Rule r) {
 		rules.add(r);
-
 	}
 
 	public void addContent(Content c) {
@@ -604,7 +603,7 @@ public class Mission extends Model {
 
 		// CONTENTS
 		for (Content c : contents) {
-			Element content = c.createXMLForWeb(doc, g);
+			Element content = c.createXMLForWeb(doc, this, g);
 
 			mission.appendChild(content);
 
@@ -623,34 +622,22 @@ public class Mission extends Model {
 	}
 
 	public Rule getRule(RuleType rt) {
-
 		for (Rule r : rules) {
-
 			if (r.getTrigger().equals(rt.getTrigger())) {
-
 				return r;
-
 			}
-
 		}
 
 		return null;
 	}
 
 	public boolean hasRule(RuleType rt) {
-
 		for (Rule r : rules) {
-
 			if (r.getTrigger().equals(rt.getTrigger())) {
-
 				return true;
-
 			}
-
 		}
-
 		return false;
-
 	}
 
 	public Mission migrateTo(MissionType missionType) {

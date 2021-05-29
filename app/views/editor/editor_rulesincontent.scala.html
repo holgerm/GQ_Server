@@ -1,0 +1,198 @@
+@(g:Game,c:models.GameParts.Content)
+
+@import util.Global;
+
+@if(c.getType != null){
+
+	@{System.out.println("TTT --> 1")}
+
+	@for(rt <- c.getType().getPossibleRuleTypes()) {
+		@{System.out.println("TTT --> 2 rt: " + rt.getName())}
+
+		@if(c.hasRule(rt)){
+			@if(!c.getRule(rt).getSubRules().isEmpty()){
+				@for(r <- c.getRule(rt).getSubRules()){
+		
+					<div id="actioninfocontainer_r@r.getId">
+						@if(r.getActions() != null){
+							@if(!r.getActions().isEmpty()){
+								@for(ac <- r.getActions){
+									@editor_actionincontentedit(g,ac,String.valueOf(rt.getId()),10000000,c)
+								}
+							}
+						}
+					</div>
+		
+				}
+			}
+		}
+	}
+}
+
+@{System.out.println("TTT --> 3")}
+
+<div class="inneredit" id="ruleedit_c@c.getId()" name="ruleedit_c@c.getId()" style="display: block;">
+	<div class="scrollable-content" id="rulescroll_h@c.getId()" style="overflow-y:scroll; overflow-x:scroll; height:100%; width:100%;">
+
+		<div class="options">
+			<i class="icon-resize-full" onClick="javascript:toggleFullscreen('ruleedit_c@c.getId()','90%','60%','200px','5%','25px')"></i>
+			<i class="icon-remove"
+				onClick="javascript:document.getElementById('ruleedit_c@c.getId()').style.display = 'none';showPlayer();deactiveFullscreen('ruleedit_c@c.getId()','90%','60%','200px','5%','25px')"></i>
+		</div>
+              	        		
+        <h2>@Application.getLanguage("Ereignisse") @Application.getLanguage("in") @Application.getLanguage("Seite") @c.getName()</h2>
+           
+        @for(rt <- c.getType.getPossibleRuleTypes){
+			@{System.out.println("TTT --> 4 rt: " + rt.getName())}
+        	<div style="width:99%; white-space: nowrap;  ">
+				<div style="min-width:101%; white-space: nowrap;">
+              		<div id="trigger_@rt.getId" style=" padding:10px; overflow:wrap; display:inline-block; width:100px; cursor:pointer;">
+							<div>
+								<img src="@if(rt.getSymbol != null){ @rt.getSymbol} else { @Global.SERVER_URL_2/assets/icons/trigger/onstart.png }" style="height:70px; width:70px; position:relative; left:15px; " />
+								<p style="width:100px; height:35px; font-size:10px; text-align:center;">@Application.getLanguage(rt.getName())</p>
+							</div>
+							<p style="height:20px; overflow:hidden;">&nbsp;</p>
+					</div>
+
+					@{System.out.println("TTT --> 5 rt: " + rt.getName())}
+
+					<div id="triggerarrow_@rt.getId" style="overflow:wrap; display:inline-block; width:30px;">
+						<img style="position:relative; top:-70px;" src="@Global.SERVER_URL_2/assets/icons/next.png">
+					</div>
+									              				
+              		<div id="trigger_c@c.getId()_@rt.getId" name="trigger_c@c.getId()_@rt.getId" style="display:inline-block;">
+              			@if(c.hasRule(rt)){
+							@{System.out.println("TTT --> 6 rt: " + rt.getName() + " has Rule")}
+
+							<div id="subrules_@c.getRule(rt)" name="subrules_@c.getRule(rt)" style="display:inline-block;">
+              					@for(r <- c.getRule(rt).getSubRules()){
+              						@editor_aruleincontent(g,r,rt,c)
+              					}
+							</div>
+						} else {
+							@{System.out.println("TTT --> 7 rt: " + rt.getName() +
+									" has no Rule but actionTypes #: " + rt.getPossibleActionTypes().size())}
+
+							@if(rt.getPossibleActionTypes().get(0).getCategory().equals("")) {
+              					<div style="display:inline-block; width:130px;">
+              						<a class="btn" id="addaction_@rt.getId()_c@c.getId()btn"
+										style=" display:inline-block; cursor:pointer; position:relative; top:-70px;" onClick="document.getElementById('addaction_@rt.getId()_c@c.getId()div').style.display='inline-block'; document.getElementById('addaction_@rt.getId()_c@c.getId()btn').style.display='none';">
+    									<span class="icon-plus"></span>
+  									</a>
+					             		
+									<div style=" position:relative; top:-70px; display:none;" id="addaction_@rt.getId()_c@c.getId()div">
+										<select id = "actiontypert_@rt.getId()_c@c.getId" style="position:relative;">
+											@for(at <- rt.getPossibleActionTypes()) {
+												<option value = "@at.getId()">@Application.getLanguage(at.getName())</option>
+											}
+										</select><br/>
+
+										<div id="rulet_add_action_button_@rt.getId()_c@c.getId"
+											class="btn btn-success"
+											onClick="newRuleInContent(@c.getId,@rt.getId); document.getElementById('addaction_@rt.getId()_c@c.getId()div').style.display='none'; document.getElementById('addaction_@rt.getId()_c@c.getId()btn').style.display='inline-block'; document.getElementById('addaction_@rt.getId()_c@c.getId()div').style.display='none';">@Application.getLanguage("Hinzufügen")</span>
+										</div>
+									</div>
+								</div>
+							} else {
+								<div style="position:relative; top:-80px; width:500px;">
+									<div class="btn-group">
+										<a class="btn dropdown-toggle" id="actiondropdown_rt@rt.getId()" style=" cursor:pointer;" data-toggle="dropdown" onClick="scrollDiv('actiondropdown_rt@rt.getId()');">
+											<span class="icon-plus"></span>
+										</a>
+										<ul class="dropdown-menu" style=" float: right; top: -60px; left: 45px;">
+											<li class="dropdown-submenu">
+												<a tabindex="-1" >@Application.getLanguage("Questverlauf")</a>
+												<ul class="dropdown-menu">
+												@for(at <- rt.getPossibleActionTypes()) {
+													@if(at.getCategory().equals("page")) {
+														<li>
+															<a tabindex="-1" style="cursor:pointer;"
+															onClick="newRuleInContent(@c.getId,@rt.getId,@at.getId());">@Application.getLanguage(at.getName)</a>
+														</li>
+													}
+												}
+												</ul>
+											</li>
+  
+											<li class="dropdown-submenu">
+												<a tabindex="-1" >@Application.getLanguage("Karte")</a>
+												<ul class="dropdown-menu">
+												@for(at <- rt.getPossibleActionTypes()) {
+													@if(at.getCategory().equals("map")) {
+														<li>
+															<a tabindex="-1" style="cursor:pointer;"
+															onClick="newRuleInContent(@c.getId,@rt.getId,@at.getId());">@Application.getLanguage(at.getName)</a>
+														</li>
+													}
+												}
+												</ul>
+											</li>
+
+											<li class="dropdown-submenu">
+												<a tabindex="-1" >@Application.getLanguage("Variablen")</a>
+												<ul class="dropdown-menu">
+												@for(at <- rt.getPossibleActionTypes()) {
+													@if(at.getCategory().equals("var")) {
+														<li>
+															<a tabindex="-1" style="cursor:pointer;"
+															onClick="newRuleInContent(@c.getId,@rt.getId,@at.getId());">@Application.getLanguage(at.getName)</a>
+														</li>
+													}
+												}
+												</ul>
+											</li>
+  
+											<li class="dropdown-submenu">
+												<a tabindex="-1" >@Application.getLanguage("Bedingt")</a>
+												<ul class="dropdown-menu">
+												@for(at <- rt.getPossibleActionTypes()) {
+													@if(at.getCategory().equals("condition")) {
+														<li>
+															<a tabindex="-1" style="cursor:pointer;"
+															onClick="newRuleInContent(@c.getId,@rt.getId,@at.getId());">@Application.getLanguage(at.getName)</a>
+														</li>
+													}
+												}
+												</ul>
+											</li>
+  
+											<li class="dropdown-submenu">
+												<a tabindex="-1" >@Application.getLanguage("Sonstiges")</a>
+												<ul class="dropdown-menu">
+												@for(at <- rt.getPossibleActionTypes()) {
+													@if(at.getCategory().equals("other")) {
+														<li>
+															<a tabindex="-1" style="cursor:pointer;"
+															onClick="newRuleInContent(@c.getId,@rt.getId,@at.getId());">@Application.getLanguage(at.getName)</a>
+														</li>
+													}
+												}
+												</ul>
+											</li>
+   
+											@for(at <- rt.getPossibleActionTypes()) {
+												@if(at.getCategory().equals("")) {
+													<li>
+														<a tabindex="-1" style="cursor:pointer;"
+														onClick="newRuleInContent(@c.getId,@rt.getId,@at.getId());">@Application.getLanguage(at.getName)</a>
+													</li>
+												}
+											}
+										</ul>
+									</div>
+								</div>
+							}
+						}
+					</div>
+			</div>
+		</div>
+		}
+              				
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+
+	</div>
+</div>
