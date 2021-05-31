@@ -1477,21 +1477,17 @@ public class Game extends Model {
 					}
 
 				} else {
-
 					n = p.getScene().getFirstMission();
 					current = false;
 					done = true;
-
 				}
 
 			} else {
 
 				if (current == false) {
-
 					if (p.getMission().equals(m)) {
 						current = true;
 					}
-
 				} else {
 
 					if (!p.getMission().getType().getXMLType().equals("MetaData") &&
@@ -1501,13 +1497,10 @@ public class Game extends Model {
 						done = true;
 					}
 				}
-
 			}
-
 		}
 
 		return n;
-
 	}
 
 	@JSON(include = false)

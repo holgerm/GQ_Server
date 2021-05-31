@@ -887,36 +887,23 @@ public class Scene extends Model {
 
 	public Scene migrateTo(SceneType sceneType, Map<Mission, Mission> missionbinder,
 			Map<Hotspot, Hotspot> hotspotbinder) {
-
-		Attribute att1 = getAttributes().get(0);
-		String val1 = att1.getValue();
-		List<String> posValuesAtt1 = att1.getType().getPossibleValues();
-		Attribute att2 = getAttributes().get(1);
-		String val2 = att2.getValue();
-		List<String> posValuesAtt2 = att2.getType().getPossibleValues();
-
 		Scene s = new Scene(name, sceneType);
 		s.save();
 
 		// PARTS
-
 		for (Part p : parts) {
-
 			boolean done = false;
 
 			if (p.isScene()) {
-
 				SceneType old = p.getScene().getType();
 				System.out.println("SceneType search: " + old.getName());
 
 				for (PartType tnpt : type.getPossiblePartTypes()) {
 
 					if (tnpt.isSceneType()) {
-
 						SceneType npt = tnpt.getSceneType();
 
 						if (npt.getName().equals(old.getName())) {
-
 							done = true;
 							Scene nss = p.getScene().migrateTo(npt, missionbinder, hotspotbinder);
 							nss.save();
@@ -925,21 +912,16 @@ public class Scene extends Model {
 
 							s.addPart(ns);
 							s.update();
-
 						}
-
 					}
 				}
 
 				if (done == false) {
-
 					System.out.println("Didn't find SceneType " + old.getName());
 				}
 
 			} else {
-				
 				// Part p is a MISSION:
-
 //				MissionType old = p.getMission().getType();
 				Mission originalM = p.getMission();
 
@@ -953,7 +935,6 @@ public class Scene extends Model {
 				} else {
 					System.out.println("Didn't find MissionType " + originalM.getType().getName());
 				}
-
 //				for (PartType npt : gameType.getPossiblePartTypes()) {
 //
 //					Global.Log("Possible part type: id: " + npt.getId());
@@ -987,7 +968,6 @@ public class Scene extends Model {
 //
 //					System.out.println("Didn't find MissionType " + old.getXMLType());
 //				}
-
 			}
 
 			s.update();
@@ -995,19 +975,16 @@ public class Scene extends Model {
 		}
 
 		// ATTRIBUTES
-
 		for (Attribute at : attributes) {
-
 			boolean done = false;
 			AttributeType attt = at.getType();
 
 			for (AttributeType atrt : sceneType.getAttributeTypes()) {
-
 //				if (atrt.getXMLType().equals(attt.getXMLType())) {
 				/*
 				 * We use names instead of xmlTypeNames here. In the xmlName slot of the attributeTypes the id of linked attributes is stored.
 				 * This could also be used, but names are more intuitive to use here. They are given manually during the game type creation.
-				 * They should of course be unique throughout this scene, but we can expect that anyway, since other wise they would be shown
+				 * They should of course be unique throughout this scene, but we can expect that anyway, since otherwise they would be shown
 				 * as different entry fields with the same name in the editor.
 				 */
 				if (atrt.getName().equals(attt.getName())) {
@@ -1018,19 +995,14 @@ public class Scene extends Model {
 			}
 
 			if (done == false) {
-
 				System.out.println("Didn't find AttributeType (Scene) " + at.getName());
 			}
 
 			s.update();
-
 		}
 
 		// HOTSPOTS
-
 		for (Hotspot hs : hotspots) {
-
-			
 			HotspotType targetHT = sceneType.findMigrationTargetHotspotType(hs);
 			if (targetHT != null) {
 				s.addHotspot(hs.migrateTo(targetHT, hotspotbinder));
@@ -1038,31 +1010,6 @@ public class Scene extends Model {
 			} else {
 				System.out.println("Didn't find HotspotType " + hs.getType().getName());
 			}
-
-//			boolean done = false;
-//
-//			HotspotType old = hs.getType();
-//
-//			for (HotspotType hst : type.getPossibleHotspotTypes()) {
-//
-//				if (hst.getName().equals(old.getName())) {
-//
-//					done = true;
-//
-//					s.addHotspot(hs.migrateTo(hst, hotspotbinder));
-//					s.update();
-//
-//				}
-//
-//			}
-//
-//			if (done == false) {
-//
-//				System.out.println("Didn't find HotspotType " + old.getName());
-//			}
-//
-//			s.update();
-
 		}
 
 		return s;
