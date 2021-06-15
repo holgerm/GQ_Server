@@ -1,10 +1,10 @@
 package models.GameParts;
 
+import models.help.GameCopyContext;
 import play.db.ebean.Model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 
@@ -12,10 +12,8 @@ import models.Game;
 import models.help.Scenefield;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 @Entity
@@ -204,54 +202,45 @@ public class GameType extends Model {
 		int counter = 1;
 		// DEFAULT PARTS
 
-		Map<Mission, Mission> missionbinder = new HashMap<Mission, Mission>();
-		Map<Hotspot, Hotspot> hotspotbinder = new HashMap<Hotspot, Hotspot>();
+		GameCopyContext copyContext = new GameCopyContext();
 
 		for (Part ap : defaultParts) {
-
 			counter = 1;
 			if (ap.isScene()) {
 
 				if (in.contains(ap.getScene().getName())) {
-
 					for (String st : in) {
 						if (st.equals(ap.getScene().getName())) {
 							counter++;
 						}
-
 					}
 				}
 
 				in.add(ap.getScene().getName());
-
 			} else {
-
 				if (in.contains(ap.getMission().getName())) {
 
 					for (String st : in) {
 						if (st.equals(ap.getMission().getName())) {
 							counter++;
 						}
-
 					}
 				}
 
 				in.add(ap.getMission().getName());
-
 			}
 
 			if (counter > 1) {
 				add = "" + counter;
 			}
 
-			Part copiedPart = ap.copyMe(add, missionbinder, hotspotbinder);
+			Part copiedPart = ap.copyMe(add, copyContext);
 			g.addPart(copiedPart);
 			g.update();
 
 			if (copiedPart.isScene()) {
 				copiedPart.getScene().redoLinking(g);
 			}
-
 		}
 
 		System.out.println("Game Parts End");
@@ -261,7 +250,7 @@ public class GameType extends Model {
 		counter = 1;
 		for (Hotspot ah : defaultHotspots) {
 
-			g.addHotspot(ah.copyMe("" + counter));
+			g.addHotspot(ah.copyMe(copyContext));
 			g.update();
 
 			counter++;

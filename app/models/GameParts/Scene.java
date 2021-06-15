@@ -1,11 +1,11 @@
 package models.GameParts;
 
+import models.help.GameCopyContext;
 import play.db.ebean.Model;
 import util.Global;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
@@ -14,25 +14,12 @@ import models.Game;
 import org.w3c.dom.Element;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.zip.ZipOutputStream;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 @Entity
 public class Scene extends Model {
@@ -214,7 +201,7 @@ public class Scene extends Model {
 
 	// / CREATION
 
-	public Scene copyMe(String n, Map<Mission, Mission> missionbinder, Map<Hotspot, Hotspot> hotspotbinder) {
+	public Scene copyMe(String n, GameCopyContext copyContext) {
 
 		String nam = name + " " + n;
 
@@ -288,40 +275,32 @@ public class Scene extends Model {
 					if (counter > 1) {
 						add = "" + counter;
 					}
-
 				}
-
 			}
 
-			s.addPart(ap.copyMe(add, missionbinder, hotspotbinder));
+			s.addPart(ap.copyMe(add, copyContext));
 			s.update();
 			counter++;
 		}
 
 		// ATTRIBUTES
-
 		for (Attribute aart : attributes) {
-			s.setAttribute(aart.copyMe());
+			s.setAttribute(aart.copyMe(copyContext));
 			s.update();
 		}
 
 		// RULES
-
 		for (Rule ar : rules) {
-			s.addRule(ar.copyMe());
+			s.addRule(ar.copyMe(copyContext));
 			s.update();
 		}
 
 		// HOTSPOTS
 		counter = 1;
 		for (Hotspot ah : hotspots) {
-
-			Hotspot newhotspot = ah.copyMe("" + counter);
-
+			Hotspot newhotspot = ah.copyMe(copyContext);
 			newhotspot.save();
-
-			hotspotbinder.put(ah, newhotspot);
-
+			copyContext.hotspotMap.put(ah, newhotspot);
 			s.addHotspot(newhotspot);
 			s.update();
 
@@ -329,9 +308,7 @@ public class Scene extends Model {
 		}
 
 		// Update Links to the copies of attributes etc.
-
 		return s;
-
 	}
 
 	public void redoLinking(Game g) {
@@ -340,7 +317,6 @@ public class Scene extends Model {
 		attributeTypes.addAll(getAllAttributes());
 
 		for (AttributeType atrttype : attributeTypes) {
-
 			Attribute atrt = this.getAttribute(atrttype);
 
 			if (atrt != null) {
@@ -365,21 +341,13 @@ public class Scene extends Model {
 							this.update();
 
 						} else {
-
 							System.out.println("but didn't find a fitting equivalent.");
-
 						}
-
 					} else {
-
 						System.out.println("but has no object reference specified correctly.");
-
 					}
-
 				}
-
 			}
-
 		}
 
 	}
@@ -557,21 +525,17 @@ public class Scene extends Model {
 	}
 
 	public List<Element> createXMLForWeb(Document doc, Game g) {
+		System.out.println("createXMLForWeb: Scene: " + id);
 		List<Element> e = new ArrayList<Element>();
 
 		for (Part ap : parts) {
-
 			if (!ap.isScene()) {
 				if (!ap.getMission().equals(g.getFirstMission())) {
 					e.addAll(ap.createXMLForWeb(doc, g));
 				}
-
 			} else {
-
 				e.addAll(ap.createXMLForWeb(doc, g));
-
 			}
-
 		}
 
 		return e;
@@ -835,10 +799,7 @@ public class Scene extends Model {
 	public String getAttributeValue(AttributeType at) {
 
 		String x = at.getDefaultValue();
-
-		System.out.print("ATTRIBUTE: " + at.getName());
-		System.out.print("ATTRIBUTE VALUE: " + x);
-		System.out.print("# ATTRIBUTES: " + attributes.size());
+		long attId = -1l;
 
 		for (Attribute aa : attributes) {
 			if (aa.getValue() == null)
@@ -847,6 +808,7 @@ public class Scene extends Model {
 			if (aa.getXMLType().equals(at.getXMLType())) {
 
 				x = aa.getValue();
+				attId = aa.getId();
 
 				if (aa.getType().getFileType().equals("QuoteString")
 						|| aa.getType().getFileType().equals("QuoteStringTextArea")) {
@@ -858,9 +820,8 @@ public class Scene extends Model {
 			}
 		}
 
-		System.out.print("ATTRIBUTE VALUE finally: " + x);
+		System.out.print("Scene (" + id + ").getAttributeValue() --> >" + x + "<  id: " + attId + "\n");
 		return x;
-
 	}
 
 	public Attribute getAttribute(AttributeType at) {
@@ -885,8 +846,7 @@ public class Scene extends Model {
 		name = n;
 	}
 
-	public Scene migrateTo(SceneType sceneType, Map<Mission, Mission> missionbinder,
-			Map<Hotspot, Hotspot> hotspotbinder) {
+	public Scene migrateTo(SceneType sceneType, GameCopyContext copyContext) {
 		Scene s = new Scene(name, sceneType);
 		s.save();
 
@@ -905,7 +865,7 @@ public class Scene extends Model {
 
 						if (npt.getName().equals(old.getName())) {
 							done = true;
-							Scene nss = p.getScene().migrateTo(npt, missionbinder, hotspotbinder);
+							Scene nss = p.getScene().migrateTo(npt, copyContext);
 							nss.save();
 							Part ns = new Part(nss);
 							ns.save();
@@ -929,7 +889,7 @@ public class Scene extends Model {
 				
 				MissionType targetMT = sceneType.findMigrationTargetMissionType(originalM);
 				if (targetMT != null) {
-					s.addPart(p.migrateTo(targetMT, missionbinder));
+					s.addPart(p.migrateTo(targetMT, copyContext));
 					s.update();
 					done = true;
 				} else {
@@ -988,7 +948,7 @@ public class Scene extends Model {
 				 * as different entry fields with the same name in the editor.
 				 */
 				if (atrt.getName().equals(attt.getName())) {
-					s.setAttribute(at.migrateTo(atrt));
+					s.setAttribute(at.migrateTo(atrt, copyContext));
 					s.update();
 					done = true;
 				}
@@ -1005,7 +965,7 @@ public class Scene extends Model {
 		for (Hotspot hs : hotspots) {
 			HotspotType targetHT = sceneType.findMigrationTargetHotspotType(hs);
 			if (targetHT != null) {
-				s.addHotspot(hs.migrateTo(targetHT, hotspotbinder));
+				s.addHotspot(hs.migrateTo(targetHT, copyContext));
 				s.update();
 			} else {
 				System.out.println("Didn't find HotspotType " + hs.getType().getName());

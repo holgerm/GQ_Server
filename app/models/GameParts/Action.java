@@ -1,5 +1,6 @@
 package models.GameParts;
 
+import models.help.GameCopyContext;
 import play.db.ebean.Model;
 import util.Global;
 
@@ -135,7 +136,7 @@ public class Action extends Model {
     public static final Finder<Long, Action> find = new Finder<Long, Action>(Long.class, Action.class);
 
     @JSON(include = false)
-    public Action copyMe(String n) {
+    public Action copyMe(String n, GameCopyContext copyContext) {
 
         Action a = new Action(name, type);
         a.save();
@@ -144,7 +145,7 @@ public class Action extends Model {
 
         for (Attribute aatr : attributes) {
 
-            a.setAttribute(aatr.copyMe());
+            a.setAttribute(aatr.copyMe(copyContext));
             a.update();
         }
 
@@ -289,6 +290,8 @@ public class Action extends Model {
     }
 
     public Element createXMLForWeb(Document doc, Mission m, Game g) {
+        System.out.println("createXMLForWeb: Action: " + id + " name: " + name);
+
         Element action = null;
 
         boolean saveme = true;
@@ -711,7 +714,7 @@ public class Action extends Model {
         return type;
     }
 
-    public Action migrateTo(ActionType nat, RuleType rt) {
+    public Action migrateTo(ActionType nat, RuleType rt, GameCopyContext copyContext) {
         System.out.println("Action.migrateTo: " + id + " name: " +
                 name + " --> " + nat.getName() + " rule Type: " + rt.getName());
         Action a = new Action(name, nat);
@@ -729,7 +732,7 @@ public class Action extends Model {
 //				if (atrt.getXMLType().equals(attt.getXMLType())) {
                 if (atrt.getName().equals(attt.getName())) {
 
-                    a.setAttribute(at.migrateTo(atrt, rt));
+                    a.setAttribute(at.migrateTo(atrt, rt, copyContext));
 
                     a.update();
                     done = true;
@@ -755,7 +758,7 @@ public class Action extends Model {
 
                     if (nat1.getXMLType().equals(at1.getXMLType())) {
 
-                        a.addSubAction(aa.migrateTo(nat1, rt));
+                        a.addSubAction(aa.migrateTo(nat1, rt, copyContext));
                         a.update();
                         done1 = true;
 

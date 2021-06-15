@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
 import models.Game;
+import models.help.GameCopyContext;
 import models.help.Scenefield;
 import play.db.ebean.Model;
 
@@ -438,34 +439,26 @@ public class SceneType extends Model {
 		Scene s = new Scene(n, this);
 		s.save();
 
-		Map<Mission, Mission> missionbinder = new HashMap<Mission, Mission>();
-		Map<Mission, Mission> missionbinder2 = new HashMap<Mission, Mission>();
-		Map<Hotspot, Hotspot> hotspotbinder = new HashMap<Hotspot, Hotspot>();
+		GameCopyContext copyContext = new GameCopyContext();
+		GameCopyContext subCopyContext = new GameCopyContext();
 
 		// PARTS
 		for (Part ap : defaultParts) {
-
 			if (ap.isScene()) {
-
-				s.addPart(ap.copyMe(n, missionbinder2, hotspotbinder));
+				s.addPart(ap.copyMe(n, subCopyContext));
 			} else {
-
-				Part anp = ap.copyMe(n, missionbinder2, hotspotbinder);
-				missionbinder.put(ap.getMission(), anp.getMission());
+				Part anp = ap.copyMe(n, subCopyContext);
+				copyContext.missionMap.put(ap.getMission(), anp.getMission());
 				s.addPart(anp);
-
 			}
-
 		}
 
 		// HOTSPOTS
 		for (Hotspot ah : defaultHotspots) {
-
-			s.addHotspot(ah.copyMe(n));
+			s.addHotspot(ah.copyMe(copyContext));
 		}
 
 		for (AttributeType atrt : attributeTypes) {
-
 			if (atrt.hasLink()) {
 
 				Attribute atr = new Attribute(atrt);
@@ -477,23 +470,19 @@ public class SceneType extends Model {
 
 				s.setAttribute(atr);
 				s.update();
-
 			}
-
 		}
 
 		// LINK REBINDING
-
-		for (Map.Entry<Mission, Mission> entry : missionbinder.entrySet()) {
+		for (Map.Entry<Mission, Mission> entry : copyContext.missionMap.entrySet()) {
 			System.out.println("Ersetze alle $_" + entry.getKey().getId() + " durch $_" + entry.getValue().getId());
 		}
 
 		for (Attribute a : s.getAllSubAttributes()) {
-
 			if (a.getValue() != null) {
 				if (a.getValue().contains("$_")) {
 
-					for (Map.Entry<Mission, Mission> entry : missionbinder.entrySet()) {
+					for (Map.Entry<Mission, Mission> entry : copyContext.missionMap.entrySet()) {
 
 						if (a.getValue().contains("$_" + entry.getKey().getId())) {
 
@@ -510,16 +499,13 @@ public class SceneType extends Model {
 							a.update();
 						}
 					}
-
 				}
 
 				if (a.getType().getFileType().equals("mission")) {
-
 					String newvalue = a.getValue();
 
-					for (Map.Entry<Mission, Mission> entry : missionbinder.entrySet()) {
+					for (Map.Entry<Mission, Mission> entry : copyContext.missionMap.entrySet()) {
 						if (a.getValue().equals(String.valueOf(entry.getKey().getId()))) {
-
 							newvalue = newvalue.replace("" + entry.getKey().getId(), "" + entry.getValue().getId());
 							System.out.println("excecuting mission attribute:" + entry.getKey().getId() + " -> "
 									+ entry.getValue().getId());
@@ -527,22 +513,17 @@ public class SceneType extends Model {
 						}
 						a.setValue(newvalue);
 						a.update();
-
 					}
-
 				}
-
 			}
 		}
 
 		for (AttributeType atrt : attributeTypes) {
-
 			if (atrt.hasLink()) {
 
 				System.out.println("An attribute wants to link to another object");
 
 				if (atrt.getLink().getObjectId() != null) {
-
 					Attribute atr = new Attribute(atrt);
 					atr.save();
 					ObjectReference o = g.getAbstractRelinkObject(atrt.getLink(), s);
@@ -595,14 +576,13 @@ public class SceneType extends Model {
 		s.save();
 
 		// PARTS
+		GameCopyContext copyContext = new GameCopyContext();
 
-		Map<Mission, Mission> missionbinder = new HashMap<Mission, Mission>();
-		Map<Hotspot, Hotspot> hotspotbinder = new HashMap<Hotspot, Hotspot>();
 
 		int counter = 1;
 		for (Part ap : defaultParts) {
 
-			s.addPart(ap.copyMe("" + counter, missionbinder, hotspotbinder));
+			s.addPart(ap.copyMe("" + counter, copyContext));
 
 			counter++;
 		}
@@ -610,8 +590,7 @@ public class SceneType extends Model {
 		counter = 1;
 		// HOTSPOTS
 		for (Hotspot ah : defaultHotspots) {
-
-			s.addHotspot(ah.copyMe("" + counter, lon, lat));
+			s.addHotspot(ah.copyMe(lon, lat, copyContext));
 			counter++;
 		}
 
@@ -770,7 +749,7 @@ public class SceneType extends Model {
 
 		// LINK REBINDING
 
-		for (Map.Entry<Mission, Mission> entry : missionbinder.entrySet()) {
+		for (Map.Entry<Mission, Mission> entry : copyContext.missionMap.entrySet()) {
 			System.out.println("Ersetze alle $_" + entry.getKey().getId() + " durch $_" + entry.getValue().getId());
 		}
 
@@ -779,7 +758,7 @@ public class SceneType extends Model {
 			if (a.getValue() != null) {
 				if (a.getValue().contains("$_")) {
 
-					for (Map.Entry<Mission, Mission> entry : missionbinder.entrySet()) {
+					for (Map.Entry<Mission, Mission> entry : copyContext.missionMap.entrySet()) {
 
 						if (a.getValue().contains("$_" + entry.getKey().getId())) {
 
@@ -803,7 +782,7 @@ public class SceneType extends Model {
 
 					String newvalue = a.getValue();
 
-					for (Map.Entry<Mission, Mission> entry : missionbinder.entrySet()) {
+					for (Map.Entry<Mission, Mission> entry : copyContext.missionMap.entrySet()) {
 						if (a.getValue().equals(String.valueOf(entry.getKey().getId()))) {
 
 							newvalue = newvalue.replace("" + entry.getKey().getId(), "" + entry.getValue().getId());

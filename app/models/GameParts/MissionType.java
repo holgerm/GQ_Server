@@ -1,5 +1,6 @@
 package models.GameParts;
 
+import models.help.GameCopyContext;
 import play.db.ebean.Model;
 
 import javax.persistence.Entity;
@@ -131,27 +132,20 @@ public boolean getVisibility(){ return oeffentlich; }
     
     
     public Mission createMe(String n){
-    	
-    	
+		GameCopyContext copyContext = new GameCopyContext();
 
 		Mission m = new Mission(n, this);
 		m.save();
-		
-		
-		
+
 		for(Rule ar: defaultRules){
 			
-			m.addRule(ar.copyMe());
+			m.addRule(ar.copyMe(copyContext));
 			m.update();
 		}
 		
 		Set<String> in = new HashSet<String>();
-    	
-    	
+
 		for(Content ac:defaultContent){
-			
-			
-			
 			if(in.contains(ac.getName())){
 				int counter = 1;
 				for(String st:in){ 
@@ -160,28 +154,17 @@ public boolean getVisibility(){ return oeffentlich; }
     				}
 				}
 				in.add(ac.getName());
-				m.addContent(ac.copyMe(""+counter));
-				
-			
+				m.addContent(ac.copyMe(""+counter, copyContext));
 			} else {
-				
-				m.addContent(ac.copyMe(""));
+				m.addContent(ac.copyMe("", copyContext));
 				
 				in.add(ac.getName());
-				
 			}
-			
-			
-			m.update();
-  
 
-			
+			m.update();
 		}
-		
-    	
-    	
+
     	return m;
-    	
     }
     
     

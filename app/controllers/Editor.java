@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import models.Device;
 import models.Game;
@@ -33,6 +32,7 @@ import models.GameParts.RuleType;
 import models.GameParts.Scene;
 import models.GameParts.SceneType;
 
+import models.help.GameCopyContext;
 import org.apache.commons.io.FileUtils;
 
 import play.mvc.BodyParser;
@@ -267,25 +267,25 @@ public class Editor extends Controller {
 
     }
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result getContentRulesForEditor(Long gid, Long pid) {
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
-		} else {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result getContentRulesForEditor(Long gid, Long pid) {
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+        } else {
             if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
-					Game.find.byId(gid)) == false) {
+                    Game.find.byId(gid)) == false) {
                 return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
-			} else {
+            } else {
                 if (Content.find.where().eq("id", pid).findRowCount() != 1) {
-                     return badRequest(views.html.norights.render("Dieser Content existiert nicht"));
-				} else {
+                    return badRequest(views.html.norights.render("Dieser Content existiert nicht"));
+                } else {
                     Game game = Game.find.byId(gid);
                     Content content = Content.find.byId(pid);
                     return ok(views.html.editor.editor_rulesincontent.render(game, content));
-				}
-			}
-		}
-	}
+                }
+            }
+        }
+    }
 
     @Restrict(@Group(Application.USER_ROLE))
     public static Result getMarkerAddScriptForEditor(Long gid, Long pid, boolean last) {
@@ -1495,9 +1495,7 @@ public class Editor extends Controller {
 
         }
 
-        Map<Hotspot, Hotspot> hotspotbinder = new HashMap<Hotspot, Hotspot>();
-
-        Map<Mission, Mission> missionbinder = new HashMap<Mission, Mission>();
+        GameCopyContext copyContext = new GameCopyContext();
 
         if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
@@ -1522,7 +1520,7 @@ public class Editor extends Controller {
 
                     Mission y = Mission.find.byId(mid);
 
-                    Mission nm = y.copyMe("Copy of " + y.getName(), missionbinder, false);
+                    Mission nm = y.copyMe("Copy of " + y.getName(), copyContext, false);
                     nm.save();
 
                     Part z = new Part(nm);
@@ -1569,16 +1567,14 @@ public class Editor extends Controller {
                     return badRequest(views.html.norights.render("Der hotspot existiert nicht"));
 
                 } else {
-
                     Hotspot y = Hotspot.find.byId(mid);
 
-                    Hotspot nm = y.copyMe("Copy of " + y.getName());
+                    Hotspot nm = y.copyMe(new GameCopyContext());
                     nm.save();
 
                     g.addHotspot(nm);
                     g.update();
                     return ok(String.valueOf(nm.getId()));
-
                 }
 
             }
@@ -1619,7 +1615,7 @@ public class Editor extends Controller {
 
                     Rule sr = Rule.find.byId(srid);
 
-                    Rule nr = sr.copyMe();
+                    Rule nr = sr.copyMe(new GameCopyContext());
                     nr.save();
 
                     r.addSubRule(nr);
@@ -1643,8 +1639,7 @@ public class Editor extends Controller {
 
         }
 
-        Map<Mission, Mission> missionbinder = new HashMap<Mission, Mission>();
-        Map<Hotspot, Hotspot> hotspotbinder = new HashMap<Hotspot, Hotspot>();
+        GameCopyContext copyContext = new GameCopyContext();
 
         if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
@@ -1669,7 +1664,7 @@ public class Editor extends Controller {
 
                     Scene y = Scene.find.byId(sid);
 
-                    Scene nm = y.copyMe("Copy of " + y.getName(), missionbinder, hotspotbinder);
+                    Scene nm = y.copyMe("Copy of " + y.getName(), copyContext);
                     nm.save();
 
                     Part z = new Part(nm);
@@ -2503,7 +2498,6 @@ public class Editor extends Controller {
     }
 
     /**
-     *
      * @param gid
      * @param mission
      * @param rtype
@@ -2555,7 +2549,6 @@ public class Editor extends Controller {
     }
 
     /**
-     *
      * @param gid
      * @param content
      * @param rtype
@@ -3809,13 +3802,16 @@ public class Editor extends Controller {
                             a.update();
 
                             if (a.hasLink()) {
-                                System.out.println(a.getName() + " has link");
+                                if (a.getLink().getObjectType().equals("Attribute")) {
+                                    System.out.println("Attribute id: " + a.getId() + ", name: " + a.getName() +
+                                            ", has link to " + a.getLink().getAttribute().getId());
+                                } else {
+                                    System.out.println("Attribute id: " + a.getId() + ", name: " + a.getName());
+                                }
                                 a.getLink().setObjectValue(value);
 
                             } else {
-
                                 System.out.println(a.getName() + " has no link");
-
                             }
 
                         } else {
@@ -4062,21 +4058,15 @@ public class Editor extends Controller {
 
     @BodyParser.Of(Xml.class)
     public static Result getXMLForClient(Long gid) {
-
         if (Game.find.where().eq("id", gid).findRowCount() != 1) {
-
             return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
-
         } else {
-
             Game g = Game.find.byId(gid);
-
             if (g.zip == null) {
                 return ok("<error>No Pages defined</error>");
             }
 
             File gameXMLFile = new File(g.zip);
-
             if (!gameXMLFile.exists() || !gameXMLFile.canRead()) {
                 return ok("<error>No Pages defined</error>");
             }
@@ -4098,9 +4088,7 @@ public class Editor extends Controller {
             } else {
                 return ok("<error>No Pages defined</error>");
             }
-
         }
-
     }
 
     @BodyParser.Of(Xml.class)

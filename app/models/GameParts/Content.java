@@ -1,5 +1,6 @@
 package models.GameParts;
 
+import models.help.GameCopyContext;
 import play.db.ebean.Model;
 import util.Global;
 
@@ -231,7 +232,7 @@ public class Content extends Model {
 
     public static final Finder<Long, Content> find = new Finder<Long, Content>(Long.class, Content.class);
 
-    public Content copyMe(String n) {
+    public Content copyMe(String n, GameCopyContext copyContext) {
 
         Content c = new Content(name + " " + n, type);
 
@@ -245,14 +246,14 @@ public class Content extends Model {
 
         for (Attribute aatr : attributes) {
 
-            c.setAttribute(aatr.copyMe());
+            c.setAttribute(aatr.copyMe(copyContext));
             c.update();
         }
 
         // SUBCONTENT
 
         for (Content sc : subcontent.getContents()) {
-            c.addSubContent(sc.copyMe(""));
+            c.addSubContent(sc.copyMe("", copyContext));
         }
         c.save();
 
@@ -325,16 +326,19 @@ public class Content extends Model {
             }
         }
 
+        String contentString = getContent();
         if (isOldKindOfContent()) {
             // old kinds of content have the string content directly as xml text content of the tag and
             // do not support any rules:
-            content.setTextContent(getContent());
+            content.setTextContent(contentString);
+            System.out.println("Content id: " + id + " is '" + contentString + "'");
         } else {
             // for new kinds of contents we put the string content in a special attribute named "content" and
             // support rules within the content xml tag:
             Element innerContent = doc.createElement("content");
-            innerContent.setTextContent(getContent());
+            innerContent.setTextContent(contentString);
             content.appendChild(innerContent);
+            System.out.println("Content (new inner) id: " + id + " is '" + contentString + "'");
 
             for (Rule r : rules) {
                 if (!r.getFirstAction().equals("Keine") && !r.getFirstAction().equals("Deep")) {
@@ -488,7 +492,7 @@ public class Content extends Model {
         rules.add(r);
     }
 
-    public Content migrateTo(ContentType nct) {
+    public Content migrateTo(ContentType nct, GameCopyContext copyContext) {
         Content c = new Content(name, nct);
 
         // CONTENT
@@ -504,7 +508,7 @@ public class Content extends Model {
             for (AttributeType atrt : nct.getAttributeTypes()) {
 //				if (atrt.getXMLType().equals(attt.getXMLType())) {
                 if (atrt.getName().equals(attt.getName())) {
-                    c.setAttribute(at.migrateTo(atrt));
+                    c.setAttribute(at.migrateTo(atrt, copyContext));
                     c.update();
                     done = true;
                 }
@@ -523,7 +527,7 @@ public class Content extends Model {
             ContentType sct = sc.getType();
             for (ContentType nsct : nct.getPossibleContentTypes()) {
                 if (sct.getXMLType().equals(nsct.getXMLType())) {
-                    c.addSubContent(sc.migrateTo(nsct));
+                    c.addSubContent(sc.migrateTo(nsct, copyContext));
                     c.update();
                     done = true;
                 }
@@ -537,7 +541,7 @@ public class Content extends Model {
 
             for (RuleType nrt : type.getPossibleRuleTypes()) {
                 if (nrt.getTrigger().equals(oldtrigger)) {
-                    c.addRule(r.migrateTo(nrt));
+                    c.addRule(r.migrateTo(nrt, copyContext));
                     c.update();
                     done = true;
                     break;

@@ -1,5 +1,6 @@
 package models.GameParts;
 
+import models.help.GameCopyContext;
 import play.db.ebean.Model;
 
 import javax.persistence.Entity;
@@ -2058,7 +2059,7 @@ for(Node z: allSubNodesAsList(the_if)){
             Long.class, Condition.class);
 
 
-	public Condition copyMe() {
+	public Condition copyMe(GameCopyContext copyContext) {
 		
 		Condition c;
 		

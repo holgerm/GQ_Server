@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
+import models.help.GameCopyContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -86,16 +87,16 @@ public class Part extends Model {
 
 	/// CREATION
 
-	public Part copyMe(String n, Map<Mission, Mission> missionbinder, Map<Hotspot, Hotspot> hotspotbinder) {
+	public Part copyMe(String n, GameCopyContext copyContext) {
 
 		Part p;
 		System.out.println("starting copy");
 
 		if (is_scene == true) {
-			p = new Part(scene.copyMe(n, missionbinder, hotspotbinder));
+			p = new Part(scene.copyMe(n, copyContext));
 		} else {
 
-			p = new Part(mission.copyMe(n, missionbinder));
+			p = new Part(mission.copyMe(n, copyContext));
 
 		}
 
@@ -163,15 +164,13 @@ public class Part extends Model {
 	}
 
 	public List<Element> createXMLForWeb(Document doc, Game g) {
-
-		List<Element> e = new ArrayList<Element>();
+		System.out.println("createXMLForWeb: Part: " + id);
+		List<Element> e;
 
 		if (is_scene == true) {
 			e = scene.createXMLForWeb(doc, g);
 		} else {
-
 			e = mission.createXMLForWeb(doc, g);
-
 		}
 		return e;
 	}
@@ -221,25 +220,17 @@ public class Part extends Model {
 	// }
 	// }
 
-	public Part migrateTo(MissionType missionType, Map<Mission, Mission> missionbinder) {
+	public Part migrateTo(MissionType missionType, GameCopyContext copyContext) {
 
 		if (!isScene()) {
-
-			Mission x = getMission().migrateTo(missionType);
-
+			Mission x = getMission().migrateTo(missionType, copyContext);
 			Part p = new Part(x);
-
 			p.save();
-
-			missionbinder.put(getMission(), x);
+			copyContext.missionMap.put(getMission(), x);
 
 			return p;
-
 		} else {
-
 			return null;
-
 		}
 	}
-
 }

@@ -1,5 +1,6 @@
 package models.GameParts;
 
+import models.help.GameCopyContext;
 import play.db.ebean.Model;
 import util.Global;
 
@@ -402,7 +403,7 @@ public class Hotspot extends Model {
 
 	public static final Finder<Long, Hotspot> find = new Finder<Long, Hotspot>(Long.class, Hotspot.class);
 
-	public Hotspot copyMe(String string) {
+	public Hotspot copyMe(GameCopyContext copyContext) {
 
 		Hotspot h = new Hotspot(type, longitude, latitude, name);
 		h.setParent(this);
@@ -412,20 +413,20 @@ public class Hotspot extends Model {
 
 		for (Attribute aatr : attributes) {
 
-			h.setAttribute(aatr.copyMe());
+			h.setAttribute(aatr.copyMe(copyContext));
 			h.update();
 		}
 
 		for (Rule ar : rules) {
 
-			h.addRule(ar.copyMe());
+			h.addRule(ar.copyMe(copyContext));
 			h.update();
 		}
 
 		return h;
 	}
 
-	public Hotspot copyMe(String string, float lon, float lat) {
+	public Hotspot copyMe(float lon, float lat, GameCopyContext copyContext) {
 		Hotspot h = new Hotspot(type, lon, lat, name);
 		h.save();
 
@@ -433,13 +434,13 @@ public class Hotspot extends Model {
 
 		for (Attribute aatr : attributes) {
 
-			h.setAttribute(aatr.copyMe());
+			h.setAttribute(aatr.copyMe(copyContext));
 			h.update();
 		}
 
 		for (Rule ar : rules) {
 
-			h.addRule(ar.copyMe());
+			h.addRule(ar.copyMe(copyContext));
 			h.update();
 		}
 
@@ -647,12 +648,12 @@ public class Hotspot extends Model {
 		name = n;
 	}
 
-	public Hotspot migrateTo(HotspotType hst, Map<Hotspot, Hotspot> hotspotbinder) {
+	public Hotspot migrateTo(HotspotType hst, GameCopyContext copyContext) {
 
 		Hotspot h = new Hotspot(hst, longitude, latitude, name);
 		h.save();
 
-		hotspotbinder.put(this, h);
+		copyContext.hotspotMap.put(this, h);
 
 		/// Rules
 
@@ -666,7 +667,7 @@ public class Hotspot extends Model {
 
 				if (nrt.getTrigger().equals(oldtrigger)) {
 
-					h.addRule(r.migrateTo(nrt));
+					h.addRule(r.migrateTo(nrt, copyContext));
 					h.update();
 
 					done = true;
@@ -694,7 +695,7 @@ public class Hotspot extends Model {
 //					if (atrt.getXMLType().equals(attt.getXMLType())) {
 					if (atrt.getName().equals(attt.getName())) {
 
-					h.setAttribute(at.migrateTo(atrt));
+					h.setAttribute(at.migrateTo(atrt, copyContext));
 					h.update();
 					done = true;
 

@@ -1,5 +1,6 @@
 package models.GameParts;
 
+import models.help.GameCopyContext;
 import play.db.ebean.Model;
 import util.Global;
 
@@ -33,10 +34,7 @@ import flexjson.JSON;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.zip.ZipOutputStream;
 
 @Entity
@@ -119,84 +117,95 @@ public class Rule extends Model {
 	}
 
 	public void addAction(Action a) {
-
 		actions.add(a);
 		update();
-
 	}
 
 	public void action_left(Action a) {
 		int old_position = actions.indexOf(a);
 
-		if (old_position > 0) {
+		if (old_position < 1) return;
 
-			List<Action> helplist = new ArrayList<Action>();
-			for (Action a_a : actions) {
+		Collections.swap(actions, old_position - 1, old_position);
 
-				helplist.add(a_a);
+		update();
 
-			}
-
-			actions.clear();
-			update();
-
-			List<Action> new_actions = new ArrayList<Action>();
-
-			for (int i = 0; i < helplist.size(); i++) {
-				if (i == old_position - 1) {
-					new_actions.add(a.copyMe(a.getName()));
-					new_actions.add(helplist.get(i).copyMe(helplist.get(i).getName()));
-					helplist.get(i).removeMe();
-					i++;
-				} else {
-					new_actions.add(helplist.get(i).copyMe(helplist.get(i).getName()));
-
-				}
-
-				helplist.get(i).removeMe();
-
-			}
-
-			actions = new_actions;
-			update();
-		}
+//		if (old_position > 0) {
+//
+//			List<Action> helplist = new ArrayList<Action>();
+//			for (Action a_a : actions) {
+//
+//				helplist.add(a_a);
+//
+//			}
+//
+//			actions.clear();
+//			update();
+//
+//			List<Action> new_actions = new ArrayList<Action>();
+//
+//			for (int i = 0; i < helplist.size(); i++) {
+//				if (i == old_position - 1) {
+//					new_actions.add(a.copyMe(a.getName(), ));
+//					new_actions.add(helplist.get(i).copyMe(helplist.get(i).getName()));
+//					helplist.get(i).removeMe();
+//					i++;
+//				} else {
+//					new_actions.add(helplist.get(i).copyMe(helplist.get(i).getName()));
+//
+//				}
+//
+//				helplist.get(i).removeMe();
+//
+//			}
+//
+//			actions = new_actions;
+//			update();
+//		}
 
 	}
 
 	public void action_right(Action a) {
 		int old_position = actions.indexOf(a);
 
-		if (old_position > -1 && old_position < actions.size() - 1) {
+		if (old_position == -1 || old_position >= actions.size() - 1)
+			return;
 
-			List<Action> helplist = new ArrayList<Action>();
-			for (Action a_a : actions) {
+		Collections.swap(actions, old_position, old_position + 1 );
 
-				helplist.add(a_a);
+		update();
 
-			}
-
-			actions.clear();
-			update();
-
-			List<Action> new_actions = new ArrayList<Action>();
-
-			for (int i = 0; i < helplist.size(); i++) {
-				if (i == old_position) {
-					i++;
-					new_actions.add(helplist.get(i).copyMe(helplist.get(i).getName()));
-					helplist.get(i - 1).removeMe();
-					new_actions.add(a.copyMe(a.getName()));
-				} else {
-					new_actions.add(helplist.get(i).copyMe(helplist.get(i).getName()));
-
-				}
-
-				helplist.get(i).removeMe();
-
-			}
-			actions = new_actions;
-			update();
-		}
+//		if (old_position > -1 && old_position < actions.size() - 1) {
+//
+//			List<Action> helplist = new ArrayList<Action>();
+//			for (Action a_a : actions) {
+//
+//				helplist.add(a_a);
+//
+//			}
+//
+//			actions.clear();
+//			update();
+//
+//			List<Action> new_actions = new ArrayList<Action>();
+//
+//			for (int i = 0; i < helplist.size(); i++) {
+//				if (i == old_position) {
+//					i++;
+//					new_actions.add(helplist.get(i).copyMe(helplist.get(i).getName()));
+//					helplist.get(i - 1).removeMe();
+//					new_actions.add(a.copyMe(a.getName()));
+//				} else {
+//					new_actions.add(helplist.get(i).copyMe(helplist.get(i).getName()));
+//
+//				}
+//
+//				helplist.get(i).removeMe();
+//
+//			}
+//			actions = new_actions;
+//			update();
+//		}
 	}
 
 	// GETTER
@@ -287,7 +296,7 @@ public class Rule extends Model {
 	public static final Finder<Long, Rule> find = new Finder<Long, Rule>(Long.class, Rule.class);
 
 	@JSON(include = false)
-	public Rule copyMe() {
+	public Rule copyMe(GameCopyContext copyContext) {
 
 		Rule r = new Rule();
 		r.save();
@@ -295,7 +304,7 @@ public class Rule extends Model {
 		int counter = 1;
 		for (Action aa : actions) {
 
-			r.addAction(aa.copyMe("" + counter));
+			r.addAction(aa.copyMe("" + counter, copyContext));
 			counter++;
 
 		}
@@ -304,7 +313,7 @@ public class Rule extends Model {
 
 		for (Condition ac : conditions) {
 
-			r.addCondition(ac.copyMe());
+			r.addCondition(ac.copyMe(copyContext));
 			r.update();
 		}
 
@@ -313,11 +322,10 @@ public class Rule extends Model {
 			for (Rule ar : subrules.getRules()) {
 
 				if (ar != null) {
-					r.addSubRule(ar.copyMe());
+					r.addSubRule(ar.copyMe(copyContext));
 
 					r.update();
 				}
-
 			}
 		}
 
@@ -721,7 +729,7 @@ public class Rule extends Model {
 
 	}
 
-	public Rule migrateTo(RuleType nrt) {
+	public Rule migrateTo(RuleType nrt, GameCopyContext copyContext) {
 		System.out.println("Rule.migrateTo: " + nrt.getName());
 		Rule r = new Rule();
 		r.save();
@@ -736,7 +744,7 @@ public class Rule extends Model {
 
 				if (nat.getXMLType().equals(at.getXMLType())) {
 
-					r.addAction(aa.migrateTo(nat, nrt));
+					r.addAction(aa.migrateTo(nat, nrt, copyContext));
 					r.update();
 					done = true;
 
@@ -755,7 +763,7 @@ public class Rule extends Model {
 
 		for (Condition ac : conditions) {
 
-			r.addCondition(ac.copyMe());
+			r.addCondition(ac.copyMe(copyContext));
 			r.update();
 
 		}
@@ -765,7 +773,7 @@ public class Rule extends Model {
 			for (Rule ar : subrules.getRules()) {
 
 				if (ar != null) {
-					r.addSubRule(ar.migrateTo(nrt));
+					r.addSubRule(ar.migrateTo(nrt, copyContext));
 
 					r.update();
 				}

@@ -1,5 +1,6 @@
 package models.GameParts;
 
+import models.help.GameCopyContext;
 import play.db.ebean.Model;
 
 import javax.persistence.Entity;
@@ -69,17 +70,12 @@ public class ContentType extends Model {
     }
 
     public void addContentTypeOccurrence(ContentTypeOccurrence cto) {
-
         contentoccurrences.add(cto);
-
-
     }
-
 
     public void addDefaultContent(Content c) {
         defaultContent.addContent(c);
     }
-
 
     public void setDefaultValue(String x) {
         defaultvalue = x;
@@ -88,7 +84,6 @@ public class ContentType extends Model {
     public void setVisibility(boolean x) {
         show = x;
     }
-
 
     public void setAttributeType(AttributeType t) {
 
@@ -105,17 +100,12 @@ public class ContentType extends Model {
             attributeTypes.add(t);
 
         } catch (RuntimeException e) {
-
             System.out.println("Problem setting AttributeType.");
             e.printStackTrace();
-
         }
-
     }
 
-
-//GETTER
-
+    //GETTER
     public boolean canHaveSubContent() {
         if (possibleContentTypes != null) {
             if (possibleContentTypes.getContents().isEmpty()) {
@@ -164,11 +154,9 @@ public class ContentType extends Model {
         return attributeTypes;
     }
 
-
     public Long getId() {
         return id;
     }
-
 
     public static final Finder<Long, ContentType> find = new Finder<Long, ContentType>(
             Long.class, ContentType.class);
@@ -176,33 +164,24 @@ public class ContentType extends Model {
 
     public Content createMe() {
 
-
         Content c = new Content(name, this);
         c.setContent(defaultvalue);
 
 
         for (Content sc : defaultContent.getContents()) {
-            c.addSubContent(sc.copyMe(""));
+            c.addSubContent(sc.copyMe("", new GameCopyContext()));
         }
         c.save();
 
-
         return c;
-
-
     }
 
     public Content createMe(String n) {
-
-
         Content c = new Content(n, this);
         c.setContent(defaultvalue);
         c.save();
 
         return c;
-
-
     }
-
 
 }

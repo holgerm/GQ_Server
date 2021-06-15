@@ -1,5 +1,6 @@
 package models.GameParts;
 
+import models.help.GameCopyContext;
 import play.db.ebean.Model;
 import util.Global;
 
@@ -285,13 +286,11 @@ public class Mission extends Model {
 
 	public static final Finder<Long, Mission> find = new Finder<Long, Mission>(Long.class, Mission.class);
 
-	public Mission copyMe(String n, Map<Mission, Mission> missionbinder) {
-
-		return copyMe(n, missionbinder, true);
-
+	public Mission copyMe(String n, GameCopyContext copyContext) {
+		return copyMe(n, copyContext, true);
 	}
 
-	public Mission copyMe(String n, Map<Mission, Mission> missionbinder, boolean migrate) {
+	public Mission copyMe(String n, GameCopyContext copyContext, boolean migrate) {
 
 		String nam = name;
 
@@ -303,34 +302,25 @@ public class Mission extends Model {
 		}
 
 		m.save();
-		missionbinder.put(this, m);
+		copyContext.missionMap.put(this, m);
 
 		// ATTRIBUTE
-
 		for (Attribute aatr : attributes) {
-
-			m.setAttribute(aatr.copyMe());
+			m.setAttribute(aatr.copyMe(copyContext));
 			m.update();
-
 		}
 
 		// RULES
-
 		for (Rule ar : rules) {
-
-			m.addRule(ar.copyMe());
+			m.addRule(ar.copyMe(copyContext));
 			m.update();
-
 		}
 
 		// CONTENTS
-
 		Set<String> in = new HashSet<String>();
 
 		for (Content ac : contents) {
-
 			if (in.contains(ac.getName())) {
-
 				int counter = 1;
 				for (String st : in) {
 					if (st.equals(ac.getName())) {
@@ -338,19 +328,13 @@ public class Mission extends Model {
 					}
 				}
 				in.add(ac.getName());
-				m.addContent(ac.copyMe("" + counter));
-
+				m.addContent(ac.copyMe("" + counter, copyContext));
 			} else {
-
 				in.add(ac.getName());
-				m.addContent(ac.copyMe(""));
-
+				m.addContent(ac.copyMe("", copyContext));
 			}
-
 			m.update();
-
 		}
-
 		return m;
 	}
 
@@ -546,6 +530,7 @@ public class Mission extends Model {
 	}
 
 	public List<Element> createXMLForWeb(Document doc, Game g) {
+		System.out.println("createXMLForWeb: Mission: " + id);
 
 		List<Element> e = new ArrayList<Element>();
 
@@ -640,7 +625,7 @@ public class Mission extends Model {
 		return false;
 	}
 
-	public Mission migrateTo(MissionType missionType) {
+	public Mission migrateTo(MissionType missionType, GameCopyContext copyContext) {
 
 		Mission m = new Mission(name, missionType);
 		m.save();
@@ -656,7 +641,7 @@ public class Mission extends Model {
 
 //				if (atrt.getXMLType().equals(attt.getXMLType())) {
 				if (atrt.getName().equals(attt.getName())) {
-					m.setAttribute(at.migrateTo(atrt));
+					m.setAttribute(at.migrateTo(atrt, copyContext));
 					m.update();
 					done = true;
 				}
@@ -684,7 +669,7 @@ public class Mission extends Model {
 
 				if (nrt.getTrigger().equals(oldtrigger)) {
 
-					m.addRule(r.migrateTo(nrt));
+					m.addRule(r.migrateTo(nrt, copyContext));
 					m.update();
 
 					done = true;
@@ -711,7 +696,7 @@ public class Mission extends Model {
 
 				if (nct.getXMLType().equals(ct.getXMLType())) {
 
-					m.addContent(c.migrateTo(nct));
+					m.addContent(c.migrateTo(nct, copyContext));
 					m.update();
 					done = true;
 

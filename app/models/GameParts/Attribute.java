@@ -1,5 +1,6 @@
 package models.GameParts;
 
+import models.help.GameCopyContext;
 import play.db.ebean.Model;
 import util.Global;
 
@@ -39,455 +40,456 @@ import java.util.Set;
 @Entity
 public class Attribute extends Model {
 
-	@Id
-	private Long id;
+    @Id
+    private Long id;
 
-	@ManyToOne
-	private AttributeType type;
+    @ManyToOne
+    private AttributeType type;
 
-	@Lob
-	private String value;
+    @Lob
+    private String value;
 
-	@OneToOne
-	private ObjectReference abstractValue;
+    @OneToOne
+    private ObjectReference abstractValue;
 
-	@ManyToOne
-	private ActionSet subactions;
+    @ManyToOne
+    private ActionSet subactions;
 
-	@OneToOne
-	private ObjectReference linkto;
+    @OneToOne
+    private ObjectReference linkto;
 
-	@OneToOne
-	private Attribute parent;
+    @OneToOne
+    private Attribute parent;
 
-	public Attribute(AttributeType t) {
+    public Attribute(AttributeType t) {
+        type = t;
+    }
 
-		type = t;
+    public String toString() {
+        return getType().getXMLType() + ":" + value;
+    }
 
-	}
+    // SETTER
 
-	public String toString() {
-		return getType().getXMLType() + ":" + value;
-	}
+    public void setParent(Attribute x) {
+        parent = x;
+    }
 
-	// SETTER
+    public void setValue(String v) {
+        value = v;
+        if (hasLink() && linkto.getObjectType().equals("Attribute")) {
+            System.out.println("Attribute:setValue() id: " + id + " to val: " + v +
+                    " --> linkto.val: " + linkto.getAttribute().getValue());
+        } else {
+            System.out.println("Attribute:setValue() id: " + id + "    -- no attribute");
+        }
+    }
 
-	public void setParent(Attribute x) {
-		parent = x;
-	}
+    public void setAbstractValue(ObjectReference x) {
 
-	public void setValue(String v) {
+        abstractValue = x;
 
-		/// CHECK IF VALUE HAS CORRECT FILETYPE
+    }
 
-		value = v;
+    // GETTER
+    @JSON(include = false)
+    public Attribute getParent() {
+        return parent;
+    }
 
-	}
+    @JSON(include = false)
+    public AttributeType getType() {
+        return type;
+    }
 
-	public void setAbstractValue(ObjectReference x) {
+    @JSON(include = false)
+    public Long getId() {
+        return id;
+    }
 
-		abstractValue = x;
+    @JSON(include = false)
+    public boolean hasAbstractValue() {
 
-	}
+        System.out.println("Checking Abstract Value");
 
-	// GETTER
-	@JSON(include = false)
-	public Attribute getParent() {
-		return parent;
-	}
+        if (abstractValue == null) {
 
-	@JSON(include = false)
-	public AttributeType getType() {
-		return type;
-	}
+            return false;
 
-	@JSON(include = false)
-	public Long getId() {
-		return id;
-	}
+        } else {
 
-	@JSON(include = false)
-	public boolean hasAbstractValue() {
+            return true;
+        }
 
-		System.out.println("Checking Abstract Value");
+    }
 
-		if (abstractValue == null) {
+    @JSON(include = false)
+    public ObjectReference getAbstractValue() {
 
-			return false;
+        return abstractValue;
+    }
 
-		} else {
+    @JSON(include = false)
+    public String getXMLType() {
 
-			return true;
-		}
+        return type.getXMLType();
 
-	}
+    }
 
-	@JSON(include = false)
-	public ObjectReference getAbstractValue() {
+    @JSON(include = true)
+    public String getTypeDescription() {
 
-		return abstractValue;
-	}
+        return type.getXMLType();
 
-	@JSON(include = false)
-	public String getXMLType() {
+    }
 
-		return type.getXMLType();
+    @JSON(include = true)
+    public String getFiletype() {
 
-	}
+        return type.getFileType();
 
-	@JSON(include = true)
-	public String getTypeDescription() {
+    }
 
-		return type.getXMLType();
+    @JSON(include = true)
+    public String getValue() {
 
-	}
+        if (abstractValue == null) {
 
-	@JSON(include = true)
-	public String getFiletype() {
+            return value;
 
-		return type.getFileType();
+        } else {
 
-	}
+            return String.valueOf(abstractValue.getObjectId());
+        }
 
-	@JSON(include = true)
-	public String getValue() {
+    }
 
-		if (abstractValue == null) {
+    @JSON(include = false)
+    public List<String> getPossibleValues() {
 
-			return value;
+        return type.getPossibleValues();
 
-		} else {
+    }
 
-			return String.valueOf(abstractValue.getObjectId());
-		}
+    @JSON(include = false)
+    public boolean hasPossibleValues() {
 
-	}
+        if (type.getPossibleValues().isEmpty()) {
 
-	@JSON(include = false)
-	public List<String> getPossibleValues() {
+            return false;
 
-		return type.getPossibleValues();
+        } else {
 
-	}
+            return true;
+        }
 
-	@JSON(include = false)
-	public boolean hasPossibleValues() {
+    }
 
-		if (type.getPossibleValues().isEmpty()) {
+    @JSON(include = true)
+    public List<Action> getActions() {
+        if (subactions != null) {
+            return subactions.getRules();
+        } else {
+            return null;
+        }
+    }
 
-			return false;
+    @JSON(include = false)
+    public void addAction(Action a) {
 
-		} else {
+        if (subactions == null) {
 
-			return true;
-		}
+            subactions = new ActionSet();
+            subactions.save();
 
-	}
+        }
+        subactions.addAction(a);
+        subactions.update();
 
-	@JSON(include = true)
-	public List<Action> getActions() {
-		if (subactions != null) {
-			return subactions.getRules();
-		} else {
-			return null;
-		}
-	}
+    }
 
-	@JSON(include = false)
-	public void addAction(Action a) {
+    public void removeAction(Action a) {
+        subactions.remove(a);
+        subactions.update();
+    }
 
-		if (subactions == null) {
+    @JSON(include = false)
+    public String getValue(Game g) {
 
-			subactions = new ActionSet();
-			subactions.save();
+        if (abstractValue == null) {
 
-		}
-		subactions.addAction(a);
-		subactions.update();
+            return value;
 
-	}
+        } else {
 
-	public void removeAction(Action a) {
-		subactions.remove(a);
-		subactions.update();
-	}
+            String who = abstractValue.getObjectType();
+            String special = abstractValue.getSpecial();
 
-	@JSON(include = false)
-	public String getValue(Game g) {
+            if (who.equals("Game")) {
+                // GAME
 
-		if (abstractValue == null) {
+                Game ga = abstractValue.getGame();
 
-			return value;
+                if (special.equals("First Mission")) {
 
-		} else {
+                    return String.valueOf(ga.getFirstMission().getId());
 
-			String who = abstractValue.getObjectType();
-			String special = abstractValue.getSpecial();
+                } else if (special.equals("Last Mission")) {
 
-			if (who.equals("Game")) {
-				// GAME
+                    return String.valueOf(ga.getLastMission().getId());
 
-				Game ga = abstractValue.getGame();
+                } else if (special.equals("First Hotspot")) {
 
-				if (special.equals("First Mission")) {
+                    return String.valueOf(ga.getFirstHotspot().getId());
 
-					return String.valueOf(ga.getFirstMission().getId());
+                }
 
-				} else if (special.equals("Last Mission")) {
+            } else if (who.equals("Part")) {
+                // PART
 
-					return String.valueOf(ga.getLastMission().getId());
+            }
 
-				} else if (special.equals("First Hotspot")) {
+        }
 
-					return String.valueOf(ga.getFirstHotspot().getId());
+        return null;
+    }
 
-				}
+    @JSON(include = true)
+    public String getName() {
+        return type.getName();
+    }
 
-			} else if (who.equals("Part")) {
-				// PART
+    public void setLink(ObjectReference o) {
+        linkto = o;
+    }
 
-			}
+    @JSON(include = false)
+    public ObjectReference getLink() {
+        return linkto;
+    }
 
-		}
+    @JSON(include = false)
+    public boolean hasLink() {
+        if (linkto != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-		return null;
-	}
+    public static final Finder<Long, Attribute> find = new Finder<Long, Attribute>(Long.class, Attribute.class);
 
-	@JSON(include = true)
-	public String getName() {
+    public Attribute copyMe(GameCopyContext copyContext) {
+        Attribute atr = new Attribute(type);
+        atr.setValue(value);
+        atr.setAbstractValue(abstractValue);
+        atr.setParent(this);
+        atr.save();
+        if (linkto != null) {
+            ObjectReference objRefCopy = linkto.copyMe(copyContext);
+            if (objRefCopy != null)
+                atr.setLink(objRefCopy);
+        }
+        atr.update();
 
-		return type.getName();
+        if (subactions != null) {
+            for (Action aa : subactions.getRules()) {
+                Action na = aa.copyMe("", copyContext);
+                na.save();
+                atr.addAction(na);
+                atr.update();
+            }
+        }
 
-	}
+        copyContext.attributeMap.put(this, atr);
+        return atr;
+    }
 
-	public void setLink(ObjectReference o) {
+    public Attribute migrateTo(AttributeType atrt, GameCopyContext copyContext) {
+        Attribute a = new Attribute(atrt);
+        a.save();
 
-		linkto = o;
+        a.setAbstractValue(abstractValue);
+        a.setParent(parent);
+        a.setValue(value);
+        System.out.println("---- migrating attribute id: " + getId() + ", value: " + value + ", linkto: --> id: " + linkto.getId());
+        if (linkto != null) {
+            ObjectReference objRefCopy = linkto.copyMe(copyContext);
+            if (objRefCopy != null)
+                a.setLink(objRefCopy);
+        }
+        a.update();
 
-	}
+        copyContext.attributeMap.put(this, a);
+        return a;
+    }
 
-	@JSON(include = false)
-	public ObjectReference getLink() {
+    public Attribute migrateTo(AttributeType atrt, RuleType rt, GameCopyContext copyContext) {
+        System.out.println("Attribute.migrateTo: " + id + " --> " +
+                atrt.getName() + " rule Type: " + rt.getName());
 
-		return linkto;
+        Attribute a = new Attribute(type);
+        a.save();
 
-	}
+        if (subactions != null) {
 
-	@JSON(include = false)
-	public boolean hasLink() {
+            for (Action aa : subactions.getRules()) {
 
-		if (linkto != null) {
+                boolean done = false;
 
-			return true;
+                ActionType at = aa.getType();
 
-		} else {
+                for (ActionType nat : rt.getPossibleActionTypes()) {
 
-			return false;
-		}
+                    if (nat.getXMLType().equals(at.getXMLType())) {
 
-	}
+                        a.addAction(aa.migrateTo(nat, rt, copyContext));
+                        a.update();
+                        done = true;
 
-	public static final Finder<Long, Attribute> find = new Finder<Long, Attribute>(Long.class, Attribute.class);
+                    }
 
-	public Attribute copyMe() {
+                }
 
-		Attribute atr = new Attribute(type);
-		atr.setValue(value);
-		atr.setAbstractValue(abstractValue);
-		atr.setParent(this);
-		atr.save();
-		atr.setLink(linkto);
-		atr.update();
+                if (done == false) {
 
-		if (subactions != null) {
-			for (Action aa : subactions.getRules()) {
-				Action na = aa.copyMe("");
-				na.save();
-				atr.addAction(na);
-				atr.update();
-			}
+                    System.out.println("Didn't find ActionType " + at.getXMLType());
+                }
 
-		}
+            }
 
-		return atr;
-	}
+        }
 
-	public Attribute migrateTo(AttributeType atrt) {
+        a.setAbstractValue(abstractValue);
+        a.setParent(parent);
+        a.setValue(value);
+        if (linkto != null) {
+            ObjectReference objRefCopy = linkto.copyMe(copyContext);
+            if (objRefCopy != null)
+                a.setLink(objRefCopy);
+        }
+        a.update();
 
-		Global.Log("Attribute migrateTo(" + atrt.getName() + ")");
+        copyContext.attributeMap.put(this, a);
+        return a;
+    }
 
-		Attribute a = new Attribute(atrt);
-		a.save();
+    @JSON(include = false)
+    public Long getParentId() {
+        if (parent != null) {
+            return parent.getId();
+        } else {
 
-		a.setAbstractValue(abstractValue);
-		a.setParent(parent);
-		a.setValue(value);
-		a.setLink(linkto);
-		a.update();
+            return 0L;
+        }
+    }
 
-		return a;
-	}
+    @JSON(include = false)
+    public Node getXML(Document doc) {
+        System.out.println("getXML: Attribute: " + id + "(val: " + value + ")");
 
-	public Attribute migrateTo(AttributeType atrt, RuleType rt) {
-		System.out.println("Attribute.migrateTo: " + id + " --> " +
-				atrt.getName() + " rule Type: " + rt.getName());
+        Element valueel = doc.createElement("value");
 
-		Attribute a = new Attribute(type);
-		a.save();
+        if (value.matches("(\\s*)")) {
 
-		if (subactions != null) {
+            Element y = doc.createElement("string");
 
-			for (Action aa : subactions.getRules()) {
+            y.setTextContent("");
 
-				boolean done = false;
+            valueel.appendChild(y);
 
-				ActionType at = aa.getType();
+            /// STRING
+        } else if (value.matches("(.*)\"(.*)\"(.*)")) {
+            String[] help = value.split("\"");
 
-				for (ActionType nat : rt.getPossibleActionTypes()) {
+            String x = value.substring(1, value.length() - 1);
 
-					if (nat.getXMLType().equals(at.getXMLType())) {
+            Element y = doc.createElement("string");
 
-						a.addAction(aa.migrateTo(nat, rt));
-						a.update();
-						done = true;
+            y.setTextContent(x);
 
-					}
+            valueel.appendChild(y);
 
-				}
+            // Number
+        } else if (value.matches(Global.REGEXP_NUM)) {
 
-				if (done == false) {
+            Element y = doc.createElement("num");
 
-					System.out.println("Didn't find ActionType " + at.getXMLType());
-				}
+            y.setTextContent(value.trim());
 
-			}
+            valueel.appendChild(y);
 
-		}
+            // Bool
 
-		a.setAbstractValue(abstractValue);
-		a.setParent(parent);
-		a.setValue(value);
-		a.setLink(linkto);
-		a.update();
+        } else if (value.matches("(\\s*)(true|false|True|False|TRUE|FALSE)(\\s*)")) {
 
-		return a;
-	}
+            Element y = doc.createElement("bool");
 
-	@JSON(include = false)
-	public Long getParentId() {
-		if (parent != null) {
-			return parent.getId();
-		} else {
+            y.setTextContent(value);
 
-			return 0L;
-		}
-	}
+            valueel.appendChild(y);
 
-	@JSON(include = false)
-	public Node getXML(Document doc) {
+            // Variable
+        } else {
 
-		Element valueel = doc.createElement("value");
+            Element y = doc.createElement("var");
 
-		if (value.matches("(\\s*)")) {
+            y.setTextContent(value);
 
-			Element y = doc.createElement("string");
+            valueel.appendChild(y);
 
-			y.setTextContent("");
+        }
 
-			valueel.appendChild(y);
+        return valueel;
+    }
 
-			/// STRING
-		} else if (value.matches("(.*)\"(.*)\"(.*)")) {
-			String[] help = value.split("\"");
+    public String getComputedValue() {
+        String x = value;
 
-			String x = value.substring(1, value.length() - 1);
+        if (type.getFileType().equals("condition")) {
+            Condition help = new Condition(true, x);
+            try {
+                DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder docBuilder;
 
-			Element y = doc.createElement("string");
+                docBuilder = docFactory.newDocumentBuilder();
 
-			y.setTextContent(x);
+                // game element
+                Document doc = docBuilder.newDocument();
 
-			valueel.appendChild(y);
+                Element y = help.getXMLforJSON(doc, true);
 
-			// Number
-		} else if (value.matches(Global.REGEXP_NUM)) {
+                Transformer transformer;
+                try {
+                    transformer = TransformerFactory.newInstance().newTransformer();
 
-			Element y = doc.createElement("num");
+                    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 
-			y.setTextContent(value.trim());
+                    StreamResult result = new StreamResult(new StringWriter());
+                    DOMSource source = new DOMSource(y);
+                    try {
+                        transformer.transform(source, result);
+                    } catch (TransformerException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
 
-			valueel.appendChild(y);
+                    x = result.getWriter().toString();
+                } catch (TransformerConfigurationException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (TransformerFactoryConfigurationError e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
 
-			// Bool
+            } catch (ParserConfigurationException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
 
-		} else if (value.matches("(\\s*)(true|false|True|False|TRUE|FALSE)(\\s*)")) {
-
-			Element y = doc.createElement("bool");
-
-			y.setTextContent(value);
-
-			valueel.appendChild(y);
-
-			// Variable
-		} else {
-
-			Element y = doc.createElement("var");
-
-			y.setTextContent(value);
-
-			valueel.appendChild(y);
-
-		}
-
-		return valueel;
-	}
-
-	public String getComputedValue() {
-		String x = value;
-
-		if (type.getFileType().equals("condition")) {
-			Condition help = new Condition(true, x);
-			try {
-				DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-				DocumentBuilder docBuilder;
-
-				docBuilder = docFactory.newDocumentBuilder();
-
-				// game element
-				Document doc = docBuilder.newDocument();
-
-				Element y = help.getXMLforJSON(doc, true);
-
-				Transformer transformer;
-				try {
-					transformer = TransformerFactory.newInstance().newTransformer();
-
-					transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-
-					StreamResult result = new StreamResult(new StringWriter());
-					DOMSource source = new DOMSource(y);
-					try {
-						transformer.transform(source, result);
-					} catch (TransformerException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
-					x = result.getWriter().toString();
-				} catch (TransformerConfigurationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (TransformerFactoryConfigurationError e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-			} catch (ParserConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		return x;
-	}
+        return x;
+    }
 
 }

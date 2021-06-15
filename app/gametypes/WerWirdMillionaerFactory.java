@@ -20,6 +20,7 @@ import models.GameParts.Rule;
 import models.GameParts.RuleType;
 import models.GameParts.Scene;
 import models.GameParts.SceneType;
+import models.help.GameCopyContext;
 import util.Global;
 
 public class WerWirdMillionaerFactory {
@@ -29,6 +30,8 @@ public class WerWirdMillionaerFactory {
 	}
 
 	public GameType addGameToDatabase() {
+
+		GameCopyContext copyContext = new GameCopyContext();
 
 		// GAME TYPE
 
@@ -296,7 +299,7 @@ public class WerWirdMillionaerFactory {
 		m1.update();
 
 		// ALWAYS USE THIS AS DEFAULT FOR ONEND RULES
-		Rule r13 = r11.copyMe();
+		Rule r13 = r11.copyMe(copyContext);
 		r13.save();
 		rt3.addDefaultImplementation(r13);
 		rt3.update();
@@ -389,10 +392,10 @@ public class WerWirdMillionaerFactory {
 		m2.addContent(antwort4);
 		m2.update();
 
-		frage.addDefaultContent(antwort1.copyMe(""));
-		frage.addDefaultContent(antwort2.copyMe(""));
-		frage.addDefaultContent(antwort3.copyMe(""));
-		frage.addDefaultContent(antwort4.copyMe(""));
+		frage.addDefaultContent(antwort1.copyMe("", copyContext));
+		frage.addDefaultContent(antwort2.copyMe("", copyContext));
+		frage.addDefaultContent(antwort3.copyMe("", copyContext));
+		frage.addDefaultContent(antwort4.copyMe("", copyContext));
 		frage.update();
 
 		// RULES
@@ -424,13 +427,13 @@ public class WerWirdMillionaerFactory {
 		m2.addRule(r6);
 		m2.update();
 
-		rt1.addDefaultImplementation(r3.copyMe());
-		rt2.addDefaultImplementation(r6.copyMe());
+		rt1.addDefaultImplementation(r3.copyMe(copyContext));
+		rt2.addDefaultImplementation(r6.copyMe(copyContext));
 		rt1.update();
 		rt2.update();
 
-		frage.addDefaultRules(r3.copyMe());
-		frage.addDefaultRules(r6.copyMe());
+		frage.addDefaultRules(r3.copyMe(copyContext));
+		frage.addDefaultRules(r6.copyMe(copyContext));
 		frage.update();
 
 		// MISSION 3: WIN
@@ -488,7 +491,7 @@ public class WerWirdMillionaerFactory {
 		Rule r9 = new Rule();
 		r9.save();
 
-		Rule r10 = new Rule(c10.copyMe(), r9);
+		Rule r10 = new Rule(c10.copyMe(copyContext), r9);
 		r10.save();
 		m4.addRule(r10);
 		m4.update();

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
@@ -51,6 +52,7 @@ import models.GameParts.Rule;
 import models.GameParts.Scene;
 import models.GameParts.SceneType;
 
+import models.help.GameCopyContext;
 import org.apache.commons.io.FileUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -67,2572 +69,2527 @@ import flexjson.JSON;
 @JSON(include = false)
 public class Game extends Model {
 
-	/**
-	 * Variables
-	 * 
-	 */
+    /**
+     * Variables
+     */
 
-	@Id
-	public Long id;
-	public String name;
-	public String zip;
+    @Id
+    public Long id;
+    public String name;
+    public String zip;
 
-	@Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
-	public Date lastUpdate;
+    @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
+    public Date lastUpdate;
 
-	@OneToMany(mappedBy = "game")
-	private Set<ProviderGames> portals;
+    @OneToMany(mappedBy = "game")
+    private Set<ProviderGames> portals;
 
-	@OneToMany(mappedBy = "game")
-	private Set<GameRights> rights;
+    @OneToMany(mappedBy = "game")
+    private Set<GameRights> rights;
 
-	@ManyToMany
-	@OrderBy("datum")
-	private List<NewsstreamItem> Newsstream;
+    @ManyToMany
+    @OrderBy("datum")
+    private List<NewsstreamItem> Newsstream;
 
-	public User owner;
-	public boolean publish;
+    public User owner;
+    public boolean publish;
 
-	public Long userlastupdated;
+    public Long userlastupdated;
 
-	private int version;
+    private int version;
 
-	@OneToOne
-	private Game oldversion;
+    @OneToOne
+    private Game oldversion;
 
-	/**
-	 * Game Contents
-	 * 
-	 */
+    /**
+     * Game Contents
+     */
 
-	@ManyToOne
-	private GameType type;
+    @ManyToOne
+    private GameType type;
 
-	@ManyToMany
-	@OrderBy("id")
-	private List<Part> parts;
-	@ManyToMany
-	private Set<Attribute> attributes;
-	@ManyToMany
-	private List<Hotspot> hotspots;
-	@ManyToMany
-	private List<MenuItem> menuItems;
+    @ManyToMany
+    @OrderBy("id")
+    private List<Part> parts;
+    @ManyToMany
+    private Set<Attribute> attributes;
+    @ManyToMany
+    private List<Hotspot> hotspots;
+    @ManyToMany
+    private List<MenuItem> menuItems;
 
-	@OneToOne
-	private SceneType editor_only_scene_type;
+    @OneToOne
+    private SceneType editor_only_scene_type;
 
-	/**
-	 * 
-	 * Constructors
-	 * 
-	 */
+    /**
+     * Constructors
+     */
 
-	public Game(String startName, String startZip) {
+    public Game(String startName, String startZip) {
 
-		name = startName;
-		zip = startZip;
+        name = startName;
+        zip = startZip;
 
-		publish = true;
+        publish = true;
 
-		lastUpdate = new Date();
-		version = 1;
+        lastUpdate = new Date();
+        version = 1;
 
-	}
+    }
 
-	/**
-	 * GAME EDITOR CONSTRUCTOR
-	 * 
-	 */
-	public Game(String n, GameType t) {
-		name = n;
-		type = t;
-		zip = "none";
-		version = 1;
-		lastUpdate = new Date();
-	}
+    /**
+     * GAME EDITOR CONSTRUCTOR
+     */
+    public Game(String n, GameType t) {
+        name = n;
+        type = t;
+        zip = "none";
+        version = 1;
+        lastUpdate = new Date();
+    }
 
-	@JSON(include = false)
-	public boolean hasGameType() {
+    @JSON(include = false)
+    public boolean hasGameType() {
 
-		if (type != null) {
-			return true;
-		} else {
-			return false;
-		}
+        if (type != null) {
+            return true;
+        } else {
+            return false;
+        }
 
-	}
+    }
 
-	/**
-	 * 
-	 * Functions
-	 * 
-	 */
+    /**
+     * Functions
+     */
 
-	public void addOwner(User u) {
+    public void addOwner(User u) {
 
-		if (owner == null) {
-			owner = u;
+        if (owner == null) {
+            owner = u;
 
-			addUser(u, "write");
+            addUser(u, "write");
 
-		}
+        }
 
-	}
+    }
 
-	public void addUser(User u, String rights) {
+    public void addUser(User u, String rights) {
 
-		GameRights grights = new GameRights();
-		grights.setUser(u);
-		grights.setGame(this);
+        GameRights grights = new GameRights();
+        grights.setUser(u);
+        grights.setGame(this);
 
-		grights.setRights(rights);
+        grights.setRights(rights);
 
-		grights.save();
+        grights.save();
 
-		this.rights.add(grights);
-		// Also add the association object to the employee.
-		u.getGames().add(grights);
+        this.rights.add(grights);
+        // Also add the association object to the employee.
+        u.getGames().add(grights);
 
-		this.update();
-		u.update();
-		grights.update();
+        this.update();
+        u.update();
+        grights.update();
 
-	}
+    }
 
-	public void editUser(User u, String newright) {
+    public void editUser(User u, String newright) {
 
-		Set<GameRights> todelete = new HashSet<GameRights>();
-		for (GameRights agr : rights) {
+        Set<GameRights> todelete = new HashSet<GameRights>();
+        for (GameRights agr : rights) {
 
-			if (rights.contains(agr)) {
+            if (rights.contains(agr)) {
 
-				if (agr.getUser().getId().equals(u.getId())) {
+                if (agr.getUser().getId().equals(u.getId())) {
 
-					todelete.add(agr);
+                    todelete.add(agr);
 
-				}
+                }
 
-			}
+            }
 
-		}
-		for (GameRights agr : todelete) {
+        }
+        for (GameRights agr : todelete) {
 
-			User us = agr.getUser();
-			us.deleteGame(agr);
-			us.update();
-			rights.remove(agr);
-			agr.delete();
+            User us = agr.getUser();
+            us.deleteGame(agr);
+            us.update();
+            rights.remove(agr);
+            agr.delete();
 
-		}
+        }
 
-		GameRights grights = new GameRights();
-		grights.setUser(u);
-		grights.setGame(this);
+        GameRights grights = new GameRights();
+        grights.setUser(u);
+        grights.setGame(this);
 
-		grights.setRights(newright);
+        grights.setRights(newright);
 
-		grights.save();
+        grights.save();
 
-		this.rights.add(grights);
-		// Also add the association object to the employee.
-		u.getGames().add(grights);
+        this.rights.add(grights);
+        // Also add the association object to the employee.
+        u.getGames().add(grights);
 
-		this.save();
-		u.save();
-		grights.save();
+        this.save();
+        u.save();
+        grights.save();
 
-	}
+    }
 
-	public void deleteUser(User u) {
+    public void deleteUser(User u) {
 
-		Set<GameRights> todelete = new HashSet<GameRights>();
-		for (GameRights agr : rights) {
+        Set<GameRights> todelete = new HashSet<GameRights>();
+        for (GameRights agr : rights) {
 
-			if (rights.contains(agr)) {
+            if (rights.contains(agr)) {
 
-				if (agr.getUser().getId().equals(u.getId())) {
+                if (agr.getUser().getId().equals(u.getId())) {
 
-					todelete.add(agr);
+                    todelete.add(agr);
 
-				}
+                }
 
-			}
+            }
 
-		}
-		for (GameRights agr : todelete) {
+        }
+        for (GameRights agr : todelete) {
 
-			User us = agr.getUser();
-			us.deleteGame(agr);
-			us.update();
-			rights.remove(agr);
-			agr.delete();
+            User us = agr.getUser();
+            us.deleteGame(agr);
+            us.update();
+            rights.remove(agr);
+            agr.delete();
 
-		}
+        }
 
-	}
+    }
 
-	@JSON(include = false)
-	public Game copyMe(String n) {
+    @JSON(include = false)
+    public Game copyMe(String n) {
 
-		Map<Mission, Mission> missionbinder = new HashMap<Mission, Mission>();
-		Map<Hotspot, Hotspot> hotspotbinder = new HashMap<Hotspot, Hotspot>();
+        GameCopyContext copyContext = new GameCopyContext();
 
-		String nam = name + " " + n;
+        String nam = name + " " + n;
 
-		try {
-			double d = Double.parseDouble(n);
-		} catch (NumberFormatException nfe) {
+        try {
+            double d = Double.parseDouble(n);
+        } catch (NumberFormatException nfe) {
 
-			if (n.contains("(1)")) {
+            if (n.contains("(1)")) {
 
-				n.replace("(1)", "");
+                n.replace("(1)", "");
 
-			}
+            }
 
-			nam = name + " " + String.valueOf(n);
-		}
+            nam = name + " " + String.valueOf(n);
+        }
 
-		Game s = new Game(nam, type);
-		s.save();
+        Game s = new Game(nam, type);
+        s.save();
 
-		// PARTS
+        // PARTS
 
-		int counter = 1;
-		String add = "";
+        int counter = 1;
+        String add = "";
 
-		Set<String> in = new HashSet<String>();
+        Set<String> in = new HashSet<String>();
 
-		for (Part ap : parts) {
+        for (Part ap : parts) {
 
-			if (ap.isScene()) {
+            if (ap.isScene()) {
 
-				if (in.contains(ap.getScene().getName())) {
+                if (in.contains(ap.getScene().getName())) {
 
-					for (String st : in) {
-						if (st.equals(ap.getScene().getName())) {
-							counter++;
-						}
+                    for (String st : in) {
+                        if (st.equals(ap.getScene().getName())) {
+                            counter++;
+                        }
 
-					}
-				}
+                    }
+                }
 
-				in.add(ap.getScene().getName());
+                in.add(ap.getScene().getName());
 
-			} else {
+            } else {
 
-				if (in.contains(ap.getMission().getName())) {
+                if (in.contains(ap.getMission().getName())) {
 
-					for (String st : in) {
-						if (st.equals(ap.getMission().getName())) {
-							counter++;
-						}
+                    for (String st : in) {
+                        if (st.equals(ap.getMission().getName())) {
+                            counter++;
+                        }
 
-					}
-				}
+                    }
+                }
 
-				in.add(ap.getMission().getName());
+                in.add(ap.getMission().getName());
 
-			}
+            }
 
-			if (counter > 1) {
-				add = "" + counter;
-			}
+            if (counter > 1) {
+                add = "" + counter;
+            }
 
-			try {
-				double d = Double.parseDouble(n);
-			} catch (NumberFormatException nfe) {
+            try {
+                double d = Double.parseDouble(n);
+            } catch (NumberFormatException nfe) {
 
-				if (ap.isScene()) {
+                if (ap.isScene()) {
 
-					add = ap.getScene().getName();
-				} else {
-					if (counter > 1) {
-						add = "" + counter;
-					}
+                    add = ap.getScene().getName();
+                } else {
+                    if (counter > 1) {
+                        add = "" + counter;
+                    }
 
-				}
+                }
 
-			}
+            }
 
-			s.addPart(ap.copyMe(add, missionbinder, hotspotbinder));
-			s.update();
-			counter++;
-		}
+            s.addPart(ap.copyMe(add, copyContext));
+            s.update();
+            counter++;
+        }
 
-		// ATTRIBUTES
+        // ATTRIBUTES
 
-		for (Attribute aart : attributes) {
-			s.setAttribute(aart.copyMe());
-			s.update();
-		}
+        for (Attribute aart : attributes) {
+            s.setAttribute(aart.copyMe(copyContext));
+            s.update();
+        }
 
-		// HOTSPOTS
-		counter = 1;
-		for (Hotspot ah : hotspots) {
-			Hotspot newHotspot = ah.copyMe("" + counter);
-			s.addHotspot(newHotspot);
-			hotspotbinder.put(ah, newHotspot);
-			counter++;
-		}
+        // HOTSPOTS
+        counter = 1;
+        for (Hotspot ah : hotspots) {
+            Hotspot newHotspot = ah.copyMe(copyContext);
+            s.addHotspot(newHotspot);
+            copyContext.hotspotMap.put(ah, newHotspot);
+            counter++;
+        }
 
-		s.relinkMissionAndHotspots(missionbinder, hotspotbinder);
+        s.relinkMissionAndHotspots(copyContext);
+        s.renewObjectReferences(copyContext);
+        s.update();
 
-		s.update();
+        return s;
+    }
 
-		return s;
+    public void relinkMissionAndHotspots(GameCopyContext copyContext) {
 
-	}
+        for (Attribute a : this.getAllSubAttributes()) {
 
-	public void relinkMissionAndHotspots(Map<Mission, Mission> missionbinder, Map<Hotspot, Hotspot> hotspotbinder) {
+            if (a.getValue() != null) {
+                if (a.getValue().contains("$_")) {
 
-		for (Attribute a : this.getAllSubAttributes()) {
+                    for (Map.Entry<Mission, Mission> entry : copyContext.missionMap.entrySet()) {
 
-			if (a.getValue() != null) {
-				if (a.getValue().contains("$_")) {
+                        if (a.getValue().contains("$_" + entry.getKey().getId())
+                                || a.getValue().contains("$_mission_" + entry.getKey().getId())) {
 
-					for (Map.Entry<Mission, Mission> entry : missionbinder.entrySet()) {
+                            String newvalue = a.getValue();
 
-						if (a.getValue().contains("$_" + entry.getKey().getId())
-								|| a.getValue().contains("$_mission_" + entry.getKey().getId())) {
+                            newvalue = newvalue.replace("$_" + entry.getKey().getId(),
+                                    "$_mission_" + entry.getValue().getId());
+                            newvalue = newvalue.replace("$_mission_" + entry.getKey().getId(),
+                                    "$_mission_" + entry.getValue().getId());
 
-							String newvalue = a.getValue();
+                            a.setValue(newvalue);
+                            a.update();
+                        }
+                    }
 
-							newvalue = newvalue.replace("$_" + entry.getKey().getId(),
-									"$_mission_" + entry.getValue().getId());
-							newvalue = newvalue.replace("$_mission_" + entry.getKey().getId(),
-									"$_mission_" + entry.getValue().getId());
+                    for (Map.Entry<Hotspot, Hotspot> entry : copyContext.hotspotMap.entrySet()) {
 
-							a.setValue(newvalue);
-							a.update();
-						}
-					}
+                        if (a.getValue().contains("$_" + entry.getKey().getId())
+                                || a.getValue().contains("$_hotspot_" + entry.getKey().getId())) {
 
-					for (Map.Entry<Hotspot, Hotspot> entry : hotspotbinder.entrySet()) {
+                            String newvalue = a.getValue();
 
-						if (a.getValue().contains("$_" + entry.getKey().getId())
-								|| a.getValue().contains("$_hotspot_" + entry.getKey().getId())) {
+                            newvalue = newvalue.replace("$_hotspot_" + entry.getKey().getId(),
+                                    "$_hotspot_" + entry.getValue().getId());
 
-							String newvalue = a.getValue();
+                            a.setValue(newvalue);
+                            a.update();
+                        }
+                    }
+                }
 
-							newvalue = newvalue.replace("$_hotspot_" + entry.getKey().getId(),
-									"$_hotspot_" + entry.getValue().getId());
+                if (a.getType().getFileType().equals("mission")) {
+                    String newvalue = a.getValue();
 
-							a.setValue(newvalue);
-							a.update();
-						}
-					}
+                    for (Map.Entry<Mission, Mission> entry : copyContext.missionMap.entrySet()) {
+                        if (a.getValue().equals(String.valueOf(entry.getKey().getId()))) {
 
-				}
+                            newvalue = newvalue.replace("" + entry.getKey().getId(), "" + entry.getValue().getId());
+                            System.out.println("executing mission attribute:" + entry.getKey().getId() + " -> "
+                                    + entry.getValue().getId());
 
-				if (a.getType().getFileType().equals("mission")) {
+                        }
+                        a.setValue(newvalue);
+                        a.update();
+                    }
+                }
 
-					String newvalue = a.getValue();
+                if (a.getType().getFileType().equals("hotspot")) {
 
-					for (Map.Entry<Mission, Mission> entry : missionbinder.entrySet()) {
-						if (a.getValue().equals(String.valueOf(entry.getKey().getId()))) {
+                    String newvalue = a.getValue();
 
-							newvalue = newvalue.replace("" + entry.getKey().getId(), "" + entry.getValue().getId());
-							System.out.println("excecuting mission attribute:" + entry.getKey().getId() + " -> "
-									+ entry.getValue().getId());
+                    for (Map.Entry<Hotspot, Hotspot> entry : copyContext.hotspotMap.entrySet()) {
+                        if (a.getValue().equals(String.valueOf(entry.getKey().getId()))) {
 
-						}
-						a.setValue(newvalue);
-						a.update();
+                            newvalue = newvalue.replace("" + entry.getKey().getId(), "" + entry.getValue().getId());
+                            System.out.println("excecuting hotspot attribute:" + entry.getKey().getId() + " -> "
+                                    + entry.getValue().getId());
 
-					}
+                        }
+                        a.setValue(newvalue);
+                        a.update();
+                    }
+                }
+            }
+        }
 
-				}
+    }
 
-				if (a.getType().getFileType().equals("hotspot")) {
+    private void renewObjectReferences(GameCopyContext copyContext) {
+        for (ObjectReference objRef : copyContext.objRefsWithTargetToRenew) {
+            System.out.println("Renew ObjRef# " + objRef.getId());
+            switch (objRef.getObjectType()) {
+                case "Attribute":
+                    Attribute oldTarget = objRef.getAttribute();
+                    if (oldTarget == null) {
+                        System.out.println("Renew oldTarget is null");
+                        continue;
+                    }
+                    Attribute newTarget = copyContext.attributeMap.get(oldTarget);
+                    if (newTarget == null) {
+                        System.out.println("Renew newTarget is null");
+                        continue;
+                    }
+                    objRef.setAttribute(newTarget);
+                    System.out.println("Renewing objref: " + oldTarget.getId() + " --> " + newTarget.getId());
+                    objRef.update();
+                    return;
+                default:
+                    System.err.println("Renewing ObjectReferences does not work for type " +
+                            objRef.getObjectType() + " yet.");
+                    return;
+            }
+        }
+    }
 
-					String newvalue = a.getValue();
 
-					for (Map.Entry<Hotspot, Hotspot> entry : hotspotbinder.entrySet()) {
-						if (a.getValue().equals(String.valueOf(entry.getKey().getId()))) {
+    @JSON(include = false)
+    public boolean removeMe() {
 
-							newvalue = newvalue.replace("" + entry.getKey().getId(), "" + entry.getValue().getId());
-							System.out.println("excecuting hotspot attribute:" + entry.getKey().getId() + " -> "
-									+ entry.getValue().getId());
+        List<ProviderGames> pg = new ArrayList<ProviderGames>(portals.size());
+        for (ProviderGames item : portals)
+            pg.add(item);
 
-						}
-						a.setValue(newvalue);
-						a.update();
+        List<GameRights> gr = new ArrayList<GameRights>(rights.size());
+        for (GameRights item : rights)
+            gr.add(item);
 
-					}
+        List<NewsstreamItem> ni = new ArrayList<NewsstreamItem>(Newsstream.size());
+        for (NewsstreamItem item : Newsstream)
+            ni.add(item);
 
-				}
+        try {
+            for (NewsstreamItem oneni : ni) {
+                Newsstream.remove(oneni);
+                update();
+                if (oneni.getPosterClass() == "user") {
 
-			}
-		}
+                    if (User.find.where().eq("id", oneni.getPosterid()).findRowCount() == 1) {
 
-	}
+                        User.find.byId(oneni.getPosterid()).deleteNewsstreamItem(oneni);
+                    }
 
-	@JSON(include = false)
-	public boolean removeMe() {
+                }
 
-		List<ProviderGames> pg = new ArrayList<ProviderGames>(portals.size());
-		for (ProviderGames item : portals)
-			pg.add(item);
+                try {
 
-		List<GameRights> gr = new ArrayList<GameRights>(rights.size());
-		for (GameRights item : rights)
-			gr.add(item);
+                    oneni.delete();
 
-		List<NewsstreamItem> ni = new ArrayList<NewsstreamItem>(Newsstream.size());
-		for (NewsstreamItem item : Newsstream)
-			ni.add(item);
+                } catch (RuntimeException e) {
 
-		try {
-			for (NewsstreamItem oneni : ni) {
-				Newsstream.remove(oneni);
-				update();
-				if (oneni.getPosterClass() == "user") {
+                    System.out.println("Can't delete NewsstreamItem:");
+                    e.printStackTrace();
 
-					if (User.find.where().eq("id", oneni.getPosterid()).findRowCount() == 1) {
+                }
 
-						User.find.byId(oneni.getPosterid()).deleteNewsstreamItem(oneni);
-					}
+            }
 
-				}
+        } catch (ConcurrentModificationException e) {
 
-				try {
+            System.out.println("Iterator Exception:");
+            e.printStackTrace();
 
-					oneni.delete();
+        }
+        try {
+            for (ProviderGames onepg : pg) {
 
-				} catch (RuntimeException e) {
+                portals.remove(onepg);
+                update();
+                if (ProviderPortal.find.where().eq("id", onepg.getPortal().getId()).findRowCount() == 1) {
+                    ProviderPortal p = ProviderPortal.find.byId(onepg.getPortal().getId());
 
-					System.out.println("Can't delete NewsstreamItem:");
-					e.printStackTrace();
+                    p.deleteGame(onepg);
 
-				}
+                    p.update();
+                }
 
-			}
+                try {
+                    onepg.delete();
 
-		} catch (ConcurrentModificationException e) {
+                } catch (RuntimeException e) {
 
-			System.out.println("Iterator Exception:");
-			e.printStackTrace();
+                    System.out.println("Can't delete ProviderGames:");
+                    e.printStackTrace();
 
-		}
-		try {
-			for (ProviderGames onepg : pg) {
+                }
 
-				portals.remove(onepg);
-				update();
-				if (ProviderPortal.find.where().eq("id", onepg.getPortal().getId()).findRowCount() == 1) {
-					ProviderPortal p = ProviderPortal.find.byId(onepg.getPortal().getId());
+            }
 
-					p.deleteGame(onepg);
+        } catch (ConcurrentModificationException e) {
 
-					p.update();
-				}
+            System.out.println("Iterator Exception:");
+            e.printStackTrace();
 
-				try {
-					onepg.delete();
+        }
 
-				} catch (RuntimeException e) {
+        try {
 
-					System.out.println("Can't delete ProviderGames:");
-					e.printStackTrace();
+            for (GameRights onegr : gr) {
 
-				}
+                rights.remove(onegr);
+                onegr.getUser().deleteGame(onegr);
 
-			}
+                onegr.getUser().update();
 
-		} catch (ConcurrentModificationException e) {
+                try {
+                    onegr.delete();
+                    System.out.println("Game deleted GameRights.");
 
-			System.out.println("Iterator Exception:");
-			e.printStackTrace();
+                } catch (RuntimeException e) {
 
-		}
+                    System.out.println("Can't delete GemRights:");
+                    e.printStackTrace();
 
-		try {
+                }
 
-			for (GameRights onegr : gr) {
+            }
+        } catch (ConcurrentModificationException e) {
 
-				rights.remove(onegr);
-				onegr.getUser().deleteGame(onegr);
+            System.out.println("Iterator Exception:");
+            e.printStackTrace();
 
-				onegr.getUser().update();
+        }
 
-				try {
-					onegr.delete();
-					System.out.println("Game deleted GameRights.");
+        File todelete = new File(getFile());
+        FileUtils.deleteQuietly(todelete);
 
-				} catch (RuntimeException e) {
+        Set<Attribute> atrs = new HashSet<Attribute>();
+        atrs.addAll(attributes);
 
-					System.out.println("Can't delete GemRights:");
-					e.printStackTrace();
+        Set<Part> prts = new HashSet<Part>();
+        prts.addAll(parts);
+        Set<Hotspot> htsps = new HashSet<Hotspot>();
+        htsps.addAll(hotspots);
 
-				}
+        try {
+            for (Attribute aa : atrs) {
+                attributes.remove(aa);
+                this.update();
+                aa.delete();
+            }
+            for (Part ap : prts) {
+                parts.remove(ap);
+                this.update();
+                ap.removeMe();
+                ap.delete();
+            }
+            for (Hotspot ah : htsps) {
+                hotspots.remove(ah);
+                this.update();
+                ah.removeMe();
+                ah.delete();
+            }
+        } catch (RuntimeException e) {
 
-			}
-		} catch (ConcurrentModificationException e) {
+            System.out.println("Can't delete Game-Contents.");
+            e.printStackTrace();
 
-			System.out.println("Iterator Exception:");
-			e.printStackTrace();
+        }
 
-		}
+        System.out.println("Done with Game-intern links.");
 
-		File todelete = new File(getFile());
-		FileUtils.deleteQuietly(todelete);
+        try {
 
-		Set<Attribute> atrs = new HashSet<Attribute>();
-		atrs.addAll(attributes);
+            System.out.println("Deleting Portal-Links to be sure.");
 
-		Set<Part> prts = new HashSet<Part>();
-		prts.addAll(parts);
-		Set<Hotspot> htsps = new HashSet<Hotspot>();
-		htsps.addAll(hotspots);
+            for (ProviderPortal app : ProviderPortal.find.all()) {
 
-		try {
-			for (Attribute aa : atrs) {
-				attributes.remove(aa);
-				this.update();
-				aa.delete();
-			}
-			for (Part ap : prts) {
-				parts.remove(ap);
-				this.update();
-				ap.removeMe();
-				ap.delete();
-			}
-			for (Hotspot ah : htsps) {
-				hotspots.remove(ah);
-				this.update();
-				ah.removeMe();
-				ah.delete();
-			}
-		} catch (RuntimeException e) {
+                if (app.getGame(this) != null) {
 
-			System.out.println("Can't delete Game-Contents.");
-			e.printStackTrace();
+                    app.deleteGame(app.getGame(this));
 
-		}
+                    app.update();
 
-		System.out.println("Done with Game-intern links.");
+                }
 
-		try {
+            }
 
-			System.out.println("Deleting Portal-Links to be sure.");
+        } catch (ConcurrentModificationException e) {
 
-			for (ProviderPortal app : ProviderPortal.find.all()) {
+            System.out.println("Iterator Exception:");
+            e.printStackTrace();
 
-				if (app.getGame(this) != null) {
+        }
 
-					app.deleteGame(app.getGame(this));
+        System.out.println("Remove Me complete.");
 
-					app.update();
+        return true;
 
-				}
+    }
 
-			}
+    @JSON(include = false)
+    public int getAmountOfUsers() {
 
-		} catch (ConcurrentModificationException e) {
+        int i = 0;
+        for (GameRights gr : rights) {
 
-			System.out.println("Iterator Exception:");
-			e.printStackTrace();
+            if (gr.getRights().equals("write")) {
 
-		}
+                i++;
 
-		System.out.println("Remove Me complete.");
+            }
 
-		return true;
+        }
+        return i;
+    }
 
-	}
+    @JSON(include = false)
+    public String getPortalBackLink() {
 
-	@JSON(include = false)
-	public int getAmountOfUsers() {
+        String x = "";
 
-		int i = 0;
-		for (GameRights gr : rights) {
+        for (ProviderGames p : portals) {
 
-			if (gr.getRights().equals("write")) {
+            if (portals.size() == 1) {
 
-				i++;
+                return p.getPortal().getTemplateServerURLDropSlash();
 
-			}
+            } else {
 
-		}
-		return i;
-	}
+                if (!p.getPortal().getId().equals(Global.defaultportal.getId())) {
 
-	@JSON(include = false)
-	public String getPortalBackLink() {
+                    return p.getPortal().getTemplateServerURLDropSlash();
 
-		String x = "";
+                }
 
-		for (ProviderGames p : portals) {
+            }
 
-			if (portals.size() == 1) {
+        }
 
-				return p.getPortal().getTemplateServerURLDropSlash();
+        return x;
 
-			} else {
+    }
 
-				if (!p.getPortal().getId().equals(Global.defaultportal.getId())) {
+    public boolean existsUser(User u) {
 
-					return p.getPortal().getTemplateServerURLDropSlash();
+        boolean exists = false;
 
-				}
+        for (GameRights agameright : rights) {
 
-			}
+            if (agameright.getUser().getId().equals(u.getId())) {
 
-		}
+                exists = true;
 
-		return x;
+            }
 
-	}
+        }
 
-	public boolean existsUser(User u) {
+        return exists;
 
-		boolean exists = false;
+    }
 
-		for (GameRights agameright : rights) {
+    public GameRights getUser(User u) {
 
-			if (agameright.getUser().getId().equals(u.getId())) {
+        GameRights gr = new GameRights();
 
-				exists = true;
+        for (GameRights agameright : rights) {
 
-			}
+            if (agameright.getUser().getId().equals(u.getId())) {
 
-		}
+                if (gr.getRights().equals("write")) {
 
-		return exists;
+                } else {
 
-	}
+                    gr = agameright;
+                }
 
-	public GameRights getUser(User u) {
+            }
 
-		GameRights gr = new GameRights();
+        }
 
-		for (GameRights agameright : rights) {
+        return gr;
 
-			if (agameright.getUser().getId().equals(u.getId())) {
+    }
 
-				if (gr.getRights().equals("write")) {
+    public ProviderGames getPortal(ProviderPortal p) {
 
-				} else {
+        ProviderGames pg = new ProviderGames();
 
-					gr = agameright;
-				}
+        for (ProviderGames aprovidergame : portals) {
 
-			}
+            if (aprovidergame.getPortal().getIdentifier() == p.getIdentifier()) {
 
-		}
+                pg = aprovidergame;
 
-		return gr;
+            }
 
-	}
+        }
 
-	public ProviderGames getPortal(ProviderPortal p) {
+        return pg;
 
-		ProviderGames pg = new ProviderGames();
+    }
 
-		for (ProviderGames aprovidergame : portals) {
+    public boolean existsPortal(ProviderPortal p) {
 
-			if (aprovidergame.getPortal().getIdentifier() == p.getIdentifier()) {
+        boolean exists = false;
 
-				pg = aprovidergame;
+        for (ProviderGames aprovidergame : portals) {
 
-			}
+            if (aprovidergame.getPortal().getIdentifier() == p.getIdentifier()) {
 
-		}
+                exists = true;
 
-		return pg;
+            }
 
-	}
+        }
 
-	public boolean existsPortal(ProviderPortal p) {
+        return exists;
 
-		boolean exists = false;
+    }
 
-		for (ProviderGames aprovidergame : portals) {
+    public Set<GameRights> getRightsOnPortal(ProviderPortal p) {
 
-			if (aprovidergame.getPortal().getIdentifier() == p.getIdentifier()) {
+        Set<GameRights> onPortal = new HashSet<GameRights>();
+        for (GameRights agameright : rights) {
 
-				exists = true;
+            if (p.existsUser(agameright.getUser()) == true) {
+                onPortal.add(agameright);
+            }
 
-			}
+        }
 
-		}
+        boolean visibility = false;
 
-		return exists;
+        for (ProviderGames visible : portals) {
 
-	}
+            visibility = visible.getVisibility();
 
-	public Set<GameRights> getRightsOnPortal(ProviderPortal p) {
+        }
 
-		Set<GameRights> onPortal = new HashSet<GameRights>();
-		for (GameRights agameright : rights) {
+        if (visibility == true) {
+            for (ProviderUsers aprovideruser : p.getUsers()) {
 
-			if (p.existsUser(agameright.getUser()) == true) {
-				onPortal.add(agameright);
-			}
+                boolean contained = false;
 
-		}
+                for (GameRights acontainedgr : onPortal) {
+                    if (acontainedgr.getUser().getId() == aprovideruser.getUser().getId()) {
+                        contained = true;
+                    }
 
-		boolean visibility = false;
+                }
 
-		for (ProviderGames visible : portals) {
+                if (contained == false) {
+                    GameRights newgr = new GameRights();
+                    newgr.setUser(aprovideruser.getUser());
+                    newgr.setGame(this);
+                    newgr.setRights("public");
 
-			visibility = visible.getVisibility();
+                    onPortal.add(newgr);
 
-		}
+                }
+            }
+        }
 
-		if (visibility == true) {
-			for (ProviderUsers aprovideruser : p.getUsers()) {
+        return onPortal;
 
-				boolean contained = false;
+    }
 
-				for (GameRights acontainedgr : onPortal) {
-					if (acontainedgr.getUser().getId() == aprovideruser.getUser().getId()) {
-						contained = true;
-					}
+    public void deleteNewsstreamItem(NewsstreamItem ni) {
 
-				}
+        if (Newsstream.contains(ni) == true) {
 
-				if (contained == false) {
-					GameRights newgr = new GameRights();
-					newgr.setUser(aprovideruser.getUser());
-					newgr.setGame(this);
-					newgr.setRights("public");
+            Newsstream.remove(ni);
 
-					onPortal.add(newgr);
+        }
 
-				}
-			}
-		}
+    }
 
-		return onPortal;
+    /**
+     * EDITOR FUNCTIONS
+     */
 
-	}
+    @JSON(include = false)
+    public GameType getType() {
+        return type;
+    }
 
-	public void deleteNewsstreamItem(NewsstreamItem ni) {
+    public void addHotspot(Hotspot h) {
+        hotspots.add(h);
+    }
 
-		if (Newsstream.contains(ni) == true) {
+    // DELETE HOTSPOT
 
-			Newsstream.remove(ni);
+    public void addPart(Part p) {
+        parts.add(p);
+    }
 
-		}
+    public void setAttribute(Attribute t) {
 
-	}
+        try {
+            List<Attribute> copyOfAttributes = new ArrayList<Attribute>(attributes.size());
+            ;
+            for (Attribute item : attributes)
+                copyOfAttributes.add(item);
 
-	/**
-	 * EDITOR FUNCTIONS
-	 * 
-	 */
+            for (Attribute aatr : copyOfAttributes) {
+                if (aatr.getXMLType().equals(t.getXMLType())) {
+                    attributes.remove(aatr);
+                }
+            }
+            attributes.add(t);
 
-	@JSON(include = false)
-	public GameType getType() {
-		return type;
-	}
+        } catch (RuntimeException e) {
 
-	public void addHotspot(Hotspot h) {
-		hotspots.add(h);
-	}
+            System.out.println("Problem setting Attribute.");
+            e.printStackTrace();
 
-	// DELETE HOTSPOT
+        }
 
-	public void addPart(Part p) {
-		parts.add(p);
-	}
+    }
 
-	public void setAttribute(Attribute t) {
+    public Scene getSceneForHotspot(Hotspot h) {
 
-		try {
-			List<Attribute> copyOfAttributes = new ArrayList<Attribute>(attributes.size());
-			;
-			for (Attribute item : attributes)
-				copyOfAttributes.add(item);
+        for (Part p : parts) {
 
-			for (Attribute aatr : copyOfAttributes) {
-				if (aatr.getXMLType().equals(t.getXMLType())) {
-					attributes.remove(aatr);
-				}
-			}
-			attributes.add(t);
+            if (p.isScene()) {
 
-		} catch (RuntimeException e) {
+                if (p.getScene().getHotspots().contains(h)) {
 
-			System.out.println("Problem setting Attribute.");
-			e.printStackTrace();
+                    return p.getScene();
 
-		}
+                }
 
-	}
+            }
 
-	public Scene getSceneForHotspot(Hotspot h) {
+        }
 
-		for (Part p : parts) {
+        return null;
 
-			if (p.isScene()) {
+    }
 
-				if (p.getScene().getHotspots().contains(h)) {
+    public void removePart(Part x) {
 
-					return p.getScene();
+        if (parts.contains(x)) {
+            parts.remove(x);
+            this.update();
+            x.removeMe();
+            x.delete();
+        } else {
 
-				}
+            for (Part ap : parts) {
 
-			}
+                if (ap.isScene()) {
 
-		}
+                    ap.getScene().removePart(x);
 
-		return null;
+                }
 
-	}
+            }
 
-	public void removePart(Part x) {
+        }
 
-		if (parts.contains(x)) {
-			parts.remove(x);
-			this.update();
-			x.removeMe();
-			x.delete();
-		} else {
+    }
 
-			for (Part ap : parts) {
+    public void part_up(Part p) {
+        int old_position = parts.indexOf(p);
 
-				if (ap.isScene()) {
+        if (old_position > 0) {
 
-					ap.getScene().removePart(x);
+            List<Part> helplist = new ArrayList<Part>();
+            for (Part curP : parts) {
 
-				}
+                helplist.add(curP);
 
-			}
+            }
 
-		}
+            parts.clear();
+            update();
 
-	}
+            List<Part> new_parts = new ArrayList<Part>();
 
-	public void part_up(Part p) {
-		int old_position = parts.indexOf(p);
+            for (int i = 0; i < helplist.size(); i++) {
 
-		if (old_position > 0) {
+                if (i == old_position - 1) {
 
-			List<Part> helplist = new ArrayList<Part>();
-			for (Part curP : parts) {
+                    if (p.isScene()) {
+                        new_parts.add(new Part(p.getScene()));
+                    } else {
+                        new_parts.add(new Part(p.getMission()));
+                    }
 
-				helplist.add(curP);
+                    if (helplist.get(i).isScene()) {
+                        new_parts.add(new Part(helplist.get(i).getScene()));
+                    } else {
+                        new_parts.add(new Part(helplist.get(i).getMission()));
+                    }
+                    // TODO helplist.get(i).removeMe();
+                    i++;
+                } else {
+                    if (helplist.get(i).isScene()) {
+                        new_parts.add(new Part(helplist.get(i).getScene()));
+                    } else {
+                        new_parts.add(new Part(helplist.get(i).getMission()));
+                    }
 
-			}
+                }
 
-			parts.clear();
-			update();
+                // TODO helplist.get(i).removeMe();
 
-			List<Part> new_parts = new ArrayList<Part>();
+            }
 
-			for (int i = 0; i < helplist.size(); i++) {
+            parts = new_parts;
+            update();
+        }
 
-				if (i == old_position - 1) {
+    }
 
-					if (p.isScene()) {
-						new_parts.add(new Part(p.getScene()));
-					} else {
-						new_parts.add(new Part(p.getMission()));
-					}
+    public void part_down(Part p) {
+        int old_position = parts.indexOf(p);
+        System.out.println("Oldposi = " + parts.indexOf(p));
 
-					if (helplist.get(i).isScene()) {
-						new_parts.add(new Part(helplist.get(i).getScene()));
-					} else {
-						new_parts.add(new Part(helplist.get(i).getMission()));
-					}
-					// TODO helplist.get(i).removeMe();
-					i++;
-				} else {
-					if (helplist.get(i).isScene()) {
-						new_parts.add(new Part(helplist.get(i).getScene()));
-					} else {
-						new_parts.add(new Part(helplist.get(i).getMission()));
-					}
+        if (old_position > -1 && old_position < parts.size() - 1) {
 
-				}
+            List<Part> helplist = new ArrayList<Part>();
+            for (Part curP : parts) {
 
-				// TODO helplist.get(i).removeMe();
+                helplist.add(curP);
 
-			}
+            }
 
-			parts = new_parts;
-			update();
-		}
+            System.out.println("Helplist.Size = " + helplist.size());
+            parts.clear();
+            update();
 
-	}
+            List<Part> new_parts = new ArrayList<Part>();
 
-	public void part_down(Part p) {
-		int old_position = parts.indexOf(p);
-		System.out.println("Oldposi = " + parts.indexOf(p));
+            for (int i = 0; i < helplist.size(); i++) {
 
-		if (old_position > -1 && old_position < parts.size() - 1) {
+                if (i == old_position) {
+                    i++;
 
-			List<Part> helplist = new ArrayList<Part>();
-			for (Part curP : parts) {
+                    if (helplist.get(i).isScene()) {
+                        new_parts.add(new Part(helplist.get(i).getScene()));
+                    } else {
+                        new_parts.add(new Part(helplist.get(i).getMission()));
+                    }
 
-				helplist.add(curP);
+                    if (p.isScene()) {
+                        new_parts.add(new Part(p.getScene()));
+                    } else {
+                        new_parts.add(new Part(p.getMission()));
+                    }
+                    // TODO helplist.get(i).removeMe();
+                } else {
 
-			}
+                    System.out.println("Running through list");
 
-			System.out.println("Helplist.Size = " + helplist.size());
-			parts.clear();
-			update();
+                    if (helplist.get(i).isScene()) {
+                        new_parts.add(new Part(helplist.get(i).getScene()));
+                    } else {
+                        new_parts.add(new Part(helplist.get(i).getMission()));
+                        System.out.println("Adding new Mission");
 
-			List<Part> new_parts = new ArrayList<Part>();
+                    }
 
-			for (int i = 0; i < helplist.size(); i++) {
+                }
 
-				if (i == old_position) {
-					i++;
+                // TODO helplist.get(i).removeMe();
 
-					if (helplist.get(i).isScene()) {
-						new_parts.add(new Part(helplist.get(i).getScene()));
-					} else {
-						new_parts.add(new Part(helplist.get(i).getMission()));
-					}
+            }
 
-					if (p.isScene()) {
-						new_parts.add(new Part(p.getScene()));
-					} else {
-						new_parts.add(new Part(p.getMission()));
-					}
-					// TODO helplist.get(i).removeMe();
-				} else {
+            System.out.println("New_parts.Size = " + new_parts.size());
 
-					System.out.println("Running through list");
+            parts = new_parts;
+            update();
+        }
 
-					if (helplist.get(i).isScene()) {
-						new_parts.add(new Part(helplist.get(i).getScene()));
-					} else {
-						new_parts.add(new Part(helplist.get(i).getMission()));
-						System.out.println("Adding new Mission");
+    }
 
-					}
+    public void createXML() {
+        String xmlString = createXMLForWeb(getFirstMission());
+        String sid = String.valueOf(id);
 
-				}
+        try {
+            File theDir3 = new File("public/uploads/" + Application.getLocalPortal().getId());
+            if (!theDir3.exists())
+                theDir3.mkdir();
 
-				// TODO helplist.get(i).removeMe();
+            File theDir2 = new File("public/uploads/" + Application.getLocalPortal().getId() + "/editor");
+            if (!theDir2.exists())
+                theDir2.mkdir();
 
-			}
+            File theDir = new File("public/uploads/" + Application.getLocalPortal().getId() + "/editor/" + sid + "/");
+            if (!theDir.exists())
+                theDir.mkdir();
 
-			System.out.println("New_parts.Size = " + new_parts.size());
+            File f = new File("public/uploads/" + Application.getLocalPortal().getId() + "/editor/" + sid + "/",
+                    "game.xml");
 
-			parts = new_parts;
-			update();
-		}
+            String xmlFilePath = f.getAbsolutePath();
 
-	}
+            Path xmlPath = Paths.get(xmlFilePath);
+            Files.write(xmlPath, xmlString.getBytes());
 
-	public void createXML() {
+            zip = xmlFilePath;
+            this.update();
 
-		String xmlString = createXMLForWeb(getFirstMission());
-		String sid = String.valueOf(id);
+            System.out.println("XML file created for game id: " + id);
 
-		try {
+        } catch (IOException ioe) {
 
-			File theDir3 = new File("public/uploads/" + Application.getLocalPortal().getId());
-			if (!theDir3.exists())
-				theDir3.mkdir();
+            ioe.printStackTrace();
+        }
 
-			File theDir2 = new File("public/uploads/" + Application.getLocalPortal().getId() + "/editor");
-			if (!theDir2.exists())
-				theDir2.mkdir();
+    }
 
-			File theDir = new File("public/uploads/" + Application.getLocalPortal().getId() + "/editor/" + sid + "/");
-			if (!theDir.exists())
-				theDir.mkdir();
+    public String createTestXML() {
 
-			File f = new File("public/uploads/" + Application.getLocalPortal().getId() + "/editor/" + sid + "/",
-					"game.xml");
+        String xmlString = createXMLForWeb(getFirstMission());
+        String sid = String.valueOf(id);
 
-			String xmlFilePath = f.getAbsolutePath();
+        try {
 
-			Files.write(Paths.get(xmlFilePath), xmlString.getBytes());
+            File theDir3 = new File("public/uploads/" + Application.getLocalPortal().getId());
+            if (!theDir3.exists())
+                theDir3.mkdir();
 
-			zip = xmlFilePath;
-			this.update();
+            File theDir2 = new File("public/uploads/" + Application.getLocalPortal().getId() + "/editor");
+            if (!theDir2.exists())
+                theDir2.mkdir();
 
-			System.out.println("File saved!");
+            File theDir4 = new File("public/uploads/" + Application.getLocalPortal().getId() + "/editor/test");
+            if (!theDir4.exists())
+                theDir4.mkdir();
 
-		} catch (IOException ioe) {
+            File theDir = new File(
+                    "public/uploads/" + Application.getLocalPortal().getId() + "/editor/test/" + sid + "/");
+            if (!theDir.exists())
+                theDir.mkdir();
 
-			ioe.printStackTrace();
-		}
+            File f = new File("public/uploads/" + Application.getLocalPortal().getId() + "/editor/test/" + sid + "/",
+                    "game.xml");
 
-	}
+            String xmlFilePath = f.getAbsolutePath();
 
-	public String createTestXML() {
+            Files.write(Paths.get(xmlFilePath), xmlString.getBytes());
 
-		String xmlString = createXMLForWeb(getFirstMission());
-		String sid = String.valueOf(id);
+            String zip2 = xmlFilePath;
+            this.update();
 
-		try {
+            System.out.println("File saved!");
 
-			File theDir3 = new File("public/uploads/" + Application.getLocalPortal().getId());
-			if (!theDir3.exists())
-				theDir3.mkdir();
+            return zip2;
 
-			File theDir2 = new File("public/uploads/" + Application.getLocalPortal().getId() + "/editor");
-			if (!theDir2.exists())
-				theDir2.mkdir();
+        } catch (IOException ioe) {
 
-			File theDir4 = new File("public/uploads/" + Application.getLocalPortal().getId() + "/editor/test");
-			if (!theDir4.exists())
-				theDir4.mkdir();
+            ioe.printStackTrace();
+        }
 
-			File theDir = new File(
-					"public/uploads/" + Application.getLocalPortal().getId() + "/editor/test/" + sid + "/");
-			if (!theDir.exists())
-				theDir.mkdir();
+        return "error";
 
-			File f = new File("public/uploads/" + Application.getLocalPortal().getId() + "/editor/test/" + sid + "/",
-					"game.xml");
+    }
 
-			String xmlFilePath = f.getAbsolutePath();
+    public String createXMLForWeb(Mission m) {
 
-			Files.write(Paths.get(xmlFilePath), xmlString.getBytes());
+        System.out.println("createXMLForWeb: Game: " + id);
 
-			String zip2 = xmlFilePath;
-			this.update();
+        String sid = String.valueOf(id);
+        String content = "";
+        try {
 
-			System.out.println("File saved!");
+            File theDir3 = new File("public/uploads/" + Application.getLocalPortal().getId());
+            if (!theDir3.exists())
+                theDir3.mkdir();
 
-			return zip2;
+            File theDir2 = new File("public/uploads/" + Application.getLocalPortal().getId() + "/editor");
+            if (!theDir2.exists())
+                theDir2.mkdir();
 
-		} catch (IOException ioe) {
+            File theDir = new File("public/uploads/" + Application.getLocalPortal().getId() + "/editor/" + sid + "/");
+            if (!theDir.exists())
+                theDir.mkdir();
 
-			ioe.printStackTrace();
-		}
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder;
 
-		return "error";
+            docBuilder = docFactory.newDocumentBuilder();
 
-	}
+            // game element
+            Document doc = docBuilder.newDocument();
+            Element game = doc.createElement("game");
+            doc.appendChild(game);
 
-	public String createXMLForWeb(Mission m) {
+            // / GAME ATTRIBUTES
+            Attr attr = doc.createAttribute("id");
+            attr.setValue(sid);
+            game.setAttributeNode(attr);
 
-		String sid = String.valueOf(id);
-		String content = "";
-		try {
+            Attr attr2 = doc.createAttribute("name");
+            attr2.setValue(name);
+            game.setAttributeNode(attr2);
 
-			File theDir3 = new File("public/uploads/" + Application.getLocalPortal().getId());
-			if (!theDir3.exists())
-				theDir3.mkdir();
+            Attr attr3 = doc.createAttribute("xmlformat");
+            attr3.setValue("5");
+            game.setAttributeNode(attr3);
 
-			File theDir2 = new File("public/uploads/" + Application.getLocalPortal().getId() + "/editor");
-			if (!theDir2.exists())
-				theDir2.mkdir();
+            Attr attr5 = doc.createAttribute("lastUpdate");
+            attr5.setValue("" + lastUpdate.getTime());
+            game.setAttributeNode(attr5);
 
-			File theDir = new File("public/uploads/" + Application.getLocalPortal().getId() + "/editor/" + sid + "/");
-			if (!theDir.exists())
-				theDir.mkdir();
+            for (Attribute aa : attributes) {
 
-			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder docBuilder;
+                if (!aa.getXMLType().contains(".")) {
+                    Attr attr4 = doc.createAttribute(aa.getXMLType());
+                    attr4.setValue(aa.getValue());
+                    game.setAttributeNode(attr4);
+                }
 
-			docBuilder = docFactory.newDocumentBuilder();
+            }
 
-			// game element
-			Document doc = docBuilder.newDocument();
-			Element game = doc.createElement("game");
-			doc.appendChild(game);
+            if (!parts.isEmpty()) {
 
-			// / GAME ATTRIBUTES
-			Attr attr = doc.createAttribute("id");
-			attr.setValue(sid);
-			game.setAttributeNode(attr);
+                // Missions
 
-			Attr attr2 = doc.createAttribute("name");
-			attr2.setValue(name);
-			game.setAttributeNode(attr2);
+                List<Part> partmirror = new ArrayList<Part>();
+                partmirror.addAll(parts);
 
-			Attr attr3 = doc.createAttribute("xmlformat");
-			attr3.setValue("5");
-			game.setAttributeNode(attr3);
+                Mission first = m;
 
-			Attr attr5 = doc.createAttribute("lastUpdate");
-			attr5.setValue("" + lastUpdate.getTime());
-			game.setAttributeNode(attr5);
+                // / FIRST
 
-			for (Attribute aa : attributes) {
+                for (Element e : first.createXMLForWeb(doc, this)) {
 
-				if (!aa.getXMLType().contains(".")) {
-					Attr attr4 = doc.createAttribute(aa.getXMLType());
-					attr4.setValue(aa.getValue());
-					game.setAttributeNode(attr4);
-				}
+                    game.appendChild(e);
 
-			}
+                }
 
-			if (!parts.isEmpty()) {
+                // / OTHERS
+                for (Part p : parts) {
 
-				// Missions
+                    for (Element e : p.createXMLForWeb(doc, this)) {
 
-				List<Part> partmirror = new ArrayList<Part>();
-				partmirror.addAll(parts);
+                        if (!p.isScene()) {
+                            if (!p.getMission().equals(first)) {
+                                game.appendChild(e);
+                            }
+                        } else {
+                            game.appendChild(e);
+                        }
+                    }
+                }
+            }
 
-				Mission first = m;
+            for (Hotspot h : getAllHotspots()) {
+                Element spot = h.createXMLForWeb(doc, this);
+                game.appendChild(spot);
 
-				// / FIRST
+            }
 
-				for (Element e : first.createXMLForWeb(doc, this)) {
+            for (MenuItem h : this.getMenuItems()) {
+                // Element mi = h.createXML(doc, this, zout);
+                // game.appendChild(mi);
 
-					game.appendChild(e);
+            }
+            try {
+                try {
+                    TransformerFactory tf = TransformerFactory.newInstance();
+                    Transformer transformer;
 
-				}
+                    transformer = tf.newTransformer();
 
-				// / OTHERS
+                    transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+                    StringWriter writer = new StringWriter();
 
-				for (Part p : parts) {
+                    transformer.transform(new DOMSource(doc), new StreamResult(writer));
 
-					for (Element e : p.createXMLForWeb(doc, this)) {
+                    content = writer.getBuffer().toString().replaceAll("\n|\r", "");
 
-						if (!p.isScene()) {
-							if (!p.getMission().equals(first)) {
-								game.appendChild(e);
-							}
+                } catch (TransformerConfigurationException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            } catch (TransformerException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        } catch (ParserConfigurationException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+        return content;
 
-						} else {
+    }
 
-							game.appendChild(e);
+    // GETTER
 
-						}
+    @JSON(include = false)
+    public Set<Attribute> getAttributes() {
+        return attributes;
+    }
 
-					}
-				}
+    @JSON(include = true)
+    public Long getId() {
+        return id;
+    }
 
-			}
+    @JSON(include = true)
+    public String getName() {
 
-			for (Hotspot h : getAllHotspots()) {
-				Element spot = h.createXMLForWeb(doc, this);
-				game.appendChild(spot);
+        return name;
+    }
 
-			}
+    @JSON(include = true)
+    public Map<String, String> getComputedAttributes() {
 
-			for (MenuItem h : this.getMenuItems()) {
-				// Element mi = h.createXML(doc, this, zout);
-				// game.appendChild(mi);
+        Map<String, String> aMap = new HashMap<String, String>();
 
-			}
-			try {
-				try {
-					TransformerFactory tf = TransformerFactory.newInstance();
-					Transformer transformer;
+        for (AttributeType x : getAllAttributes()) {
 
-					transformer = tf.newTransformer();
+            aMap.put(x.getXMLType(), getAttributeValue(x));
 
-					transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-					StringWriter writer = new StringWriter();
+        }
 
-					transformer.transform(new DOMSource(doc), new StreamResult(writer));
+        return aMap;
 
-					content = writer.getBuffer().toString().replaceAll("\n|\r", "");
+    }
 
-				} catch (TransformerConfigurationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			} catch (TransformerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} catch (ParserConfigurationException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		return content;
+    @JSON(include = false)
+    public Set<Attribute> getAllSubAttributes() {
 
-	}
+        Set<Attribute> all = new HashSet<Attribute>();
 
-	// GETTER
+        all.addAll(attributes);
 
-	@JSON(include = false)
-	public Set<Attribute> getAttributes() {
-		return attributes;
-	}
+        // / PARTS
 
-	@JSON(include = true)
-	public Long getId() {
-		return id;
-	}
+        for (Part ap : parts) {
 
-	@JSON(include = true)
-	public String getName() {
+            if (!ap.isScene()) {
+                // MISSION
+                Mission am = ap.getMission();
+                all.addAll(am.getAttributes());
 
-		return name;
-	}
+                // CONTENTS
+                for (Content ac : am.getContents()) {
+                    for (AttributeType act : ac.getAllAttributes()) {
+                        if (ac.getAttribute(act) != null) {
+                            all.add(ac.getAttribute(act));
+                        }
+                    }
 
-	@JSON(include = true)
-	public Map<String, String> getComputedAttributes() {
+                    // /// TRIGGER RULES:
+                    for (Rule atr : ac.getRules()) {
+                        for (Rule ar : atr.getSubRules()) {
+                            for (Action aa : ar.getActions()) {
+                                all.addAll(aa.getAllSubAttributes());
+                            }
+                        }
+                    }
 
-		Map<String, String> aMap = new HashMap<String, String>();
+                    for (Content asc : ac.getSubContent()) {
+                        for (AttributeType act : asc.getAllAttributes()) {
+                            if (asc.getAttribute(act) != null) {
+                                all.add(asc.getAttribute(act));
+                            }
+                        }
+                    }
+                }
 
-		for (AttributeType x : getAllAttributes()) {
+                // /// TRIGGER RULES:
+                for (Rule atr : am.getRules()) {
+                    for (Rule ar : atr.getSubRules()) {
+                        for (Action aa : ar.getActions()) {
+                            all.addAll(aa.getAllSubAttributes());
+                        }
+                    }
+                }
 
-			aMap.put(x.getXMLType(), getAttributeValue(x));
+            } else {
+                // SCENES
+                Scene as = ap.getScene();
+                all.addAll(as.getAllSubAttributes());
+            }
+        }
 
-		}
+        // / HOTSPOTS
 
-		return aMap;
+        for (Hotspot ah : hotspots) {
+            all.addAll(ah.getAttributes());
+            // TRIGGER RULES
+            for (Rule atr : ah.getRules()) {
+                // //// RULES
+                for (Rule ar : atr.getSubRules()) {
+                    // ///// ACTIONS
+                    for (Action aa : ar.getActions()) {
+                        all.addAll(aa.getAttributes());
+                    }
+                }
+            }
+        }
 
-	}
+        return all;
+    }
 
-	@JSON(include = false)
-	public Set<Attribute> getAllSubAttributes() {
+    @JSON(include = true)
+    public Set<String> getFilesToLoad() {
 
-		Set<Attribute> all = new HashSet<Attribute>();
+        Set<String> files = new HashSet<String>();
+        Set<Attribute> all = getAllSubAttributes();
 
-		all.addAll(attributes);
+        for (Attribute at : all) {
 
-		// / PARTS
+            if (at.getFiletype().equals("file")) {
 
-		for (Part ap : parts) {
+                files.add(at.getValue());
 
-			if (!ap.isScene()) {
-				// MISSION
-				Mission am = ap.getMission();
-				all.addAll(am.getAttributes());
+            }
 
-				// CONTENTS
-				for (Content ac : am.getContents()) {
-					for (AttributeType act : ac.getAllAttributes()) {
-						if (ac.getAttribute(act) != null) {
-							all.add(ac.getAttribute(act));
-						}
-					}
+        }
 
-					// /// TRIGGER RULES:
-					for (Rule atr : ac.getRules()) {
-						for (Rule ar : atr.getSubRules()) {
-							for (Action aa : ar.getActions()) {
-								all.addAll(aa.getAllSubAttributes());
-							}
-						}
-					}
+        return files;
 
-					for (Content asc : ac.getSubContent()) {
-						for (AttributeType act : asc.getAllAttributes()) {
-							if (asc.getAttribute(act) != null) {
-								all.add(asc.getAttribute(act));
-							}
-						}
-					}
-				}
+    }
 
-				// /// TRIGGER RULES:
-				for (Rule atr : am.getRules()) {
-					for (Rule ar : atr.getSubRules()) {
-						for (Action aa : ar.getActions()) {
-							all.addAll(aa.getAllSubAttributes());
-						}
-					}
-				}
+    @JSON(include = false)
+    public List<Hotspot> getHotspots() {
+        return hotspots;
+    }
 
-			} else {
-				// SCENES
-				Scene as = ap.getScene();
-				all.addAll(as.getAllSubAttributes());
-			}
-		}
+    @JSON(include = false)
+    public String getZip() {
+        return zip;
+    }
 
-		// / HOTSPOTS
+    @JSON(include = false)
+    public List<Part> getParts() {
+        return parts;
+    }
 
-		for (Hotspot ah : hotspots) {
-			all.addAll(ah.getAttributes());
-			// TRIGGER RULES
-			for (Rule atr : ah.getRules()) {
-				// //// RULES
-				for (Rule ar : atr.getSubRules()) {
-					// ///// ACTIONS
-					for (Action aa : ar.getActions()) {
-						all.addAll(aa.getAttributes());
-					}
-				}
-			}
-		}
+    @JSON(include = false)
+    public Hotspot getHotspot(Long hid) {
 
-		return all;
-	}
+        List<Hotspot> x = getAllHotspots();
 
-	@JSON(include = true)
-	public Set<String> getFilesToLoad() {
+        for (Hotspot y : x) {
 
-		Set<String> files = new HashSet<String>();
-		Set<Attribute> all = getAllSubAttributes();
+            if (y.getId().equals(hid)) {
+                return y;
+            }
+        }
 
-		for (Attribute at : all) {
+        return null;
 
-			if (at.getFiletype().equals("file")) {
+    }
 
-				files.add(at.getValue());
+    @JSON(include = false)
+    public List<AttributeType> getAllAttributes() {
+        return type.getAttributeTypes();
 
-			}
+    }
 
-		}
+    @JSON(include = false)
+    public Long getAttributeId(AttributeType at) {
 
-		return files;
+        Long x = 0L;
 
-	}
+        for (Attribute aa : attributes) {
 
-	@JSON(include = false)
-	public List<Hotspot> getHotspots() {
-		return hotspots;
-	}
+            if (aa.getXMLType().equals(at.getXMLType())) {
 
-	@JSON(include = false)
-	public String getZip() {
-		return zip;
-	}
+                x = aa.getId();
 
-	@JSON(include = false)
-	public List<Part> getParts() {
-		return parts;
-	}
+            }
 
-	@JSON(include = false)
-	public Hotspot getHotspot(Long hid) {
+        }
 
-		List<Hotspot> x = getAllHotspots();
+        return x;
 
-		for (Hotspot y : x) {
+    }
 
-			if (y.getId().equals(hid)) {
-				return y;
-			}
-		}
+    @JSON(include = false)
+    public String getAttributeValue(AttributeType at) {
 
-		return null;
+        String x = at.getDefaultValue();
 
-	}
+        for (Attribute aa : attributes) {
 
-	@JSON(include = false)
-	public List<AttributeType> getAllAttributes() {
-		return type.getAttributeTypes();
+            if (aa.getXMLType().equals(at.getXMLType())) {
 
-	}
+                x = aa.getValue();
 
-	@JSON(include = false)
-	public Long getAttributeId(AttributeType at) {
+            }
 
-		Long x = 0L;
+        }
 
-		for (Attribute aa : attributes) {
+        return x;
 
-			if (aa.getXMLType().equals(at.getXMLType())) {
+    }
 
-				x = aa.getId();
+    @JSON(include = false)
+    public Mission getNextMission(Mission m) {
 
-			}
+        Mission n = null;
 
-		}
+        boolean current = false;
+        boolean done = false;
+        int counter = 0;
+        for (Part p : parts) {
+            counter++;
+            if (p.isScene()) {
 
-		return x;
+                if (current == false) {
 
-	}
+                    if (p.getScene().containsMission(m)) {
 
-	@JSON(include = false)
-	public String getAttributeValue(AttributeType at) {
+                        if (p.getScene().isLastMission(m)) {
 
-		String x = at.getDefaultValue();
+                            current = true;
 
-		for (Attribute aa : attributes) {
+                        } else {
 
-			if (aa.getXMLType().equals(at.getXMLType())) {
+                            n = p.getScene().getNextMission(m);
 
-				x = aa.getValue();
+                            current = false;
+                            done = true;
 
-			}
+                        }
 
-		}
+                    }
 
-		return x;
+                } else {
+                    n = p.getScene().getFirstMission();
+                    current = false;
+                    done = true;
+                }
 
-	}
+            } else {
 
-	@JSON(include = false)
-	public Mission getNextMission(Mission m) {
+                if (current == false) {
+                    if (p.getMission().equals(m)) {
+                        current = true;
+                    }
+                } else {
 
-		Mission n = null;
+                    if (!p.getMission().getType().getXMLType().equals("MetaData") &&
+                            !p.getMission().getType().getXMLType().equals("Timer")) {
+                        n = p.getMission();
+                        current = false;
+                        done = true;
+                    }
+                }
+            }
+        }
 
-		boolean current = false;
-		boolean done = false;
-		int counter = 0;
-		for (Part p : parts) {
-			counter++;
-			if (p.isScene()) {
+        return n;
+    }
 
-				if (current == false) {
+    @JSON(include = false)
+    public Mission getLastMission() {
 
-					if (p.getScene().containsMission(m)) {
+        Mission m = null;
 
-						if (p.getScene().isLastMission(m)) {
+        if (!parts.isEmpty()) {
+            int i = 1;
+            System.out.println("parts.size: " + parts.size());
 
-							current = true;
+            while (((m == null) || i <= parts.size()
+                    || m.getType().getXMLType().equals("MetaData")
+                    || m.getType().getXMLType().equals("Timer"))
+                    && (parts.size() - i) >= 0) {
 
-						} else {
+                // System.out.println("looking for: " + (parts.size() - i));
 
-							n = p.getScene().getNextMission(m);
+                if (parts.get(parts.size() - i) != null) {
+                    Part p = parts.get(parts.size() - i);
+                    if (p.getLastMission() != null) {
+                        m = p.getLastMission();
 
-							current = false;
-							done = true;
+                    }
 
-						}
+                }
+                i++;
+            }
+        }
+        return m;
 
-					}
+    }
 
-				} else {
-					n = p.getScene().getFirstMission();
-					current = false;
-					done = true;
-				}
+    @JSON(include = false)
+    public Mission getFirstMission() {
 
-			} else {
+        Mission ret = null;
+        if (parts.isEmpty()) {
+            return null;
+        } else {
+            ArrayList<Part> pp = new ArrayList<Part>();
+            pp.addAll(parts);
 
-				if (current == false) {
-					if (p.getMission().equals(m)) {
-						current = true;
-					}
-				} else {
+            while (!pp.isEmpty() && pp.get(0).isScene()) {
 
-					if (!p.getMission().getType().getXMLType().equals("MetaData") &&
-						!p.getMission().getType().getXMLType().equals("Timer")) {
-						n = p.getMission();
-						current = false;
-						done = true;
-					}
-				}
-			}
-		}
+                pp.addAll(0, pp.get(0).getScene().getParts());
+            }
 
-		return n;
-	}
+            ret = pp.get(0).getMission();
 
-	@JSON(include = false)
-	public Mission getLastMission() {
+        }
 
-		Mission m = null;
+        for (AttributeType att : type.getAttributeTypes()) {
 
-		if (!parts.isEmpty()) {
-			int i = 1;
-			System.out.println("parts.size: " + parts.size());
+            if (att.getXMLType().equals("Editor.StartMission")) {
+                System.out.println("found StartMission Attribute for game");
+                if (!this.getAttributeValue(att).equals("")) {
 
-			while (((m == null) || i <= parts.size() 
-				|| m.getType().getXMLType().equals("MetaData")
-				|| m.getType().getXMLType().equals("Timer"))
-					&& (parts.size() - i) >= 0) {
+                    Long testid = Long.valueOf(this.getAttributeValue(att));
 
-				// System.out.println("looking for: " + (parts.size() - i));
+                    if (Mission.find.where().eq("id", testid).findRowCount() != 1) {
 
-				if (parts.get(parts.size() - i) != null) {
-					Part p = parts.get(parts.size() - i);
-					if (p.getLastMission() != null) {
-						m = p.getLastMission();
+                        System.out.println("Start-Mission " + testid + " not found.");
+                    } else {
 
-					}
+                        ret = Mission.find.byId(testid);
+                    }
 
-				}
-				i++;
-			}
-		}
-		return m;
+                }
+            }
 
-	}
+        }
 
-	@JSON(include = false)
-	public Mission getFirstMission() {
+        return ret;
 
-		Mission ret = null;
-		if (parts.isEmpty()) {
-			return null;
-		} else {
-			ArrayList<Part> pp = new ArrayList<Part>();
-			pp.addAll(parts);
+    }
 
-			while (!pp.isEmpty() && pp.get(0).isScene()) {
+    @JSON(include = false)
+    public Hotspot getFirstHotspot() {
 
-				pp.addAll(0, pp.get(0).getScene().getParts());
-			}
+        for (Part p : parts) {
 
-			ret = pp.get(0).getMission();
+            if (p.isScene()) {
 
-		}
+                if (p.getScene().getHotspots() != null) {
 
-		for (AttributeType att : type.getAttributeTypes()) {
+                    if (!p.getScene().getHotspots().isEmpty()) {
 
-			if (att.getXMLType().equals("Editor.StartMission")) {
-				System.out.println("found StartMission Attribute for game");
-				if (!this.getAttributeValue(att).equals("")) {
+                        return p.getScene().getHotspots().get(0);
 
-					Long testid = Long.valueOf(this.getAttributeValue(att));
+                    }
 
-					if (Mission.find.where().eq("id", testid).findRowCount() != 1) {
+                }
 
-						System.out.println("Start-Mission " + testid + " not found.");
-					} else {
+            }
 
-						ret = Mission.find.byId(testid);
-					}
+        }
 
-				}
-			}
+        if (hotspots == null) {
+            return null;
+        } else {
 
-		}
+            if (hotspots.isEmpty()) {
+                return null;
+            } else {
 
-		return ret;
+                return hotspots.get(0);
+            }
+        }
+    }
 
-	}
+    @JSON(include = false)
+    public String getNPCTalkText() {
 
-	@JSON(include = false)
-	public Hotspot getFirstHotspot() {
+        List<Mission> missions = new ArrayList<Mission>();
+        missions.addAll(getAllMissions());
 
-		for (Part p : parts) {
+        String x = "";
+        List<String> vars = new ArrayList<String>();
+        boolean done = false;
 
-			if (p.isScene()) {
+        for (Mission current : missions) {
 
-				if (p.getScene().getHotspots() != null) {
+            if (done == false) {
 
-					if (!p.getScene().getHotspots().isEmpty()) {
+                if (current.getType().getXMLType().equals("NPCTalk")) {
 
-						return p.getScene().getHotspots().get(0);
+                    // CHECK CONTENT
 
-					}
+                    if (!current.getContents().isEmpty()) {
 
-				}
+                        for (Content y : current.getContents()) {
 
-			}
+                            if (y.getContent() != null) {
 
-		}
+                                String str2 = y.getContent().replaceAll("<", "&lt;");
+                                str2 = str2.replaceAll(">", "&gt;");
+                                str2 = str2.replaceAll("\"", "&quot;");
+                                str2 = str2.replaceAll("&", "&amp;");
 
-		if (hotspots == null) {
-			return null;
-		} else {
+                                str2 = str2.replaceAll("\n", "<br/>");
 
-			if (hotspots.isEmpty()) {
-				return null;
-			} else {
+                                x = x + "<br/><br/>" + str2;
 
-				return hotspots.get(0);
-			}
-		}
-	}
+                            }
 
-	@JSON(include = false)
-	public String getNPCTalkText() {
+                        }
 
-		List<Mission> missions = new ArrayList<Mission>();
-		missions.addAll(getAllMissions());
+                        done = true;
 
-		String x = "";
-		List<String> vars = new ArrayList<String>();
-		boolean done = false;
+                    }
 
-		for (Mission current : missions) {
+                }
 
-			if (done == false) {
+            }
 
-				if (current.getType().getXMLType().equals("NPCTalk")) {
+        }
 
-					// CHECK CONTENT
+        boolean done2 = false;
 
-					if (!current.getContents().isEmpty()) {
+        for (Mission current : missions) {
 
-						for (Content y : current.getContents()) {
+            if (done2 == false) {
 
-							if (y.getContent() != null) {
+                if (current.getType().getXMLType().equals("NPCTalk")) {
 
-								String str2 = y.getContent().replaceAll("<", "&lt;");
-								str2 = str2.replaceAll(">", "&gt;");
-								str2 = str2.replaceAll("\"", "&quot;");
-								str2 = str2.replaceAll("&", "&amp;");
+                    if (!current.getRules().isEmpty()) {
 
-								str2 = str2.replaceAll("\n", "<br/>");
+                        for (Rule r : current.getRules()) {
 
-								x = x + "<br/><br/>" + str2;
+                            if (!r.getSubRules().isEmpty()) {
 
-							}
+                                for (Rule sr : r.getSubRules()) {
 
-						}
+                                    if (!sr.getActions().isEmpty()) {
 
-						done = true;
+                                        for (Action ac : sr.getActions()) {
 
-					}
+                                            if (ac.getType().getXMLType().equals("SetVariable")) {
 
-				}
+                                                String var = "";
+                                                String value = "";
 
-			}
+                                                for (Attribute at : ac.getAttributes()) {
 
-		}
+                                                    if (at.getXMLType().equals("var")) {
 
-		boolean done2 = false;
+                                                        var = at.getValue();
 
-		for (Mission current : missions) {
+                                                    } else if (at.getXMLType().equals("value")) {
 
-			if (done2 == false) {
+                                                        value = at.getValue();
 
-				if (current.getType().getXMLType().equals("NPCTalk")) {
+                                                    }
 
-					if (!current.getRules().isEmpty()) {
+                                                }
 
-						for (Rule r : current.getRules()) {
+                                                if (!var.equals("") && !value.equals("")) {
 
-							if (!r.getSubRules().isEmpty()) {
+                                                    value = value.replaceAll("\"", "");
 
-								for (Rule sr : r.getSubRules()) {
+                                                    x = x.replace("@" + var + "@", value);
 
-									if (!sr.getActions().isEmpty()) {
+                                                }
 
-										for (Action ac : sr.getActions()) {
+                                            }
 
-											if (ac.getType().getXMLType().equals("SetVariable")) {
+                                        }
 
-												String var = "";
-												String value = "";
+                                    }
 
-												for (Attribute at : ac.getAttributes()) {
+                                }
 
-													if (at.getXMLType().equals("var")) {
+                            }
 
-														var = at.getValue();
+                        }
 
-													} else if (at.getXMLType().equals("value")) {
+                    }
+                }
+            }
+        }
 
-														value = at.getValue();
+        return x;
+    }
 
-													}
+    @JSON(include = false)
+    public String getNPCTalkTextForDevices() {
 
-												}
+        List<Mission> missions = new ArrayList<Mission>();
+        missions.addAll(getAllMissions());
 
-												if (!var.equals("") && !value.equals("")) {
+        String x = "";
+        List<String> vars = new ArrayList<String>();
+        boolean done = false;
 
-													value = value.replaceAll("\"", "");
+        for (Mission current : missions) {
 
-													x = x.replace("@" + var + "@", value);
+            if (done == false) {
 
-												}
+                if (current.getType().getXMLType().equals("NPCTalk")) {
 
-											}
+                    // CHECK CONTENT
 
-										}
+                    if (!current.getContents().isEmpty()) {
 
-									}
+                        for (Content y : current.getContents()) {
 
-								}
+                            if (y.getContent() != null) {
 
-							}
+                                String str2 = y.getContent().replaceAll("<", "&lt;");
+                                str2 = str2.replaceAll(">", "&gt;");
+                                str2 = str2.replaceAll("\"", "&quot;");
+                                str2 = str2.replaceAll("&", "&amp;");
 
-						}
+                                x = x + "\n \n" + str2;
 
-					}
-				}
-			}
-		}
+                            }
 
-		return x;
-	}
+                        }
 
-	@JSON(include = false)
-	public String getNPCTalkTextForDevices() {
+                        done = true;
 
-		List<Mission> missions = new ArrayList<Mission>();
-		missions.addAll(getAllMissions());
+                    }
 
-		String x = "";
-		List<String> vars = new ArrayList<String>();
-		boolean done = false;
+                }
 
-		for (Mission current : missions) {
+            }
 
-			if (done == false) {
+        }
 
-				if (current.getType().getXMLType().equals("NPCTalk")) {
+        boolean done2 = false;
 
-					// CHECK CONTENT
+        for (Mission current : missions) {
 
-					if (!current.getContents().isEmpty()) {
+            if (done2 == false) {
 
-						for (Content y : current.getContents()) {
+                if (current.getType().getXMLType().equals("NPCTalk")) {
 
-							if (y.getContent() != null) {
+                    if (!current.getRules().isEmpty()) {
 
-								String str2 = y.getContent().replaceAll("<", "&lt;");
-								str2 = str2.replaceAll(">", "&gt;");
-								str2 = str2.replaceAll("\"", "&quot;");
-								str2 = str2.replaceAll("&", "&amp;");
+                        for (Rule r : current.getRules()) {
 
-								x = x + "\n \n" + str2;
+                            if (!r.getSubRules().isEmpty()) {
 
-							}
+                                for (Rule sr : r.getSubRules()) {
 
-						}
+                                    if (!sr.getActions().isEmpty()) {
 
-						done = true;
+                                        for (Action ac : sr.getActions()) {
 
-					}
+                                            if (ac.getType().getXMLType().equals("SetVariable")) {
 
-				}
+                                                String var = "";
+                                                String value = "";
 
-			}
+                                                for (Attribute at : ac.getAttributes()) {
 
-		}
+                                                    if (at.getXMLType().equals("var")) {
 
-		boolean done2 = false;
+                                                        var = at.getValue();
 
-		for (Mission current : missions) {
+                                                    } else if (at.getXMLType().equals("value")) {
 
-			if (done2 == false) {
+                                                        value = at.getValue();
 
-				if (current.getType().getXMLType().equals("NPCTalk")) {
+                                                    }
 
-					if (!current.getRules().isEmpty()) {
+                                                }
 
-						for (Rule r : current.getRules()) {
+                                                if (!var.equals("") && !value.equals("")) {
 
-							if (!r.getSubRules().isEmpty()) {
+                                                    value = value.replaceAll("\"", "");
 
-								for (Rule sr : r.getSubRules()) {
+                                                    x = x.replace("@" + var + "@", value);
 
-									if (!sr.getActions().isEmpty()) {
+                                                }
 
-										for (Action ac : sr.getActions()) {
+                                            }
 
-											if (ac.getType().getXMLType().equals("SetVariable")) {
+                                        }
 
-												String var = "";
-												String value = "";
+                                    }
 
-												for (Attribute at : ac.getAttributes()) {
+                                }
 
-													if (at.getXMLType().equals("var")) {
+                            }
 
-														var = at.getValue();
+                        }
 
-													} else if (at.getXMLType().equals("value")) {
+                    }
+                }
+            }
+        }
 
-														value = at.getValue();
+        return x;
+    }
 
-													}
+    @JSON(include = false)
+    public String getNPCTalkSoundURL() {
 
-												}
+        List<Mission> missions = new ArrayList<Mission>();
+        missions.addAll(getAllMissions());
 
-												if (!var.equals("") && !value.equals("")) {
+        String x = "";
 
-													value = value.replaceAll("\"", "");
+        boolean done = false;
 
-													x = x.replace("@" + var + "@", value);
+        for (Mission current : missions) {
 
-												}
+            if (done == false) {
 
-											}
+                if (current.getType().getXMLType().equals("NPCTalk")) {
 
-										}
+                    // CHECK CONTENT
 
-									}
+                    if (!current.getContents().isEmpty()) {
 
-								}
+                        for (Content y : current.getContents()) {
 
-							}
+                            if (y.getContent() != null) {
 
-						}
+                                for (Attribute aatr : y.getAttributes()) {
 
-					}
-				}
-			}
-		}
+                                    if (aatr.getXMLType().equals("sound")) {
 
-		return x;
-	}
+                                        x = aatr.getValue();
 
-	@JSON(include = false)
-	public String getNPCTalkSoundURL() {
+                                    }
 
-		List<Mission> missions = new ArrayList<Mission>();
-		missions.addAll(getAllMissions());
+                                }
 
-		String x = "";
+                            }
 
-		boolean done = false;
+                        }
 
-		for (Mission current : missions) {
+                        done = true;
 
-			if (done == false) {
+                    }
 
-				if (current.getType().getXMLType().equals("NPCTalk")) {
+                }
 
-					// CHECK CONTENT
+            }
 
-					if (!current.getContents().isEmpty()) {
+        }
 
-						for (Content y : current.getContents()) {
+        return x;
+    }
 
-							if (y.getContent() != null) {
+    @JSON(include = false)
+    public String getNPCTalkPictureURL() {
 
-								for (Attribute aatr : y.getAttributes()) {
+        String y = "";
+        List<Mission> missions = new ArrayList<Mission>();
+        missions.addAll(getAllMissions());
 
-									if (aatr.getXMLType().equals("sound")) {
+        for (Mission current : missions) {
 
-										x = aatr.getValue();
+            if (current.getType().getXMLType().equals("NPCTalk")) {
 
-									}
+                // CHECK IMAGE
 
-								}
+                for (AttributeType atr : current.getAllAttributes()) {
 
-							}
+                    if (atr.getXMLType().equals("image")) {
 
-						}
+                        if (current.getAttributeValue(atr) != null) {
 
-						done = true;
+                            y = current.getAttributeValue(atr);
 
-					}
+                        }
 
-				}
+                    }
 
-			}
+                }
 
-		}
+            }
 
-		return x;
-	}
+        }
 
-	@JSON(include = false)
-	public String getNPCTalkPictureURL() {
+        return y;
+    }
 
-		String y = "";
-		List<Mission> missions = new ArrayList<Mission>();
-		missions.addAll(getAllMissions());
+    @JSON(include = false)
+    public boolean hasFilledNPCTalk() {
 
-		for (Mission current : missions) {
+        List<Mission> missions = new ArrayList<Mission>();
+        missions.addAll(getAllMissions());
 
-			if (current.getType().getXMLType().equals("NPCTalk")) {
+        for (Mission current : missions) {
 
-				// CHECK IMAGE
+            if (current.getType().getXMLType().equals("NPCTalk")) {
 
-				for (AttributeType atr : current.getAllAttributes()) {
+                // CHECK CONTENT
 
-					if (atr.getXMLType().equals("image")) {
+                if (!current.getContents().isEmpty()) {
 
-						if (current.getAttributeValue(atr) != null) {
+                    Content x = current.getContents().get(0);
 
-							y = current.getAttributeValue(atr);
+                    if (x.getContent() != null) {
 
-						}
+                        // CHECK IMAGE
 
-					}
+                        for (AttributeType atr : current.getAllAttributes()) {
 
-				}
+                            if (atr.getXMLType().equals("image")) {
 
-			}
+                                if (current.getAttributeValue(atr) != null) {
 
-		}
+                                    return true;
 
-		return y;
-	}
+                                }
 
-	@JSON(include = false)
-	public boolean hasFilledNPCTalk() {
+                            }
 
-		List<Mission> missions = new ArrayList<Mission>();
-		missions.addAll(getAllMissions());
+                        }
 
-		for (Mission current : missions) {
+                    }
 
-			if (current.getType().getXMLType().equals("NPCTalk")) {
+                }
 
-				// CHECK CONTENT
+            }
 
-				if (!current.getContents().isEmpty()) {
+        }
 
-					Content x = current.getContents().get(0);
+        return false;
+    }
 
-					if (x.getContent() != null) {
+    @JSON(include = false)
+    public Set<Scene> getAllScenes() {
 
-						// CHECK IMAGE
+        Set<Scene> all = new HashSet<Scene>();
 
-						for (AttributeType atr : current.getAllAttributes()) {
+        for (Part ap : parts) {
 
-							if (atr.getXMLType().equals("image")) {
+            if (ap.isScene()) {
+                all.add(ap.getScene());
+                all.addAll(ap.getScene().getAllScenes());
 
-								if (current.getAttributeValue(atr) != null) {
+            }
 
-									return true;
+        }
 
-								}
+        return all;
 
-							}
+    }
 
-						}
+    @JSON(include = false)
+    public List<Mission> getAllMissions() {
 
-					}
+        List<Mission> all = new ArrayList<Mission>();
 
-				}
+        for (Part ap : parts) {
 
-			}
+            if (!ap.isScene()) {
 
-		}
+                all.add(ap.getMission());
 
-		return false;
-	}
+            } else {
 
-	@JSON(include = false)
-	public Set<Scene> getAllScenes() {
+                all.addAll(ap.getScene().getAllMissions());
 
-		Set<Scene> all = new HashSet<Scene>();
+            }
 
-		for (Part ap : parts) {
+        }
 
-			if (ap.isScene()) {
-				all.add(ap.getScene());
-				all.addAll(ap.getScene().getAllScenes());
+        return all;
 
-			}
+    }
 
-		}
+    @JSON(include = true)
+    public List<Mission> getMissions() {
 
-		return all;
+        return getAllMissions();
+    }
 
-	}
+    @JSON(include = false)
+    public Set<Content> getAllContents() {
 
-	@JSON(include = false)
-	public List<Mission> getAllMissions() {
+        Set<Content> allc = new HashSet<Content>();
 
-		List<Mission> all = new ArrayList<Mission>();
+        for (Mission am : getAllMissions()) {
 
-		for (Part ap : parts) {
+            for (Content ac : am.getContents()) {
 
-			if (!ap.isScene()) {
+                allc.add(ac);
 
-				all.add(ap.getMission());
+                if (ac.hasSubContent()) {
 
-			} else {
+                    for (Content asc : ac.getSubContents()) {
 
-				all.addAll(ap.getScene().getAllMissions());
+                        allc.add(asc);
 
-			}
+                    }
 
-		}
+                }
 
-		return all;
+            }
 
-	}
+        }
 
-	@JSON(include = true)
-	public List<Mission> getMissions() {
+        return allc;
 
-		return getAllMissions();
-	}
+    }
 
-	@JSON(include = false)
-	public Set<Content> getAllContents() {
+    /**
+     * Getter & Setter
+     */
 
-		Set<Content> allc = new HashSet<Content>();
+    public void setName(String n) {
 
-		for (Mission am : getAllMissions()) {
+        name = n;
 
-			for (Content ac : am.getContents()) {
+    }
 
-				allc.add(ac);
+    @JSON(include = false)
+    public Set<ProviderGames> getPortals() {
 
-				if (ac.hasSubContent()) {
+        return portals;
 
-					for (Content asc : ac.getSubContents()) {
+    }
 
-						allc.add(asc);
+    @JSON(include = false)
+    public String getIdentifier() {
+        return Long.toString(id);
+    }
 
-					}
+    @JSON(include = true)
+    public List<Hotspot> getAllHotspots() {
 
-				}
+        List<Hotspot> x = new ArrayList<Hotspot>();
+        x.addAll(hotspots);
 
-			}
+        for (Part p : parts) {
 
-		}
+            if (p.isScene()) {
 
-		return allc;
+                x.addAll(p.getScene().getHotspots());
 
-	}
+            }
 
-	/**
-	 * 
-	 * Getter & Setter
-	 * 
-	 */
+        }
 
-	public void setName(String n) {
+        return x;
 
-		name = n;
+    }
 
-	}
+    @JSON(include = false)
+    public Set<GameRights> getRights() {
 
-	@JSON(include = false)
-	public Set<ProviderGames> getPortals() {
+        return rights;
 
-		return portals;
+    }
 
-	}
+    @JSON(include = false)
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
 
-	@JSON(include = false)
-	public String getIdentifier() {
-		return Long.toString(id);
-	}
+    @JSON(include = false)
+    public String getFile() {
 
-	@JSON(include = true)
-	public List<Hotspot> getAllHotspots() {
+        if (version == 1) {
 
-		List<Hotspot> x = new ArrayList<Hotspot>();
-		x.addAll(hotspots);
+            return zip;
+        } else {
 
-		for (Part p : parts) {
+            Long gametofind = getVersion();
 
-			if (p.isScene()) {
+            if (Game.find.where().eq("id", gametofind).findRowCount() != 1) {
 
-				x.addAll(p.getScene().getHotspots());
+                return zip;
 
-			}
+            } else {
 
-		}
+                Game g = Game.find.byId(gametofind);
 
-		return x;
+                if (g.hasFile()) {
 
-	}
+                    return g.getFile();
 
-	@JSON(include = false)
-	public Set<GameRights> getRights() {
+                } else {
 
-		return rights;
+                    if (!g.getVersion().equals(1L)) {
 
-	}
+                        return g.getFile();
 
-	@JSON(include = false)
-	public Date getLastUpdate() {
-		return lastUpdate;
-	}
+                    } else {
 
-	@JSON(include = false)
-	public String getFile() {
+                        return zip;
 
-		if (version == 1) {
+                    }
 
-			return zip;
-		} else {
+                }
 
-			Long gametofind = getVersion();
+            }
 
-			if (Game.find.where().eq("id", gametofind).findRowCount() != 1) {
+        }
+    }
 
-				return zip;
+    public NewsstreamItem createNewsstreamItem(String title, String content, String vis) {
 
-			} else {
+        NewsstreamItem nsi = new NewsstreamItem(title, content, vis, "game", getId());
 
-				Game g = Game.find.byId(gametofind);
+        return nsi;
 
-				if (g.hasFile()) {
+    }
 
-					return g.getFile();
+    public void addNewsstream(NewsstreamItem nsi) {
 
-				} else {
+        Newsstream.add(nsi);
 
-					if (!g.getVersion().equals(1L)) {
+        this.update();
 
-						return g.getFile();
+    }
 
-					} else {
+    @JSON(include = false)
+    public User getOwner() {
 
-						return zip;
+        return owner;
+    }
 
-					}
+    public void setFile(String file) {
 
-				}
+        zip = file;
+    }
 
-			}
+    @JSON(include = false)
+    public boolean hasFile() {
 
-		}
-	}
+        boolean help = false;
+        try {
+            if (!zip.equals("none")) {
+                help = true;
+            }
+        } catch (RuntimeException e) {
 
-	public NewsstreamItem createNewsstreamItem(String title, String content, String vis) {
+            System.out.println("Can't look for zip.");
+            e.printStackTrace();
 
-		NewsstreamItem nsi = new NewsstreamItem(title, content, vis, "game", getId());
+        }
 
-		return nsi;
+        return help;
+    }
 
-	}
+    /**
+     * Finder is a Play Framework Class that lets other classes find a specific
+     * object of this class, in this case, searching for objects with a Long value
+     * is enabled.
+     */
 
-	public void addNewsstream(NewsstreamItem nsi) {
+    public static final Finder<Long, Game> find = new Finder<Long, Game>(Long.class, Game.class);
 
-		Newsstream.add(nsi);
+    public void setPublish(boolean b) {
+        publish = b;
 
-		this.update();
+    }
 
-	}
+    public void setPublishOnAllPortals(boolean b) {
 
-	@JSON(include = false)
-	public User getOwner() {
+        for (ProviderGames pg : portals) {
 
-		return owner;
-	}
+            pg.setVisibility(b);
+            pg.update();
 
-	public void setFile(String file) {
+        }
 
-		zip = file;
-	}
+    }
 
-	@JSON(include = false)
-	public boolean hasFile() {
+    @JSON(include = true)
+    public boolean getPublish() {
+        return publish;
 
-		boolean help = false;
-		try {
-			if (!zip.equals("none")) {
-				help = true;
-			}
-		} catch (RuntimeException e) {
+    }
 
-			System.out.println("Can't look for zip.");
-			e.printStackTrace();
+    public String getAbstractRelink(ObjectReference or, Scene s) {
+        String x = "";
 
-		}
+        if (or.getObjectType().equals("Part")) {
 
-		return help;
-	}
+            System.out.println("Relinking Abstract Value");
+            System.out.println("Searching for: " + or.getObjectId());
 
-	/**
-	 * 
-	 * Finder is a Play Framework Class that lets other classes find a specific
-	 * object of this class, in this case, searching for objects with a Long value
-	 * is enabled.
-	 * 
-	 */
+            boolean done = false;
+            List<Part> allparts = s.getParts();
 
-	public static final Finder<Long, Game> find = new Finder<Long, Game>(Long.class, Game.class);
+            int count = 0;
+            while (done == false && count < 1000) {
+                for (Part p : allparts) {
 
-	public void setPublish(boolean b) {
-		publish = b;
+                    if (p.isScene() == false) {
 
-	}
+                        System.out.println("Found: " + p.getParent());
 
-	public void setPublishOnAllPortals(boolean b) {
+                        if (or.getObjectId().equals(p.getParent().getId())) {
 
-		for (ProviderGames pg : portals) {
+                            x = String.valueOf(p.getMission().getId());
+                            System.out.println("Relinking to:" + x + ";");
+                            done = true;
 
-			pg.setVisibility(b);
-			pg.update();
+                        }
 
-		}
+                    }
 
-	}
+                }
 
-	@JSON(include = true)
-	public boolean getPublish() {
-		return publish;
+                if (done == false) {
+                    allparts = getAllParts();
+                }
 
-	}
+                count++;
+            }
 
-	public String getAbstractRelink(ObjectReference or, Scene s) {
-		String x = "";
+        }
 
-		if (or.getObjectType().equals("Part")) {
+        return x;
+    }
 
-			System.out.println("Relinking Abstract Value");
-			System.out.println("Searching for: " + or.getObjectId());
+    public ObjectReference getAbstractRelinkObject(ObjectReference or, Scene s) {
+        ObjectReference x = null;
 
-			boolean done = false;
-			List<Part> allparts = s.getParts();
+        if (or.getObjectType().equals("Part")) {
 
-			int count = 0;
-			while (done == false && count < 1000) {
-				for (Part p : allparts) {
+            System.out.println("Relinking Abstract Value");
+            System.out.println("Searching for: " + or.getObjectId());
 
-					if (p.isScene() == false) {
+            boolean done = false;
+            List<Part> allparts = s.getParts();
 
-						System.out.println("Found: " + p.getParent());
+            int count = 0;
+            while (done == false && count < 1000) {
+                for (Part p : allparts) {
 
-						if (or.getObjectId().equals(p.getParent().getId())) {
+                    if (p.isScene() == false) {
 
-							x = String.valueOf(p.getMission().getId());
-							System.out.println("Relinking to:" + x + ";");
-							done = true;
+                        System.out.println("Found: " + p.getParent());
 
-						}
+                        if (or.getObjectId().equals(p.getParent().getId())) {
 
-					}
+                            x = new ObjectReference(p);
+                            System.out.println("Relinking to:" + x + ";");
+                            done = true;
 
-				}
+                        }
 
-				if (done == false) {
-					allparts = getAllParts();
-				}
+                    }
 
-				count++;
-			}
+                }
 
-		}
+                if (done == false) {
+                    allparts = getAllParts();
+                }
+                count++;
+            }
 
-		return x;
-	}
+        } else if (or.getObjectType().equals("Content")) {
 
-	public ObjectReference getAbstractRelinkObject(ObjectReference or, Scene s) {
-		ObjectReference x = null;
+            List<Content> allcontents = s.getAllSubContents();
 
-		if (or.getObjectType().equals("Part")) {
+            for (Content c : allcontents) {
 
-			System.out.println("Relinking Abstract Value");
-			System.out.println("Searching for: " + or.getObjectId());
+                if (or.getObjectId().equals(c.getParentId())) {
 
-			boolean done = false;
-			List<Part> allparts = s.getParts();
+                    x = new ObjectReference(c);
 
-			int count = 0;
-			while (done == false && count < 1000) {
-				for (Part p : allparts) {
+                }
 
-					if (p.isScene() == false) {
+            }
 
-						System.out.println("Found: " + p.getParent());
+        } else if (or.getObjectType().equals("Attribute")) {
 
-						if (or.getObjectId().equals(p.getParent().getId())) {
+            System.out.println("Searching for Attribute: " + or.getObjectId());
 
-							x = new ObjectReference(p);
-							System.out.println("Relinking to:" + x + ";");
-							done = true;
+            List<Attribute> allattr = s.getAllSubAttributes();
 
-						}
+            for (Attribute at : allattr) {
+                System.out.println("found: " + at.getParentId());
 
-					}
+                if (at != null) {
+                    if (or.getObjectId().equals(at.getParentId())) {
+                        // we return a new object reference that links to the copy of the attribute that
+                        // the given object reference linked to.
+                        x = new ObjectReference(at);
 
-				}
+                        System.out.println("success!");
 
-				if (done == false) {
-					allparts = getAllParts();
-				}
-				count++;
-			}
+                    }
+                }
 
-		} else if (or.getObjectType().equals("Content")) {
+            }
 
-			List<Content> allcontents = s.getAllSubContents();
+        }
 
-			for (Content c : allcontents) {
+        return x;
+    }
 
-				if (or.getObjectId().equals(c.getParentId())) {
+    @JSON(include = false)
+    private List<Part> getAllParts() {
 
-					x = new ObjectReference(c);
+        List<Part> allparts = new ArrayList<Part>();
+        for (Part ap : parts) {
 
-				}
+            allparts.add(ap);
+            if (ap.isScene()) {
 
-			}
+                allparts.addAll(ap.getScene().getParts());
 
-		} else if (or.getObjectType().equals("Attribute")) {
+            }
 
-			System.out.println("Searching for Attribute: " + or.getObjectId());
+        }
 
-			List<Attribute> allattr = s.getAllSubAttributes();
+        return allparts;
+    }
 
-			for (Attribute at : allattr) {
-				System.out.println("found: " + at.getParentId());
+    public Game migrateTo(GameType gt) {
+        System.out.println("Migrating game " + id + " from type " + type.getId() + " to " + gt.getId());
 
-				if (at != null) {
-					if (or.getObjectId().equals(at.getParentId())) {
-						// we return a new object reference that links to the copy of the attribute that
-						// the given object reference linked to.
-						x = new ObjectReference(at);
+        GameCopyContext copyContext = new GameCopyContext();
 
-						System.out.println("success!");
+        Game g = new Game(name, gt);
+        g.save();
 
-					}
-				}
+        // PARTS
+        for (Part p : parts) {
+            boolean done = false;
 
-			}
+            if (p.isScene()) {
+                // SCENES:
+                SceneType old = p.getScene().getType();
 
-		}
+                for (SceneType npt : gt.getPossibleSceneTypes()) {
 
-		return x;
-	}
+                    if (npt.getName().equals(old.getName())) {
 
-	@JSON(include = false)
-	private List<Part> getAllParts() {
+                        done = true;
+                        Scene nss = p.getScene().migrateTo(npt, copyContext);
+                        nss.save();
+                        Part ns = new Part(nss);
+                        ns.save();
 
-		List<Part> allparts = new ArrayList<Part>();
-		for (Part ap : parts) {
+                        g.addPart(ns);
+                        g.update();
+                    }
+                }
 
-			allparts.add(ap);
-			if (ap.isScene()) {
+                if (done == false) {
+                    System.out.println("Didn't find SceneType " + old.getName());
+                }
+            } else {
+                // MISSIONS aka PAGES:
+                MissionType oldMissionType = p.getMission().getType();
 
-				allparts.addAll(ap.getScene().getParts());
+                PartType targetPartType = null;
 
-			}
+                String xmlTypeOld = oldMissionType.getXMLType();
+                if (xmlTypeOld.equals("NPCTalk") && oldMissionType.getName().equals("Text mit Bild")) {
+                    xmlTypeOld = "ImageWithText";
+                }
+                if (xmlTypeOld.equals("MultipleChoiceQuestion") && oldMissionType.getName().equals("Auswahlmenü")) {
+                    xmlTypeOld = "Menu";
+                }
 
-		}
+                for (PartType npt : gt.getPossiblePartTypes()) {
 
-		return allparts;
-	}
+                    if (!npt.isSceneType()) {
 
-	public Game migrateTo(GameType gt) {
+                        // TODO special solution for migration e.g. from
+                        // textmitbild to whatever or auswahlmenu
 
-		Map<Mission, Mission> missionbinder = new HashMap<Mission, Mission>();
-		Map<Hotspot, Hotspot> hotspotbinder = new HashMap<Hotspot, Hotspot>();
+                        if (npt.getMissionType().getXMLType().equals(xmlTypeOld)) {
 
-		Game g = new Game(name, gt);
-		g.save();
+                            targetPartType = npt;
 
-		// PARTS
+                            break;
+                        }
 
-		for (Part p : parts) {
+                    }
 
-			boolean done = false;
+                }
 
-			if (p.isScene()) {
+                if (targetPartType != null) {
+                    Part np = p.migrateTo(targetPartType.getMissionType(), copyContext);
 
-				// SCENES:
+                    g.addPart(np);
+                    g.update();
+                } else {
+                    System.out.println("Didn't find MissionType " + oldMissionType.getName());
+                }
+            }
 
-				SceneType old = p.getScene().getType();
-				System.out.println("SceneType search: " + old.getName());
+            g.update();
+        }
 
-				for (SceneType npt : gt.getPossibleSceneTypes()) {
+        // HOTSPOTS
 
-					if (npt.getName().equals(old.getName())) {
+        for (Hotspot hs : hotspots) {
+            boolean done = false;
+            HotspotType old = hs.getType();
 
-						done = true;
-						Scene nss = p.getScene().migrateTo(npt, missionbinder, hotspotbinder);
-						nss.save();
-						Part ns = new Part(nss);
-						ns.save();
+            for (HotspotType hst : gt.getPossibleHotspotTypes()) {
+                if (hst.getName().equals(old.getName())) {
+                    done = true;
 
-						g.addPart(ns);
-						g.update();
+                    g.addHotspot(hs.migrateTo(hst, copyContext));
+                    g.update();
+                }
+            }
 
-					}
+            if (done == false) {
+                System.out.println("Didn't find HotspotType " + old.getName());
+            }
 
-				}
+            g.update();
+        }
 
-				if (done == false) {
+        // ATTRIBUTES
+        for (Attribute at : attributes) {
+            boolean done = false;
+            AttributeType attt = at.getType();
 
-					System.out.println("Didn't find SceneType " + old.getName());
-				}
+            for (AttributeType atrt : gt.getAttributeTypes()) {
+                if (atrt.getName().equals(attt.getName())) {
+                    g.setAttribute(at.migrateTo(atrt, copyContext));
+                    g.update();
+                    done = true;
+                }
+            }
 
-			} else {
+            if (done == false) {
+                System.out.println("Didn't find AttributeType (Game) " + at.getName());
+            }
 
-				// MISSIONS aka PAGES:
+            g.update();
+        }
 
-				MissionType oldMissionType = p.getMission().getType();
+        // relinking attributes:
+        for (Attribute atr : g.getAllSubAttributes()) {
+            if (atr.getType().getFileType().equals("mission")) {
+                for (Mission x : getAllMissions()) {
 
-				PartType targetPartType = null;
+                    if (atr.getValue() != null) {
+                        if (x.getCopiedFrom() != null) {
+                            if (atr.getValue().equals(String.valueOf(x.getId()))) {
 
-				String xmlTypeOld = oldMissionType.getXMLType();
-				if (xmlTypeOld.equals("NPCTalk") && oldMissionType.getName().equals("Text mit Bild")) {
-					xmlTypeOld = "ImageWithText";
-				}
-				if (xmlTypeOld.equals("MultipleChoiceQuestion") && oldMissionType.getName().equals("Auswahlmenü")) {
-					xmlTypeOld = "Menu";
-				}
+                                atr.setValue(x.getName());
+                                atr.update();
+                            }
+                        }
+                    }
+                }
 
-				for (PartType npt : gt.getPossiblePartTypes()) {
+            } else if (atr.getType().getFileType().equals("hotspot")) {
+                for (Hotspot x : getAllHotspots()) {
 
-					if (!npt.isSceneType()) {
+                    if (atr.getValue() != null) {
+                        if (x.getParent() != null) {
+                            if (atr.getValue().equals(String.valueOf(x.getParent().getId()))) {
 
-						// TODO special solution for migration e.g. from
-						// textmitbild to whatever or auswahlmenu
+                                atr.setValue(String.valueOf(x.getId()));
+                                atr.update();
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-						if (npt.getMissionType().getXMLType().equals(xmlTypeOld)) {
+        System.out.println("Created new Game: " + g.getId());
 
-							targetPartType = npt;
+        // / RELINK
+        g.relinkMissionAndHotspots(copyContext);
+        g.renewObjectReferences(copyContext);
+        g.update();
 
-							break;
-						}
+        return g;
+    }
 
-					}
+    @JSON(include = false)
+    public Set<GameRights> getUsers() {
 
-				}
+        return rights;
+    }
 
-				if (targetPartType != null) {
-					Part np = p.migrateTo(targetPartType.getMissionType(), missionbinder);
+    public void deletePortal(ProviderGames pg) {
 
-					g.addPart(np);
-					g.update();
+        portals.remove(pg);
 
-				}
+    }
 
-				else {
+    public void setVersion(Long id2) {
+        if (id2 < Integer.MIN_VALUE || id2 > Integer.MAX_VALUE) {
 
-					System.out.println("Didn't find MissionType " + oldMissionType.getName());
-				}
+            System.out.println("CANNOT SAVE NEW VERSION ID");
 
-			}
+        } else {
+            version = new BigDecimal(id2).intValueExact();
+        }
 
-			g.update();
+    }
 
-		}
-		System.out.println("Done with Part Migration");
+    @JSON(include = false)
+    public Long getVersion() {
 
-		// HOTSPOTS
+        Long l = new Long(version);
+        return l;
+    }
 
-		for (Hotspot hs : hotspots) {
+    public void removeHotspot(Hotspot p) {
 
-			boolean done = false;
+        if (hotspots.contains(p)) {
 
-			HotspotType old = hs.getType();
+            hotspots.remove(p);
 
-			for (HotspotType hst : gt.getPossibleHotspotTypes()) {
+        }
 
-				if (hst.getName().equals(old.getName())) {
+    }
 
-					done = true;
+    @JSON(include = true)
+    public List<MenuItem> getMenuItems() {
+        return menuItems;
+    }
 
-					g.addHotspot(hs.migrateTo(hst, hotspotbinder));
-					g.update();
+    public void addMenuItem(MenuItem z) {
+        menuItems.add(z);
 
-				}
+    }
 
-			}
+    public void removeMenuItem(MenuItem p) {
 
-			if (done == false) {
+        List<MenuItem> all = new ArrayList<MenuItem>();
+        all.addAll(menuItems);
 
-				System.out.println("Didn't find HotspotType " + old.getName());
-			}
+        for (MenuItem am : all) {
 
-			g.update();
+            if (am.getId().equals(p.getId())) {
 
-		}
+                menuItems.remove(am);
 
-		System.out.println("Done with Hotspot Migration");
+            }
 
-		// ATTRIBUTES
+        }
 
-		for (Attribute at : attributes) {
-
-			boolean done = false;
-			AttributeType attt = at.getType();
-
-			for (AttributeType atrt : gt.getAttributeTypes()) {
-
-				if (atrt.getName().equals(attt.getName())) {
-
-					g.setAttribute(at.migrateTo(atrt));
-					g.update();
-					done = true;
-				}
-
-			}
-
-			if (done == false) {
-
-				System.out.println("Didn't find AttributeType (Game) " + at.getName());
-			}
-
-			g.update();
-
-		}
-		System.out.println("Done with Attribute Migration");
-
-		System.out.println("Starting Attribute Relinking");
-
-		for (Attribute atr : g.getAllSubAttributes()) {
-
-			if (atr.getType().getFileType().equals("mission")) {
-
-				for (Mission x : getAllMissions()) {
-
-					if (atr.getValue() != null) {
-						if (x.getCopiedFrom() != null) {
-							if (atr.getValue().equals(String.valueOf(x.getId()))) {
-
-								atr.setValue(x.getName());
-								atr.update();
-
-							}
-						}
-
-					}
-				}
-
-			} else if (atr.getType().getFileType().equals("hotspot")) {
-
-				for (Hotspot x : getAllHotspots()) {
-
-					if (atr.getValue() != null) {
-						if (x.getParent() != null) {
-							if (atr.getValue().equals(String.valueOf(x.getParent().getId()))) {
-
-								atr.setValue(String.valueOf(x.getId()));
-								atr.update();
-
-							}
-
-						}
-					}
-
-				}
-
-			}
-
-		}
-
-		System.out.println("Created new Game: " + g.getId());
-
-		// / RELINK
-
-		g.relinkMissionAndHotspots(missionbinder, hotspotbinder);
-		g.update();
-
-		return g;
-	}
-
-	@JSON(include = false)
-	public Set<GameRights> getUsers() {
-
-		return rights;
-	}
-
-	public void deletePortal(ProviderGames pg) {
-
-		portals.remove(pg);
-
-	}
-
-	public void setVersion(Long id2) {
-		if (id2 < Integer.MIN_VALUE || id2 > Integer.MAX_VALUE) {
-
-			System.out.println("CANNOT SAVE NEW VERSION ID");
-
-		} else {
-			version = new BigDecimal(id2).intValueExact();
-		}
-
-	}
-
-	@JSON(include = false)
-	public Long getVersion() {
-
-		Long l = new Long(version);
-		return l;
-	}
-
-	public void removeHotspot(Hotspot p) {
-
-		if (hotspots.contains(p)) {
-
-			hotspots.remove(p);
-
-		}
-
-	}
-
-	@JSON(include = true)
-	public List<MenuItem> getMenuItems() {
-		return menuItems;
-	}
-
-	public void addMenuItem(MenuItem z) {
-		menuItems.add(z);
-
-	}
-
-	public void removeMenuItem(MenuItem p) {
-
-		List<MenuItem> all = new ArrayList<MenuItem>();
-		all.addAll(menuItems);
-
-		for (MenuItem am : all) {
-
-			if (am.getId().equals(p.getId())) {
-
-				menuItems.remove(am);
-
-			}
-
-		}
-
-	}
+    }
 
 }

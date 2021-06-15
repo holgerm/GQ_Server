@@ -12,52 +12,7 @@ var inmapview = 0;
 var missionstillopen=0;
 var rulesstillopen = 0;
 
-var config = {
-		width: document.getElementById('unityPlayer').innerWidth,
-		height: document.getElementById('unityPlayer').innerHeight,
-		params: { enableDebugging:"0", logoimage: "@Global.SERVER_URL_2@routes.Assets.at("img/geoquestlogo.png")" }
-		
-	};
 
-var u = new UnityObject2(config);
-	
-	jQuery(function() {
-
-		var $missingScreen = jQuery("#unityPlayer").find(".missing");
-		var $brokenScreen = jQuery("#unityPlayer").find(".broken");
-		$missingScreen.hide();
-		$brokenScreen.hide();
-
-		u.observeProgress(function (progress) {
-			switch(progress.pluginStatus) {
-				case "broken":
-					$brokenScreen.find("a").click(function (e) {
-						e.stopPropagation();
-						e.preventDefault();
-						u.installPlugin();
-						return false;
-					});
-					$brokenScreen.show();
-				break;
-				case "missing":
-					$missingScreen.find("a").click(function (e) {
-						e.stopPropagation();
-						e.preventDefault();
-						u.installPlugin();
-						return false;
-					});
-					$missingScreen.show();
-				break;
-				case "installed":
-					$missingScreen.remove();
-				break;
-				case "first":
-				break;
-			}
-		});
-		u.initPlugin(jQuery("#unityPlayer")[0], "@Global.SERVER_URL_2/gqplayer/html.unity3d");
-	});
-	
 	
 function showLinkDescription(text){
 
@@ -2417,150 +2372,118 @@ $(window).resize(function() {
 
 
 
-function syncAttr(type,cid,aid,quotes){
+function syncAttr(type,cid,aid,quotes) {
 
-quotes = typeof quotes !== 'undefined' ? quotes : false;
+	quotes = typeof quotes !== 'undefined' ? quotes : false;
 
-var statusdiv = "status_"+type+"at"+cid+""+aid;
-if(document.getElementById(statusdiv).tagName == "IMG"){ 
-document.getElementById(statusdiv).src = '@Global.SERVER_URL_2@routes.Assets.at("img/syncing.gif")';
+	var statusdiv = "status_"+type+"at"+cid+""+aid;
+	if(document.getElementById(statusdiv).tagName == "IMG"){
+	document.getElementById(statusdiv).src = '@Global.SERVER_URL_2@routes.Assets.at("img/syncing.gif")';
 
-} else {
-    document.getElementById(statusdiv).innerHTML="syncing...";
+	} else {
+  	  document.getElementById(statusdiv).innerHTML="syncing...";
     
     }
-    
-    
-    
 
-var xmlhttp;
-if (window.XMLHttpRequest)
-  {// code for IE7+, Firefox, Chrome, Opera, Safari
-  xmlhttp=new XMLHttpRequest();
-  }
-else
-  {// code for IE6, IE5
-  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  }
+	var xmlhttp;
+	if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+	  xmlhttp=new XMLHttpRequest();
+	}
+	else {// code for IE6, IE5
+	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	}
 
-var field = document.getElementById(type+'at'+cid+''+aid);
-var value=" ";
+	var field = document.getElementById(type+'at'+cid+''+aid);
+	var value=" ";
 
 
-if(field.tagName && field.tagName.toLowerCase() == "textarea") {
+	if (field.tagName && field.tagName.toLowerCase() == "textarea") {
 
-if(field.value != ""){value = field.value; field.innerHTML = field.value; }
+		if (field.value != "") {
+			value = field.value;
+			field.innerHTML = field.value;
+		}
 
+		if (document.getElementById(type+'at'+cid+''+aid+'_parent')) {
+			var fieldparent = document.getElementById(type+'at'+cid+''+aid+'_parent');
+			if(fieldparent.value != "") {
+				fieldparent.value = field.value;
+			}
+		}
+	} else
+		if (field.type == 'text' || field.type == 'color' || field.type == 'hidden') {
+			if(field.value != "") {
+				value = field.value;
+				field.setAttribute("placeholder",field.value);
+				field.setAttribute("value",field.value);
+			}
 
-if(document.getElementById(type+'at'+cid+''+aid+'_parent')){
-var fieldparent = document.getElementById(type+'at'+cid+''+aid+'_parent');
-if(fieldparent.value != ""){
-fieldparent.value = field.value;
-}
-}
+			if (document.getElementById(type+'at'+cid+''+aid+'_parent')) {
+				var fieldparent = document.getElementById(type+'at'+cid+''+aid+'_parent');
+				fieldparent.value = field.value;
+			}
+		} else
+			if(field.type == 'number') {
+				value = 0;
+				if (field.value != "") {
+					value = field.value;
+					field.setAttribute("placeholder",field.value);
+					field.setAttribute("value",field.value);
+				}
 
-} else if(field.type == 'text' || field.type == 'color' || field.type == 'hidden'){
+				if (document.getElementById(type+'at'+cid+''+aid+'_parent')) {
+					var fieldparent = document.getElementById(type+'at'+cid+''+aid+'_parent');
+					fieldparent.value = field.value;
+				}
+			} else
+				if (field.type == 'checkbox') {
+					if (field.checked) {
+						value='true';
+						field.setAttribute("checked",true);
+					} else {
+						value='false';
+						field.setAttribute("checked",false);
+					}
 
+					if (document.getElementById(type+'at'+cid+''+aid+'_parent')) {
+						var fieldparent = document.getElementById(type+'at'+cid+''+aid+'_parent');
+						fieldparent.checked = field.checked;
+					}
+				} else
+					if (field.options[field.selectedIndex]) {
+						value = field.options[field.selectedIndex].value;
+						field.setAttribute("placeholder",value);
+						field.setAttribute("value",value);
 
-if(field.value != ""){value = field.value; field.setAttribute("placeholder",field.value); field.setAttribute("value",field.value); }
+						if(document.getElementById(type+'at'+cid+''+aid+'_parent')) {
+							var fieldparent = document.getElementById(type+'at'+cid+''+aid+'_parent');
+							fieldparent.selectedIndex = field.selectedIndex;
+						}
+					}
 
-if(document.getElementById(type+'at'+cid+''+aid+'_parent')){
-var fieldparent = document.getElementById(type+'at'+cid+''+aid+'_parent');
-fieldparent.value = field.value;
-}
-
-
-} else if(field.type == 'number'){
-value = 0;
-if(field.value != ""){value = field.value; field.setAttribute("placeholder",field.value); field.setAttribute("value",field.value); }
-
-if(document.getElementById(type+'at'+cid+''+aid+'_parent')){
-var fieldparent = document.getElementById(type+'at'+cid+''+aid+'_parent');
-fieldparent.value = field.value;
-}
-
-
-} else if(field.type == 'checkbox'){
-
-if(field.checked){ value='true'; field.setAttribute("checked",true); } else { value='false'; field.setAttribute("checked",false); }
-
-
-if(document.getElementById(type+'at'+cid+''+aid+'_parent')){
-var fieldparent = document.getElementById(type+'at'+cid+''+aid+'_parent');
-fieldparent.checked = field.checked;
-}
-
-} else if(field.options[field.selectedIndex]){
-
-
-value = field.options[field.selectedIndex].value;
-
-field.setAttribute("placeholder",value); field.setAttribute("value",value);
-
-if(document.getElementById(type+'at'+cid+''+aid+'_parent')){
-var fieldparent = document.getElementById(type+'at'+cid+''+aid+'_parent');
-fieldparent.selectedIndex = field.selectedIndex;
-}
-
-
-}
-
-
-
-xmlhttp.onreadystatechange=function()
-  {
-  if (xmlhttp.readyState==4 && xmlhttp.status==200)
-    {
-    
-    
-    
-if(document.getElementById(statusdiv).tagName == "IMG"){ 
-
-
-if(xmlhttp.responseText == "synced"){
-document.getElementById(statusdiv).src = '@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")';
-
-
-} else {
-
-
-
-
-alert(xmlhttp.responseText);
-
-
-}
-
-} else {
-    
-    
-    document.getElementById(statusdiv).innerHTML=xmlhttp.responseText;
-    
-    
-    }
-    
-    
-    }
-  }
-  
-  
-  
-  
-  
-  if(quotes == true){value = "\""+value+"\""; }
-  if(type != 'game'){
-xmlhttp.open("GET","@Global.SERVER_URL_2/editor/@g.getId/"+type+"/"+cid+"/setattr/"+aid+"/"+encodeURIComponent(value),true);
-
-} else {
-xmlhttp.open("GET","@Global.SERVER_URL_2/editor/@g.getId/setattr/"+aid+"/"+encodeURIComponent(value),true);
-
-
-}
-xmlhttp.send();
-
-
-
-
+					xmlhttp.onreadystatechange = function() {
+						if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+							if (document.getElementById(statusdiv).tagName == "IMG") {
+								if (xmlhttp.responseText == "synced") {
+									document.getElementById(statusdiv).src='@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")';
+								} else {
+									alert(xmlhttp.responseText);
+								}
+							} else {
+								document.getElementById(statusdiv).innerHTML = xmlhttp.responseText;
+							}
+						}
+					}
+					if (quotes == true) {
+						value = "\""+value+"\"";
+					}
+					if (type != 'game') {
+						xmlhttp.open("GET","@Global.SERVER_URL_2/editor/@g.getId/"+type+"/"+cid+
+								"/setattr/"+aid+"/"+encodeURIComponent(value),true);
+					} else {
+						xmlhttp.open("GET","@Global.SERVER_URL_2/editor/@g.getId/setattr/"+aid+"/"+encodeURIComponent(value),true);
+					}
+					xmlhttp.send();
 }
 
 
