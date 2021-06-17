@@ -40,831 +40,776 @@ import java.util.zip.ZipOutputStream;
 @Entity
 public class Rule extends Model {
 
-	@Id
-	private Long id;
+    @Id
+    private Long id;
 
-	@ManyToMany
-	private List<Condition> conditions;
+    @ManyToMany
+    private List<Condition> conditions;
 
-	@ManyToOne
-	private RuleSet subrules;
+    @ManyToOne
+    private RuleSet subrules;
 
-	@ManyToOne
-	private Action firstaction;
+    @ManyToOne
+    private Action firstaction;
 
-	@ManyToMany
-	private List<Action> actions;
+    @ManyToMany
+    private List<Action> actions;
 
-	@OneToOne
-	private Rule parent;
-
-	public Rule(Condition c, Rule r) {
-
-		subrules = new RuleSet(r);
-		subrules.save();
-		conditions = new ArrayList<Condition>();
-		conditions.add(c);
-
-	}
-
-	public Rule(Action a) {
+    @OneToOne
+    private Rule parent;
 
-		if (a != null) {
-			actions = new ArrayList<Action>();
-			actions.add(a);
-		} else {
-			System.out.println("Action is null?");
-		}
+    public Rule(Condition c, Rule r) {
 
-	}
+        subrules = new RuleSet(r);
+        subrules.save();
+        conditions = new ArrayList<Condition>();
+        conditions.add(c);
 
-	public Rule() {
+    }
 
-	}
-
-	// SETTER
-
-	public void setParent(Rule x) {
-		parent = x;
-	}
-
-	public boolean addCondition(Condition c) {
-		conditions = new ArrayList<Condition>();
-		conditions.add(c);
-		return true;
-	}
-
-	public boolean addSubRule(Rule r) {
-		boolean help = false;
-		if (actions.isEmpty()) {
-
-			if (subrules != null) {
-
-				subrules.addRule(r);
-				subrules.update();
-
-			} else {
-
-				subrules = new RuleSet(r);
-				subrules.save();
-				this.update();
-
-			}
-
-			help = true;
-		}
-		return help;
-	}
-
-	public void addAction(Action a) {
-		actions.add(a);
-		update();
-	}
-
-	public void action_left(Action a) {
-		int old_position = actions.indexOf(a);
-
-		if (old_position < 1) return;
-
-		Collections.swap(actions, old_position - 1, old_position);
-
-		update();
-
-//		if (old_position > 0) {
-//
-//			List<Action> helplist = new ArrayList<Action>();
-//			for (Action a_a : actions) {
-//
-//				helplist.add(a_a);
-//
-//			}
-//
-//			actions.clear();
-//			update();
-//
-//			List<Action> new_actions = new ArrayList<Action>();
-//
-//			for (int i = 0; i < helplist.size(); i++) {
-//				if (i == old_position - 1) {
-//					new_actions.add(a.copyMe(a.getName(), ));
-//					new_actions.add(helplist.get(i).copyMe(helplist.get(i).getName()));
-//					helplist.get(i).removeMe();
-//					i++;
-//				} else {
-//					new_actions.add(helplist.get(i).copyMe(helplist.get(i).getName()));
-//
-//				}
-//
-//				helplist.get(i).removeMe();
-//
-//			}
-//
-//			actions = new_actions;
-//			update();
-//		}
-
-	}
-
-	public void action_right(Action a) {
-		int old_position = actions.indexOf(a);
-
-		if (old_position == -1 || old_position >= actions.size() - 1)
-			return;
-
-		Collections.swap(actions, old_position, old_position + 1 );
-
-		update();
-
-//		if (old_position > -1 && old_position < actions.size() - 1) {
-//
-//			List<Action> helplist = new ArrayList<Action>();
-//			for (Action a_a : actions) {
-//
-//				helplist.add(a_a);
-//
-//			}
-//
-//			actions.clear();
-//			update();
-//
-//			List<Action> new_actions = new ArrayList<Action>();
-//
-//			for (int i = 0; i < helplist.size(); i++) {
-//				if (i == old_position) {
-//					i++;
-//					new_actions.add(helplist.get(i).copyMe(helplist.get(i).getName()));
-//					helplist.get(i - 1).removeMe();
-//					new_actions.add(a.copyMe(a.getName()));
-//				} else {
-//					new_actions.add(helplist.get(i).copyMe(helplist.get(i).getName()));
-//
-//				}
-//
-//				helplist.get(i).removeMe();
-//
-//			}
-//			actions = new_actions;
-//			update();
-//		}
-	}
-
-	// GETTER
-
-	@JSON(include = false)
-	public String getFirstAction() {
-
-		if (actions == null) {
-
-			return "Nicht initialisiert->Actions is null";
-		} else {
-
-			if (actions.isEmpty()) {
-
-				if (!(subrules == null)) {
-					if (!(subrules.isEmpty())) {
-
-						if (subrules.get(0).getActions().isEmpty()) {
-
-							return "Keine";
-
-						} else {
-
-							return subrules.get(0).getActions().get(0).getName();
-						}
-					} else {
-						return "Nicht initialisiert->Subrules is empty";
-					}
-				} else {
-					return "Nicht initialisiert-> Subrules is null";
-				}
-
-			} else {
-
-				return actions.get(0).getName();
-
-			}
-		}
-
-	}
-
-	@JSON(include = false)
-	public String getTrigger() {
-		if (actions.isEmpty()) {
-			return conditions.get(0).getTrigger();
-		} else {
-			return "Aktion";
-		}
-	}
-
-	@JSON(include = false)
-	public boolean isSimpleRule() {
-		boolean help = true;
-		if (actions.isEmpty()) {
-			help = false;
-		}
-		return help;
-	}
-
-	@JSON(include = false)
-	public List<Condition> getConditions() {
-		return conditions;
-	}
-
-	@JSON(include = false)
-	public List<Rule> getSubRules() {
-
-		if (subrules != null) {
-			return subrules.getRules();
-		} else {
-
-			List<Rule> x = new ArrayList<Rule>();
-			return x;
-
-		}
-	}
-
-	@JSON(include = true)
-	public List<Action> getActions() {
-		return actions;
-	}
-
-	@JSON(include = true)
-	public Long getId() {
-		return id;
-	}
-
-	public static final Finder<Long, Rule> find = new Finder<Long, Rule>(Long.class, Rule.class);
-
-	@JSON(include = false)
-	public Rule copyMe(GameCopyContext copyContext) {
-
-		Rule r = new Rule();
-		r.save();
-
-		int counter = 1;
-		for (Action aa : actions) {
-
-			r.addAction(aa.copyMe("" + counter, copyContext));
-			counter++;
-
-		}
-
-		r.update();
-
-		for (Condition ac : conditions) {
+    public Rule(Action a) {
 
-			r.addCondition(ac.copyMe(copyContext));
-			r.update();
-		}
+        if (a != null) {
+            actions = new ArrayList<Action>();
+            actions.add(a);
+        } else {
+            System.out.println("Action is null?");
+        }
 
-		// SUBRULES
-		if (subrules != null) {
-			for (Rule ar : subrules.getRules()) {
+    }
 
-				if (ar != null) {
-					r.addSubRule(ar.copyMe(copyContext));
+    public Rule() {
 
-					r.update();
-				}
-			}
-		}
+    }
 
-		r.setParent(this);
-		r.update();
+    // SETTER
 
-		return r;
-	}
+    public void setParent(Rule x) {
+        parent = x;
+    }
 
-	@JSON(include = false)
-	public boolean hasSubRules() {
+    public boolean addCondition(Condition c) {
+        conditions = new ArrayList<Condition>();
+        conditions.add(c);
+        return true;
+    }
 
-		if (subrules == null) {
-			return false;
-		} else {
-			return true;
-		}
+    public boolean addSubRule(Rule r) {
+        boolean help = false;
+        if (actions.isEmpty()) {
 
-	}
+            if (subrules != null) {
 
-	@JSON(include = false)
-	public void removeMe() {
+                subrules.addRule(r);
+                subrules.update();
 
-		try {
+            } else {
 
-			if (isSimpleRule()) {
-				// ACTIONS
-
-				Set<Action> acts = new HashSet<Action>();
-				acts.addAll(actions);
+                subrules = new RuleSet(r);
+                subrules.save();
+                this.update();
 
-				for (Action aa : acts) {
-					actions.remove(aa);
-					this.update();
-					aa.delete();
-				}
-			} else {
+            }
 
-				// CONDITIONS
+            help = true;
+        }
+        return help;
+    }
 
-				Set<Condition> cnds = new HashSet<Condition>();
-				cnds.addAll(conditions);
+    public void addAction(Action a) {
+        actions.add(a);
+        update();
+    }
 
-				for (Condition ac : cnds) {
-					conditions.remove(ac);
-					this.update();
-					ac.delete();
-				}
+    public void action_left(Action a) {
+        int leftPos = actions.indexOf(a);
+        moveAction(leftPos, leftPos - 1);
+    }
 
-				// SUBRULES
+    public void action_right(Action a) {
+        int rightPos = actions.indexOf(a);
+        moveAction(rightPos, rightPos + 1);
+    }
 
-				Set<Rule> rls = new HashSet<Rule>();
-				rls.addAll(subrules.getRules());
+    private void moveAction(int fromIndex, int toIndex) {
+        if (fromIndex < 0 || toIndex < 0 ||
+                fromIndex >= actions.size() || toIndex >= actions.size() ||
+                fromIndex == toIndex
+        )
+            return;
 
-				for (Rule ar : rls) {
-					subrules.remove(ar);
-					subrules.update();
-					this.update();
-					ar.removeMe();
-					ar.delete();
-				}
+        if (fromIndex > toIndex) {
+            int tmp = fromIndex;
+            fromIndex = toIndex;
+            toIndex = tmp;
+        }
 
-				RuleSet x = subrules;
-				subrules = null;
-				this.update();
+        // Do swap actions at oldPos and oldPos+1,
+        // but we need to do it manually and update in between since we must keep ids unique:
+        Action actionMoved = actions.get(fromIndex);
+        actions.remove(actionMoved);
+        update();
+        actions.add(toIndex, actionMoved);
+        update();
+    }
 
-				x.delete();
+    // GETTER
 
-			}
+    @JSON(include = false)
+    public String getFirstAction() {
 
-		} catch (RuntimeException e) {
+        if (actions == null) {
 
-			System.out.println("Can't delete Rule.");
-			e.printStackTrace();
+            return "Nicht initialisiert->Actions is null";
+        } else {
 
-		}
+            if (actions.isEmpty()) {
 
-	}
+                if (!(subrules == null)) {
+                    if (!(subrules.isEmpty())) {
 
-	public Element createXMLForWeb(Document doc, int i, Mission m, Game g) {
+                        if (subrules.get(0).getActions().isEmpty()) {
 
-		Element rule = null;
+                            return "Keine";
 
-		if (i != 0) {
+                        } else {
 
-			if (!actions.isEmpty()) {
+                            return subrules.get(0).getActions().get(0).getName();
+                        }
+                    } else {
+                        return "Nicht initialisiert->Subrules is empty";
+                    }
+                } else {
+                    return "Nicht initialisiert-> Subrules is null";
+                }
 
-				// SUBRULES
+            } else {
 
-				rule = doc.createElement("rule");
+                return actions.get(0).getName();
 
-				for (Condition ac : conditions) {
-					if (ac.isFull() && !ac.getFull().equals("") && !ac.getFull().equals(" ")) {
+            }
+        }
 
-						rule.appendChild(ac.getXML(doc, g, false));
+    }
 
-					}
-				}
+    @JSON(include = false)
+    public String getTrigger() {
+        if (actions.isEmpty()) {
+            return conditions.get(0).getTrigger();
+        } else {
+            return "Aktion";
+        }
+    }
 
-				// ACTIONS
-				for (Action a : actions) {
-					Element act = a.createXMLForWeb(doc, m, g);
-					if (act != null) {
-						rule.appendChild(act);
-					}
-				}
-			}
-		} else {
-			String triggername = getTrigger();
+    @JSON(include = false)
+    public boolean isSimpleRule() {
+        boolean help = true;
+        if (actions.isEmpty()) {
+            help = false;
+        }
+        return help;
+    }
 
-			if (triggername.equals("onFailure")) {
-				triggername = "onFail";
-			}
+    @JSON(include = false)
+    public List<Condition> getConditions() {
+        return conditions;
+    }
 
-			rule = doc.createElement(triggername);
+    @JSON(include = false)
+    public List<Rule> getSubRules() {
 
-			// SUBRULES
-			if (subrules != null) {
-				System.out.println("...not empty");
-				for (Rule ar : subrules.getRules()) {
+        if (subrules != null) {
+            return subrules.getRules();
+        } else {
 
-					Element rule2 = ar.createXMLForWeb(doc, i + 1, m, g);
-					if (rule2 != null) {
-						rule.appendChild(rule2);
-					}
-				}
-			}
-		}
+            List<Rule> x = new ArrayList<Rule>();
+            return x;
 
-		return rule;
-	}
+        }
+    }
 
-	public Element createXML(Document doc, int i, Mission m, Game g, ZipOutputStream zout) {
+    @JSON(include = true)
+    public List<Action> getActions() {
+        return actions;
+    }
 
-		Element rule = null;
+    @JSON(include = true)
+    public Long getId() {
+        return id;
+    }
 
-		if (i != 0) {
+    public static final Finder<Long, Rule> find = new Finder<Long, Rule>(Long.class, Rule.class);
 
-			if (!actions.isEmpty()) {
+    @JSON(include = false)
+    public Rule copyMe(GameCopyContext copyContext) {
 
-				System.out.println("Conditions");
+        Rule r = new Rule();
+        r.save();
 
-				// CONDITIONS
+        int counter = 1;
+        for (Action aa : actions) {
 
-				// SUBRULES
+            r.addAction(aa.copyMe("" + counter, copyContext));
+            counter++;
 
-				rule = doc.createElement("rule");
+        }
 
-				for (Condition ac : conditions) {
-					if (ac.isFull() && !ac.getFull().equals("") && !ac.getFull().equals(" ")) {
+        r.update();
 
-						rule.appendChild(ac.getXML(doc, g, false));
+        for (Condition ac : conditions) {
 
-					}
-				}
+            r.addCondition(ac.copyMe(copyContext));
+            r.update();
+        }
 
-				// ACTIONS
+        // SUBRULES
+        if (subrules != null) {
+            for (Rule ar : subrules.getRules()) {
 
-				System.out.println("Actions");
+                if (ar != null) {
+                    r.addSubRule(ar.copyMe(copyContext));
 
-				for (Action a : actions) {
+                    r.update();
+                }
+            }
+        }
 
-					Element act = a.createXML(doc, m, g, zout);
-					if (act != null) {
-						rule.appendChild(act);
-					}
+        r.setParent(this);
+        r.update();
 
-				}
+        return r;
+    }
 
-			}
+    @JSON(include = false)
+    public boolean hasSubRules() {
 
-		} else {
+        if (subrules == null) {
+            return false;
+        } else {
+            return true;
+        }
 
-			String triggername = getTrigger();
+    }
 
-			if (triggername.equals("onFailure")) {
-				triggername = "onFail";
-			}
+    @JSON(include = false)
+    public void removeMe() {
 
-			rule = doc.createElement(triggername);
-			System.out.println("Trigger Rule");
+        try {
 
-			// SUBRULES
-			if (subrules != null) {
-				System.out.println("...not empty");
-				for (Rule ar : subrules.getRules()) {
+            if (isSimpleRule()) {
+                // ACTIONS
 
-					Element rule2 = ar.createXML(doc, i + 1, m, g, zout);
-					if (rule2 != null) {
-						rule.appendChild(rule2);
-					}
+                Set<Action> acts = new HashSet<Action>();
+                acts.addAll(actions);
 
-				}
-			}
+                for (Action aa : acts) {
+                    actions.remove(aa);
+                    this.update();
+                    aa.delete();
+                }
+            } else {
 
-		}
+                // CONDITIONS
 
-		return rule;
+                Set<Condition> cnds = new HashSet<Condition>();
+                cnds.addAll(conditions);
 
-	}
+                for (Condition ac : cnds) {
+                    conditions.remove(ac);
+                    this.update();
+                    ac.delete();
+                }
 
-	public Element createXML(Document doc, int i, Hotspot h, Game g, ZipOutputStream zout) {
+                // SUBRULES
 
-		Element rule = null;
+                Set<Rule> rls = new HashSet<Rule>();
+                rls.addAll(subrules.getRules());
 
-		if (i != 0) {
+                for (Rule ar : rls) {
+                    subrules.remove(ar);
+                    subrules.update();
+                    this.update();
+                    ar.removeMe();
+                    ar.delete();
+                }
 
-			if (!actions.isEmpty()) {
+                RuleSet x = subrules;
+                subrules = null;
+                this.update();
 
-				System.out.println("Conditions");
+                x.delete();
 
-				// CONDITIONS
+            }
 
-				// SUBRULES
+        } catch (RuntimeException e) {
 
-				rule = doc.createElement("rule");
+            System.out.println("Can't delete Rule.");
+            e.printStackTrace();
 
-				for (Condition ac : conditions) {
-					if (ac.isFull() && !ac.getFull().equals("") && !ac.getFull().equals(" ")) {
+        }
 
-						Element the_if = doc.createElement("if");
+    }
 
-						InputStream inputStream = new ByteArrayInputStream(ac.getFull().getBytes());
-						DocumentBuilderFactory newInstance = DocumentBuilderFactory.newInstance();
-						newInstance.setNamespaceAware(true);
+    public Element createXMLForWeb(Document doc, int i, Mission m, Game g) {
 
-						DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-						DocumentBuilder docBuilder = null;
-						try {
-							docBuilder = docFactory.newDocumentBuilder();
-						} catch (ParserConfigurationException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
+        Element rule = null;
 
-						Document parse = docBuilder.newDocument();
+        if (i != 0) {
 
-						the_if.appendChild(doc.adoptNode(parse.getFirstChild()));
-						rule.appendChild(the_if);
-						try {
-							parse = newInstance.newDocumentBuilder().parse(inputStream);
-						} catch (SAXException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (ParserConfigurationException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+            if (!actions.isEmpty()) {
 
-					}
-				}
+                // SUBRULES
 
-				// ACTIONS
+                rule = doc.createElement("rule");
 
-				System.out.println("Actions");
+                for (Condition ac : conditions) {
+                    if (ac.isFull() && !ac.getFull().equals("") && !ac.getFull().equals(" ")) {
 
-				for (Action a : actions) {
+                        rule.appendChild(ac.getXML(doc, g, false));
 
-					Element act = a.createXML(doc, g.getLastMission(), g, zout);
-					if (act != null) {
-						rule.appendChild(act);
-					}
+                    }
+                }
 
-				}
+                // ACTIONS
+                for (Action a : actions) {
+                    Element act = a.createXMLForWeb(doc, m, g);
+                    if (act != null) {
+                        rule.appendChild(act);
+                    }
+                }
+            }
+        } else {
+            String triggername = getTrigger();
 
-			}
+            if (triggername.equals("onFailure")) {
+                triggername = "onFail";
+            }
 
-		} else {
+            rule = doc.createElement(triggername);
 
-			rule = doc.createElement(getTrigger());
-			System.out.println("Trigger Rule");
+            // SUBRULES
+            if (subrules != null) {
+                System.out.println("...not empty");
+                for (Rule ar : subrules.getRules()) {
 
-			// SUBRULES
-			if (subrules != null) {
-				System.out.println("...not empty");
-				for (Rule ar : subrules.getRules()) {
+                    Element rule2 = ar.createXMLForWeb(doc, i + 1, m, g);
+                    if (rule2 != null) {
+                        rule.appendChild(rule2);
+                    }
+                }
+            }
+        }
 
-					Element rule2 = ar.createXML(doc, i + 1, g.getLastMission(), g, zout);
-					if (rule2 != null) {
-						rule.appendChild(rule2);
-					}
+        return rule;
+    }
 
-				}
-			}
+    public Element createXML(Document doc, int i, Mission m, Game g, ZipOutputStream zout) {
 
-		}
+        Element rule = null;
 
-		return rule;
+        if (i != 0) {
 
-	}
+            if (!actions.isEmpty()) {
 
-	public Element createXMLForWeb(Document doc, int i, Hotspot h, Game g) {
+                System.out.println("Conditions");
 
-		Element rule = null;
+                // CONDITIONS
 
-		if (i != 0) {
+                // SUBRULES
 
-			if (!actions.isEmpty()) {
-				// SUBRULES
+                rule = doc.createElement("rule");
 
-				rule = doc.createElement("rule");
+                for (Condition ac : conditions) {
+                    if (ac.isFull() && !ac.getFull().equals("") && !ac.getFull().equals(" ")) {
 
-				for (Condition ac : conditions) {
-					if (ac.isFull() && !ac.getFull().equals("") && !ac.getFull().equals(" ")) {
+                        rule.appendChild(ac.getXML(doc, g, false));
 
-						Element the_if = doc.createElement("if");
+                    }
+                }
 
-						InputStream inputStream = new ByteArrayInputStream(ac.getFull().getBytes());
-						DocumentBuilderFactory newInstance = DocumentBuilderFactory.newInstance();
-						newInstance.setNamespaceAware(true);
+                // ACTIONS
 
-						DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-						DocumentBuilder docBuilder = null;
-						try {
-							docBuilder = docFactory.newDocumentBuilder();
-						} catch (ParserConfigurationException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
+                System.out.println("Actions");
 
-						Document parse = docBuilder.newDocument();
+                for (Action a : actions) {
 
-						the_if.appendChild(doc.adoptNode(parse.getFirstChild()));
-						rule.appendChild(the_if);
-						try {
-							parse = newInstance.newDocumentBuilder().parse(inputStream);
-						} catch (SAXException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (ParserConfigurationException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+                    Element act = a.createXML(doc, m, g, zout);
+                    if (act != null) {
+                        rule.appendChild(act);
+                    }
 
-					}
-				}
+                }
 
-				// ACTIONS
+            }
 
-				System.out.println("Actions");
+        } else {
 
-				for (Action a : actions) {
+            String triggername = getTrigger();
 
-					Element act = a.createXMLForWeb(doc, g.getLastMission(), g);
-					if (act != null) {
-						rule.appendChild(act);
-					}
+            if (triggername.equals("onFailure")) {
+                triggername = "onFail";
+            }
 
-				}
+            rule = doc.createElement(triggername);
+            System.out.println("Trigger Rule");
 
-			}
+            // SUBRULES
+            if (subrules != null) {
+                System.out.println("...not empty");
+                for (Rule ar : subrules.getRules()) {
 
-		} else {
+                    Element rule2 = ar.createXML(doc, i + 1, m, g, zout);
+                    if (rule2 != null) {
+                        rule.appendChild(rule2);
+                    }
 
-			rule = doc.createElement(getTrigger());
-			System.out.println("Trigger Rule");
+                }
+            }
 
-			// SUBRULES
-			if (subrules != null) {
-				System.out.println("...not empty");
-				for (Rule ar : subrules.getRules()) {
+        }
 
-					Element rule2 = ar.createXMLForWeb(doc, i + 1, g.getLastMission(), g);
-					if (rule2 != null) {
-						rule.appendChild(rule2);
-					}
+        return rule;
 
-				}
-			}
+    }
 
-		}
+    public Element createXML(Document doc, int i, Hotspot h, Game g, ZipOutputStream zout) {
 
-		return rule;
+        Element rule = null;
 
-	}
+        if (i != 0) {
 
-	public void deleteAction(Action a) {
+            if (!actions.isEmpty()) {
 
-		if (isSimpleRule()) {
+                System.out.println("Conditions");
 
-			if (actions.contains(a)) {
+                // CONDITIONS
 
-				actions.remove(a);
-				this.update();
-			}
+                // SUBRULES
 
-		}
+                rule = doc.createElement("rule");
 
-	}
+                for (Condition ac : conditions) {
+                    if (ac.isFull() && !ac.getFull().equals("") && !ac.getFull().equals(" ")) {
 
-	public void deleteSubRule(Rule z) {
+                        Element the_if = doc.createElement("if");
 
-		subrules.remove(z);
-		subrules.update();
+                        InputStream inputStream = new ByteArrayInputStream(ac.getFull().getBytes());
+                        DocumentBuilderFactory newInstance = DocumentBuilderFactory.newInstance();
+                        newInstance.setNamespaceAware(true);
 
-	}
+                        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+                        DocumentBuilder docBuilder = null;
+                        try {
+                            docBuilder = docFactory.newDocumentBuilder();
+                        } catch (ParserConfigurationException e1) {
+                            // TODO Auto-generated catch block
+                            e1.printStackTrace();
+                        }
 
-	public Rule migrateTo(RuleType nrt, GameCopyContext copyContext) {
-		System.out.println("Rule.migrateTo: " + nrt.getName());
-		Rule r = new Rule();
-		r.save();
+                        Document parse = docBuilder.newDocument();
 
-		for (Action aa : actions) {
+                        the_if.appendChild(doc.adoptNode(parse.getFirstChild()));
+                        rule.appendChild(the_if);
+                        try {
+                            parse = newInstance.newDocumentBuilder().parse(inputStream);
+                        } catch (SAXException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        } catch (ParserConfigurationException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
 
-			boolean done = false;
+                    }
+                }
 
-			ActionType at = aa.getType();
+                // ACTIONS
 
-			for (ActionType nat : nrt.getPossibleActionTypes()) {
+                System.out.println("Actions");
 
-				if (nat.getXMLType().equals(at.getXMLType())) {
+                for (Action a : actions) {
 
-					r.addAction(aa.migrateTo(nat, nrt, copyContext));
-					r.update();
-					done = true;
+                    Element act = a.createXML(doc, g.getLastMission(), g, zout);
+                    if (act != null) {
+                        rule.appendChild(act);
+                    }
 
-				}
+                }
 
-			}
+            }
 
-			if (done == false) {
+        } else {
 
-				System.out.println("Didn't find ActionType " + at.getXMLType());
-			}
+            rule = doc.createElement(getTrigger());
+            System.out.println("Trigger Rule");
 
-		}
+            // SUBRULES
+            if (subrules != null) {
+                System.out.println("...not empty");
+                for (Rule ar : subrules.getRules()) {
 
-		r.update();
+                    Element rule2 = ar.createXML(doc, i + 1, g.getLastMission(), g, zout);
+                    if (rule2 != null) {
+                        rule.appendChild(rule2);
+                    }
 
-		for (Condition ac : conditions) {
+                }
+            }
 
-			r.addCondition(ac.copyMe(copyContext));
-			r.update();
+        }
 
-		}
+        return rule;
 
-		// SUBRULES
-		if (subrules != null) {
-			for (Rule ar : subrules.getRules()) {
+    }
 
-				if (ar != null) {
-					r.addSubRule(ar.migrateTo(nrt, copyContext));
+    public Element createXMLForWeb(Document doc, int i, Hotspot h, Game g) {
 
-					r.update();
-				}
+        Element rule = null;
 
-			}
-		}
+        if (i != 0) {
 
-		r.setParent(parent);
-		r.update();
+            if (!actions.isEmpty()) {
+                // SUBRULES
 
-		return r;
-	}
+                rule = doc.createElement("rule");
 
-	@JSON(include = false)
-	public Rule getParent() {
-		return parent;
-	}
+                for (Condition ac : conditions) {
+                    if (ac.isFull() && !ac.getFull().equals("") && !ac.getFull().equals(" ")) {
 
-	public Element createXML(Document doc, int i, MenuItem menuItem, Game g, ZipOutputStream zout) {
+                        Element the_if = doc.createElement("if");
 
-		Element rule = null;
-		Element rule1 = null;
+                        InputStream inputStream = new ByteArrayInputStream(ac.getFull().getBytes());
+                        DocumentBuilderFactory newInstance = DocumentBuilderFactory.newInstance();
+                        newInstance.setNamespaceAware(true);
 
-		if (!actions.isEmpty()) {
+                        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+                        DocumentBuilder docBuilder = null;
+                        try {
+                            docBuilder = docFactory.newDocumentBuilder();
+                        } catch (ParserConfigurationException e1) {
+                            // TODO Auto-generated catch block
+                            e1.printStackTrace();
+                        }
 
-			System.out.println("Conditions");
+                        Document parse = docBuilder.newDocument();
 
-			// CONDITIONS
+                        the_if.appendChild(doc.adoptNode(parse.getFirstChild()));
+                        rule.appendChild(the_if);
+                        try {
+                            parse = newInstance.newDocumentBuilder().parse(inputStream);
+                        } catch (SAXException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        } catch (ParserConfigurationException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
 
-			// SUBRULES
+                    }
+                }
 
-			rule1 = doc.createElement("rule");
-			rule = doc.createElement("onSelect");
+                // ACTIONS
 
-			rule1.appendChild(rule);
+                System.out.println("Actions");
 
-			for (Condition ac : conditions) {
-				if (ac.isFull() && !ac.getFull().equals("") && !ac.getFull().equals(" ")) {
+                for (Action a : actions) {
 
-					Element the_if = doc.createElement("if");
+                    Element act = a.createXMLForWeb(doc, g.getLastMission(), g);
+                    if (act != null) {
+                        rule.appendChild(act);
+                    }
 
-					InputStream inputStream = new ByteArrayInputStream(ac.getFull().getBytes());
-					DocumentBuilderFactory newInstance = DocumentBuilderFactory.newInstance();
-					newInstance.setNamespaceAware(true);
+                }
 
-					DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-					DocumentBuilder docBuilder = null;
-					try {
-						docBuilder = docFactory.newDocumentBuilder();
-					} catch (ParserConfigurationException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+            }
 
-					Document parse = docBuilder.newDocument();
+        } else {
 
-					the_if.appendChild(doc.adoptNode(parse.getFirstChild()));
-					rule.appendChild(the_if);
-					try {
-						parse = newInstance.newDocumentBuilder().parse(inputStream);
-					} catch (SAXException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (ParserConfigurationException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+            rule = doc.createElement(getTrigger());
+            System.out.println("Trigger Rule");
 
-				}
-			}
+            // SUBRULES
+            if (subrules != null) {
+                System.out.println("...not empty");
+                for (Rule ar : subrules.getRules()) {
 
-			// ACTIONS
+                    Element rule2 = ar.createXMLForWeb(doc, i + 1, g.getLastMission(), g);
+                    if (rule2 != null) {
+                        rule.appendChild(rule2);
+                    }
 
-			System.out.println("Actions");
+                }
+            }
 
-			for (Action a : actions) {
+        }
 
-				Element act = a.createXML(doc, g.getLastMission(), g, zout);
-				if (act != null) {
-					rule.appendChild(act);
-				}
+        return rule;
 
-			}
+    }
 
-		}
+    public void deleteAction(Action a) {
 
-		return rule1;
+        if (isSimpleRule()) {
 
-	}
+            if (actions.contains(a)) {
+
+                actions.remove(a);
+                this.update();
+            }
+
+        }
+
+    }
+
+    public void deleteSubRule(Rule z) {
+
+        subrules.remove(z);
+        subrules.update();
+
+    }
+
+    public Rule migrateTo(RuleType nrt, GameCopyContext copyContext) {
+        System.out.println("Rule.migrateTo: " + nrt.getName());
+        Rule r = new Rule();
+        r.save();
+
+        for (Action aa : actions) {
+
+            boolean done = false;
+
+            ActionType at = aa.getType();
+
+            for (ActionType nat : nrt.getPossibleActionTypes()) {
+
+                if (nat.getXMLType().equals(at.getXMLType())) {
+
+                    r.addAction(aa.migrateTo(nat, nrt, copyContext));
+                    r.update();
+                    done = true;
+
+                }
+
+            }
+
+            if (done == false) {
+
+                System.out.println("Didn't find ActionType " + at.getXMLType());
+            }
+
+        }
+
+        r.update();
+
+        for (Condition ac : conditions) {
+
+            r.addCondition(ac.copyMe(copyContext));
+            r.update();
+
+        }
+
+        // SUBRULES
+        if (subrules != null) {
+            for (Rule ar : subrules.getRules()) {
+
+                if (ar != null) {
+                    r.addSubRule(ar.migrateTo(nrt, copyContext));
+
+                    r.update();
+                }
+
+            }
+        }
+
+        r.setParent(parent);
+        r.update();
+
+        return r;
+    }
+
+    @JSON(include = false)
+    public Rule getParent() {
+        return parent;
+    }
+
+    public Element createXML(Document doc, int i, MenuItem menuItem, Game g, ZipOutputStream zout) {
+
+        Element rule = null;
+        Element rule1 = null;
+
+        if (!actions.isEmpty()) {
+
+            System.out.println("Conditions");
+
+            // CONDITIONS
+
+            // SUBRULES
+
+            rule1 = doc.createElement("rule");
+            rule = doc.createElement("onSelect");
+
+            rule1.appendChild(rule);
+
+            for (Condition ac : conditions) {
+                if (ac.isFull() && !ac.getFull().equals("") && !ac.getFull().equals(" ")) {
+
+                    Element the_if = doc.createElement("if");
+
+                    InputStream inputStream = new ByteArrayInputStream(ac.getFull().getBytes());
+                    DocumentBuilderFactory newInstance = DocumentBuilderFactory.newInstance();
+                    newInstance.setNamespaceAware(true);
+
+                    DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder docBuilder = null;
+                    try {
+                        docBuilder = docFactory.newDocumentBuilder();
+                    } catch (ParserConfigurationException e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                    }
+
+                    Document parse = docBuilder.newDocument();
+
+                    the_if.appendChild(doc.adoptNode(parse.getFirstChild()));
+                    rule.appendChild(the_if);
+                    try {
+                        parse = newInstance.newDocumentBuilder().parse(inputStream);
+                    } catch (SAXException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (ParserConfigurationException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+
+            // ACTIONS
+
+            System.out.println("Actions");
+
+            for (Action a : actions) {
+
+                Element act = a.createXML(doc, g.getLastMission(), g, zout);
+                if (act != null) {
+                    rule.appendChild(act);
+                }
+
+            }
+
+        }
+
+        return rule1;
+
+    }
 
 }
