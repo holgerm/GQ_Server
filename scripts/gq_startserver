@@ -23,7 +23,7 @@ JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/
 GQ_EDITOR_MODE_INSECURE=true
 export GQ_EDITOR_MODE_INSECURE
 
-# check wether $GQ_SERVER_PLAY_BASE_DIR is set:
+# check whether $GQ_SERVER_PLAY_BASE_DIR is set:
 if [ -z ${GQ_SERVER_PLAY_BASE_DIR+valueIfSet} ]; then
 	echo "ERROR: This script assumes that you have set the environment variable GQ_SERVER_PLAY_BASE_DIR pointing to the application directory."
 	echo "  exiting."
@@ -54,10 +54,10 @@ fi
 # TODO allow multiple additional parameters
 if [ $# -gt 1 ]; then
 	ADDITIONAL_PARAM=$2 
-	echo "  using additonal parameter: $ADDITIONAL_PARAM"
+	echo "  using additional parameter: $ADDITIONAL_PARAM"
 else
 	ADDITIONAL_PARAM=""
-	echo "  no addtitonal parameter given."
+	echo "  no additional parameter given."
 fi
 
 # DO it:
