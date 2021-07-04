@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -2427,6 +2429,31 @@ public class Portal extends Controller {
 	}
 
 	public static Result getGamesInfoListJSON(Long pid) {
+		File theDir = new File("public/portalfiles/" + pid);
+		if (!theDir.exists())
+			theDir.mkdirs();
+
+		File listJsonFile = new File(theDir, "publicgames.json");
+		String absoluteFilePath = listJsonFile.getAbsolutePath();
+
+		String jsonResult = "[]"; // empty list as default
+		if (!listJsonFile.exists()) {
+			return ok("[]");
+		}
+
+		Path thePath = Paths.get(absoluteFilePath);
+		try {
+			String textRead = new String(Files.readAllBytes(thePath));
+			jsonResult = textRead;
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+			return ok("[]");
+		}
+
+		return ok(jsonResult);
+	}
+
+	public static String generatePublicGamesListAsString(Long pid) {
 		JSONSerializer postDetailsSerializer = new JSONSerializer()
 				.include("id", "typeID", "name", "hotspots", "hotspots.longitude", "hotspots.latitude", "metadata",
 						"metadata.key", "metadata.value", "lastUpdate", "version", "featuredImagePath", "iconPath")
@@ -2446,7 +2473,7 @@ public class Portal extends Controller {
 
 			}
 		}
-		return ok(postDetailsSerializer.serialize(gameInfos));
+		return postDetailsSerializer.serialize(gameInfos);
 	}
 
 	/*

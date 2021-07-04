@@ -4,10 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import models.Device;
 import models.Game;
@@ -3980,6 +3981,20 @@ public class Editor extends Controller {
                     g.lastUpdate = new Date();
                     g.createXML();
 
+                    // a game has been published, hence we update the public games list file:
+                    String content = Portal.generatePublicGamesListAsString(p.getId());
+                    File theDir = new File("public/portalfiles/" + p.getId());
+                    if (!theDir.exists())
+                        theDir.mkdirs();
+
+                    File f = new File(theDir, "publicgames.json");
+                    String absoluteFilePath = f.getAbsolutePath();
+                    Path thePath = Paths.get(absoluteFilePath);
+                    try {
+                        Files.write(thePath, content.getBytes());
+                    } catch (IOException ioe) {
+                        ioe.printStackTrace();
+                    }
                 } else {
 
                     String help = "false";
