@@ -54,7 +54,6 @@ local.properties
 .buildpath
 
 # sbteclipse plugin
-.target
 
 # Code Recommenders
 .recommenders/
@@ -66,3 +65,4 @@ local.properties
 .cache-main
 .scala_dependencies
 .worksheet
+publicgames.json
