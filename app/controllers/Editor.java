@@ -52,8 +52,6 @@ public class Editor extends Controller {
     @Restrict(@Group(Application.USER_ROLE))
     public static Result getEditor(Long gid) {
 
-        System.out.println("getEditor ### 1");
-
         if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
             return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
@@ -259,7 +257,6 @@ public class Editor extends Controller {
                     return badRequest(views.html.norights.render("Die Mission existiert nicht"));
 
                 } else {
-                    System.out.println("editor_rulesinmission.render(" + gid + ", " + pid + ")");
                     return ok(views.html.editor.editor_rulesinmission.render(Game.find.byId(gid),
                             Mission.find.byId(pid)));
                 }
@@ -1795,8 +1792,6 @@ public class Editor extends Controller {
 
         }
 
-        System.out.println("Starting Scene Factory");
-
         if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
             return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
@@ -1815,12 +1810,8 @@ public class Editor extends Controller {
                 if (GameType.find.where().eq("id", gtid).findRowCount() != 1) {
 
                     return badRequest(views.html.norights.render("Der Gametyp existiert nicht"));
-
                 } else {
-
                     GameType gt = GameType.find.byId(gtid);
-
-                    System.out.println("Creating Scene...");
                     SceneType s = new SceneType(name);
                     s.save();
                     s.addDefaultsFromGame(g);
@@ -1829,46 +1820,27 @@ public class Editor extends Controller {
                     gt.update();
 
                     return ok(views.html.gteditor.gteditor_newscene.render(s, gt, ""));
-
                 }
-
             }
-
         }
-
     }
 
     @Restrict(@Group(Application.USER_ROLE))
     public static Result deleteSceneTypeInGameType(Long sid, Long gtid) {
-
-        System.out.println("Starting Scene Deletion");
-
         if (SceneType.find.where().eq("id", sid).findRowCount() != 1) {
-
             return badRequest(views.html.norights.render("Der SceneType existiert nicht"));
-
         } else {
-
             SceneType s = SceneType.find.byId(sid);
 
             if (GameType.find.where().eq("id", gtid).findRowCount() != 1) {
-
                 return badRequest(views.html.norights.render("Der Gametyp existiert nicht"));
-
             } else {
-
                 GameType gt = GameType.find.byId(gtid);
-
                 gt.deletePossibleSceneType(s);
-
                 gt.update();
-
                 return ok("Deleted");
-
             }
-
         }
-
     }
 
     @Restrict(@Group(Application.USER_ROLE))
@@ -2018,9 +1990,6 @@ public class Editor extends Controller {
                         return badRequest(views.html.norights.render("Die Rule existiert nicht"));
 
                     } else {
-
-                        System.out.println("Trying to add action in: " + rid);
-
                         Rule r = Rule.find.byId(rid);
 
                         ActionType y = ActionType.find.byId(atype);
@@ -2030,9 +1999,6 @@ public class Editor extends Controller {
 
                         r.addAction(a);
                         r.update();
-
-                        System.out.println("success..");
-
                         return ok(String.valueOf(a.getId()));
 
                     }
@@ -2086,11 +2052,8 @@ public class Editor extends Controller {
                         Action a = Action.find.byId(aid);
 
                         if (direction.equals("left")) {
-                            System.out.println("moving left");
                             r.action_left(a);
                         } else if (direction.equals("right")) {
-                            System.out.println("moving right");
-
                             r.action_right(a);
                         }
 
@@ -2145,9 +2108,6 @@ public class Editor extends Controller {
                             return badRequest(views.html.norights.render("Der Attributtyp existiert nicht"));
 
                         } else {
-
-                            System.out.println("Trying to add action in: action " + aid + " (atr" + atrid + ")");
-
                             AttributeType atr = AttributeType.find.byId(atrid);
 
                             ActionType y = ActionType.find.byId(atype);
@@ -2174,9 +2134,6 @@ public class Editor extends Controller {
                                 c.update();
 
                             }
-
-                            System.out.println("success..");
-
                             return ok(String.valueOf(a.getId()));
 
                         }
@@ -2224,9 +2181,6 @@ public class Editor extends Controller {
 
                     Condition x = new Condition(true, text);
                     x.save();
-
-                    System.out.println(text);
-
                     boolean done = false;
 
                     r.addCondition(x);
@@ -2267,9 +2221,6 @@ public class Editor extends Controller {
             } else {
 
                 Game g = Game.find.byId(gid);
-
-                System.out.println(text);
-
                 if (Rule.find.where().eq("id", rid).findRowCount() != 1) {
 
                     System.out.println("Die Rule existiert nicht");
@@ -3934,107 +3885,89 @@ public class Editor extends Controller {
                 Game.find.byId(gid)) == false) {
 
             return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
-
         }
+
 
         if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
             return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
-
         } else {
 
             if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
                     Game.find.byId(gid)) == false) {
 
                 return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
-
-            } else {
-
-                ProviderPortal p = Application.getLocalPortal();
-
-                boolean doit = true;
-                String help1 = "false";
-                if (p.getContentHtmlParameter("general.games.adminshavetopublish") != null) {
-
-                    help1 = p.getContentHtmlParameter("general.games.adminshavetopublish");
-                }
-                if (help1.equals("true")) {
-                    if (Global.securityGuard.hasAdminRightsOnPortal(Application.getLocalUser(session())) == false) {
-
-                        doit = false;
-                    }
-                }
-
-                Game c = Game.find.byId(gid);
-
-                if (doit) {
-
-                    if (p.getGame(c) != null) {
-                        p.getGame(c).setVisibility(true);
-                        p.getGame(c).update();
-                        p.update();
-
-                    }
-
-                    Game g = Game.find.byId(gid);
-                    g.userlastupdated = Application.getLocalUser().getId();
-                    g.lastUpdate = new Date();
-                    g.createXML();
-
-                    // a game has been published, hence we update the public games list file:
-                    String content = Portal.generatePublicGamesListAsString(p.getId());
-                    File theDir = new File("public/portalfiles/" + p.getId());
-                    if (!theDir.exists())
-                        theDir.mkdirs();
-
-                    File f = new File(theDir, "publicgames.json");
-                    String absoluteFilePath = f.getAbsolutePath();
-                    Path thePath = Paths.get(absoluteFilePath);
-                    try {
-                        Files.write(thePath, content.getBytes());
-                    } catch (IOException ioe) {
-                        ioe.printStackTrace();
-                    }
-                } else {
-
-                    String help = "false";
-                    if (p.getContentHtmlParameter("general.games.adminsgetnotified") != null) {
-
-                        help = p.getContentHtmlParameter("general.games.adminsgetnotified");
-                    }
-                    if (help.equals("true")) {
-
-                        for (ProviderUsers au : p.getUsers()) {
-
-                            if (au.getRights().equals("admin")) {
-                                System.out.println("trying to send an email to admin: " + au.getUser().getName());
-                                final MyUsernamePasswordAuthProvider provider = MyUsernamePasswordAuthProvider
-                                        .getProvider();
-                                String linkToUserRightsTable = Global.SERVER_URL + "/" + p.id + "/portal/rights/"
-                                        + p.id;
-                                String text = "Auf dem Geoquest Portal '" + p.name
-                                        + "' wurde eine neue Quest mit dem Namen'" + c.getName() + "' und der ID "
-                                        + c.getId()
-                                        + " erstellt. Solltest nur du die Berechtigung haben, diese Quest zu veröffentlichen, kümmere dich bitte darum: "
-                                        + linkToUserRightsTable;
-
-                                String html = "Auf dem Geoquest Portal '" + p.name
-                                        + "' wurde eine neue Quest mit dem Namen'" + c.getName() + "' und der ID "
-                                        + c.getId()
-                                        + " erstellt.<br/><br/> Solltest <b>nur du</b> die Berechtigung haben, diese Quest zu veröffentlichen, kümmere dich bitte darum: "
-                                        + "<a href=\"" + linkToUserRightsTable + "\">" + linkToUserRightsTable + "</a>";
-                                provider.sendEmailToUser(au.getUser(), "Neue Quest: " + c.getName(), text, html);
-                            }
-
-                        }
-                    }
-                }
-                return ok("synced");
-
             }
-
         }
 
+        // Everything ok, we can start to do the work:
+
+        ProviderPortal p = Application.getLocalPortal();
+
+        boolean doit = true;
+        String help1 = "false";
+        if (p.getContentHtmlParameter("general.games.adminshavetopublish") != null) {
+
+            help1 = p.getContentHtmlParameter("general.games.adminshavetopublish");
+        }
+        if (help1.equals("true")) {
+            if (Global.securityGuard.hasAdminRightsOnPortal(Application.getLocalUser(session())) == false) {
+
+                doit = false;
+            }
+        }
+
+        Game c = Game.find.byId(gid);
+
+        if (doit) {
+            if (p.getGame(c) != null) {
+                p.getGame(c).setVisibility(true);
+                p.getGame(c).update();
+                p.update();
+            }
+
+            Game g = Game.find.byId(gid);
+            g.userlastupdated = Application.getLocalUser().getId();
+            g.lastUpdate = new Date();
+            g.createXML();
+
+            // a game has been published, hence we update the public games list file:
+            p.exportPublicGamesJson();
+        } else {
+
+            String help = "false";
+            if (p.getContentHtmlParameter("general.games.adminsgetnotified") != null) {
+
+                help = p.getContentHtmlParameter("general.games.adminsgetnotified");
+            }
+            if (help.equals("true")) {
+
+                for (ProviderUsers au : p.getUsers()) {
+
+                    if (au.getRights().equals("admin")) {
+                        System.out.println("trying to send an email to admin: " + au.getUser().getName());
+                        final MyUsernamePasswordAuthProvider provider = MyUsernamePasswordAuthProvider
+                                .getProvider();
+                        String linkToUserRightsTable = Global.SERVER_URL + "/" + p.id + "/portal/rights/"
+                                + p.id;
+                        String text = "Auf dem Geoquest Portal '" + p.name
+                                + "' wurde eine neue Quest mit dem Namen'" + c.getName() + "' und der ID "
+                                + c.getId()
+                                + " erstellt. Solltest nur du die Berechtigung haben, diese Quest zu veröffentlichen, kümmere dich bitte darum: "
+                                + linkToUserRightsTable;
+
+                        String html = "Auf dem Geoquest Portal '" + p.name
+                                + "' wurde eine neue Quest mit dem Namen'" + c.getName() + "' und der ID "
+                                + c.getId()
+                                + " erstellt.<br/><br/> Solltest <b>nur du</b> die Berechtigung haben, diese Quest zu veröffentlichen, kümmere dich bitte darum: "
+                                + "<a href=\"" + linkToUserRightsTable + "\">" + linkToUserRightsTable + "</a>";
+                        provider.sendEmailToUser(au.getUser(), "Neue Quest: " + c.getName(), text, html);
+                    }
+                }
+            }
+        }
+
+        return ok("synced");
     }
 
     @BodyParser.Of(Xml.class)

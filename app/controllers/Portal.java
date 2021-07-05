@@ -62,2947 +62,2833 @@ import util.Texts;
 
 public class Portal extends Controller {
 
-	public static final String USER_ROLE = "user";
-	public static final String ADMIN_ROLE = "admin";
-	public static final String UNVERIFIED_ROLE = "unverified";
+    public static final String USER_ROLE = "user";
+    public static final String ADMIN_ROLE = "admin";
+    public static final String UNVERIFIED_ROLE = "unverified";
 
-	public static long lastdate;
+    public static long lastdate;
 
-	/*
-	 * RESULT PAGES
-	 * 
-	 * these are the computing parts of any page that is accessed in routes.
-	 */
+    /*
+     * RESULT PAGES
+     *
+     * these are the computing parts of any page that is accessed in routes.
+     */
 
-	public static Result publicGamesList(Long pid) {
+    public static Result publicGamesList(Long pid) {
 
-		session("currentportal", pid.toString());
+        session("currentportal", pid.toString());
 
-		Boolean oeffentlichespiele = true;
+        Boolean oeffentlichespiele = true;
 
-		if (Application.getLocalPortal().getContentHtmlParameter("general.includesites.Oeffentliche_Spiele") != null
-				&& Application.getLocalPortal().getContentHtmlParameter("general.includesites.Oeffentliche_Spiele")
-						.equals("false")) {
-			oeffentlichespiele = false;
-		}
+        if (Application.getLocalPortal().getContentHtmlParameter("general.includesites.Oeffentliche_Spiele") != null
+                && Application.getLocalPortal().getContentHtmlParameter("general.includesites.Oeffentliche_Spiele")
+                .equals("false")) {
+            oeffentlichespiele = false;
+        }
 
-		if (pid == 1L) {
+        if (pid == 1L) {
 
-			return redirect("https://quest-mill-web.intertech.de/gqdocs/private.php");
+            return redirect("https://quest-mill-web.intertech.de/gqdocs/private.php");
 
-		} else if (pid == 61L || !oeffentlichespiele) {
+        } else if (pid == 61L || !oeffentlichespiele) {
 
-			User u = getLocalUser(session());
+            User u = getLocalUser(session());
 
-			if (u == null) {
+            if (u == null) {
 
-				return redirect(routes.Application.login(pid));
+                return redirect(routes.Application.login(pid));
 
-			} else {
+            } else {
 
-				return redirect(routes.Portal.myGamesListOnCurrentPortal());
+                return redirect(routes.Portal.myGamesListOnCurrentPortal());
 
-			}
+            }
 
-		} else {
+        } else {
 
-			List<ProviderGames> gr = Application.getLocalPortal().getPublicGamesList();
-			return ok(views.html.portal.public_games.render(gr));
-		}
+            List<ProviderGames> gr = Application.getLocalPortal().getPublicGamesList();
+            return ok(views.html.portal.public_games.render(gr));
+        }
 
-	}
+    }
 
-	public static Result publicGamesListOnCurrentPortal() {
+    public static Result publicGamesListOnCurrentPortal() {
 
-		long pid = Application.getLocalPortal().getId();
-		if (pid == 1L) {
+        long pid = Application.getLocalPortal().getId();
+        if (pid == 1L) {
 
-			return redirect("https://quest-mill-web.intertech.de/gqdocs/private.php");
+            return redirect("https://quest-mill-web.intertech.de/gqdocs/private.php");
 
-		} else if (pid == 61L) {
+        } else if (pid == 61L) {
 
-			User u = getLocalUser(session());
+            User u = getLocalUser(session());
 
-			if (u == null) {
+            if (u == null) {
 
-				return redirect(routes.Application.login(61L));
+                return redirect(routes.Application.login(61L));
 
-			} else {
+            } else {
 
-				return redirect(routes.Portal.myGamesListOnCurrentPortal());
+                return redirect(routes.Portal.myGamesListOnCurrentPortal());
 
-			}
+            }
 
-		} else {
-			List<ProviderGames> gr = Application.getLocalPortal().getPublicGamesList();
-			return ok(views.html.portal.public_games.render(gr));
-		}
+        } else {
+            List<ProviderGames> gr = Application.getLocalPortal().getPublicGamesList();
+            return ok(views.html.portal.public_games.render(gr));
+        }
 
-	}
+    }
 
-	public static Result publicGamesMap(Long pid) {
+    public static Result publicGamesMap(Long pid) {
 
-		session("currentportal", pid.toString());
+        session("currentportal", pid.toString());
 
-		List<ProviderGames> gr = Application.getLocalPortal().getPublicGamesList();
-		return ok(views.html.portal.publicgamesmap.render(gr));
+        List<ProviderGames> gr = Application.getLocalPortal().getPublicGamesList();
+        return ok(views.html.portal.publicgamesmap.render(gr));
 
-	}
+    }
 
-	// GAMES
+    // GAMES
 
-	/*
-	 * RESULTS
-	 */
+    /*
+     * RESULTS
+     */
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result myGamesList(Long pid) {
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result myGamesList(Long pid) {
+        lastdate = System.currentTimeMillis();
 
-		System.out.println("myGamesList(" + pid + ") ### 1");
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-		lastdate = System.currentTimeMillis();
+        ProviderPortal p = Application.getLocalPortal();
 
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+        if (ProviderPortal.find.where().eq("id", pid).findRowCount() == 1) {
 
-		ProviderPortal p = Application.getLocalPortal();
+            p = ProviderPortal.find.byId(pid);
 
-		if (ProviderPortal.find.where().eq("id", pid).findRowCount() == 1) {
+        }
 
-			p = ProviderPortal.find.byId(pid);
+        sayTime("Mygames #1");
 
-		}
+        User u = getLocalUser(session());
 
-		sayTime("Mygames #1");
+        if (Global.securityGuard.hasMinVerifiedRightsOnPortal(u) == false) {
 
-		User u = getLocalUser(session());
+            return badRequest(views.html.norightsonportal
+                    .render("Du benötigst mindestens User-Rechte, um diese Seite aufrufen zu können."));
 
-		if (Global.securityGuard.hasMinVerifiedRightsOnPortal(u) == false) {
+        } else {
+            sayTime("Mygames #2");
 
-			return badRequest(views.html.norightsonportal
-					.render("Du benötigst mindestens User-Rechte, um diese Seite aufrufen zu können."));
+            Set<GameRights> s = u.getGamesOnPortal(p);
+            sayTime("Mygames #3");
+            // TODO FILTER by game id to skip multiple mentions of right for the same game
 
-		} else {
-			sayTime("Mygames #2");
+            return ok(views.html.portal.my_games.render(s));
 
-			Set<GameRights> s = u.getGamesOnPortal(p);
-			sayTime("Mygames #3");
-			// TODO FILTER by game id to skip multiple mentions of right for the same game
+        }
+    }
 
-			return ok(views.html.portal.my_games.render(s));
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result userGamesList(Long uid, Long pid) {
 
-		}
-	}
+        lastdate = System.currentTimeMillis();
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result userGamesList(Long uid, Long pid) {
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-		lastdate = System.currentTimeMillis();
+        ProviderPortal p = Application.getLocalPortal();
 
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+        if (ProviderPortal.find.where().eq("id", pid).findRowCount() == 1) {
 
-		ProviderPortal p = Application.getLocalPortal();
+            p = ProviderPortal.find.byId(pid);
 
-		if (ProviderPortal.find.where().eq("id", pid).findRowCount() == 1) {
+        }
 
-			p = ProviderPortal.find.byId(pid);
+        sayTime("Mygames #1");
 
-		}
+        User u = getLocalUser(session());
 
-		sayTime("Mygames #1");
+        if (Global.securityGuard.hasAdminRightsOnPortal(u) == false) {
 
-		User u = getLocalUser(session());
+            if (User.find.where().eq("id", uid).findRowCount() == 1) {
 
-		if (Global.securityGuard.hasAdminRightsOnPortal(u) == false) {
+                User u2 = User.find.byId(uid);
 
-			if (User.find.where().eq("id", uid).findRowCount() == 1) {
+                Set<GameRights> s = u2.getPublicGamesOnPortal(p);
+                sayTime("Mygames #3");
 
-				User u2 = User.find.byId(uid);
+                return ok(views.html.portal.user_games.render(u2, s));
+            } else {
 
-				Set<GameRights> s = u2.getPublicGamesOnPortal(p);
-				sayTime("Mygames #3");
+                return badRequest(views.html.norights.render("Der User existiert nicht."));
 
-				return ok(views.html.portal.user_games.render(u2, s));
-			} else {
+            }
 
-				return badRequest(views.html.norights.render("Der User existiert nicht."));
+        } else {
+            sayTime("Mygames #2");
 
-			}
+            if (User.find.where().eq("id", uid).findRowCount() == 1) {
 
-		} else {
-			sayTime("Mygames #2");
+                User u2 = User.find.byId(uid);
 
-			if (User.find.where().eq("id", uid).findRowCount() == 1) {
+                Set<GameRights> s = u2.getGamesOnPortal(p);
+                sayTime("Mygames #3");
 
-				User u2 = User.find.byId(uid);
+                return ok(views.html.portal.user_games.render(u2, s));
 
-				Set<GameRights> s = u2.getGamesOnPortal(p);
-				sayTime("Mygames #3");
+            } else {
 
-				return ok(views.html.portal.user_games.render(u2, s));
+                return badRequest(views.html.norights.render("Der User existiert nicht."));
 
-			} else {
+            }
 
-				return badRequest(views.html.norights.render("Der User existiert nicht."));
+        }
+    }
 
-			}
+    public static void sayTime(String prefix) {
 
-		}
-	}
+        // System.out.println(prefix + ": " + (System.currentTimeMillis() - lastdate));
 
-	public static void sayTime(String prefix) {
+        lastdate = System.currentTimeMillis();
+    }
 
-		// System.out.println(prefix + ": " + (System.currentTimeMillis() - lastdate));
+    public static Result myGamesListOnCurrentPortal() {
+        ProviderPortal p = Application.getLocalPortal();
 
-		lastdate = System.currentTimeMillis();
+        String url = p.getTemplateServerURLDropSlash() + "" + p.getPathTo(routes.Portal.myGamesList(p.getId()));
+        return redirect(url);
 
-	}
+    }
 
-	public static Result myGamesListOnCurrentPortal() {
-		ProviderPortal p = Application.getLocalPortal();
+    public static Result paymentsuccessful() {
 
-		String url = p.getTemplateServerURLDropSlash() + "" + p.getPathTo(routes.Portal.myGamesList(p.getId()));
-		return redirect(url);
+        return ok(views.html.portal.payment_successful.render());
 
-	}
+    }
 
-	public static Result paymentsuccessful() {
+    public static Result paymentfailed() {
 
-		return ok(views.html.portal.payment_successful.render());
+        return ok(views.html.portal.payment_failed.render());
 
-	}
+    }
 
-	public static Result paymentfailed() {
+    public static Result logoutstepone() {
+        ProviderPortal p = Application.getLocalPortal();
+        String url = p.getTemplateServerURLDropSlash() + "" + p.getPathTo(routes.Portal.logoutsteptwo(p.getId()));
 
-		return ok(views.html.portal.payment_failed.render());
+        return redirect(url);
 
-	}
+    }
 
-	public static Result logoutstepone() {
-		ProviderPortal p = Application.getLocalPortal();
-		String url = p.getTemplateServerURLDropSlash() + "" + p.getPathTo(routes.Portal.logoutsteptwo(p.getId()));
+    public static Result logoutsteptwo(Long pid) {
 
-		return redirect(url);
+        return PlayAuthenticate.logout(session());
 
-	}
+    }
 
-	public static Result logoutsteptwo(Long pid) {
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result myGamesList61() {
+        Long pid = Long.valueOf(61);
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-		return PlayAuthenticate.logout(session());
+        ProviderPortal p = Application.getLocalPortal();
 
-	}
+        User u = getLocalUser(session());
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result myGamesList61() {
-		Long pid = Long.valueOf(61);
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+        if (Global.securityGuard.hasMinVerifiedRightsOnPortal(u) == false) {
 
-		ProviderPortal p = Application.getLocalPortal();
+            return badRequest(views.html.norightsonportal
+                    .render("Du benötigst mindestens User-Rechte, um diese Seite aufrufen zu können."));
 
-		User u = getLocalUser(session());
+        } else {
 
-		if (Global.securityGuard.hasMinVerifiedRightsOnPortal(u) == false) {
+            return ok(views.html.portal.my_games.render(u.getGamesOnPortal(p)));
 
-			return badRequest(views.html.norightsonportal
-					.render("Du benötigst mindestens User-Rechte, um diese Seite aufrufen zu können."));
+        }
+    }
 
-		} else {
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result uploadGame(Long pid) {
 
-			return ok(views.html.portal.my_games.render(u.getGamesOnPortal(p)));
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-		}
-	}
+        if (Global.securityGuard.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result uploadGame(Long pid) {
+            return badRequest(views.html.norightsonportal
+                    .render("Du benötigst mindestens User-Rechte, um diese Seite aufrufen zu können."));
 
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+        } else {
 
-		if (Global.securityGuard.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
+            return ok(views.html.portal.add_game.render(UPLOAD_FORM, ""));
 
-			return badRequest(views.html.norightsonportal
-					.render("Du benötigst mindestens User-Rechte, um diese Seite aufrufen zu können."));
+        }
+    }
 
-		} else {
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result addGameTypeFromGame(Long pid, Long gid) {
 
-			return ok(views.html.portal.add_game.render(UPLOAD_FORM, ""));
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-		}
-	}
+        if (Global.securityGuard.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result addGameTypeFromGame(Long pid, Long gid) {
+            return badRequest(views.html.norightsonportal
+                    .render("Du benötigst mindestens User-Rechte, um diese Seite aufrufen zu können."));
 
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+        } else {
 
-		if (Global.securityGuard.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
+            if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			return badRequest(views.html.norightsonportal
-					.render("Du benötigst mindestens User-Rechte, um diese Seite aufrufen zu können."));
+                return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-		} else {
+            } else {
 
-			if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+                Game g = Game.find.byId(gid);
 
-				return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+                return ok(views.html.portal.add_gametype.render(g, GAMETYPE_FORM, ""));
+            }
+        }
+    }
 
-			} else {
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result editGame(Long pid, Long game) {
 
-				Game g = Game.find.byId(gid);
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-				return ok(views.html.portal.add_gametype.render(g, GAMETYPE_FORM, ""));
-			}
-		}
-	}
+        if (Game.find.where().eq("id", game).findRowCount() != 1) {
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result editGame(Long pid, Long game) {
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+        } else {
 
-		if (Game.find.where().eq("id", game).findRowCount() != 1) {
+            Game mygame = Game.find.byId(game);
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+            if (Global.securityGuard.hasWriteRightsOnGame(getLocalUser(session()), mygame) == false) {
 
-		} else {
+                return badRequest(
+                        views.html.norights.render("Du benötigst Schreib-Rechte, um dieses Spiel zu editieren."));
 
-			Game mygame = Game.find.byId(game);
+            } else {
 
-			if (Global.securityGuard.hasWriteRightsOnGame(getLocalUser(session()), mygame) == false) {
+                UploadedGame formobject = new UploadedGame();
+                formobject.name = mygame.getName();
+                formobject.publ = Global.defaultportal.getGame(mygame).getVisibility();
 
-				return badRequest(
-						views.html.norights.render("Du benötigst Schreib-Rechte, um dieses Spiel zu editieren."));
+                Form<UploadedGame> fillForm = form(UploadedGame.class);
+                fillForm = fillForm.fill(formobject);
 
-			} else {
+                return ok(views.html.portal.edit_game.render(fillForm, mygame, ""));
 
-				UploadedGame formobject = new UploadedGame();
-				formobject.name = mygame.getName();
-				formobject.publ = Global.defaultportal.getGame(mygame).getVisibility();
+            }
+        }
 
-				Form<UploadedGame> fillForm = form(UploadedGame.class);
-				fillForm = fillForm.fill(formobject);
+    }
 
-				return ok(views.html.portal.edit_game.render(fillForm, mygame, ""));
+    public static Result getConnectionTest() {
 
-			}
-		}
+        return ok(views.html.connection.render());
 
-	}
+    }
 
-	public static Result getConnectionTest() {
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result gameRightsonPortal(Long pid, Long gid) {
 
-		return ok(views.html.connection.render());
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-	}
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result gameRightsonPortal(Long pid, Long gid) {
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+        } else {
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+            Game mygame = Game.find.byId(gid);
+            ProviderPortal p = getLocalPortal();
+            if (Global.securityGuard.hasWriteRightsOnGame(getLocalUser(session()), mygame) == false) {
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+                String xyz = "Du benötigst Schreib-Rechte für das Spiel um die Rechte anderer User zu editieren."
+                        + mygame.getUser(getLocalUser(session())).getRights();
 
-		} else {
+                return badRequest(views.html.norights.render(xyz));
 
-			Game mygame = Game.find.byId(gid);
-			ProviderPortal p = getLocalPortal();
-			if (Global.securityGuard.hasWriteRightsOnGame(getLocalUser(session()), mygame) == false) {
+            } else {
 
-				String xyz = "Du benötigst Schreib-Rechte für das Spiel um die Rechte anderer User zu editieren."
-						+ mygame.getUser(getLocalUser(session())).getRights();
+                Set<User> leer = new HashSet<User>();
 
-				return badRequest(views.html.norights.render(xyz));
+                List<GameRights> toshow = new ArrayList<GameRights>();
 
-			} else {
+                toshow.addAll(mygame.getRightsOnPortal(p));
 
-				Set<User> leer = new HashSet<User>();
+                return ok(views.html.portal.game_rights.render(toshow, mygame, leer, USER_SEARCH_FORM));
 
-				List<GameRights> toshow = new ArrayList<GameRights>();
+            }
+        }
 
-				toshow.addAll(mygame.getRightsOnPortal(p));
+    }
 
-				return ok(views.html.portal.game_rights.render(toshow, mygame, leer, USER_SEARCH_FORM));
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result gameRightsOnCurrentPortal(Long gid) {
 
-			}
-		}
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-	}
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result gameRightsOnCurrentPortal(Long gid) {
+        } else {
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+            Game mygame = Game.find.byId(gid);
+            ProviderPortal p = getLocalPortal();
+            if (Global.securityGuard.hasWriteRightsOnGame(getLocalUser(session()), mygame) == false) {
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+                String xyz = "Du benötigst Schreib-Rechte für das Spiel um die Rechte anderer User zu editieren."
+                        + mygame.getUser(getLocalUser(session())).getRights();
 
-		} else {
+                return badRequest(views.html.norights.render(xyz));
 
-			Game mygame = Game.find.byId(gid);
-			ProviderPortal p = getLocalPortal();
-			if (Global.securityGuard.hasWriteRightsOnGame(getLocalUser(session()), mygame) == false) {
+            } else {
 
-				String xyz = "Du benötigst Schreib-Rechte für das Spiel um die Rechte anderer User zu editieren."
-						+ mygame.getUser(getLocalUser(session())).getRights();
+                Set<User> leer = new HashSet<User>();
 
-				return badRequest(views.html.norights.render(xyz));
+                List<GameRights> toshow = new ArrayList<GameRights>();
 
-			} else {
+                toshow.addAll(mygame.getRightsOnPortal(p));
 
-				Set<User> leer = new HashSet<User>();
+                return ok(views.html.portal.game_rights.render(toshow, mygame, leer, USER_SEARCH_FORM));
 
-				List<GameRights> toshow = new ArrayList<GameRights>();
+            }
+        }
 
-				toshow.addAll(mygame.getRightsOnPortal(p));
+    }
 
-				return ok(views.html.portal.game_rights.render(toshow, mygame, leer, USER_SEARCH_FORM));
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result userSearchForm(Long pid) {
 
-			}
-		}
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-	}
+        ProviderPortal p = getLocalPortal();
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result userSearchForm(Long pid) {
+        Set<User> leer = new HashSet<User>();
 
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+        final Form<UserSearch> filledForm = USER_SEARCH_FORM.bindFromRequest();
+        UserSearch form = filledForm.get();
 
-		ProviderPortal p = getLocalPortal();
+        if (!form.name.isEmpty()) {
 
-		Set<User> leer = new HashSet<User>();
+            leer.addAll(p.searchForUserByName(form.name));
 
-		final Form<UserSearch> filledForm = USER_SEARCH_FORM.bindFromRequest();
-		UserSearch form = filledForm.get();
+        }
 
-		if (!form.name.isEmpty()) {
+        if (!form.email.isEmpty()) {
 
-			leer.addAll(p.searchForUserByName(form.name));
+            leer.addAll(p.searchForUserByEmail(form.email));
 
-		}
+        }
 
-		if (!form.email.isEmpty()) {
+        return ok(views.html.portal.user_search.render(leer, filledForm));
 
-			leer.addAll(p.searchForUserByEmail(form.email));
+    }
 
-		}
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result userSearch(Long pid) {
 
-		return ok(views.html.portal.user_search.render(leer, filledForm));
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-	}
+        Set<User> leer = new HashSet<User>();
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result userSearch(Long pid) {
+        return ok(views.html.portal.user_search.render(leer, USER_SEARCH_FORM));
 
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+    }
 
-		Set<User> leer = new HashSet<User>();
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result gameRightsonPortalUserSearch(Long pid, Long gid) {
 
-		return ok(views.html.portal.user_search.render(leer, USER_SEARCH_FORM));
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-	}
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result gameRightsonPortalUserSearch(Long pid, Long gid) {
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+        } else {
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+            Game mygame = Game.find.byId(gid);
+            ProviderPortal p = getLocalPortal();
+            if (Global.securityGuard.hasWriteRightsOnGame(getLocalUser(session()), mygame) == false) {
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+                return badRequest(views.html.norights
+                        .render("Du benötigst Schreib-Rechte für das Spiel um die Rechte anderer User zu editieren."));
 
-		} else {
+            } else {
 
-			Game mygame = Game.find.byId(gid);
-			ProviderPortal p = getLocalPortal();
-			if (Global.securityGuard.hasWriteRightsOnGame(getLocalUser(session()), mygame) == false) {
+                Set<User> leer = new HashSet<User>();
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte für das Spiel um die Rechte anderer User zu editieren."));
+                final Form<UserSearch> filledForm = USER_SEARCH_FORM.bindFromRequest();
 
-			} else {
+                UserSearch form = filledForm.get();
+                if (form != null) {
 
-				Set<User> leer = new HashSet<User>();
+                    if (!form.name.isEmpty()) {
 
-				final Form<UserSearch> filledForm = USER_SEARCH_FORM.bindFromRequest();
+                        leer.addAll(p.searchForUserByName(form.name));
 
-				UserSearch form = filledForm.get();
-				if (form != null) {
+                    }
 
-					if (!form.name.isEmpty()) {
+                    if (!form.email.isEmpty()) {
 
-						leer.addAll(p.searchForUserByName(form.name));
+                        leer.addAll(p.searchForUserByEmail(form.email));
 
-					}
+                    }
+                }
 
-					if (!form.email.isEmpty()) {
+                List<GameRights> toshow = new ArrayList<GameRights>();
 
-						leer.addAll(p.searchForUserByEmail(form.email));
+                toshow.addAll(mygame.getRightsOnPortal(p));
+                return ok(views.html.portal.game_rights.render(toshow, mygame, leer, filledForm));
 
-					}
-				}
+            }
 
-				List<GameRights> toshow = new ArrayList<GameRights>();
+        }
 
-				toshow.addAll(mygame.getRightsOnPortal(p));
-				return ok(views.html.portal.game_rights.render(toshow, mygame, leer, filledForm));
+    }
 
-			}
+    /*
+     * DO FUNCTIONS
+     *
+     * These are used to compute the Post objects of Forms.
+     */
 
-		}
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result setGameVisibility(Long pid, Long gid, String value) {
 
-	}
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-	/*
-	 * DO FUNCTIONS
-	 * 
-	 * These are used to compute the Post objects of Forms.
-	 */
+        ProviderPortal p = getLocalPortal();
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result setGameVisibility(Long pid, Long gid, String value) {
+        String help = "Error!";
 
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-		ProviderPortal p = getLocalPortal();
+            help = "Game " + gid + "not found";
+        } else {
+            Game c = Game.find.byId(gid);
+            boolean wasVisible = p.getGame(c).getVisibility();
+            if (value.equals("true") && !wasVisible) {
+                p.getGame(c).setVisibility(true);
+                p.exportPublicGamesJson();
+            } else {
+                if (wasVisible) {
+                    p.getGame(c).setVisibility(false);
+                    p.exportPublicGamesJson();
+                }
+            }
+            p.getGame(c).update();
+            help = "synced";
+        }
 
-		String help = "Error!";
+        return ok(help);
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+    }
 
-			help = "Game " + gid + "not found";
-		} else {
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result resetGameVisibility(Long pid, Long gid) {
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-			Game c = Game.find.byId(gid);
+        ProviderPortal p = getLocalPortal();
 
-			if (value.equals("true")) {
+        String help = "Error!";
 
-				p.getGame(c).setVisibility(true);
+        if (Application.getLocalPortal().getUser(Application.getLocalUser()).getRights().equals("admin")) {
 
-			} else {
+            if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+                help = "Game " + gid + "not found";
+            } else {
+                Game c = Game.find.byId(gid);
+                ProviderGames providerGames = p.getGame(c);
+                if (providerGames.getVisibility() == true) {
+                    providerGames.setVisibility(false);
+                    providerGames.update();
 
-				p.getGame(c).setVisibility(false);
+                    help = "synced";
+                }
+            }
+        }
+        return ok(help);
+    }
 
-			}
-			p.getGame(c).update();
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result doDeleteGame(Long pid, Long game) {
 
-			help = "synced";
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-		}
+        if (Game.find.where().eq("id", game).findRowCount() != 1) {
 
-		return ok(help);
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-	}
+        } else {
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result resetGameVisibility(Long pid, Long gid) {
+            Game mygame = Game.find.byId(game);
 
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+            if (Global.securityGuard.hasWriteRightsOnGame(getLocalUser(session()), mygame) == false) {
 
-		ProviderPortal p = getLocalPortal();
+                return badRequest(
+                        views.html.norights.render("Du benötigst Schreib-Rechte, um dieses Spiel zu entfernen."));
 
-		String help = "Error!";
+            } else {
 
-		if (Application.getLocalPortal().getUser(Application.getLocalUser()).getRights().equals("admin")) {
+                boolean done = mygame.removeMe();
+                try {
+                    mygame.delete();
+                } catch (RuntimeException e) {
+                    e.printStackTrace();
+                }
 
-			if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+                Global.updatePortals();
 
-				help = "Game " + gid + "not found";
-			} else {
+                if (done == true) {
 
-				Game c = Game.find.byId(gid);
+                    return redirect(routes.Portal.myGamesListOnCurrentPortal());
 
-				p.getGame(c).setVisibility(false);
+                } else {
 
-				p.getGame(c).update();
+                    return badRequest(views.html.norights.render("Unbekannter Fehler beim Entfernen des Spiels."));
 
-				help = "synced";
+                }
 
-			}
-		}
-		return ok(help);
+            }
+        }
 
-	}
+    }
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result doDeleteGame(Long pid, Long game) {
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result doUploadGame(Long pid) {
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+        Game g;
+        if (Global.securityGuard.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
 
-		if (Game.find.where().eq("id", game).findRowCount() != 1) {
+            return badRequest(views.html.norightsonportal
+                    .render("Du benötigst mindestens User-Rechte, um ein Spiel hochzuladen."));
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+        } else {
 
-		} else {
+            User currentuser = getLocalUser(session());
 
-			Game mygame = Game.find.byId(game);
+            final Form<UploadedGame> filledForm = UPLOAD_FORM.bindFromRequest();
 
-			if (Global.securityGuard.hasWriteRightsOnGame(getLocalUser(session()), mygame) == false) {
+            if (filledForm.hasErrors()) {
 
-				return badRequest(
-						views.html.norights.render("Du benötigst Schreib-Rechte, um dieses Spiel zu entfernen."));
+                return badRequest(views.html.portal.add_game.render(filledForm, ""));
 
-			} else {
+            } else {
 
-				boolean done = mygame.removeMe();
-				try {
-					mygame.delete();
-				} catch (RuntimeException e) {
+                MultipartFormData body = request().body().asMultipartFormData();
+                FilePart resourceFile = body.getFile("zip");
+                UploadedGame form = filledForm.get();
 
-					System.out.println("Can't delete Game itself:");
-					e.printStackTrace();
+                if (resourceFile == null) {
 
-				}
+                    if (form.gametype == 0) {
 
-				Global.updatePortals();
+                        return badRequest(views.html.portal.add_game.render(filledForm,
+                                "Du musst entweder einen Spieltyp auswählen oder eine Datei hochladen."));
+                    } else {
 
-				if (done == true) {
+                        // NEW GAME FROM GAMETYPE
 
-					return redirect(routes.Portal.myGamesListOnCurrentPortal());
+                        if (GameType.find.where().eq("id", form.gametype).findRowCount() != 1) {
 
-				} else {
+                            return badRequest(
+                                    views.html.portal.add_game.render(filledForm, "Der Spieltyp existiert nicht."));
 
-					return badRequest(views.html.norights.render("Unbekannter Fehler beim Entfernen des Spiels."));
+                        } else {
+                            GameType gt = GameType.find.byId(form.gametype);
+                            g = gt.createMe(form.name);
+                        }
+                    }
+                } else {
 
-				}
+                    String fileName = resourceFile.getFilename();
+                    File file = resourceFile.getFile();
 
-			}
-		}
+                    int i = 0;
+                    boolean exists = true;
+                    while (exists == true) {
 
-	}
+                        i++;
+                        File f = new File("public/uploads/" + Application.getLocalPortal().getName() + "/",
+                                i + "_" + fileName);
+                        if (!f.exists()) {
+                            exists = false;
+                        }
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result doUploadGame(Long pid) {
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+                    }
 
-		Game g;
-		if (Global.securityGuard.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
+                    File tosave = new File("public/uploads/" + Application.getLocalPortal().getName() + "/",
+                            i + "_" + fileName);
 
-			return badRequest(views.html.norightsonportal
-					.render("Du benötigst mindestens User-Rechte, um ein Spiel hochzuladen."));
+                    try {
 
-		} else {
+                        FileUtils.moveFile(file, tosave);
 
-			User currentuser = getLocalUser(session());
+                    } catch (IOException ioe) {
+                        return badRequest(views.html.portal.add_game.render(filledForm,
+                                "Fehler #0010 beim Datei-Upload. Versuchen Sie es später erneut oder kontaktieren Sie einen System-Administrator."));
 
-			final Form<UploadedGame> filledForm = UPLOAD_FORM.bindFromRequest();
+                    }
 
-			if (filledForm.hasErrors()) {
+                    g = new Game(form.name, tosave.getAbsolutePath());
 
-				return badRequest(views.html.portal.add_game.render(filledForm, ""));
+                    g.save();
+                }
 
-			} else {
+                g.addOwner(currentuser);
 
-				MultipartFormData body = request().body().asMultipartFormData();
-				FilePart resourceFile = body.getFile("zip");
-				UploadedGame form = filledForm.get();
+                // NEWSSTREAM-ITEMS
 
-				if (resourceFile == null) {
+                // VISIBILITY
 
-					if (form.gametype == 0) {
+                String visi = "false";
+                if (form.publ == true) {
+                    visi = "true";
 
-						return badRequest(views.html.portal.add_game.render(filledForm,
-								"Du musst entweder einen Spieltyp auswählen oder eine Datei hochladen."));
-					} else {
+                }
+                // USER WALL
 
-						// NEW GAME FROM GAMETYPE
+                String text = getLocalPortal().getLanguageParameter("hat_ein_neues_Spiel_erstellt") + ": "
+                        + g.getName();
 
-						if (GameType.find.where().eq("id", form.gametype).findRowCount() != 1) {
+                String titel = "Neues Spiel";
+                NewsstreamItem nsi = currentuser.createNewsstreamItem(titel, text, visi);
+                nsi.save();
+                currentuser.addNewsstream(nsi);
 
-							return badRequest(
-									views.html.portal.add_game.render(filledForm, "Der Spieltyp existiert nicht."));
+                // PROVIDER WALL COPY
 
-						} else {
+                NewsstreamItem nsi2 = new NewsstreamItem(nsi);
+                nsi2.save();
+                getLocalPortal().addNewsstream(nsi2);
 
-							System.out.println("Looking for GameType.");
-							GameType gt = GameType.find.byId(form.gametype);
-							System.out.println("GAMETYPE FOUND:" + form.gametype);
-							g = gt.createMe(form.name);
-							System.out.println("Game created successfully.");
+                // MAIN PORTAL COPY
 
-						}
+                if (!(Global.defaultportal.getIdentifier().equals(Application.getLocalPortal().getIdentifier()))) {
 
-					}
+                    Global.defaultportal.addNewGame(g, form.publ);
+                    Global.defaultportal.save();
 
-				} else {
+                    NewsstreamItem nsi4 = new NewsstreamItem(nsi);
+                    nsi4.save();
 
-					String fileName = resourceFile.getFilename();
-					File file = resourceFile.getFile();
+                    Global.defaultportal.addNewsstream(nsi4);
 
-					int i = 0;
-					boolean exists = true;
-					while (exists == true) {
+                    Global.updatePortals();
 
-						i++;
-						File f = new File("public/uploads/" + Application.getLocalPortal().getName() + "/",
-								i + "_" + fileName);
-						if (!f.exists()) {
-							exists = false;
-						}
+                }
+                // GAME WALL
 
-					}
+                text = "wurde neu erstellt.";
+                titel = "Neu erstellt";
+                NewsstreamItem nsi3 = g.createNewsstreamItem(titel, text, visi);
+                nsi3.save();
+                g.addNewsstream(nsi3);
 
-					File tosave = new File("public/uploads/" + Application.getLocalPortal().getName() + "/",
-							i + "_" + fileName);
+                Application.getLocalPortal().addNewGame(g, form.publ);
+                Application.getLocalPortal().save();
 
-					try {
+                if (Application.getLocalPortal().getContentHtmlParameter("general.games.directotoeditor") != null) {
 
-						FileUtils.moveFile(file, tosave);
+                    if (Application.getLocalPortal().getContentHtmlParameter("general.games.directotoeditor")
+                            .equals("false")) {
+                        return redirect(routes.Portal.myGamesList(pid));
 
-					} catch (IOException ioe) {
-						return badRequest(views.html.portal.add_game.render(filledForm,
-								"Fehler #0010 beim Datei-Upload. Versuchen Sie es später erneut oder kontaktieren Sie einen System-Administrator."));
+                    } else {
+                        return redirect(routes.Editor.getEditor(g.getId()));
 
-					}
+                    }
 
-					g = new Game(form.name, tosave.getAbsolutePath());
+                } else {
 
-					g.save();
-				}
+                    return redirect(routes.Editor.getEditor(g.getId()));
 
-				System.out.println("Game created.");
-				g.addOwner(currentuser);
+                }
 
-				System.out.println("User added to Game.");
-				// NEWSSTREAM-ITEMS
+            }
 
-				// VISIBILITY
+        }
 
-				String visi = "false";
-				if (form.publ == true) {
-					visi = "true";
+    }
 
-				}
-				System.out.println("Visibility");
-				// USER WALL
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result givePremiumAccess(Long uid, int months) {
 
-				String text = getLocalPortal().getLanguageParameter("hat_ein_neues_Spiel_erstellt") + ": "
-						+ g.getName();
+        if (!Application.getLocalUser().isAdminOnPortalOne()) {
 
-				String titel = "Neues Spiel";
-				NewsstreamItem nsi = currentuser.createNewsstreamItem(titel, text, visi);
-				nsi.save();
-				currentuser.addNewsstream(nsi);
+            return badRequest(views.html.norights.render("Das kann nur ein Admin tun."));
 
-				// PROVIDER WALL COPY
+        } else {
 
-				NewsstreamItem nsi2 = new NewsstreamItem(nsi);
-				nsi2.save();
-				getLocalPortal().addNewsstream(nsi2);
+            if (User.find.where().eq("id", uid).findRowCount() != 1) {
 
-				// MAIN PORTAL COPY
+                return badRequest(views.html.norights.render("Der User existiert nicht."));
 
-				if (!(Global.defaultportal.getIdentifier().equals(Application.getLocalPortal().getIdentifier()))) {
+            } else {
 
-					Global.defaultportal.addNewGame(g, form.publ);
-					Global.defaultportal.save();
+                User usertoedit = User.find.byId(uid);
 
-					NewsstreamItem nsi4 = new NewsstreamItem(nsi);
-					nsi4.save();
+                if (usertoedit.getCurrentAccess() != null) {
 
-					Global.defaultportal.addNewsstream(nsi4);
+                    usertoedit.getCurrentAccess().addMonths(months);
+                    usertoedit.getCurrentAccess().update();
+                } else {
 
-					Global.updatePortals();
+                    String pn = "All Access";
+                    Date then = new Date();
 
-				}
-				System.out.println("ProviderPortal Wall");
-				// GAME WALL
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(then);
+                    // int m = months+0;
+                    cal.add(Calendar.MONTH, months); // minus number would
+                    // decrement the days
+                    then = cal.getTime();
 
-				text = "wurde neu erstellt.";
-				titel = "Neu erstellt";
-				NewsstreamItem nsi3 = g.createNewsstreamItem(titel, text, visi);
-				nsi3.save();
-				g.addNewsstream(nsi3);
+                    PremiumAccess pa = new PremiumAccess(pn, then);
+                    pa.save();
+                    usertoedit.givePremiumAccess(pa);
+                    usertoedit.update();
 
-				System.out.println("Game Wall");
-				Application.getLocalPortal().addNewGame(g, form.publ);
+                }
 
-				Application.getLocalPortal().save();
+            }
 
-				System.out.println("Done");
+        }
 
-				if (Application.getLocalPortal().getContentHtmlParameter("general.games.directotoeditor") != null) {
+        return redirect(routes.Portal.myGamesListOnCurrentPortal());
+    }
 
-					if (Application.getLocalPortal().getContentHtmlParameter("general.games.directotoeditor")
-							.equals("false")) {
-						return redirect(routes.Portal.myGamesList(pid));
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result doAddGameTypeFromGame(Long pid, Long gid) {
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-					} else {
-						return redirect(routes.Editor.getEditor(g.getId()));
+        if (Global.securityGuard.hasAdminRightsOnPortal(getLocalUser(session())) == false) {
 
-					}
+            return badRequest(
+                    views.html.norightsonportal.render("Du benötigst Admin-Rechte, um einen Spieltyp anzulegen."));
 
-				} else {
+        } else {
 
-					return redirect(routes.Editor.getEditor(g.getId()));
+            if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				}
+                return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-			}
+            } else {
 
-		}
+                Game g = Game.find.byId(gid);
 
-	}
+                final Form<GameToGameType> filledForm = GAMETYPE_FORM.bindFromRequest();
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result givePremiumAccess(Long uid, int months) {
+                if (filledForm.hasErrors()) {
+                    return badRequest(views.html.portal.add_gametype.render(g, filledForm, ""));
 
-		if (!Application.getLocalUser().isAdminOnPortalOne()) {
+                } else {
 
-			return badRequest(views.html.norights.render("Das kann nur ein Admin tun."));
+                    if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
+                        return badRequest(views.html.portal.add_gametype.render(g, filledForm,
+                                "Entschulding! Diese Funktion ist noch in der Entwicklung."));
+                    } else {
 
-		} else {
+                        GameToGameType form = filledForm.get();
 
-			if (User.find.where().eq("id", uid).findRowCount() != 1) {
+                        // NEW GAMETYPE FROM GAME
 
-				return badRequest(views.html.norights.render("Der User existiert nicht."));
+                        GameType gt = new GameType(form.name);
 
-			} else {
+                        gt.save();
 
-				User usertoedit = User.find.byId(uid);
+                        if (!form.makescene || !form.onlyhotspots || !form.onlyonehotspot) {
 
-				if (usertoedit.getCurrentAccess() != null) {
+                            for (AttributeType a : g.getType().getAttributeTypes()) {
 
-					usertoedit.getCurrentAccess().addMonths(months);
-					usertoedit.getCurrentAccess().update();
-				} else {
+                                AttributeType gt_att5 = new AttributeType(a.getName(), a.getXMLType(), a.getFileType());
+                                gt_att5.save();
 
-					String pn = "All Access";
-					Date then = new Date();
+                                gt_att5.setDefaultValue(g.getAttributeValue(a));
+                                gt_att5.update();
 
-					Calendar cal = Calendar.getInstance();
-					cal.setTime(then);
-					// int m = months+0;
-					cal.add(Calendar.MONTH, months); // minus number would
-														// decrement the days
-					then = cal.getTime();
+                                gt.setAttributeType(gt_att5);
+                                gt.update();
 
-					PremiumAccess pa = new PremiumAccess(pn, then);
-					pa.save();
-					usertoedit.givePremiumAccess(pa);
-					usertoedit.update();
+                            }
 
-				}
+                            for (PartType pt : g.getType().getPossiblePartTypes()) {
 
-			}
+                                gt.addPossiblePartType(pt);
+                                gt.update();
 
-		}
+                            }
 
-		return redirect(routes.Portal.myGamesListOnCurrentPortal());
-	}
+                            for (ActionType mi : g.getType().getPossibleMenuItemActionTypes()) {
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result doAddGameTypeFromGame(Long pid, Long gid) {
-		System.out.println("Portal.doAddGameTypeFromGame(" + pid + ", " + gid + ")");
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+                                gt.addPossibleMenuItemActionType(mi);
+                                gt.update();
 
-		if (Global.securityGuard.hasAdminRightsOnPortal(getLocalUser(session())) == false) {
+                            }
 
-			return badRequest(
-					views.html.norightsonportal.render("Du benötigst Admin-Rechte, um einen Spieltyp anzulegen."));
+                            for (HotspotType ht : g.getType().getPossibleHotspotTypes()) {
 
-		} else {
+                                gt.addPossibleHotspotType(ht);
+                                gt.update();
 
-			if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+                            }
 
-				return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+                            for (SceneType st : g.getType().getPossibleSceneTypes()) {
 
-			} else {
+                                gt.addPossibleSceneType(st);
+                                gt.update();
 
-				Game g = Game.find.byId(gid);
+                            }
 
-				final Form<GameToGameType> filledForm = GAMETYPE_FORM.bindFromRequest();
+                        }
+                        if (form.makescene) {
 
-				if (filledForm.hasErrors()) {
+                            if (form.onlyonehotspot) {
 
-					System.out.println("Filled form has errors.");
+                                gt.easy_editor = true;
+                                gt.multiple_only_scene_type = true;
+                                gt.update();
+                            }
 
-					return badRequest(views.html.portal.add_gametype.render(g, filledForm, ""));
+                            if (form.onlyhotspots) {
 
-				} else {
+                                gt.show_only_hotspots_in_sidemenu = true;
+                                gt.update();
+                            }
 
-					if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
-						return badRequest(views.html.portal.add_gametype.render(g, filledForm,
-								"Entschulding! Diese Funktion ist noch in der Entwicklung."));
-					} else {
+                            SceneType s = new SceneType(form.scenename);
+                            s.save();
+                            s.addDefaultsFromGame(g);
 
-						GameToGameType form = filledForm.get();
+                            s.update();
+                            gt.addPossibleSceneType(s);
+                            gt.update();
+                        } else {
 
-						// NEW GAMETYPE FROM GAME
+                            for (Part p : g.getParts()) {
+                                gt.addDefaultPart(p);
+                            }
 
-						GameType gt = new GameType(form.name);
+                            for (Hotspot h : g.getHotspots()) {
+                                gt.addDefaultHotspot(h);
+                            }
 
-						gt.save();
+                            gt.update();
+                        }
 
-						if (!form.makescene || !form.onlyhotspots || !form.onlyonehotspot) {
+                        ProviderPortal myportal = ProviderPortal.find.byId(pid);
 
-							for (AttributeType a : g.getType().getAttributeTypes()) {
+                        myportal.addGameType(gt);
 
-								AttributeType gt_att5 = new AttributeType(a.getName(), a.getXMLType(), a.getFileType());
-								gt_att5.save();
+                        myportal.update();
 
-								gt_att5.setDefaultValue(g.getAttributeValue(a));
-								gt_att5.update();
+                        return redirect(routes.Portal.myGamesListOnCurrentPortal());
 
-								gt.setAttributeType(gt_att5);
-								gt.update();
+                    }
+                }
 
-							}
+            }
+        }
 
-							for (PartType pt : g.getType().getPossiblePartTypes()) {
+    }
 
-								gt.addPossiblePartType(pt);
-								gt.update();
+    public static Result getRouting(String arguments) {
+        String pagecontent = "ERROR";
 
-							}
+        arguments = arguments.replaceAll("-", "?");
 
-							for (ActionType mi : g.getType().getPossibleMenuItemActionTypes()) {
+        arguments = arguments.replaceAll("_", "&");
 
-								gt.addPossibleMenuItemActionType(mi);
-								gt.update();
+        String url = "http://www.yournavigation.org/" + arguments;
 
-							}
+        WebClient webClient = new WebClient();
+        try {
+            WebRequest webRequest = new WebRequest(new URL(url));
+            webRequest.setCharset("utf-8");
 
-							for (HotspotType ht : g.getType().getPossibleHotspotTypes()) {
+            webClient.setThrowExceptionOnFailingStatusCode(false);
+            webClient.setThrowExceptionOnScriptError(false);
 
-								gt.addPossibleHotspotType(ht);
-								gt.update();
+            webClient.setPrintContentOnFailingStatusCode(false);
+            webClient.setJavaScriptEnabled(false);
+            webClient.setRedirectEnabled(true);
+            webClient.setTimeout(20000);
 
-							}
+            XmlPage page = webClient.getPage(webRequest);
 
-							for (SceneType st : g.getType().getPossibleSceneTypes()) {
+            pagecontent = page.getWebResponse().getContentAsString();
+        } catch (IOException ioe) {
+            pagecontent = "Problem accessing page...";
+        }
 
-								gt.addPossibleSceneType(st);
-								gt.update();
+        return ok(pagecontent);
 
-							}
+    }
 
-						}
-						if (form.makescene) {
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result doEditGame(Long pid, Long game) {
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-							if (form.onlyonehotspot) {
+        if (Game.find.where().eq("id", game).findRowCount() != 1) {
 
-								gt.easy_editor = true;
-								gt.multiple_only_scene_type = true;
-								gt.update();
-							}
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-							if (form.onlyhotspots) {
+        } else {
+            Game mygame = Game.find.byId(game);
 
-								gt.show_only_hotspots_in_sidemenu = true;
-								gt.update();
-							}
+            if (Global.securityGuard.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
 
-							SceneType s = new SceneType(form.scenename);
-							s.save();
-							s.addDefaultsFromGame(g);
+                return badRequest(views.html.norightsonportal
+                        .render("Du benötigst mindestens User-Rechte, um ein Spiel hochzuladen."));
 
-							s.update();
-							gt.addPossibleSceneType(s);
-							gt.update();
-						} else {
+            } else {
+                final Form<UploadedGame> filledForm = UPLOAD_FORM.bindFromRequest();
 
-							for (Part p : g.getParts()) {
-								gt.addDefaultPart(p);
-							}
+                if (filledForm.hasErrors()) {
 
-							for (Hotspot h : g.getHotspots()) {
-								gt.addDefaultHotspot(h);
-							}
+                    return badRequest(views.html.portal.edit_game.render(filledForm, mygame, ""));
 
-							gt.update();
-						}
+                }
 
-						ProviderPortal myportal = ProviderPortal.find.byId(pid);
+                MultipartFormData body = request().body().asMultipartFormData();
 
-						myportal.addGameType(gt);
+                UploadedGame form = filledForm.get();
 
-						myportal.update();
+                mygame.setName(form.name);
 
-						return redirect(routes.Portal.myGamesListOnCurrentPortal());
+                for (ProviderGames pg : mygame.getPortals()) {
+                    if (pg.getVisibility() == form.publ)
+                        continue;
 
-					}
-				}
+                    pg.setVisibility(form.publ);
+                    pg.update();
+                    pg.getPortal().exportPublicGamesJson();
+                }
 
-			}
-		}
+                FilePart resourceFile = body.getFile("zip");
 
-	}
+                if (resourceFile != null) {
+                    String fileName = resourceFile.getFilename();
+                    File file = resourceFile.getFile();
 
-	public static Result getRouting(String arguments) {
-		String pagecontent = "ERROR";
+                    int i = 0;
+                    boolean exists = true;
+                    while (exists == true) {
 
-		arguments = arguments.replaceAll("-", "?");
+                        i++;
+                        File f = new File("public/uploads/" + Application.getLocalPortal().getName() + "/",
+                                i + "_" + fileName);
+                        if (!f.exists()) {
+                            exists = false;
+                        }
 
-		arguments = arguments.replaceAll("_", "&");
+                    }
 
-		String url = "http://www.yournavigation.org/" + arguments;
+                    File tosave = new File("public/uploads/" + Application.getLocalPortal().getName() + "/",
+                            i + "_" + fileName);
 
-		System.out.println(url);
+                    try {
 
-		WebClient webClient = new WebClient();
-		try {
-			WebRequest webRequest = new WebRequest(new URL(url));
-			webRequest.setCharset("utf-8");
+                        FileUtils.moveFile(file, tosave);
 
-			webClient.setThrowExceptionOnFailingStatusCode(false);
-			webClient.setThrowExceptionOnScriptError(false);
+                    } catch (IOException ioe) {
 
-			webClient.setPrintContentOnFailingStatusCode(false);
-			webClient.setJavaScriptEnabled(false);
-			webClient.setRedirectEnabled(true);
-			webClient.setTimeout(20000);
+                        return badRequest(views.html.portal.edit_game.render(filledForm, mygame,
+                                "Fehler #0011 beim Datei-Upload. Versuchen Sie es später erneut oder kontaktieren Sie einen System-Administrator."));
 
-			XmlPage page = webClient.getPage(webRequest);
+                    }
 
-			pagecontent = page.getWebResponse().getContentAsString();
-		} catch (IOException ioe) {
-			System.out.println("IO Problem accessing page " + ioe.getMessage());
+                    File todelete = new File(mygame.getFile());
+                    FileUtils.deleteQuietly(todelete);
 
-			pagecontent = "Problem accessing page...";
-		}
+                    mygame.setFile(tosave.getAbsolutePath());
 
-		return ok(pagecontent);
+                }
 
-	}
+                Global.updatePortals();
+                mygame.update();
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result doEditGame(Long pid, Long game) {
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+                return redirect(routes.Portal.myGamesListOnCurrentPortal());
 
-		if (Game.find.where().eq("id", game).findRowCount() != 1) {
+            }
+        }
+    }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result doCopyGame(Long pid, Long game) {
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-		} else {
-			Game mygame = Game.find.byId(game);
+        if (Game.find.where().eq("id", game).findRowCount() != 1) {
 
-			if (Global.securityGuard.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				return badRequest(views.html.norightsonportal
-						.render("Du benötigst mindestens User-Rechte, um ein Spiel hochzuladen."));
+        } else {
+            Game mygame = Game.find.byId(game);
 
-			} else {
-				final Form<UploadedGame> filledForm = UPLOAD_FORM.bindFromRequest();
+            if (Global.securityGuard.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
 
-				if (filledForm.hasErrors()) {
+                return badRequest(views.html.norightsonportal
+                        .render("Du benötigst mindestens User-Rechte, um ein Spiel zu kopieren."));
 
-					return badRequest(views.html.portal.edit_game.render(filledForm, mygame, ""));
+            } else {
+                User currentuser = getLocalUser(session());
 
-				}
+                Game g = mygame.copyMe(" " + Application.getLanguage(("Kopie")));
+                g.save();
+                g.addOwner(currentuser);
+                // NEWSSTREAM-ITEMS
 
-				MultipartFormData body = request().body().asMultipartFormData();
+                // VISIBILITY
 
-				UploadedGame form = filledForm.get();
+                String visi = "false";
+                boolean publ = false;
+                // USER WALL
 
-				mygame.setName(form.name);
+                String text = getLocalPortal().getLanguageParameter("hat_ein_neues_Spiel_erstellt") + ": "
+                        + g.getName();
 
-				for (ProviderGames pg : mygame.getPortals()) {
+                String titel = "Neues Spiel";
+                NewsstreamItem nsi = currentuser.createNewsstreamItem(titel, text, visi);
+                nsi.save();
+                currentuser.addNewsstream(nsi);
 
-					pg.setVisibility(form.publ);
-					pg.update();
+                // PROVIDER WALL COPY
 
-				}
+                NewsstreamItem nsi2 = new NewsstreamItem(nsi);
+                nsi2.save();
+                getLocalPortal().addNewsstream(nsi2);
 
-				FilePart resourceFile = body.getFile("zip");
+                // MAIN PORTAL COPY
 
-				if (resourceFile != null) {
-					String fileName = resourceFile.getFilename();
-					File file = resourceFile.getFile();
+                if (!(Global.defaultportal.getIdentifier().equals(Application.getLocalPortal().getIdentifier()))) {
 
-					int i = 0;
-					boolean exists = true;
-					while (exists == true) {
+                    Global.defaultportal.addNewGame(g, publ);
+                    Global.defaultportal.save();
 
-						i++;
-						File f = new File("public/uploads/" + Application.getLocalPortal().getName() + "/",
-								i + "_" + fileName);
-						if (!f.exists()) {
-							exists = false;
-						}
+                    NewsstreamItem nsi4 = new NewsstreamItem(nsi);
+                    nsi4.save();
 
-					}
+                    Global.defaultportal.addNewsstream(nsi4);
 
-					File tosave = new File("public/uploads/" + Application.getLocalPortal().getName() + "/",
-							i + "_" + fileName);
+                    Global.updatePortals();
 
-					try {
+                }
+                // GAME WALL
 
-						FileUtils.moveFile(file, tosave);
+                text = "wurde neu erstellt.";
+                titel = "Neu erstellt";
+                NewsstreamItem nsi3 = g.createNewsstreamItem(titel, text, visi);
+                nsi3.save();
+                g.addNewsstream(nsi3);
 
-					} catch (IOException ioe) {
+                Application.getLocalPortal().addNewGame(g, publ);
 
-						return badRequest(views.html.portal.edit_game.render(filledForm, mygame,
-								"Fehler #0011 beim Datei-Upload. Versuchen Sie es später erneut oder kontaktieren Sie einen System-Administrator."));
+                Application.getLocalPortal().save();
+                return redirect(routes.Portal.myGamesListOnCurrentPortal());
 
-					}
+            }
+        }
+    }
 
-					File todelete = new File(mygame.getFile());
-					FileUtils.deleteQuietly(todelete);
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result doEditUserRightsOnGame(Long pid, Long gid, Long uid, String rights) {
 
-					mygame.setFile(tosave.getAbsolutePath());
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-				}
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				Global.updatePortals();
-				mygame.update();
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				return redirect(routes.Portal.myGamesListOnCurrentPortal());
+        } else {
+            Game mygame = Game.find.byId(gid);
+            if (Global.securityGuard.hasWriteRightsOnGame(getLocalUser(session()), mygame) == false) {
 
-			}
-		}
-	}
+                return badRequest(views.html.norights
+                        .render("Du benötigst Schreib-Rechte für das Spiel um die Rechte anderer User zu editieren."));
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result doCopyGame(Long pid, Long game) {
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+            } else {
 
-		if (Game.find.where().eq("id", game).findRowCount() != 1) {
+                if (User.find.where().eq("id", uid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+                    return badRequest(views.html.norights.render("Der User existiert nicht"));
 
-		} else {
-			Game mygame = Game.find.byId(game);
+                } else {
 
-			if (Global.securityGuard.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
+                    User usertoedit = User.find.byId(uid);
 
-				return badRequest(views.html.norightsonportal
-						.render("Du benötigst mindestens User-Rechte, um ein Spiel zu kopieren."));
+                    boolean b = true;
 
-			} else {
-				User currentuser = getLocalUser(session());
+                    if (usertoedit.getId() == Application.getLocalUser().getId()) {
+                        b = false;
 
-				Game g = mygame.copyMe(" " + Application.getLanguage(("Kopie")));
-				g.save();
-				System.out.println("Game created.");
-				g.addOwner(currentuser);
+                        if (mygame.getAmountOfUsers() >= 2) {
 
-				System.out.println("User added to Game.");
-				// NEWSSTREAM-ITEMS
+                            b = true;
 
-				// VISIBILITY
+                        }
 
-				String visi = "false";
-				boolean publ = false;
-				// USER WALL
+                    }
 
-				String text = getLocalPortal().getLanguageParameter("hat_ein_neues_Spiel_erstellt") + ": "
-						+ g.getName();
+                    if (b) {
 
-				String titel = "Neues Spiel";
-				NewsstreamItem nsi = currentuser.createNewsstreamItem(titel, text, visi);
-				nsi.save();
-				currentuser.addNewsstream(nsi);
+                        if (mygame.userlastupdated == usertoedit.getId() && !rights.equals("write")) {
 
-				// PROVIDER WALL COPY
+                            mygame.setPublishOnAllPortals(false);
 
-				NewsstreamItem nsi2 = new NewsstreamItem(nsi);
-				nsi2.save();
-				getLocalPortal().addNewsstream(nsi2);
+                        }
 
-				// MAIN PORTAL COPY
+                        if (mygame.existsUser(usertoedit)) {
 
-				if (!(Global.defaultportal.getIdentifier().equals(Application.getLocalPortal().getIdentifier()))) {
+                            // EDIT
 
-					Global.defaultportal.addNewGame(g, publ);
-					Global.defaultportal.save();
+                            mygame.editUser(usertoedit, rights);
 
-					NewsstreamItem nsi4 = new NewsstreamItem(nsi);
-					nsi4.save();
+                            Global.updatePortals();
 
-					Global.defaultportal.addNewsstream(nsi4);
+                        } else {
 
-					Global.updatePortals();
+                            // NEU HINZUFÜGEN
 
-				}
-				System.out.println("ProviderPortal Wall");
-				// GAME WALL
+                            mygame.addUser(usertoedit, rights);
+                            Global.updatePortals();
 
-				text = "wurde neu erstellt.";
-				titel = "Neu erstellt";
-				NewsstreamItem nsi3 = g.createNewsstreamItem(titel, text, visi);
-				nsi3.save();
-				g.addNewsstream(nsi3);
+                        }
+                    }
 
-				System.out.println("Game Wall");
-				Application.getLocalPortal().addNewGame(g, publ);
+                    mygame.update();
 
-				Application.getLocalPortal().save();
+                    if (usertoedit.getId() == Application.getLocalUser().getId() && !rights.equals("write")) {
 
-				System.out.println("Done");
+                        return redirect(routes.Portal.myGamesList(pid));
 
-				return redirect(routes.Portal.myGamesListOnCurrentPortal());
+                    } else {
 
-			}
-		}
-	}
+                        return redirect(routes.Portal.gameRightsOnCurrentPortal(gid));
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result doEditUserRightsOnGame(Long pid, Long gid, Long uid, String rights) {
+                    }
 
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+                }
+            }
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+        }
+    }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result doDeleteUserRightsOnGame(Long pid, Long gid, Long uid) {
 
-		} else {
-			Game mygame = Game.find.byId(gid);
-			if (Global.securityGuard.hasWriteRightsOnGame(getLocalUser(session()), mygame) == false) {
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte für das Spiel um die Rechte anderer User zu editieren."));
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-			} else {
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-				if (User.find.where().eq("id", uid).findRowCount() != 1) {
+        } else {
+            Game mygame = Game.find.byId(gid);
+            if (Global.securityGuard.hasWriteRightsOnGame(getLocalUser(session()), mygame) == false) {
 
-					return badRequest(views.html.norights.render("Der User existiert nicht"));
+                return badRequest(views.html.norights
+                        .render("Du benötigst Schreib-Rechte für das Spiel um die Rechte anderer User zu editieren."));
 
-				} else {
+            } else {
 
-					User usertoedit = User.find.byId(uid);
+                if (User.find.where().eq("id", uid).findRowCount() != 1) {
 
-					boolean b = true;
+                    return badRequest(views.html.norights.render("Der User existiert nicht"));
 
-					if (usertoedit.getId() == Application.getLocalUser().getId()) {
-						b = false;
+                } else {
 
-						if (mygame.getAmountOfUsers() >= 2) {
+                    User usertoedit = User.find.byId(uid);
 
-							b = true;
+                    if (mygame.existsUser(usertoedit)) {
 
-						}
+                        boolean b = true;
 
-					}
+                        if (usertoedit.getId() == Application.getLocalUser().getId()) {
+                            b = false;
 
-					if (b) {
+                            if (mygame.getAmountOfUsers() >= 2) {
 
-						if (mygame.userlastupdated == usertoedit.getId() && !rights.equals("write")) {
+                                b = true;
 
-							mygame.setPublishOnAllPortals(false);
+                            }
 
-						}
+                        }
 
-						if (mygame.existsUser(usertoedit)) {
+                        if (b) {
 
-							// EDIT
+                            // DELTE
 
-							mygame.editUser(usertoedit, rights);
+                            mygame.deleteUser(usertoedit);
 
-							Global.updatePortals();
+                            if (mygame.userlastupdated == usertoedit.getId()) {
 
-						} else {
+                                mygame.setPublishOnAllPortals(false);
 
-							// NEU HINZUFÜGEN
+                            }
 
-							mygame.addUser(usertoedit, rights);
-							Global.updatePortals();
+                            Global.updatePortals();
 
-						}
-					}
+                        }
 
-					mygame.update();
+                    }
 
-					if (usertoedit.getId() == Application.getLocalUser().getId() && !rights.equals("write")) {
+                    mygame.save();
 
-						return redirect(routes.Portal.myGamesList(pid));
+                    if (usertoedit.getId() == Application.getLocalUser().getId()) {
 
-					} else {
+                        return redirect(routes.Portal.myGamesList(pid));
 
-						return redirect(routes.Portal.gameRightsOnCurrentPortal(gid));
+                    } else {
 
-					}
+                        return redirect(routes.Portal.gameRightsOnCurrentPortal(gid));
 
-				}
-			}
+                    }
 
-		}
-	}
+                }
+            }
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result doDeleteUserRightsOnGame(Long pid, Long gid, Long uid) {
+        }
+    }
 
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+    // PORTALS
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+    /*
+     * RESULTS
+     */
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    public static Result myPortalsList(Long pid) {
 
-		} else {
-			Game mygame = Game.find.byId(gid);
-			if (Global.securityGuard.hasWriteRightsOnGame(getLocalUser(session()), mygame) == false) {
+        session("currentportal", pid.toString());
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Schreib-Rechte für das Spiel um die Rechte anderer User zu editieren."));
+        User u = getLocalUser(session());
 
-			} else {
+        if (Global.securityGuard.isDefaultPortal() == false) {
 
-				if (User.find.where().eq("id", uid).findRowCount() != 1) {
+            return badRequest(
+                    views.html.norights.render("Diese Seite kann nur vom Geoquest Webservice aus aufgerufen werden."));
 
-					return badRequest(views.html.norights.render("Der User existiert nicht"));
+        } else {
 
-				} else {
+            Set<ProviderUsers> pplist = new HashSet<ProviderUsers>();
 
-					User usertoedit = User.find.byId(uid);
+            for (ProviderUsers pp : u.getPortals()) {
+                if (!(pp.getPortal().getId().equals(Global.defaultportal.getId())))
+                    pplist.add(pp);
 
-					if (mygame.existsUser(usertoedit)) {
+            }
 
-						boolean b = true;
+            return ok(views.html.portal.my_portals.render(ProviderPortal.find.all()));
 
-						if (usertoedit.getId() == Application.getLocalUser().getId()) {
-							b = false;
+        }
+    }
 
-							if (mygame.getAmountOfUsers() >= 2) {
+    public static Result getMenu() {
 
-								b = true;
+        ProviderPortal p = Application.getLocalPortal();
+        User u = getLocalUser(session());
 
-							}
+        if (p.getId() == 61L && u != null) {
 
-						}
+            for (SortedHtml sh : p.getHtml()) {
 
-						if (b) {
+                if (sh.getWort().equals("%%_GEOQUEST_NAV_LI_%%")) {
+                    return ok(views.html.geoquestcodes.mainnavigation.render(sh, ""));
+                }
 
-							// DELTE
+            }
 
-							mygame.deleteUser(usertoedit);
+        }
 
-							if (mygame.userlastupdated == usertoedit.getId()) {
+        return ok("");
+    }
 
-								mygame.setPublishOnAllPortals(false);
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result addPortal(Long pid) {
 
-							}
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-							Global.updatePortals();
+        if (Global.securityGuard.isDefaultPortal() == false) {
 
-						}
+            return badRequest(
+                    views.html.norights.render("Diese Seite kann nur vom Geoquest Webservice aus aufgerufen werden."));
 
-					}
+        } else {
 
-					mygame.save();
+            return ok(views.html.portal.add_portal.render(PORTAL_FORM, ""));
 
-					if (usertoedit.getId() == Application.getLocalUser().getId()) {
+        }
+    }
 
-						return redirect(routes.Portal.myGamesList(pid));
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result doAddGameTypeToPortal(Long pid, Long portal, Long gtid) {
 
-					} else {
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-						return redirect(routes.Portal.gameRightsOnCurrentPortal(gid));
+        if (ProviderPortal.find.where().eq("id", portal).findRowCount() == 1) {
 
-					}
+            ProviderPortal myportal = ProviderPortal.find.byId(portal);
 
-				}
-			}
+            if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
 
-		}
-	}
+                return badRequest(views.html.norights
+                        .render("Du benötigst Admin-Rechte auf diesem Portal, um dieses Portal zu entfernen."));
 
-	// PORTALS
+            } else {
 
-	/*
-	 * RESULTS
-	 */
+                if (GameType.find.where().eq("id", gtid).findRowCount() == 1) {
 
-	public static Result myPortalsList(Long pid) {
+                    myportal.addGameType(GameType.find.byId(gtid));
 
-		session("currentportal", pid.toString());
+                    myportal.update();
 
-		User u = getLocalUser(session());
+                    return redirect(
+                            routes.Portal.gameTypesonPortal(myportal.getId(), Application.getLocalPortal().getId()));
 
-		if (Global.securityGuard.isDefaultPortal() == false) {
+                } else {
+                    return badRequest(views.html.norights.render("Der Spieltyp existiert nicht."));
 
-			return badRequest(
-					views.html.norights.render("Diese Seite kann nur vom Geoquest Webservice aus aufgerufen werden."));
+                }
 
-		} else {
+            }
 
-			Set<ProviderUsers> pplist = new HashSet<ProviderUsers>();
+        } else {
 
-			for (ProviderUsers pp : u.getPortals()) {
-				if (!(pp.getPortal().getId().equals(Global.defaultportal.getId())))
-					pplist.add(pp);
+            return badRequest(views.html.norights.render("Das Portal existiert nicht."));
 
-			}
+        }
 
-			return ok(views.html.portal.my_portals.render(ProviderPortal.find.all()));
+    }
 
-		}
-	}
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result doDeleteGameTypeFromPortal(Long pid, Long portal, Long gtid) {
 
-	public static Result getMenu() {
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-		ProviderPortal p = Application.getLocalPortal();
-		User u = getLocalUser(session());
+        if (ProviderPortal.find.where().eq("id", portal).findRowCount() == 1) {
 
-		if (p.getId() == 61L && u != null) {
+            ProviderPortal myportal = ProviderPortal.find.byId(portal);
 
-			for (SortedHtml sh : p.getHtml()) {
+            if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
 
-				if (sh.getWort().equals("%%_GEOQUEST_NAV_LI_%%")) {
-					return ok(views.html.geoquestcodes.mainnavigation.render(sh, ""));
-				}
+                return badRequest(views.html.norights
+                        .render("Du benötigst Admin-Rechte auf diesem Portal, um dieses Portal zu entfernen."));
 
-			}
+            } else {
 
-		}
+                if (GameType.find.where().eq("id", gtid).findRowCount() == 1) {
 
-		return ok("");
-	}
+                    myportal.removeGameType(GameType.find.byId(gtid));
+                    myportal.update();
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result addPortal(Long pid) {
+                    Global.updatePortals();
 
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+                    return redirect(
+                            routes.Portal.gameTypesonPortal(myportal.getId(), Application.getLocalPortal().getId()));
 
-		if (Global.securityGuard.isDefaultPortal() == false) {
+                } else {
+                    return badRequest(views.html.norights.render("Der Spieltyp existiert nicht."));
 
-			return badRequest(
-					views.html.norights.render("Diese Seite kann nur vom Geoquest Webservice aus aufgerufen werden."));
+                }
 
-		} else {
+            }
 
-			return ok(views.html.portal.add_portal.render(PORTAL_FORM, ""));
+        } else {
 
-		}
-	}
+            return badRequest(views.html.norights.render("Das Portal existiert nicht."));
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result doAddGameTypeToPortal(Long pid, Long portal, Long gtid) {
+        }
 
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+    }
 
-		if (ProviderPortal.find.where().eq("id", portal).findRowCount() == 1) {
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result userRightsonPortal(Long pid, Long gid) {
 
-			ProviderPortal myportal = ProviderPortal.find.byId(portal);
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-			if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
+        if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Admin-Rechte auf diesem Portal, um dieses Portal zu entfernen."));
+            return badRequest(views.html.norights.render("Das Portal existiert nicht"));
 
-			} else {
+        } else {
+            ProviderPortal myportal = ProviderPortal.find.byId(gid);
+            if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
 
-				if (GameType.find.where().eq("id", gtid).findRowCount() == 1) {
+                return badRequest(views.html.norights.render(
+                        "Du benötigst Admin-Rechte auf diesem Portal, um die User-Rechte auf dem Portal zu editieren."));
 
-					myportal.addGameType(GameType.find.byId(gtid));
+            } else {
 
-					myportal.update();
+                return ok(views.html.portal.portal_rights.render(myportal));
 
-					return redirect(
-							routes.Portal.gameTypesonPortal(myportal.getId(), Application.getLocalPortal().getId()));
+            }
+        }
 
-				} else {
-					return badRequest(views.html.norights.render("Der Spieltyp existiert nicht."));
+    }
 
-				}
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result gameTypesonPortal(Long pid, Long gid) {
 
-			}
+        session("currentportal", gid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-		} else {
+        if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
 
-			return badRequest(views.html.norights.render("Das Portal existiert nicht."));
+            return badRequest(views.html.norights.render("Das Portal existiert nicht"));
 
-		}
+        } else {
+            ProviderPortal myportal = ProviderPortal.find.byId(pid);
+            if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
 
-	}
+                return badRequest(views.html.norights.render(
+                        "Du benötigst Admin-Rechte auf diesem Portal, um die User-Rechte auf dem Portal zu editieren."));
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result doDeleteGameTypeFromPortal(Long pid, Long portal, Long gtid) {
+            } else {
 
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+                return ok(views.html.portal.portal_gametypes.render(myportal));
 
-		if (ProviderPortal.find.where().eq("id", portal).findRowCount() == 1) {
+            }
+        }
 
-			ProviderPortal myportal = ProviderPortal.find.byId(portal);
+    }
 
-			if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result userRightsonCurrentPortal() {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Admin-Rechte auf diesem Portal, um dieses Portal zu entfernen."));
+        ProviderPortal myportal = Application.getLocalPortal();
+        if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
 
-			} else {
+            return badRequest(views.html.norights.render(
+                    "Du benötigst Admin-Rechte auf diesem Portal, um die User-Rechte auf dem Portal zu editieren."));
 
-				if (GameType.find.where().eq("id", gtid).findRowCount() == 1) {
+        } else {
 
-					myportal.removeGameType(GameType.find.byId(gtid));
-					myportal.update();
+            return ok(views.html.portal.portal_rights.render(myportal));
 
-					Global.updatePortals();
+        }
 
-					return redirect(
-							routes.Portal.gameTypesonPortal(myportal.getId(), Application.getLocalPortal().getId()));
+    }
 
-				} else {
-					return badRequest(views.html.norights.render("Der Spieltyp existiert nicht."));
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result editPortal(Long pid, Long portal) {
 
-				}
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-			}
+        if (ProviderPortal.find.where().eq("id", portal).findRowCount() != 1) {
 
-		} else {
+            return badRequest(views.html.norights.render("Das Portal existiert nicht"));
 
-			return badRequest(views.html.norights.render("Das Portal existiert nicht."));
+        } else {
 
-		}
+            ProviderPortal myportal = ProviderPortal.find.byId(portal);
 
-	}
+            if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result userRightsonPortal(Long pid, Long gid) {
+                return badRequest(views.html.norights
+                        .render("Du benötigst Admin-Rechte auf diesem Portal, um dieses Portal zu editieren."));
 
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+            } else {
 
-		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
+                PostedPortal formobject = new PostedPortal();
+                formobject.name = myportal.getName();
+                formobject.htmlurl = myportal.getTemplateURL();
+                formobject.formname = myportal.getTemplateForm();
+                formobject.pwfield = myportal.getTemplateFormField();
+                formobject.password = myportal.getTemplatePw();
+                formobject.user = myportal.getTemplateUser();
+                formobject.userfield = myportal.getTemplateUserField();
+                formobject.afterloginurl = myportal.getTemplateAfterLoginURL();
+                formobject.mappingurl = myportal.getTemplateMappingURL();
+                formobject.submitbutton = myportal.getTemplateSubmitButton();
+                formobject.autoverify = myportal.getAutoVerifyUsers();
+                formobject.customserverurl = myportal.getTemplateServerURL();
+                formobject.addcss = myportal.getAdditionalCSS();
+                formobject.posturl = myportal.getTemplatePostURL();
+                formobject.color = myportal.getDefaultcolor();
+                formobject.color_2 = myportal.getComplementColor();
+                formobject.color_3 = myportal.getGradientColor();
+                formobject.color_4 = myportal.getNavbarColor();
+                formobject.color_5 = myportal.getLinkColor();
+                formobject.privacyagreement = myportal.privacyagreement;
+                formobject.privacyagreementversion = myportal.privacyagreementversion;
+                formobject.imprint = myportal.imprint;
+                formobject.agbs = myportal.agbs;
+                formobject.agbsversion = myportal.agbsversion;
+                formobject.portalprivacyagreement = myportal.portalprivacyagreement;
+                if (myportal.portalprivacyagreementversion != null)
+                    formobject.portalprivacyagreementversion = myportal.portalprivacyagreementversion;
+                formobject.portalimprint = myportal.portalimprint;
+                formobject.portalagbs = myportal.portalagbs;
+                if (myportal.portalagbsversion != null)
+                    formobject.portalagbsversion = myportal.portalagbsversion;
 
-			return badRequest(views.html.norights.render("Das Portal existiert nicht"));
+                Form<PostedPortal> fillForm = form(PostedPortal.class);
+                fillForm = fillForm.fill(formobject);
 
-		} else {
-			ProviderPortal myportal = ProviderPortal.find.byId(gid);
-			if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
+                return ok(views.html.portal.edit_portal.render(fillForm, myportal, ""));
 
-				return badRequest(views.html.norights.render(
-						"Du benötigst Admin-Rechte auf diesem Portal, um die User-Rechte auf dem Portal zu editieren."));
+            }
+        }
 
-			} else {
+    }
 
-				return ok(views.html.portal.portal_rights.render(myportal));
+    /*
+     * DO FUNCTIONS
+     *
+     * These are used to compute the Post objects of Forms.
+     */
 
-			}
-		}
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result doAddPortal(Long pid) {
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-	}
+        if (Global.securityGuard.isDefaultPortal() == false) {
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result gameTypesonPortal(Long pid, Long gid) {
+            return badRequest(
+                    views.html.norights.render("Diese Seite kann nur vom Geoquest Webservice aus aufgerufen werden."));
 
-		session("currentportal", gid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+        } else {
 
-		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
+            User currentuser = getLocalUser(session());
+            final Form<PostedPortal> filledForm = PORTAL_FORM.bindFromRequest();
 
-			return badRequest(views.html.norights.render("Das Portal existiert nicht"));
+            if (filledForm.hasGlobalErrors()) {
 
-		} else {
-			ProviderPortal myportal = ProviderPortal.find.byId(pid);
-			if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
+                return badRequest(views.html.portal.add_portal.render(filledForm, "Global Error"));
 
-				return badRequest(views.html.norights.render(
-						"Du benötigst Admin-Rechte auf diesem Portal, um die User-Rechte auf dem Portal zu editieren."));
+            }
 
-			} else {
+            if (filledForm.hasErrors()) {
 
-				return ok(views.html.portal.portal_gametypes.render(myportal));
+                return badRequest(views.html.portal.add_portal.render(filledForm, ""));
 
-			}
-		}
+            }
 
-	}
+            PostedPortal form = filledForm.get();
 
-	@Restrict(@Group(Application.USER_ROLE))
-	public static Result userRightsonCurrentPortal() {
+            MultipartFormData body = request().body().asMultipartFormData();
+            FilePart resourceFile = body.getFile("logo");
 
-		ProviderPortal myportal = Application.getLocalPortal();
-		if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
+            Long nid = Application.getLocalPortal().getId();
 
-			return badRequest(views.html.norights.render(
-					"Du benötigst Admin-Rechte auf diesem Portal, um die User-Rechte auf dem Portal zu editieren."));
+            String the_url = Global.SERVER_URL + "defaulttemplate";
+            boolean set_url = false;
+            if (!form.htmlurl.equals("")) {
 
-		} else {
+                the_url = form.htmlurl;
+                set_url = true;
+            }
 
-			return ok(views.html.portal.portal_rights.render(myportal));
+            // / HOCHLADEN
 
-		}
+            String tosavename = "";
 
-	}
+            if (resourceFile != null) {
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result editPortal(Long pid, Long portal) {
+                String fileName = resourceFile.getFilename();
+                File file = resourceFile.getFile();
 
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+                int i = 0;
+                boolean exists = true;
+                while (exists == true) {
 
-		if (ProviderPortal.find.where().eq("id", portal).findRowCount() != 1) {
+                    i++;
+                    File f = new File("public/uploads/" + Application.getLocalPortal().getName() + "/img/",
+                            i + "_" + fileName);
+                    if (!f.exists()) {
+                        exists = false;
+                    }
 
-			return badRequest(views.html.norights.render("Das Portal existiert nicht"));
+                }
 
-		} else {
+                File tosave = new File("public/uploads/portallogos/", i + "_" + fileName);
 
-			ProviderPortal myportal = ProviderPortal.find.byId(portal);
+                try {
+                    FileUtils.moveFile(file, tosave);
+                    tosavename = tosave.getAbsolutePath();
+                } catch (IOException ioe) {
+                    return badRequest(views.html.portal.add_portal.render(filledForm,
+                            "Fehler #0012 beim Datei-Upload. Versuchen Sie es später erneut oder kontaktieren Sie einen System-Administrator."));
 
-			if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
+                }
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Admin-Rechte auf diesem Portal, um dieses Portal zu editieren."));
+            } else {
 
-			} else {
+                // BAD REQUEST
 
-				PostedPortal formobject = new PostedPortal();
-				formobject.name = myportal.getName();
-				formobject.htmlurl = myportal.getTemplateURL();
-				formobject.formname = myportal.getTemplateForm();
-				formobject.pwfield = myportal.getTemplateFormField();
-				formobject.password = myportal.getTemplatePw();
-				formobject.user = myportal.getTemplateUser();
-				formobject.userfield = myportal.getTemplateUserField();
-				formobject.afterloginurl = myportal.getTemplateAfterLoginURL();
-				formobject.mappingurl = myportal.getTemplateMappingURL();
-				formobject.submitbutton = myportal.getTemplateSubmitButton();
-				formobject.autoverify = myportal.getAutoVerifyUsers();
-				formobject.customserverurl = myportal.getTemplateServerURL();
-				formobject.addcss = myportal.getAdditionalCSS();
-				formobject.posturl = myportal.getTemplatePostURL();
-				formobject.color = myportal.getDefaultcolor();
-				formobject.color_2 = myportal.getComplementColor();
-				formobject.color_3 = myportal.getGradientColor();
-				formobject.color_4 = myportal.getNavbarColor();
-				formobject.color_5 = myportal.getLinkColor();
-				formobject.privacyagreement = myportal.privacyagreement;
-				formobject.privacyagreementversion = myportal.privacyagreementversion;
-				formobject.imprint = myportal.imprint;
-				formobject.agbs = myportal.agbs;
-				formobject.agbsversion = myportal.agbsversion;
-				formobject.portalprivacyagreement = myportal.portalprivacyagreement;
-				if (myportal.portalprivacyagreementversion != null)
-					formobject.portalprivacyagreementversion = myportal.portalprivacyagreementversion;
-				formobject.portalimprint = myportal.portalimprint;
-				formobject.portalagbs = myportal.portalagbs;
-				if (myportal.portalagbsversion != null)
-					formobject.portalagbsversion = myportal.portalagbsversion;
+            }
 
-				Form<PostedPortal> fillForm = form(PostedPortal.class);
-				fillForm = fillForm.fill(formobject);
+            String c1 = form.color;
+            String c2 = form.color_2;
+            String c3 = form.color_3;
+            String c4 = form.color_4;
+            String c5 = form.color_5;
 
-				return ok(views.html.portal.edit_portal.render(fillForm, myportal, ""));
+            if (c1.equals("")) {
+                c1 = "#ffccff";
+            }
+            if (c2.equals("")) {
+                c2 = "#ffccff";
+            }
+            if (c3.equals("")) {
+                c3 = "#ffccff";
+            }
+            if (c4.equals("")) {
+                c4 = "#ffccff";
+            }
+            if (c5.equals("")) {
+                c5 = "#ffccff";
+            }
 
-			}
-		}
+            ProviderPortal p = new ProviderPortal(form.name, the_url, form.formname, form.pwfield, form.userfield,
+                    form.password, form.user, form.afterloginurl, form.autoverify, form.submitbutton, form.mappingurl,
+                    form.customserverurl, form.posturl, form.addcss, c1, "default", c2, c3, c4, c5, tosavename);
+            p.save();
+            p.addNewAdmin(currentuser);
+            p.save();
+            nid = p.getId();
 
-	}
+            // IF I GOT NO TEMPLATE PAGE, DO QEEVEEDESIGN DEFAULT1
 
-	/*
-	 * DO FUNCTIONS
-	 * 
-	 * These are used to compute the Post objects of Forms.
-	 */
+            if (!set_url) {
+                p.setTemplateURL(Global.SERVER_URL + nid + "/qeeveetemplates/default/html");
+                p.update();
+                p.updateHtmlByTemplateNoPassword();
+            }
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result doAddPortal(Long pid) {
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+            return redirect(Application.getLocalPortal().getTemplateServerURLDropSlash() + "/" + nid + "/public");
+        }
+    }
 
-		if (Global.securityGuard.isDefaultPortal() == false) {
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result doDeletePortal(Long pid, Long portal) {
 
-			return badRequest(
-					views.html.norights.render("Diese Seite kann nur vom Geoquest Webservice aus aufgerufen werden."));
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-		} else {
+        if (ProviderPortal.find.where().eq("id", portal).findRowCount() == 1) {
 
-			User currentuser = getLocalUser(session());
-			final Form<PostedPortal> filledForm = PORTAL_FORM.bindFromRequest();
+            ProviderPortal myportal = ProviderPortal.find.byId(portal);
 
-			if (filledForm.hasGlobalErrors()) {
+            if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
 
-				return badRequest(views.html.portal.add_portal.render(filledForm, "Global Error"));
+                return badRequest(views.html.norights
+                        .render("Du benötigst Admin-Rechte auf diesem Portal, um dieses Portal zu entfernen."));
 
-			}
+            } else {
 
-			if (filledForm.hasErrors()) {
+                boolean done = false;
 
-				return badRequest(views.html.portal.add_portal.render(filledForm, ""));
+                if (!(myportal.getId().equals(Global.defaultportal.getId()))) {
 
-			}
+                    done = myportal.removeMe();
+                    try {
+                        myportal.delete();
+                    } catch (RuntimeException e) {
+                        e.printStackTrace();
+                    }
 
-			PostedPortal form = filledForm.get();
+                    Global.updatePortals();
+                }
 
-			MultipartFormData body = request().body().asMultipartFormData();
-			FilePart resourceFile = body.getFile("logo");
+                if (done == true) {
 
-			Long nid = Application.getLocalPortal().getId();
+                    return ok(views.html.portal.public_games.render(Application.getLocalPortal().getPublicGamesList()));
 
-			String the_url = Global.SERVER_URL + "defaulttemplate";
-			boolean set_url = false;
-			if (!form.htmlurl.equals("")) {
+                } else {
 
-				the_url = form.htmlurl;
-				set_url = true;
-			}
+                    return badRequest(views.html.norights.render("Unbekannter Fehler beim Entfernen des Portals."));
 
-			// / HOCHLADEN
+                }
 
-			String tosavename = "";
+            }
 
-			if (resourceFile != null) {
+        } else {
 
-				String fileName = resourceFile.getFilename();
-				File file = resourceFile.getFile();
+            return badRequest(views.html.norights.render("Das zu entfernende Portal existiert nicht."));
 
-				int i = 0;
-				boolean exists = true;
-				while (exists == true) {
+        }
 
-					i++;
-					File f = new File("public/uploads/" + Application.getLocalPortal().getName() + "/img/",
-							i + "_" + fileName);
-					if (!f.exists()) {
-						exists = false;
-					}
+    }
 
-				}
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result doEditPortal(Long pid, Long portal) {
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-				File tosave = new File("public/uploads/portallogos/", i + "_" + fileName);
+        if (ProviderPortal.find.where().eq("id", portal).findRowCount() == 1) {
 
-				try {
+            ProviderPortal myportal = ProviderPortal.find.byId(portal);
 
-					FileUtils.moveFile(file, tosave);
-					System.out.println("Done");
-					tosavename = tosave.getAbsolutePath();
+            if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
 
-				} catch (IOException ioe) {
-					return badRequest(views.html.portal.add_portal.render(filledForm,
-							"Fehler #0012 beim Datei-Upload. Versuchen Sie es später erneut oder kontaktieren Sie einen System-Administrator."));
+                return badRequest(views.html.norights
+                        .render("Du benötigst Admin-Rechte auf dem jeweiligen Portal, um es zu editieren."));
 
-				}
+            } else {
 
-			} else {
+                final Form<PostedPortal> filledForm = PORTAL_FORM.bindFromRequest();
 
-				// BAD REQUEST
+                if (filledForm.hasErrors()) {
 
-			}
+                    return badRequest(views.html.portal.edit_portal.render(filledForm, myportal, ""));
 
-			String c1 = form.color;
-			String c2 = form.color_2;
-			String c3 = form.color_3;
-			String c4 = form.color_4;
-			String c5 = form.color_5;
+                }
 
-			if (c1.equals("")) {
-				c1 = "#ffccff";
-			}
-			if (c2.equals("")) {
-				c2 = "#ffccff";
-			}
-			if (c3.equals("")) {
-				c3 = "#ffccff";
-			}
-			if (c4.equals("")) {
-				c4 = "#ffccff";
-			}
-			if (c5.equals("")) {
-				c5 = "#ffccff";
-			}
+                PostedPortal form = filledForm.get();
 
-			ProviderPortal p = new ProviderPortal(form.name, the_url, form.formname, form.pwfield, form.userfield,
-					form.password, form.user, form.afterloginurl, form.autoverify, form.submitbutton, form.mappingurl,
-					form.customserverurl, form.posturl, form.addcss, c1, "default", c2, c3, c4, c5, tosavename);
-			p.save();
-			p.addNewAdmin(currentuser);
-			p.save();
-			nid = p.getId();
+                MultipartFormData body = request().body().asMultipartFormData();
+                FilePart resourceFile = body.getFile("logo");
 
-			// IF I GOT NO TEMPLATE PAGE, DO QEEVEEDESIGN DEFAULT1
+                String tosavename = "";
 
-			if (!set_url) {
+                if (resourceFile != null) {
 
-				System.out.println("Trying to set default template");
-				p.setTemplateURL(Global.SERVER_URL + nid + "/qeeveetemplates/default/html");
-				p.update();
-				p.updateHtmlByTemplateNoPassword();
+                    // HOCHLADEN
 
-			}
+                    String fileName = resourceFile.getFilename();
+                    File file = resourceFile.getFile();
 
-			return redirect(Application.getLocalPortal().getTemplateServerURLDropSlash() + "/" + nid + "/public");
+                    int i = 0;
+                    boolean exists = true;
+                    while (exists == true) {
 
-		}
-	}
+                        i++;
+                        File f = new File("public/uploads/portallogos/", i + "_" + fileName);
+                        if (!f.exists()) {
+                            exists = false;
+                        }
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result doDeletePortal(Long pid, Long portal) {
+                    }
 
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+                    File tosave = new File("public/uploads/portallogos/", i + "_" + fileName);
 
-		if (ProviderPortal.find.where().eq("id", portal).findRowCount() == 1) {
+                    try {
 
-			ProviderPortal myportal = ProviderPortal.find.byId(portal);
+                        FileUtils.moveFile(file, tosave);
+                        tosavename = tosave.getAbsolutePath();
 
-			if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
+                        myportal.setLogoimg(tosavename);
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Admin-Rechte auf diesem Portal, um dieses Portal zu entfernen."));
+                    } catch (IOException ioe) {
+                        return badRequest(views.html.portal.edit_portal.render(filledForm, myportal,
+                                "Fehler #0013 beim Datei-Upload. Versuchen Sie es später erneut oder kontaktieren Sie einen System-Administrator."));
 
-			} else {
+                    }
 
-				boolean done = false;
+                }
 
-				if (!(myportal.getId().equals(Global.defaultportal.getId()))) {
+                myportal.setName(form.name);
 
-					done = myportal.removeMe();
-					try {
-						myportal.delete();
-					} catch (RuntimeException e) {
+                myportal.setAutoVerifyUsers(form.autoverify);
 
-						System.out.println("Can't delete Portal itself:");
-						e.printStackTrace();
+                if (!form.htmlurl.equals("")) {
+                    myportal.setTemplateURL(form.htmlurl);
 
-					}
+                } else {
 
-					Global.updatePortals();
+                    myportal.setTemplateURL(
+                            Global.SERVER_URL + myportal.getIdentifier() + "/qeeveetemplates/default/html");
 
-				}
+                }
 
-				if (done == true) {
+                if (!form.password.equals("")) {
+                    myportal.setTemplatePw(form.password);
+                }
 
-					return ok(views.html.portal.public_games.render(Application.getLocalPortal().getPublicGamesList()));
+                String c1 = form.color;
+                String c2 = form.color_2;
+                String c3 = form.color_3;
+                String c4 = form.color_4;
+                String c5 = form.color_5;
 
-				} else {
+                if (c1.equals("")) {
+                    c1 = "#ffccff";
+                }
+                myportal.setDefaultcolor(c1);
+                if (c2.equals("")) {
+                    c2 = "#ffccff";
+                }
+                myportal.setComplementColor(c2);
+                if (c3.equals("")) {
+                    c3 = "#ffccff";
+                }
+                myportal.setGradientColor(c3);
+                if (c4.equals("")) {
+                    c4 = "#ffccff";
+                }
+                myportal.setNavbarColor(c4);
+                if (c5.equals("")) {
+                    c5 = "#ffccff";
+                }
+                myportal.setLinkColor(c5);
 
-					return badRequest(views.html.norights.render("Unbekannter Fehler beim Entfernen des Portals."));
+                myportal.portalagbs = form.portalagbs;
+                myportal.portalagbsversion = form.portalagbsversion;
+                myportal.portalprivacyagreement = form.portalprivacyagreement;
+                myportal.portalprivacyagreementversion = form.portalprivacyagreementversion;
+                myportal.portalimprint = form.portalimprint;
 
-				}
+                myportal.agbs = form.agbs;
+                myportal.agbsversion = form.agbsversion;
+                myportal.privacyagreement = form.privacyagreement;
+                myportal.privacyagreementversion = form.privacyagreementversion;
+                myportal.imprint = form.imprint;
+                myportal.setTemplateFormField(form.pwfield);
+                myportal.setTemplateForm(form.formname);
+                myportal.setTemplateAfterLoginURL(form.afterloginurl);
+                myportal.setTemplateUser(form.user);
+                myportal.setTemplateUserField(form.userfield);
+                myportal.setTemplateSubmitButton(form.submitbutton);
+                myportal.setTemplateMappingURL(form.mappingurl);
+                myportal.setTemplateServerURL(form.customserverurl);
+                myportal.setTemplatePostURL(form.posturl);
+                myportal.setAdditionalCSS(form.addcss);
+                myportal.update();
+                myportal.computeMapping();
+                myportal.updateHtmlByTemplateNoPassword();
+                Global.updatePortals();
 
-			}
+                return redirect(routes.Portal.myPortalsList(pid));
+            }
 
-		} else {
+        } else {
 
-			return badRequest(views.html.norights.render("Das zu entfernende Portal existiert nicht."));
+            final Form<PostedPortal> filledForm = PORTAL_FORM.bindFromRequest();
 
-		}
+            return badRequest(
+                    views.html.portal.edit_portal.render(filledForm, getLocalPortal(), "Das Portal existiert nicht"));
 
-	}
+        }
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result doEditPortal(Long pid, Long portal) {
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+    }
 
-		if (ProviderPortal.find.where().eq("id", portal).findRowCount() == 1) {
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result doEditUserRightsOnPortal(Long pid, Long peditid, Long uid, String rights) {
 
-			ProviderPortal myportal = ProviderPortal.find.byId(portal);
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-			if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
+        if (ProviderPortal.find.where().eq("id", peditid).findRowCount() == 1) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Admin-Rechte auf dem jeweiligen Portal, um es zu editieren."));
+            ProviderPortal myportal = ProviderPortal.find.byId(peditid);
+            if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
 
-			} else {
+                return badRequest(views.html.norights
+                        .render("Du benötigst Admin-Rechte auf dem jeweiligen Portal, um es zu editieren."));
 
-				final Form<PostedPortal> filledForm = PORTAL_FORM.bindFromRequest();
+            } else {
 
-				if (filledForm.hasErrors()) {
+                if (User.find.where().eq("id", uid).findRowCount() != 1) {
 
-					return badRequest(views.html.portal.edit_portal.render(filledForm, myportal, ""));
+                    return badRequest(views.html.norights.render("Der User existiert nicht"));
 
-				}
+                } else {
+                    User usertoedit = User.find.byId(uid);
 
-				PostedPortal form = filledForm.get();
+                    myportal.editUser(usertoedit, rights);
 
-				MultipartFormData body = request().body().asMultipartFormData();
-				FilePart resourceFile = body.getFile("logo");
+                    myportal.update();
 
-				String tosavename = "";
+                    Global.updatePortals();
 
-				if (resourceFile != null) {
+                    return redirect(routes.Portal.userRightsonPortal(pid, peditid));
 
-					// HOCHLADEN
+                }
+            }
 
-					String fileName = resourceFile.getFilename();
-					File file = resourceFile.getFile();
+        } else {
 
-					int i = 0;
-					boolean exists = true;
-					while (exists == true) {
+            return redirect(routes.Portal.userRightsonCurrentPortal());
 
-						i++;
-						File f = new File("public/uploads/portallogos/", i + "_" + fileName);
-						if (!f.exists()) {
-							exists = false;
-						}
+        }
 
-					}
+    }
 
-					File tosave = new File("public/uploads/portallogos/", i + "_" + fileName);
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result doDeleteUserRightsOnPortal(Long pid, Long peditid, Long uid) {
 
-					try {
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-						FileUtils.moveFile(file, tosave);
-						tosavename = tosave.getAbsolutePath();
+        if (ProviderPortal.find.where().eq("id", peditid).findRowCount() == 1) {
 
-						myportal.setLogoimg(tosavename);
+            ProviderPortal myportal = ProviderPortal.find.byId(peditid);
+            if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
 
-					} catch (IOException ioe) {
-						return badRequest(views.html.portal.edit_portal.render(filledForm, myportal,
-								"Fehler #0013 beim Datei-Upload. Versuchen Sie es später erneut oder kontaktieren Sie einen System-Administrator."));
+                return badRequest(views.html.norights
+                        .render("Du benötigst Admin-Rechte auf dem jeweiligen Portal, um es zu editieren."));
 
-					}
+            } else {
 
-				}
+                if (User.find.where().eq("id", uid).findRowCount() != 1) {
+                    return badRequest(views.html.norights.render("Der User existiert nicht"));
+                } else {
+                    for (ProviderGames pg : myportal.getGameList()) {
+                        if (pg.getGame().userlastupdated != uid || !pg.getVisibility())
+                            continue;
 
-				myportal.setName(form.name);
+                        pg.setVisibility(false);
+                        pg.update();
+                        pg.getPortal().exportPublicGamesJson();                    }
 
-				myportal.setAutoVerifyUsers(form.autoverify);
+                    User usertoedit = User.find.byId(uid);
+                    myportal.deleteUser(usertoedit);
+                    myportal.update();
+                    Global.updatePortals();
 
-				if (!form.htmlurl.equals("")) {
-					myportal.setTemplateURL(form.htmlurl);
+                    return redirect(routes.Portal.userRightsonCurrentPortal());
+                }
+            }
 
-				} else {
+        } else {
 
-					myportal.setTemplateURL(
-							Global.SERVER_URL + myportal.getIdentifier() + "/qeeveetemplates/default/html");
+            // NEEDS ERRORMESSAGE
 
-				}
+            return badRequest(views.html.norights.render("Das Portal existiert nicht."));
 
-				if (!form.password.equals("")) {
-					myportal.setTemplatePw(form.password);
-				} else {
+        }
 
-					System.out.println("ignored empty password in <<Edit Portal>>-form");
+    }
 
-				}
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result doAddMeToPortal(Long pid) {
 
-				String c1 = form.color;
-				String c2 = form.color_2;
-				String c3 = form.color_3;
-				String c4 = form.color_4;
-				String c5 = form.color_5;
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-				if (c1.equals("")) {
-					c1 = "#ffccff";
-				}
-				myportal.setDefaultcolor(c1);
-				if (c2.equals("")) {
-					c2 = "#ffccff";
-				}
-				myportal.setComplementColor(c2);
-				if (c3.equals("")) {
-					c3 = "#ffccff";
-				}
-				myportal.setGradientColor(c3);
-				if (c4.equals("")) {
-					c4 = "#ffccff";
-				}
-				myportal.setNavbarColor(c4);
-				if (c5.equals("")) {
-					c5 = "#ffccff";
-				}
-				myportal.setLinkColor(c5);
+        if (Global.securityGuard.hasAnyRightsOnPortal(Application.getLocalUser(session()))) {
 
-				myportal.portalagbs = form.portalagbs;
-				myportal.portalagbsversion = form.portalagbsversion;
-				myportal.portalprivacyagreement = form.portalprivacyagreement;
-				myportal.portalprivacyagreementversion = form.portalprivacyagreementversion;
-				myportal.portalimprint = form.portalimprint;
+            return badRequest(views.html.norights.render(
+                    "Deine Registrierung auf diesem Portal muss erst von einem Administrator bestätigt werden."));
 
-				myportal.agbs = form.agbs;
-				myportal.agbsversion = form.agbsversion;
-				myportal.privacyagreement = form.privacyagreement;
-				myportal.privacyagreementversion = form.privacyagreementversion;
-				myportal.imprint = form.imprint;
-				myportal.setTemplateFormField(form.pwfield);
-				myportal.setTemplateForm(form.formname);
-				myportal.setTemplateAfterLoginURL(form.afterloginurl);
-				myportal.setTemplateUser(form.user);
-				myportal.setTemplateUserField(form.userfield);
-				myportal.setTemplateSubmitButton(form.submitbutton);
-				myportal.setTemplateMappingURL(form.mappingurl);
-				myportal.setTemplateServerURL(form.customserverurl);
-				myportal.setTemplatePostURL(form.posturl);
-				myportal.setAdditionalCSS(form.addcss);
-				System.out.println("##Portal-Data-Update complete.");
-				myportal.update();
-				myportal.computeMapping();
-				System.out.println("##Portal-Mapping-Update complete.");
-				myportal.updateHtmlByTemplateNoPassword();
-				System.out.println("##Portal-Template-Update complete.");
-				Global.updatePortals();
-				System.out.println("##Portal-Update complete.");
+        } else {
 
-				return redirect(routes.Portal.myPortalsList(pid));
+            User u = Application.getLocalUser(session());
 
-			}
+            if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
 
-		} else {
+                return badRequest(views.html.norights.render("Das Portal existiert nicht"));
 
-			final Form<PostedPortal> filledForm = PORTAL_FORM.bindFromRequest();
+            } else {
 
-			return badRequest(
-					views.html.portal.edit_portal.render(filledForm, getLocalPortal(), "Das Portal existiert nicht"));
+                ProviderPortal p = ProviderPortal.find.byId(pid);
 
-		}
+                p.addNewUser(u);
 
-	}
+                return redirect(routes.Portal.publicGamesListOnCurrentPortal());
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result doEditUserRightsOnPortal(Long pid, Long peditid, Long uid, String rights) {
+            }
 
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+        }
 
-		if (ProviderPortal.find.where().eq("id", peditid).findRowCount() == 1) {
+    }
 
-			ProviderPortal myportal = ProviderPortal.find.byId(peditid);
-			if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
+    public static Result migrateGame(Long pid, Long gid) {
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Admin-Rechte auf dem jeweiligen Portal, um es zu editieren."));
+        session("currentportal", pid.toString());
 
-			} else {
+        ProviderPortal p = Application.getLocalPortal();
 
-				if (User.find.where().eq("id", uid).findRowCount() != 1) {
+        // CHECK RIGHTS ON GAME
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-					return badRequest(views.html.norights.render("Der User existiert nicht"));
+            return ok("Game not found");
 
-				} else {
-					User usertoedit = User.find.byId(uid);
+        } else {
 
-					myportal.editUser(usertoedit, rights);
+            Game g = Game.find.byId(gid);
 
-					myportal.update();
+            if (p.hasGameType(g.getType())) {
 
-					Global.updatePortals();
+                return badRequest(views.html.norights.render("Es liegen keine Updates für diesen Spieltyp vor."));
 
-					return redirect(routes.Portal.userRightsonPortal(pid, peditid));
+            } else {
 
-				}
-			}
+                for (GameType gt : p.getGameTypes()) {
 
-		} else {
+                    if (gt.getName().equals(g.getType().getName())) {
 
-			return redirect(routes.Portal.userRightsonCurrentPortal());
+                        Game newg = g.migrateTo(gt);
+                        newg.save();
 
-		}
+                        if (p.getGame(g) != null) {
 
-	}
+                            p.addNewGame(newg, p.getGame(g).getVisibility());
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result doDeleteUserRightsOnPortal(Long pid, Long peditid, Long uid) {
+                        } else {
+                            p.addNewGame(newg, false);
+                        }
 
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+                        p.deleteGame(p.getGame(g));
+                        p.update();
 
-		if (ProviderPortal.find.where().eq("id", peditid).findRowCount() == 1) {
+                        // Alle User Rechte auf neues Spiel linken
 
-			ProviderPortal myportal = ProviderPortal.find.byId(peditid);
-			if (Global.securityGuard.hasAdminRightsOnPortalX(getLocalUser(session()), myportal) == false) {
+                        List<GameRights> grl = new ArrayList<GameRights>();
+                        grl.addAll(g.getUsers());
 
-				return badRequest(views.html.norights
-						.render("Du benötigst Admin-Rechte auf dem jeweiligen Portal, um es zu editieren."));
+                        for (GameRights gr : grl) {
 
-			} else {
+                            // NEU HINZUFÜGEN
 
-				if (User.find.where().eq("id", uid).findRowCount() != 1) {
+                            newg.addUser(gr.getUser(), gr.getRights());
+                            newg.update();
 
-					return badRequest(views.html.norights.render("Der User existiert nicht"));
+                        }
 
-				} else {
+                        // Alle Portale auf neues Spiel linken
 
-					for (ProviderGames pg : myportal.getGameList()) {
+                        List<ProviderGames> pgl = new ArrayList<ProviderGames>();
 
-						if (pg.getGame().userlastupdated == uid) {
+                        for (ProviderPortal app : ProviderPortal.find.all()) {
 
-							pg.setVisibility(false);
-							pg.update();
-						}
+                            if (app.getGame(g) != null) {
 
-					}
+                            }
+                        }
+                        pgl.addAll(g.getPortals());
 
-					User usertoedit = User.find.byId(uid);
+                        for (ProviderGames pg : pgl) {
 
-					myportal.deleteUser(usertoedit);
+                            if (!pg.getPortal().getId().equals(p.getId()))
+                                continue;
 
-					myportal.update();
+                            // NEU HINZUFÜGEN
+                            pg.getPortal().addNewGame(newg, pg.getVisibility());
+                            boolean wasVisible = pg.getVisibility();
+                            pg.setVisibility(false);
+                            pg.update();
 
-					Global.updatePortals();
+                            ProviderPortal pp = pg.getPortal();
+                            if (wasVisible)
+                                pp.exportPublicGamesJson();
 
-					return redirect(routes.Portal.userRightsonCurrentPortal());
+                            pp.deleteGame(pg);
+                            pp.update();
+                        }
 
-				}
-			}
+                        g.removeMe();
 
-		} else {
+                        try {
+                            g.setVersion(newg.getId());
+                            g.update();
+                        } catch (RuntimeException e) {
+                            e.printStackTrace();
+                        }
 
-			// NEEDS ERRORMESSAGE
+                        Global.updatePortals();
+                        return redirect(routes.Portal.gameRightsonPortal(pid, newg.getId()));
+                    }
+                }
 
-			return badRequest(views.html.norights.render("Das Portal existiert nicht."));
+                return redirect(routes.Portal.gameRightsonPortal(pid, g.getId()));
+            }
+        }
+    }
 
-		}
+    // NEWSSTREAMS
 
-	}
+    public static Result portalNewsstream(Long pid) {
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result doAddMeToPortal(Long pid) {
+        session("currentportal", pid.toString());
 
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+        if (pid == 1L) {
 
-		if (Global.securityGuard.hasAnyRightsOnPortal(Application.getLocalUser(session()))) {
+            return redirect("https://quest-mill-web.intertech.de/gqdocs/private.php");
 
-			return badRequest(views.html.norights.render(
-					"Deine Registrierung auf diesem Portal muss erst von einem Administrator bestätigt werden."));
+        } else if (pid == 61L
+                || (Application.getLocalPortal().getContentHtmlParameter("general.includesites.Newsstream") != null
+                && (Application.getLocalPortal().getContentHtmlParameter("general.includesites.Newsstream")
+                .equals("false")))) {
 
-		} else {
+            User u = getLocalUser(session());
 
-			User u = Application.getLocalUser(session());
+            if (u == null) {
 
-			if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
+                return redirect(routes.Application.login(pid));
 
-				return badRequest(views.html.norights.render("Das Portal existiert nicht"));
+            } else {
 
-			} else {
+                return redirect(routes.Portal.myGamesListOnCurrentPortal());
+            }
 
-				ProviderPortal p = ProviderPortal.find.byId(pid);
+        } else {
+            List<NewsstreamItem> ilist;
+            ilist = getLocalPortal().getNewsstream();
 
-				p.addNewUser(u);
+            return ok(views.html.portal.portalnewsstream.render(ilist));
+        }
 
-				return redirect(routes.Portal.publicGamesListOnCurrentPortal());
+    }
 
-			}
+    public static Result portalNewsstreamOnCurrentPortal() {
 
-		}
+        List<NewsstreamItem> ilist;
+        ilist = getLocalPortal().getNewsstream();
 
-	}
+        return ok(views.html.portal.portalnewsstream.render(ilist));
+    }
 
-	public static Result migrateGame(Long pid, Long gid) {
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result doDeleteNewsItem(Long pid, Long nid) {
 
-		session("currentportal", pid.toString());
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-		ProviderPortal p = Application.getLocalPortal();
+        if (Global.securityGuard.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
 
-		// CHECK RIGHTS ON GAME
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+            return badRequest(views.html.norights.render(
+                    "Deine Registrierung auf diesem Portal muss erst von einem Administrator bestätigt werden."));
 
-			return ok("Game not found");
+        } else {
 
-		} else {
+            Application.getLocalPortal().deleteNewsstream(nid);
 
-			Game g = Game.find.byId(gid);
+            return redirect(routes.Portal.portalNewsstreamOnCurrentPortal());
 
-			if (p.hasGameType(g.getType())) {
+        }
 
-				return badRequest(views.html.norights.render("Es liegen keine Updates für diesen Spieltyp vor."));
+    }
 
-			} else {
+    public static Result getGamesInfoListJSON(Long pid) {
+        File theDir = new File("public/portalfiles/" + pid);
+        if (!theDir.exists())
+            theDir.mkdirs();
 
-				for (GameType gt : p.getGameTypes()) {
+        File listJsonFile = new File(theDir, "publicgames.json");
+        String absoluteFilePath = listJsonFile.getAbsolutePath();
 
-					if (gt.getName().equals(g.getType().getName())) {
+        String jsonResult = "[]"; // empty list as default
+        if (!listJsonFile.exists()) {
+            return ok("[]");
+        }
 
-						Game newg = g.migrateTo(gt);
-						newg.save();
+        Path thePath = Paths.get(absoluteFilePath);
+        try {
+            String textRead = new String(Files.readAllBytes(thePath));
+            jsonResult = textRead;
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+            return ok("[]");
+        }
 
-						if (p.getGame(g) != null) {
+        return ok(jsonResult);
+    }
 
-							p.addNewGame(newg, p.getGame(g).getVisibility());
 
-						} else {
-							p.addNewGame(newg, false);
+    /*
+     * JSON RESULTS
+     */
 
-						}
+    public static Result getPublicGamesJson(Long pid) {
 
-						System.out.println("Done with Game Migration on Portal " + p.getId());
+        List<ProviderPortal> all = ProviderPortal.find.all();
 
-						p.deleteGame(p.getGame(g));
+        List<Long> allids = new ArrayList<Long>();
 
-						p.update();
+        for (ProviderPortal pp : all) {
 
-						// Alle User Rechte auf neues Spiel linken
+            allids.add(pp.getId());
 
-						List<GameRights> grl = new ArrayList<GameRights>();
-						grl.addAll(g.getUsers());
+        }
 
-						for (GameRights gr : grl) {
+        JSONSerializer postDetailsSerializer = new JSONSerializer()
+                .include("id", "name", "zip", "lastUpdate", "hotspots", "hotspots.longitude", "hotspots.latitude",
+                        "parts.scene.hotspots.longitude", "parts.scene.hotspots.l", "parts.scene", "type.id")
+                .exclude("*").prettyPrint(true);
+        List<Game> obj = new ArrayList<Game>();
 
-							// NEU HINZUFÜGEN
+        if (allids.contains(pid)) {
 
-							newg.addUser(gr.getUser(), gr.getRights());
-							newg.update();
+            if (ProviderPortal.find.where().eq("id", pid).findRowCount() == 1) {
 
-						}
+                ProviderPortal p = ProviderPortal.find.byId(pid);
 
-						// Alle Portale auf neues Spiel linken
+                List<ProviderGames> objects = p.getPublicGamesList();
 
-						List<ProviderGames> pgl = new ArrayList<ProviderGames>();
+                for (ProviderGames pg : objects) {
 
-						for (ProviderPortal app : ProviderPortal.find.all()) {
+                    obj.add(pg.getGame());
 
-							if (app.getGame(g) != null) {
+                }
+            }
 
-							}
-						}
-						pgl.addAll(g.getPortals());
+        }
 
-						for (ProviderGames pg : pgl) {
+        return ok(postDetailsSerializer.serialize(obj));
 
-							if (pg.getPortal().getId().equals(p.getId())) {
+    }
 
-								// NEU HINZUFÜGEN
-								pg.getPortal().addNewGame(newg, pg.getVisibility());
-								pg.setVisibility(false);
-								pg.update();
+    public static Result getGameJson(Long gid) {
 
-								pg.getPortal().deleteGame(pg);
+        if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-								pg.getPortal().update();
+            return ok("[]");
 
-							}
-						}
+        } else {
 
-						g.removeMe();
+            JSONSerializer postDetailsSerializer = new JSONSerializer().exclude("*.class").prettyPrint(true);
 
-						try {
-							g.setVersion(newg.getId());
-							g.update();
+            Game g = Game.find.byId(gid);
+            String jsonStr = "";
+            try {
+                jsonStr = postDetailsSerializer.deepSerialize(g);
+            } catch (Exception e) {
 
-							System.out.println("Old Game version linked.");
+                jsonStr = e.getMessage() + "\n";
+                for (StackTraceElement ste : e.getStackTrace()) {
+                    jsonStr += ste.toString() + "\n";
 
-						} catch (RuntimeException e) {
+                }
 
-							System.out.println("Can't delete old Game.");
-							e.printStackTrace();
+            }
+            return ok(jsonStr);
+        }
 
-						}
+    }
 
-						Global.updatePortals();
+    public static Result getPrivateGamesJson(Long pid) {
 
-						return redirect(routes.Portal.gameRightsonPortal(pid, newg.getId()));
+        ProviderPortal p = Application.getLocalPortal();
 
-					}
+        User u = getLocalUser(session());
 
-				}
+        if (Global.securityGuard.hasMinVerifiedRightsOnPortal(u) == false) {
 
-				return redirect(routes.Portal.gameRightsonPortal(pid, g.getId()));
+            return ok("NORIGHTS");
 
-			}
+        } else {
 
-		}
-	}
+            JSONSerializer postDetailsSerializer = new JSONSerializer()
+                    .include("id", "name", "zip", "lastUpdate", "hotspots", "hotspots.longitude", "hotspots.latitude",
+                            "parts.scene.hotspots.longitude", "parts.scene.hotspots.l", "parts.scene", "type.id")
+                    .exclude("*").prettyPrint(true);
 
-	// NEWSSTREAMS
+            List<Game> obj = new ArrayList<Game>();
 
-	public static Result portalNewsstream(Long pid) {
+            for (GameRights gr : u.getGamesOnPortal(p)) {
 
-		session("currentportal", pid.toString());
+                obj.add(gr.getGame());
 
-		if (pid == 1L) {
+            }
 
-			return redirect("https://quest-mill-web.intertech.de/gqdocs/private.php");
+            return ok(postDetailsSerializer.serialize(obj));
 
-		} else 
-			if (pid == 61L
-				|| (Application.getLocalPortal().getContentHtmlParameter("general.includesites.Newsstream") != null
-						&& (Application.getLocalPortal().getContentHtmlParameter("general.includesites.Newsstream")
-								.equals("false")))) 
-		{
+        }
+    }
 
-			User u = getLocalUser(session());
+    public static Result getPortalsJson() {
+        List<ProviderPortal> obj = Ebean.find(ProviderPortal.class).select("id,name").findList();
 
-			if (u == null) {
+        JSONSerializer postDetailsSerializer = new JSONSerializer().include("id", "name").exclude("*")
+                .prettyPrint(true);
 
-				return redirect(routes.Application.login(pid));
+        return ok(postDetailsSerializer.serialize(obj));
 
-			} else {
+    }
 
-				return redirect(routes.Portal.myGamesListOnCurrentPortal());
-			}
+    /*
+     * DEFAULT DESIGNS
+     */
 
-		} else {
-			List<NewsstreamItem> ilist;
-			ilist = getLocalPortal().getNewsstream();
+    public static Result getDesign(Long pid, String x, String y) {
 
-			return ok(views.html.portal.portalnewsstream.render(ilist));
-		}
+        session("currentportal", pid.toString());
 
-	}
+        if (x.equals("default")) {
 
-	public static Result portalNewsstreamOnCurrentPortal() {
+            if (y.equals("css")) {
 
-		List<NewsstreamItem> ilist;
-		ilist = getLocalPortal().getNewsstream();
+                response().setContentType("text/css");
+                return ok(views.html.portaldesigns.default1_css.render());
 
-		return ok(views.html.portal.portalnewsstream.render(ilist));
-	}
+            }
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result doDeleteNewsItem(Long pid, Long nid) {
+            if (y.equals("html")) {
+                return ok(views.html.portaldesigns.default1_html.render());
 
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+            }
 
-		if (Global.securityGuard.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
+            if (y.equals("dtt")) {
 
-			return badRequest(views.html.norights.render(
-					"Deine Registrierung auf diesem Portal muss erst von einem Administrator bestätigt werden."));
+                response().setContentType("text/css");
+                return ok(views.html.portaldesigns.default1_dt.render());
+            }
 
-		} else {
+        }
 
-			Application.getLocalPortal().deleteNewsstream(nid);
+        return ok(views.html.template.render());
 
-			return redirect(routes.Portal.portalNewsstreamOnCurrentPortal());
+    }
 
-		}
+    public static Result getAGBs(Long pid) {
 
-	}
+        if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
+            return badRequest(views.html.norights.render("Das Portal existiert nicht"));
 
-	public static Result getGamesInfoListJSON(Long pid) {
-		File theDir = new File("public/portalfiles/" + pid);
-		if (!theDir.exists())
-			theDir.mkdirs();
+        }
 
-		File listJsonFile = new File(theDir, "publicgames.json");
-		String absoluteFilePath = listJsonFile.getAbsolutePath();
+        return ok(views.html.portal.agbs.render(ProviderPortal.find.byId(pid)));
 
-		String jsonResult = "[]"; // empty list as default
-		if (!listJsonFile.exists()) {
-			return ok("[]");
-		}
+    }
 
-		Path thePath = Paths.get(absoluteFilePath);
-		try {
-			String textRead = new String(Files.readAllBytes(thePath));
-			jsonResult = textRead;
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-			return ok("[]");
-		}
+    public static Result getPortalAGBs(Long pid) {
 
-		return ok(jsonResult);
-	}
+        if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
+            return badRequest(views.html.norights.render("Das Portal existiert nicht"));
 
-	public static String generatePublicGamesListAsString(Long pid) {
-		JSONSerializer postDetailsSerializer = new JSONSerializer()
-				.include("id", "typeID", "name", "hotspots", "hotspots.longitude", "hotspots.latitude", "metadata",
-						"metadata.key", "metadata.value", "lastUpdate", "version", "featuredImagePath", "iconPath")
-				.exclude("*").prettyPrint(true);
+        }
 
-		List<GameInfo> gameInfos = new ArrayList<GameInfo>();
+        return ok(views.html.portal.portalagbs.render(ProviderPortal.find.byId(pid)));
 
-		if (ProviderPortal.find.where().eq("id", pid).findRowCount() == 1) {
+    }
 
-			ProviderPortal p = ProviderPortal.find.byId(pid);
+    public static Result getAGBVersion(Long pid) {
 
-			List<ProviderGames> objects = p.getPublicGamesList();
+        if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
+            return badRequest(views.html.norights.render("Das Portal existiert nicht"));
 
-			for (ProviderGames pg : objects) {
+        }
 
-				gameInfos.add(new GameInfo(pg.getGame()));
+        return ok(views.html.portal.agbsversion.render(ProviderPortal.find.byId(pid)));
 
-			}
-		}
-		return postDetailsSerializer.serialize(gameInfos);
-	}
+    }
 
-	/*
-	 * JSON RESULTS
-	 */
+    public static Result getPrivacyAgreementVersion(Long pid) {
 
-	public static Result getPublicGamesJson(Long pid) {
+        if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
+            return badRequest(views.html.norights.render("Das Portal existiert nicht"));
 
-		List<ProviderPortal> all = ProviderPortal.find.all();
+        }
 
-		List<Long> allids = new ArrayList<Long>();
+        return ok(views.html.portal.privacyversion.render(ProviderPortal.find.byId(pid)));
 
-		for (ProviderPortal pp : all) {
+    }
 
-			allids.add(pp.getId());
+    /**
+     * This is called from the App to show the Privacy Agreement in Unitys Rich Text
+     * format.
+     *
+     * @param pid
+     * @return
+     */
+    public static Result getPrivacyAgreement(Long pid, boolean asHTML) {
 
-		}
+        if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
+            return badRequest(views.html.norights.render("Das Portal existiert nicht"));
 
-		JSONSerializer postDetailsSerializer = new JSONSerializer()
-				.include("id", "name", "zip", "lastUpdate", "hotspots", "hotspots.longitude", "hotspots.latitude",
-						"parts.scene.hotspots.longitude", "parts.scene.hotspots.l", "parts.scene", "type.id")
-				.exclude("*").prettyPrint(true);
-		List<Game> obj = new ArrayList<Game>();
+        }
 
-		if (allids.contains(pid)) {
+        ProviderPortal p = ProviderPortal.find.byId(pid);
+        String privacyAgreement = asHTML ? Texts.UnityRichText2HTML(p.getAppPrivacyAgreement())
+                : p.getAppPrivacyAgreement();
 
-			if (ProviderPortal.find.where().eq("id", pid).findRowCount() == 1) {
+        return ok(views.html.simpletext.render(privacyAgreement));
+    }
 
-				ProviderPortal p = ProviderPortal.find.byId(pid);
+    public static Result getPortalPrivacyAgreement(Long pid) {
 
-				List<ProviderGames> objects = p.getPublicGamesList();
+        if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
+            return badRequest(views.html.norights.render("Das Portal existiert nicht"));
 
-				for (ProviderGames pg : objects) {
+        }
 
-					obj.add(pg.getGame());
+        return ok(views.html.portal.portalprivacy.render(ProviderPortal.find.byId(pid)));
 
-				}
-			}
+    }
 
-		}
+    public static String getNameOfLastReleaseUser(Game g) {
 
-		return ok(postDetailsSerializer.serialize(obj));
+        if (g.userlastupdated != null && g.userlastupdated != 0) {
 
-	}
+            if (User.find.byId(g.userlastupdated) != null) {
 
-	public static Result getGameJson(Long gid) {
+                return User.find.byId(g.userlastupdated).name;
 
-		if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+            } else {
 
-			return ok("[]");
+                return "Benutzer gelöscht";
 
-		} else {
+            }
 
-			JSONSerializer postDetailsSerializer = new JSONSerializer().exclude("*.class").prettyPrint(true);
+        } else {
 
-			Game g = Game.find.byId(gid);
-			String jsonStr = "";
-			try {
-				jsonStr = postDetailsSerializer.deepSerialize(g);
-			} catch (Exception e) {
+            return "Kein Benutzer";
 
-				jsonStr = e.getMessage() + "\n";
-				for (StackTraceElement ste : e.getStackTrace()) {
-					jsonStr += ste.toString() + "\n";
+        }
 
-				}
+    }
 
-			}
-			return ok(jsonStr);
-		}
+    public static String getNameOfLastReleaseUser() {
 
-	}
+        return "Kein Benutzer";
 
-	public static Result getPrivateGamesJson(Long pid) {
+    }
 
-		ProviderPortal p = Application.getLocalPortal();
+    public static Result getImprint(Long pid) {
 
-		User u = getLocalUser(session());
+        if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
+            return badRequest(views.html.norights.render("Das Portal existiert nicht"));
 
-		if (Global.securityGuard.hasMinVerifiedRightsOnPortal(u) == false) {
+        }
 
-			return ok("NORIGHTS");
-
-		} else {
-
-			JSONSerializer postDetailsSerializer = new JSONSerializer()
-					.include("id", "name", "zip", "lastUpdate", "hotspots", "hotspots.longitude", "hotspots.latitude",
-							"parts.scene.hotspots.longitude", "parts.scene.hotspots.l", "parts.scene", "type.id")
-					.exclude("*").prettyPrint(true);
-
-			List<Game> obj = new ArrayList<Game>();
-
-			for (GameRights gr : u.getGamesOnPortal(p)) {
-
-				obj.add(gr.getGame());
-
-			}
-
-			return ok(postDetailsSerializer.serialize(obj));
-
-		}
-	}
-
-	public static Result getPortalsJson() {
-		List<ProviderPortal> obj = Ebean.find(ProviderPortal.class).select("id,name").findList();
-
-		JSONSerializer postDetailsSerializer = new JSONSerializer().include("id", "name").exclude("*")
-				.prettyPrint(true);
-
-		return ok(postDetailsSerializer.serialize(obj));
-
-	}
-
-	/*
-	 * DEFAULT DESIGNS
-	 */
-
-	public static Result getDesign(Long pid, String x, String y) {
-
-		session("currentportal", pid.toString());
-
-		if (x.equals("default")) {
-
-			if (y.equals("css")) {
-
-				response().setContentType("text/css");
-				return ok(views.html.portaldesigns.default1_css.render());
-
-			}
-
-			if (y.equals("html")) {
-				return ok(views.html.portaldesigns.default1_html.render());
-
-			}
-
-			if (y.equals("dtt")) {
-
-				response().setContentType("text/css");
-				return ok(views.html.portaldesigns.default1_dt.render());
-			}
-
-		}
-
-		return ok(views.html.template.render());
-
-	}
-
-	public static Result getAGBs(Long pid) {
-
-		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
-			return badRequest(views.html.norights.render("Das Portal existiert nicht"));
-
-		}
-
-		return ok(views.html.portal.agbs.render(ProviderPortal.find.byId(pid)));
-
-	}
-
-	public static Result getPortalAGBs(Long pid) {
-
-		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
-			return badRequest(views.html.norights.render("Das Portal existiert nicht"));
-
-		}
-
-		return ok(views.html.portal.portalagbs.render(ProviderPortal.find.byId(pid)));
-
-	}
-
-	public static Result getAGBVersion(Long pid) {
-
-		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
-			return badRequest(views.html.norights.render("Das Portal existiert nicht"));
-
-		}
-
-		return ok(views.html.portal.agbsversion.render(ProviderPortal.find.byId(pid)));
-
-	}
-
-	public static Result getPrivacyAgreementVersion(Long pid) {
-
-		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
-			return badRequest(views.html.norights.render("Das Portal existiert nicht"));
-
-		}
-
-		return ok(views.html.portal.privacyversion.render(ProviderPortal.find.byId(pid)));
-
-	}
-
-	/**
-	 * This is called from the App to show the Privacy Agreement in Unitys Rich Text
-	 * format.
-	 * 
-	 * @param pid
-	 * @return
-	 */
-	public static Result getPrivacyAgreement(Long pid, boolean asHTML) {
-
-		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
-			return badRequest(views.html.norights.render("Das Portal existiert nicht"));
-
-		}
-
-		ProviderPortal p = ProviderPortal.find.byId(pid);
-		String privacyAgreement = asHTML ? Texts.UnityRichText2HTML(p.getAppPrivacyAgreement())
-				: p.getAppPrivacyAgreement();
-
-		return ok(views.html.simpletext.render(privacyAgreement));
-	}
-
-	public static Result getPortalPrivacyAgreement(Long pid) {
-
-		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
-			return badRequest(views.html.norights.render("Das Portal existiert nicht"));
-
-		}
-
-		return ok(views.html.portal.portalprivacy.render(ProviderPortal.find.byId(pid)));
-
-	}
-
-	public static String getNameOfLastReleaseUser(Game g) {
-
-		if (g.userlastupdated != null && g.userlastupdated != 0) {
-
-			if (User.find.byId(g.userlastupdated) != null) {
-
-				return User.find.byId(g.userlastupdated).name;
-
-			} else {
-
-				return "Benutzer gelöscht";
-
-			}
-
-		} else {
-
-			return "Kein Benutzer";
-
-		}
-
-	}
-
-	public static String getNameOfLastReleaseUser() {
-
-		return "Kein Benutzer";
-
-	}
-
-	public static Result getImprint(Long pid) {
-
-		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
-			return badRequest(views.html.norights.render("Das Portal existiert nicht"));
-
-		}
-
-		return ok(views.html.portal.imprint.render(ProviderPortal.find.byId(pid)));
+        return ok(views.html.portal.imprint.render(ProviderPortal.find.byId(pid)));
 
 //		ProviderPortal p = ProviderPortal.find.byId(pid);
 //		String privacyAgreement = p.getAppPrivacyAgreement();
 //
 //		return ok(views.html.simpletext.render(privacyAgreement));
-	}
+    }
 
-	/*
-	 * HELPER FUNCTIONS
-	 */
+    /*
+     * HELPER FUNCTIONS
+     */
 
-	/*
-	 * getLocalPortal() looks for the global variable currentportal. If it is not
-	 * set, it looks at the defaultportal variable, but in most cases currentportal
-	 * should be set, because it gets set to defaultportal onStart of Global.
-	 */
+    /*
+     * getLocalPortal() looks for the global variable currentportal. If it is not
+     * set, it looks at the defaultportal variable, but in most cases currentportal
+     * should be set, because it gets set to defaultportal onStart of Global.
+     */
 
-	public static Result updatePortalTemplate(Long pid) {
-		session("currentportal", pid.toString());
+    public static Result updatePortalTemplate(Long pid) {
+        session("currentportal", pid.toString());
 
-		if (Global.securityGuard.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
+        if (Global.securityGuard.hasMinVerifiedRightsOnPortal(getLocalUser(session())) == false) {
 
-			return badRequest(views.html.norightsonportal
-					.render("Aus Sicherheitsgründen können nur Benutzer dieses Portals die Template Seite updaten."));
+            return badRequest(views.html.norightsonportal
+                    .render("Aus Sicherheitsgründen können nur Benutzer dieses Portals die Template Seite updaten."));
 
-		} else {
+        } else {
 
-			Application.getLocalPortal().updateHtmlByTemplateNoPassword();
-			Global.updatePortals();
-			return ok(views.html.portal.public_games.render(Application.getLocalPortal().getPublicGamesList()));
+            Application.getLocalPortal().updateHtmlByTemplateNoPassword();
+            Global.updatePortals();
+            return ok(views.html.portal.public_games.render(Application.getLocalPortal().getPublicGamesList()));
 
-		}
+        }
 
-	}
+    }
 
-	public static Result getGameFileSizeForPortal(Long portal, Long game) {
-		if (Game.find.where().eq("id", game).findRowCount() != 1) {
+    public static Result getGameFileSizeForPortal(Long portal, Long game) {
+        if (Game.find.where().eq("id", game).findRowCount() != 1) {
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-		} else {
+        } else {
 
-			Game mygame = Game.find.byId(game);
+            Game mygame = Game.find.byId(game);
 
-			return ok(new File(mygame.getFile()).length() + "");
-		}
+            return ok(new File(mygame.getFile()).length() + "");
+        }
+
+    }
+
+    public static Result getGameFileForPortal(Long portal, Long game) {
+
+        return redirect(routes.Editor.getXMLForClient(game));
+    }
+
+    public static Result getGameFile(Long game) {
+
+        if (Game.find.where().eq("id", game).findRowCount() != 1) {
 
-	}
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
 
-	public static Result getGameFileForPortal(Long portal, Long game) {
+        } else {
 
-		return redirect(routes.Editor.getXMLForClient(game));
-	}
+            Game mygame = Game.find.byId(game);
 
-	public static Result getGameFile(Long game) {
+            response().setContentType("application/x-download");
+            response().setHeader("Content-disposition", "attachment; filename=game.zip");
+            // response().setHeader("Content-Length" , new
+            // File(mygame.getFile()).length()+"");
+            return ok(new File(mygame.getFile()));
+        }
+    }
 
-		if (Game.find.where().eq("id", game).findRowCount() != 1) {
+    public static Result getGameFileSize(Long game) {
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+        if (Game.find.where().eq("id", game).findRowCount() != 1) {
+            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+        } else {
+            Game mygame = Game.find.byId(game);
+            return ok(new File(mygame.getFile()).length() + "");
+        }
+    }
 
-		} else {
+    public static Result getGQPlayer(String filename) {
+        response().setContentType("image");
+        byte[] i_file = null;
 
-			Game mygame = Game.find.byId(game);
+        try {
+            i_file = IOUtils.toByteArray(new FileInputStream(new File("public/gqplayer/" + filename)));
+        } catch (FileNotFoundException e) {
+            return ok("404: public/gqplayer/" + filename);
+        } catch (IOException e) {
+            return ok("404: public/gqplayer/" + filename);
+        }
 
-			response().setContentType("application/x-download");
-			response().setHeader("Content-disposition", "attachment; filename=game.zip");
-			// response().setHeader("Content-Length" , new
-			// File(mygame.getFile()).length()+"");
-			System.out.println("Content-Length: " + (new File(mygame.getFile()).length()));
+        return ok(i_file);
+    }
 
-			return ok(new File(mygame.getFile()));
-		}
-	}
+    public static Result getCrossdomain() {
+        response().setContentType("text/plain");
+        byte[] i_file = null;
 
-	public static Result getGameFileSize(Long game) {
+        try {
+            i_file = IOUtils.toByteArray(new FileInputStream(new File("public/crossdomain.xml")));
+        } catch (FileNotFoundException e) {
+            return ok("404: crossdomain file");
+        } catch (IOException e) {
+            return ok("404: crossdomain file");
+        }
 
-		if (Game.find.where().eq("id", game).findRowCount() != 1) {
+        return ok(i_file);
+    }
 
-			return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+    public static Result at(String filename) {
+        return at(filename, true);
+    }
 
-		} else {
+    public static Result head(String filename) {
+        return at(filename, false);
+    }
 
-			Game mygame = Game.find.byId(game);
+    private static Result at(String filename, boolean withContent) {
+        String path = "public/uploads/" + filename;
+        try {
+            File file = new File(path);
+            if (!file.exists() || !file.canRead()) {
+                return notFound(path);
+            }
+            String contentType = Files.probeContentType(file.toPath());
+            if (contentType == null)
+                contentType = URLConnection.guessContentTypeFromName(file.getName());
+            if (contentType == null)
+                contentType = "unknown";
+            response().setContentType(contentType);
+            response().setHeader(LAST_MODIFIED, String.valueOf(file.lastModified()));
+            response().setHeader(CONTENT_LENGTH, String.valueOf((long) file.length()));
 
-			return ok(new File(mygame.getFile()).length() + "");
-		}
-	}
+            if (withContent) {
+                byte[] i_file = IOUtils.toByteArray(new FileInputStream(file));
+                return ok(i_file);
+            } else {
+                return ok();
+            }
+        } catch (FileNotFoundException e) {
+            return notFound(path);
+        } catch (Exception e) {
+            return internalServerError(e.getMessage());
+        }
+    }
 
-	public static Result getGQPlayer(String filename) {
-		response().setContentType("image");
-		byte[] i_file = null;
+    public static User getLocalUser(final Session session) {
+        final AuthUser currentAuthUser = PlayAuthenticate.getUser(session);
+        final User localUser = User.findByAuthUserIdentity(currentAuthUser);
+        return localUser;
+    }
 
-		try {
-			i_file = IOUtils.toByteArray(new FileInputStream(new File("public/gqplayer/" + filename)));
-		} catch (FileNotFoundException e) {
-			return ok("404: public/gqplayer/" + filename);
-		} catch (IOException e) {
-			return ok("404: public/gqplayer/" + filename);
-		}
+    public static User getLocalUser() {
 
-		return ok(i_file);
-	}
+        return getLocalUser(session());
 
-	public static Result getCrossdomain() {
-		response().setContentType("text/plain");
-		byte[] i_file = null;
+    }
 
-		try {
-			i_file = IOUtils.toByteArray(new FileInputStream(new File("public/crossdomain.xml")));
-		} catch (FileNotFoundException e) {
-			return ok("404: crossdomain file");
-		} catch (IOException e) {
-			return ok("404: crossdomain file");
-		}
+    public static ProviderPortal getLocalPortal() {
 
-		return ok(i_file);
-	}
+        return Application.getCurrentPortal(session());
 
-	public static Result at(String filename) {
-		return at(filename, true);
-	}
+    }
 
-	public static Result head(String filename) {
-		return at(filename, false);
-	}
+    /*
+     * FORM HANDLER
+     */
 
-	private static Result at(String filename, boolean withContent) {
-		String path = "public/uploads/" + filename;
-		try {
-			File file = new File(path);
-			if (!file.exists() || !file.canRead()) {
-				return notFound(path);
-			}
-			String contentType = Files.probeContentType(file.toPath());
-			if (contentType == null)
-				contentType = URLConnection.guessContentTypeFromName(file.getName());
-			if (contentType == null)
-				contentType = "unknown";
-			response().setContentType(contentType);
-			response().setHeader(LAST_MODIFIED, String.valueOf(file.lastModified()));
-			response().setHeader(CONTENT_LENGTH, String.valueOf((long) file.length()));
+    public static class UploadedGame {
 
-			if (withContent) {
-				byte[] i_file = IOUtils.toByteArray(new FileInputStream(file));
-				return ok(i_file);
-			} else {
-				return ok();
-			}
-		} catch (FileNotFoundException e) {
-			return notFound(path);
-		} catch (Exception e) {
-			return internalServerError(e.getMessage());
-		}
-	}
+        @Required
+        @MinLength(3)
+        public String name;
 
-	public static User getLocalUser(final Session session) {
-		final AuthUser currentAuthUser = PlayAuthenticate.getUser(session);
-		final User localUser = User.findByAuthUserIdentity(currentAuthUser);
-		return localUser;
-	}
+        public long gametype;
 
-	public static User getLocalUser() {
+        public boolean publ;
 
-		return getLocalUser(session());
+    }
 
-	}
+    public static final Form<UploadedGame> UPLOAD_FORM = form(UploadedGame.class);
 
-	public static ProviderPortal getLocalPortal() {
+    public static class GameToGameType {
 
-		return Application.getCurrentPortal(session());
+        @Required
+        @MinLength(3)
+        public String name;
 
-	}
+        public String scenename;
 
-	/*
-	 * FORM HANDLER
-	 */
+        public boolean makescene;
 
-	public static class UploadedGame {
+        public boolean onlyhotspots;
+        public boolean onlyonehotspot;
 
-		@Required
-		@MinLength(3)
-		public String name;
+    }
 
-		public long gametype;
+    public static final Form<GameToGameType> GAMETYPE_FORM = form(GameToGameType.class);
 
-		public boolean publ;
+    public static class PostedPortal {
 
-	}
+        @Required
+        @MinLength(3)
+        public String name;
 
-	public static final Form<UploadedGame> UPLOAD_FORM = form(UploadedGame.class);
+        public String htmlurl;
 
-	public static class GameToGameType {
+        public String formname;
 
-		@Required
-		@MinLength(3)
-		public String name;
+        public String pwfield;
 
-		public String scenename;
+        public String password;
 
-		public boolean makescene;
+        public String userfield;
 
-		public boolean onlyhotspots;
-		public boolean onlyonehotspot;
+        public String user;
 
-	}
+        public String afterloginurl;
 
-	public static final Form<GameToGameType> GAMETYPE_FORM = form(GameToGameType.class);
+        public boolean autoverify;
 
-	public static class PostedPortal {
+        public String submitbutton;
 
-		@Required
-		@MinLength(3)
-		public String name;
+        public String mappingurl;
 
-		public String htmlurl;
+        public String customserverurl;
 
-		public String formname;
+        public String posturl;
 
-		public String pwfield;
+        public String addcss;
 
-		public String password;
+        public String color;
+        public String color_2;
+        public String color_3;
+        public String color_4;
+        public String color_5;
 
-		public String userfield;
+        public String portalagbs;
+        public String portalimprint;
+        public String portalprivacyagreement;
+        public int portalagbsversion;
+        public int portalprivacyagreementversion;
 
-		public String user;
+        public String agbs;
+        public String imprint;
+        public String privacyagreement;
+        public int agbsversion;
+        public int privacyagreementversion;
 
-		public String afterloginurl;
+    }
 
-		public boolean autoverify;
+    public static final Form<PostedPortal> PORTAL_FORM = form(PostedPortal.class);
 
-		public String submitbutton;
+    public static class UserSearch {
 
-		public String mappingurl;
+        public String name;
 
-		public String customserverurl;
+        public String email;
 
-		public String posturl;
+    }
 
-		public String addcss;
-
-		public String color;
-		public String color_2;
-		public String color_3;
-		public String color_4;
-		public String color_5;
-
-		public String portalagbs;
-		public String portalimprint;
-		public String portalprivacyagreement;
-		public int portalagbsversion;
-		public int portalprivacyagreementversion;
-
-		public String agbs;
-		public String imprint;
-		public String privacyagreement;
-		public int agbsversion;
-		public int privacyagreementversion;
-
-	}
-
-	public static final Form<PostedPortal> PORTAL_FORM = form(PostedPortal.class);
-
-	public static class UserSearch {
-
-		public String name;
-
-		public String email;
-
-	}
-
-	public static final Form<UserSearch> USER_SEARCH_FORM = form(UserSearch.class);
+    public static final Form<UserSearch> USER_SEARCH_FORM = form(UserSearch.class);
 
 }

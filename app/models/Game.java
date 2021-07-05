@@ -35,6 +35,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import controllers.Editor;
 import models.GameParts.Action;
 import models.GameParts.Attribute;
 import models.GameParts.AttributeType;
@@ -423,9 +424,6 @@ public class Game extends Model {
                         if (a.getValue().equals(String.valueOf(entry.getKey().getId()))) {
 
                             newvalue = newvalue.replace("" + entry.getKey().getId(), "" + entry.getValue().getId());
-                            System.out.println("executing mission attribute:" + entry.getKey().getId() + " -> "
-                                    + entry.getValue().getId());
-
                         }
                         a.setValue(newvalue);
                         a.update();
@@ -438,11 +436,7 @@ public class Game extends Model {
 
                     for (Map.Entry<Hotspot, Hotspot> entry : copyContext.hotspotMap.entrySet()) {
                         if (a.getValue().equals(String.valueOf(entry.getKey().getId()))) {
-
                             newvalue = newvalue.replace("" + entry.getKey().getId(), "" + entry.getValue().getId());
-                            System.out.println("excecuting hotspot attribute:" + entry.getKey().getId() + " -> "
-                                    + entry.getValue().getId());
-
                         }
                         a.setValue(newvalue);
                         a.update();
@@ -455,21 +449,17 @@ public class Game extends Model {
 
     private void renewObjectReferences(GameCopyContext copyContext) {
         for (ObjectReference objRef : copyContext.objRefsWithTargetToRenew) {
-            System.out.println("Renew ObjRef# " + objRef.getId());
             switch (objRef.getObjectType()) {
                 case "Attribute":
                     Attribute oldTarget = objRef.getAttribute();
                     if (oldTarget == null) {
-                        System.out.println("Renew oldTarget is null");
                         continue;
                     }
                     Attribute newTarget = copyContext.attributeMap.get(oldTarget);
                     if (newTarget == null) {
-                        System.out.println("Renew newTarget is null");
                         continue;
                     }
                     objRef.setAttribute(newTarget);
-                    System.out.println("Renewing objref: " + oldTarget.getId() + " --> " + newTarget.getId());
                     objRef.update();
                     return;
                 default:
@@ -506,27 +496,16 @@ public class Game extends Model {
 
                         User.find.byId(oneni.getPosterid()).deleteNewsstreamItem(oneni);
                     }
-
                 }
 
                 try {
-
                     oneni.delete();
-
                 } catch (RuntimeException e) {
-
-                    System.out.println("Can't delete NewsstreamItem:");
                     e.printStackTrace();
-
                 }
-
             }
-
         } catch (ConcurrentModificationException e) {
-
-            System.out.println("Iterator Exception:");
             e.printStackTrace();
-
         }
         try {
             for (ProviderGames onepg : pg) {
@@ -545,19 +524,11 @@ public class Game extends Model {
                     onepg.delete();
 
                 } catch (RuntimeException e) {
-
-                    System.out.println("Can't delete ProviderGames:");
                     e.printStackTrace();
-
                 }
-
             }
-
         } catch (ConcurrentModificationException e) {
-
-            System.out.println("Iterator Exception:");
             e.printStackTrace();
-
         }
 
         try {
@@ -621,38 +592,25 @@ public class Game extends Model {
 
             System.out.println("Can't delete Game-Contents.");
             e.printStackTrace();
-
         }
 
         System.out.println("Done with Game-intern links.");
 
         try {
-
             System.out.println("Deleting Portal-Links to be sure.");
 
             for (ProviderPortal app : ProviderPortal.find.all()) {
-
                 if (app.getGame(this) != null) {
-
                     app.deleteGame(app.getGame(this));
-
                     app.update();
-
                 }
-
             }
-
         } catch (ConcurrentModificationException e) {
-
             System.out.println("Iterator Exception:");
             e.printStackTrace();
-
         }
 
-        System.out.println("Remove Me complete.");
-
         return true;
-
     }
 
     @JSON(include = false)

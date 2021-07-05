@@ -8,6 +8,8 @@ import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
 import com.gargoylesoftware.htmlunit.html.HtmlTextArea;
 import com.gargoylesoftware.htmlunit.html.HtmlPasswordInput;
 
+import controllers.Editor;
+import flexjson.JSONSerializer;
 import play.api.Play;
 import play.db.ebean.Model;
 import play.api.Play.*;
@@ -26,6 +28,9 @@ import java.io.Console;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 import com.gargoylesoftware.htmlunit.*;
@@ -38,1833 +43,1760 @@ import util.Global;
 @Table(name = "providerportal")
 public class ProviderPortal extends Model {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	public static final String USER_ROLE = "user";
-	public static final String ADMIN_ROLE = "admin";
-	public static final String UNVERIFIED_ROLE = "unverified";
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    public static final String USER_ROLE = "user";
+    public static final String ADMIN_ROLE = "admin";
+    public static final String UNVERIFIED_ROLE = "unverified";
 
-	/**
-	 * Variables
-	 */
-
-	@Id
-	public Long id;
-	public String name;
-	@Lob
-	public String TemplateURL;
-	@Lob
-	public String TemplateMappingURL;
-	@Lob
-	public String TemplatePostURL;
-	public String TemplateUserField;
-	public String TemplateUser;
-	public String TemplateUserXPATH;
-	public String TemplatePw;
-	public String TemplatePwXPATH;
-	public String TemplateForm;
-	public String TemplateFormField;
-	public String TemplateSubmitButton;
-
-	@Lob
-	public String TemplateAfterLoginURL;
-	@Lob
-	public String TemplateServerURL;
-
-	@Lob
-	public String AdditionalCSS;
-
-	@Lob
-	public String portalimprint;
-
-	@Lob
-	public String portalagbs;
-
-	public Integer portalagbsversion;
-
-	@Lob
-	public String portalprivacyagreement;
-
-	public Integer portalprivacyagreementversion;
-
-	@Lob
-	public String imprint;
-
-	@Lob
-	public String agbs;
-
-	public Integer agbsversion;
-
-	@Lob
-	public String privacyagreement;
-
-	public String getAppPrivacyAgreement() {
-		System.out.println("App Privacy Agreement returned.");
-		return privacyagreement;
-	}
-
-	public Integer privacyagreementversion;
-
-	public String designpreset;
-	public String defaultcolor;
-
-	public String color2;
-	public String color3;
-	public String color4;
-	public String color5;
-	public String color6;
-	public String logoimg;
-
-	public boolean autoVerifyUsers = true;
-
-	@ManyToMany
-	@OrderBy("datum desc")
-	private List<NewsstreamItem> Newsstream;
-
-	@ManyToMany
-	private List<GameType> gameTypes;
-
-	@ManyToMany
-	private List<MissionType> missionTypes;
-
-	@ManyToMany
-	@OrderBy("zahl")
-	private List<SortedHtml> Html;
-
-	@Lob
-	private String specialCss;
-
-	@ManyToMany
-	private Set<TemplateParameter> Mapping;
-
-	@OneToMany(mappedBy = "portal")
-	public List<ProviderUsers> userList;
-
-	@OneToMany(mappedBy = "portal")
-	public List<ProviderGames> GameList;
-
-	/**
-	 *
-	 * Constructors
-	 *
-	 */
-
-	public ProviderPortal(String startName) {
-		name = startName;
-
-		System.out.println("Adding new Portal");
-		TemplateURL = Global.TEMPLATE_BASE_URL + "/defaulttemplate";
-
-		TemplateMappingURL = "";
-		TemplateForm = "";
-		TemplateFormField = "";
-		TemplatePw = "";
-		TemplateUserField = "";
-		TemplateUser = "";
-		TemplateAfterLoginURL = "";
-		TemplateServerURL = "";
-		TemplateSubmitButton = "";
-		TemplatePostURL = "";
-		AdditionalCSS = "";
-		defaultcolor = "#ffccff";
-		autoVerifyUsers = true;
-
-		agbsversion = 0;
-		privacyagreementversion = 0;
-
-		designpreset = "default";
-		color2 = "#ffccff";
-		color3 = "#ffccff";
-		color4 = "#ffccff";
-		color5 = "#ffccff";
-		logoimg = "";
-
-		updateHtmlByTemplateNoPassword();
-
-	}
-
-	public ProviderPortal(String startName, String url) {
-		System.out.println("Adding new Portal");
-		name = startName;
-		TemplateURL = url;
-		TemplateSubmitButton = "";
-		TemplateServerURL = "";
-		TemplateForm = "";
-		TemplateFormField = "";
-		TemplatePw = "";
-		TemplateUserField = "";
-		TemplateUser = "";
-		TemplateAfterLoginURL = "";
-		TemplateServerURL = "";
-		TemplatePostURL = "";
-		AdditionalCSS = "";
-		defaultcolor = "#ffccff";
-		autoVerifyUsers = true;
-		TemplateMappingURL = "";
-
-		agbsversion = 0;
-		privacyagreementversion = 0;
-
-		designpreset = "default";
-		color2 = "#ffccff";
-		color3 = "#ffccff";
-		color4 = "#ffccff";
-		color5 = "#ffccff";
-		logoimg = "";
-
-		boolean done = updateHtmlByTemplateNoPassword();
-		if (done == false) {
-			TemplateURL = Global.SERVER_URL + "/defaulttemplate";
-			updateHtmlByTemplateNoPassword();
-
-		}
-
-	}
-
-	public ProviderPortal(String startName, String url, String tf, String tpwf, String tuf, String tpw, String tu,
-			String alurl, boolean av, String button, String murl, String csurl, String purl, String acss, String clr,
-			String dpr, String c2, String c3, String c4, String c5, String limg) {
+    /**
+     * Variables
+     */
 
-		System.out.println("Adding new Portal");
-		name = startName;
-		TemplateURL = url;
-		TemplateAfterLoginURL = alurl;
-		TemplateForm = tf;
-		TemplateFormField = tpwf;
-		TemplatePw = tpw;
-		TemplateUserField = tuf;
-		TemplateUser = tu;
-		autoVerifyUsers = av;
-		TemplateSubmitButton = button;
-		TemplateMappingURL = murl;
-		TemplateServerURL = csurl;
-		TemplatePostURL = purl;
-		AdditionalCSS = acss;
-		defaultcolor = clr;
-		agbsversion = 0;
-		privacyagreementversion = 0;
-		designpreset = dpr;
-		color2 = c2;
-		color3 = c3;
-		color4 = c4;
-		color5 = c5;
-		logoimg = limg;
+    @Id
+    public Long id;
+    public String name;
+    @Lob
+    public String TemplateURL;
+    @Lob
+    public String TemplateMappingURL;
+    @Lob
+    public String TemplatePostURL;
+    public String TemplateUserField;
+    public String TemplateUser;
+    public String TemplateUserXPATH;
+    public String TemplatePw;
+    public String TemplatePwXPATH;
+    public String TemplateForm;
+    public String TemplateFormField;
+    public String TemplateSubmitButton;
+
+    @Lob
+    public String TemplateAfterLoginURL;
+    @Lob
+    public String TemplateServerURL;
+
+    @Lob
+    public String AdditionalCSS;
+
+    @Lob
+    public String portalimprint;
+
+    @Lob
+    public String portalagbs;
+
+    public Integer portalagbsversion;
+
+    @Lob
+    public String portalprivacyagreement;
+
+    public Integer portalprivacyagreementversion;
+
+    @Lob
+    public String imprint;
+
+    @Lob
+    public String agbs;
+
+    public Integer agbsversion;
+
+    @Lob
+    public String privacyagreement;
+
+    public String getAppPrivacyAgreement() {
+        return privacyagreement;
+    }
+
+    public Integer privacyagreementversion;
+
+    public String designpreset;
+    public String defaultcolor;
+
+    public String color2;
+    public String color3;
+    public String color4;
+    public String color5;
+    public String color6;
+    public String logoimg;
+
+    public boolean autoVerifyUsers = true;
+
+    @ManyToMany
+    @OrderBy("datum desc")
+    private List<NewsstreamItem> Newsstream;
+
+    @ManyToMany
+    private List<GameType> gameTypes;
+
+    @ManyToMany
+    private List<MissionType> missionTypes;
+
+    @ManyToMany
+    @OrderBy("zahl")
+    private List<SortedHtml> Html;
+
+    @Lob
+    private String specialCss;
+
+    @ManyToMany
+    private Set<TemplateParameter> Mapping;
+
+    @OneToMany(mappedBy = "portal")
+    public List<ProviderUsers> userList;
+
+    @OneToMany(mappedBy = "portal")
+    public List<ProviderGames> GameList;
+
+    /**
+     * Constructors
+     */
+
+    public ProviderPortal(String startName) {
+        name = startName;
+        TemplateURL = Global.TEMPLATE_BASE_URL + "/defaulttemplate";
+
+        TemplateMappingURL = "";
+        TemplateForm = "";
+        TemplateFormField = "";
+        TemplatePw = "";
+        TemplateUserField = "";
+        TemplateUser = "";
+        TemplateAfterLoginURL = "";
+        TemplateServerURL = "";
+        TemplateSubmitButton = "";
+        TemplatePostURL = "";
+        AdditionalCSS = "";
+        defaultcolor = "#ffccff";
+        autoVerifyUsers = true;
+
+        agbsversion = 0;
+        privacyagreementversion = 0;
+
+        designpreset = "default";
+        color2 = "#ffccff";
+        color3 = "#ffccff";
+        color4 = "#ffccff";
+        color5 = "#ffccff";
+        logoimg = "";
+
+        updateHtmlByTemplateNoPassword();
+
+    }
+
+    public ProviderPortal(String startName, String url) {
+        name = startName;
+        TemplateURL = url;
+        TemplateSubmitButton = "";
+        TemplateServerURL = "";
+        TemplateForm = "";
+        TemplateFormField = "";
+        TemplatePw = "";
+        TemplateUserField = "";
+        TemplateUser = "";
+        TemplateAfterLoginURL = "";
+        TemplateServerURL = "";
+        TemplatePostURL = "";
+        AdditionalCSS = "";
+        defaultcolor = "#ffccff";
+        autoVerifyUsers = true;
+        TemplateMappingURL = "";
+
+        agbsversion = 0;
+        privacyagreementversion = 0;
+
+        designpreset = "default";
+        color2 = "#ffccff";
+        color3 = "#ffccff";
+        color4 = "#ffccff";
+        color5 = "#ffccff";
+        logoimg = "";
+
+        boolean done = updateHtmlByTemplateNoPassword();
+        if (done == false) {
+            TemplateURL = Global.SERVER_URL + "/defaulttemplate";
+            updateHtmlByTemplateNoPassword();
+
+        }
+
+    }
+
+    public ProviderPortal(String startName, String url, String tf, String tpwf, String tuf, String tpw, String tu,
+                          String alurl, boolean av, String button, String murl, String csurl, String purl, String acss, String clr,
+                          String dpr, String c2, String c3, String c4, String c5, String limg) {
+
+        name = startName;
+        TemplateURL = url;
+        TemplateAfterLoginURL = alurl;
+        TemplateForm = tf;
+        TemplateFormField = tpwf;
+        TemplatePw = tpw;
+        TemplateUserField = tuf;
+        TemplateUser = tu;
+        autoVerifyUsers = av;
+        TemplateSubmitButton = button;
+        TemplateMappingURL = murl;
+        TemplateServerURL = csurl;
+        TemplatePostURL = purl;
+        AdditionalCSS = acss;
+        defaultcolor = clr;
+        agbsversion = 0;
+        privacyagreementversion = 0;
+        designpreset = dpr;
+        color2 = c2;
+        color3 = c3;
+        color4 = c4;
+        color5 = c5;
+        logoimg = limg;
 
-		boolean done = updateHtmlByTemplateNoPassword();
+        boolean done = updateHtmlByTemplateNoPassword();
 
-		if (done == false) {
-			TemplateURL = Global.TEMPLATE_BASE_URL + "/defaulttemplate";
-			updateHtmlByTemplateNoPassword();
+        if (done == false) {
+            TemplateURL = Global.TEMPLATE_BASE_URL + "/defaulttemplate";
+            updateHtmlByTemplateNoPassword();
 
-		}
+        }
 
-	}
+    }
 
-	/**
-	 *
-	 * Functions
-	 *
-	 */
+    /**
+     * Functions
+     */
 
-	public boolean updateHtmlByTemplateNoPassword() {
+    public boolean updateHtmlByTemplateNoPassword() {
 
-		if (!TemplateMappingURL.equals("")) {
-			computeMapping();
-		}
-		String url = TemplateURL;
+        if (!TemplateMappingURL.equals("")) {
+            computeMapping();
+        }
+        String url = TemplateURL;
 
-		boolean correct_template = false;
+        boolean correct_template = false;
 
-		if (TemplateURL.equals("")) {
+        if (TemplateURL.equals("")) {
 
-			url = Global.TEMPLATE_BASE_URL + "/defaulttemplate";
+            url = Global.TEMPLATE_BASE_URL + "/defaulttemplate";
 
-		}
+        }
+        boolean done = true;
+        int counter = 0;
 
-		System.out.println("Looking for:" + url);
-		boolean done = true;
-		int counter = 0;
+        List<SortedHtml> Html2 = new ArrayList<SortedHtml>();
 
-		List<SortedHtml> Html2 = new ArrayList<SortedHtml>();
+        String pagecontent = "";
 
-		String pagecontent = "";
+        // System.out.println("########### Starte Template Update");
 
-		// System.out.println("########### Starte Template Update");
+        WebClient webClient = new WebClient();
+        try {
 
-		WebClient webClient = new WebClient();
-		try {
+            WebRequest webRequest = new WebRequest(new URL(TemplateURL));
+            webRequest.setCharset("utf-8");
 
-			WebRequest webRequest = new WebRequest(new URL(TemplateURL));
-			webRequest.setCharset("utf-8");
+            webClient.setThrowExceptionOnFailingStatusCode(false);
+            webClient.setThrowExceptionOnScriptError(false);
 
-			webClient.setThrowExceptionOnFailingStatusCode(false);
-			webClient.setThrowExceptionOnScriptError(false);
+            webClient.setPrintContentOnFailingStatusCode(false);
+            webClient.setJavaScriptEnabled(false);
+            webClient.setRedirectEnabled(true);
+            webClient.setTimeout(20000);
 
-			webClient.setPrintContentOnFailingStatusCode(false);
-			webClient.setJavaScriptEnabled(false);
-			webClient.setRedirectEnabled(true);
-			webClient.setTimeout(20000);
+            HtmlPage page = webClient.getPage(webRequest);
 
-			HtmlPage page = webClient.getPage(webRequest);
+            boolean use_first_page = true;
 
-			boolean use_first_page = true;
+            HtmlForm form = null;
 
-			HtmlForm form = null;
+            if (TemplatePw != null && !TemplatePw.equals("")) {
 
-			if (TemplatePw != null && !TemplatePw.equals("")) {
+                use_first_page = false;
 
-				use_first_page = false;
+                // GET ALL INFORMATION
 
-				// GET ALL INFORMATION
+                if (!TemplateForm.equals("")) {
 
-				if (!TemplateForm.equals("")) {
+                    form = page.getFormByName(TemplateForm);
+                } else {
 
-					form = page.getFormByName(TemplateForm);
-				} else {
+                    // XPATH
 
-					// XPATH
+                    try {
 
-					try {
+                        if (page != null) {
+                            form = (HtmlForm) page.getByXPath("/html/body//form").get(0);
+                        }
 
-						if (page != null) {
-							form = (HtmlForm) page.getByXPath("/html/body//form").get(0);
-						}
+                    } catch (RuntimeException re) {
+                        System.out.println("Xpath not found: form");
+                    }
 
-					}
+                }
 
-					catch (RuntimeException re) {
-						System.out.println("Xpath not found: form");
-					}
+                try {
 
-				}
+                    HtmlSubmitInput button = null;
 
-				try {
+                    if (!TemplateSubmitButton.equals("")) {
 
-					HtmlSubmitInput button = null;
+                        button = form.getInputByName(TemplateSubmitButton);
 
-					if (!TemplateSubmitButton.equals("")) {
+                    } else {
 
-						button = form.getInputByName(TemplateSubmitButton);
+                        // XPATH
+                        try {
+                            button = (HtmlSubmitInput) page.getByXPath("//input[@type='submit']").get(0);
+                        } catch (RuntimeException re) {
+                            System.out.println("Xpath not found: button");
+                            use_first_page = true;
+                        }
 
-					} else {
+                    }
 
-						// XPATH
-						try {
-							button = (HtmlSubmitInput) page.getByXPath("//input[@type='submit']").get(0);
-						}
+                    if (!TemplateUser.equals("")) {
+                        String type = "";
 
-						catch (RuntimeException re) {
-							System.out.println("Xpath not found: button");
-							use_first_page = true;
-						}
+                        if (!TemplateUserField.equals("")) {
+                            try {
+                                type = form.getInputByName(TemplateUserField).getTypeAttribute();
+                            } catch (RuntimeException re) {
+                                System.out.println("Given DOM-ID not found: username");
+                            }
+                        } else {
+                            try {
+                                final HtmlTextInput textField2 = (HtmlTextInput) page
+                                        .getByXPath("//input[@type='text']").get(0);
 
-					}
+                                textField2.setValueAttribute(TemplateUser);
+                            } catch (RuntimeException re) {
+                                System.out.println("Xpath not found: username");
+                            }
 
-					if (!TemplateUser.equals("")) {
+                        }
 
-						System.out.println("### Trying User");
+                        // System.out.println("#### Template Formular User Daten gefunden: "+type);
 
-						String type = "";
+                        if (type.equals("password")) {
 
-						if (!TemplateUserField.equals("")) {
-							try {
-								type = form.getInputByName(TemplateUserField).getTypeAttribute();
-							}
+                            try {
+                                final HtmlPasswordInput textField2 = form.getInputByName(TemplateUserField);
 
-							catch (RuntimeException re) {
-								System.out.println("Given DOM-ID not found: username");
-							}
+                                textField2.setValueAttribute(TemplateUser);
+                                // System.out.println("#### Template Formular User Daten eingesetzt");
+                            } catch (RuntimeException re) {
+                                System.out.println("Given DOM-ID not found: username");
+                            }
 
-							System.out.println("### Type found: " + type);
+                        } else if (type.equals("text")) {
 
-						} else {
+                            try {
+                                final HtmlTextInput textField2 = form.getInputByName(TemplateUserField);
 
-							try {
+                                textField2.setValueAttribute(TemplateUser);
+                                // System.out.println("#### Template Formular User Daten eingesetzt");
+                            } catch (RuntimeException re) {
+                                System.out.println("Given DOM-ID not found: username");
+                            }
 
-								final HtmlTextInput textField2 = (HtmlTextInput) page
-										.getByXPath("//input[@type='text']").get(0);
+                        }
 
-								textField2.setValueAttribute(TemplateUser);
+                        // System.out.println("#### Template Formular User Daten eingesetzt");
+                    }
 
-								System.out.println("### Using first Text Field by XPATH");
-							}
+                    if (!TemplatePw.equals("")) {
 
-							catch (RuntimeException re) {
-								System.out.println("Xpath not found: username");
-							}
+                        String type = "";
 
-						}
+                        if (!TemplateFormField.equals("")) {
 
-						// System.out.println("#### Template Formular User Daten gefunden: "+type);
+                            try {
+                                type = form.getInputByName(TemplateFormField).getTypeAttribute();
+                            } catch (RuntimeException re) {
+                                System.out.println("Given DOM-ID not found: password");
+                            }
 
-						if (type.equals("password")) {
+                        } else {
 
-							try {
-								final HtmlPasswordInput textField2 = form.getInputByName(TemplateUserField);
+                            // XPATH - GEHE DAVON AUS DAS ES EIN PASSWORTFELD IST
 
-								textField2.setValueAttribute(TemplateUser);
-								// System.out.println("#### Template Formular User Daten eingesetzt");
-							}
+                            try {
+                                final HtmlPasswordInput textField2 = (HtmlPasswordInput) page
+                                        .getByXPath("//input[@type='password']").get(0);
 
-							catch (RuntimeException re) {
-								System.out.println("Given DOM-ID not found: username");
-							}
+                                textField2.setValueAttribute(TemplatePw);
 
-						} else if (type.equals("text")) {
+                                System.out.println("### Using first Password Field by XPATH");
+                            } catch (RuntimeException re) {
+                                System.out.println("Xpath not found: password");
+                            }
 
-							try {
-								final HtmlTextInput textField2 = form.getInputByName(TemplateUserField);
+                        }
 
-								textField2.setValueAttribute(TemplateUser);
-								// System.out.println("#### Template Formular User Daten eingesetzt");
-							}
+                        // System.out.println("#### Template Formular Password Daten gefunden:
+                        // /"+type+"/");
 
-							catch (RuntimeException re) {
-								System.out.println("Given DOM-ID not found: username");
-							}
+                        if (type.equals("password")) {
 
-						}
+                            try {
+                                final HtmlPasswordInput textField2 = form.getInputByName(TemplateFormField);
 
-						// System.out.println("#### Template Formular User Daten eingesetzt");
-					}
+                                textField2.setValueAttribute(TemplatePw);
+                                // System.out.println("#### Template Formular Passwort Daten eingesetzt");
+                            } catch (RuntimeException re) {
+                                System.out.println("Given DOM-ID not found: password");
+                            }
 
-					if (!TemplatePw.equals("")) {
+                        } else if (type.equals("text")) {
 
-						String type = "";
+                            try {
+                                final HtmlTextInput textField2 = form.getInputByName(TemplateFormField);
 
-						if (!TemplateFormField.equals("")) {
+                                textField2.setValueAttribute(TemplatePw);
+                                // System.out.println("#### Template Formular Passwort Daten eingesetzt");
+                            } catch (RuntimeException re) {
+                                System.out.println("Given DOM-ID not found: password");
+                            }
+
+                        }
+
+                    }
 
-							try {
-								type = form.getInputByName(TemplateFormField).getTypeAttribute();
-							}
+                    if (use_first_page != true) {
+                        // Now submit the form by clicking the button and get back the second page.
+                        page = button.click();
+                        pagecontent = page.getWebResponse().getContentAsString();
+                    }
+
+                } catch (ElementNotFoundException e) {
 
-							catch (RuntimeException re) {
-								System.out.println("Given DOM-ID not found: password");
-							}
+                    pagecontent = page.getWebResponse().getContentAsString();
 
-						} else {
+                }
 
-							// XPATH - GEHE DAVON AUS DAS ES EIN PASSWORTFELD IST
+            }
 
-							try {
-								final HtmlPasswordInput textField2 = (HtmlPasswordInput) page
-										.getByXPath("//input[@type='password']").get(0);
+            /// AUF AFTERLOGIN WECHSELN
 
-								textField2.setValueAttribute(TemplatePw);
+            if (!TemplateAfterLoginURL.equals("")) {
+                WebRequest webRequest2 = new WebRequest(new URL(TemplateAfterLoginURL));
+                webRequest2.setCharset("utf-8");
 
-								System.out.println("### Using first Password Field by XPATH");
-							}
+                page = webClient.getPage(webRequest2);
+            }
 
-							catch (RuntimeException re) {
-								System.out.println("Xpath not found: password");
-							}
+            pagecontent = page.getWebResponse().getContentAsString();
 
-						}
+        } catch (IOException ioe) {
+            pagecontent = "Problem accessing page...";
+        }
 
-						// System.out.println("#### Template Formular Password Daten gefunden:
-						// /"+type+"/");
+        ///// MAPPING
 
-						if (type.equals("password")) {
+        if (!Mapping.isEmpty()) {
+            for (TemplateParameter atp : Mapping) {
+                pagecontent = pagecontent.replaceAll(atp.getValue(), atp.getName());
+            }
+        }
 
-							try {
-								final HtmlPasswordInput textField2 = form.getInputByName(TemplateFormField);
+        List<String> searchfor = new ArrayList<String>() {
+            {
 
-								textField2.setValueAttribute(TemplatePw);
-								// System.out.println("#### Template Formular Passwort Daten eingesetzt");
-							}
+                /*
+                 * Menü List Item
+                 */
+                add("%%_GEOQUEST_NAV_LI_%%");
+                /*
+                 * Start of Pagecontent
+                 */
+                add("%%_GEOQUEST_CONTENT_CODE_START_%%");
+                /*
+                 * get Portal Titel
+                 */
+                add("%%_GEOQUEST_PORTAL_NAME_%%");
+                /*
+                 * get Version Number
+                 */
+                add("%%_GEOQUEST_SERVER_VERSION_%%");
+                /*
+                 * get Portal Id
+                 */
+                add("%%_GEOQUEST_PORTAL_ID_%%");
+                /*
+                 * get User Login Info
+                 */
+                add("%%_GEOQUEST_USER_INFO_%%");
+                /*
+                 * get Page Title
+                 */
 
-							catch (RuntimeException re) {
-								System.out.println("Given DOM-ID not found: password");
-							}
+                add("%%_GEOQUEST_CONTENT_TITLE_%%");
+                /*
+                 * End of Pagecontent
+                 */
+                add("%%_GEOQUEST_CONTENT_CODE_END_%%");
 
-						} else if (type.equals("text")) {
+                /*
+                 * Default Color
+                 */
+                add("%%_GEOQUEST_DEFAULT_COLOR_%%");
+                /*
+                 * Header
+                 */
+                add("<meta name='%%_GEOQUEST_HEADER_FUNCTIONS_%%'>");
+                add("<meta name=\"%%_GEOQUEST_HEADER_FUNCTIONS_%%\"/>");
+                /*
+                 * Server URL
+                 */
+                add("%%_GEOQUEST_SERVER_URL_%%");
+                /*
+                 * Script Divs for loading from original source
+                 */
+                add("%%_GEOQUEST_SCRIPT_DIV_%%");
+                /*
+                 * URL to LOGO defined in Portal Settings
+                 */
+                add("%%_GEOQUEST_YOUR_LOGO_%%");
 
-							try {
-								final HtmlTextInput textField2 = form.getInputByName(TemplateFormField);
+            }
+        };
 
-								textField2.setValueAttribute(TemplatePw);
-								// System.out.println("#### Template Formular Passwort Daten eingesetzt");
-							}
+        List<Couple> couples = new ArrayList<Couple>();
 
-							catch (RuntimeException re) {
-								System.out.println("Given DOM-ID not found: password");
-							}
+        /*
+         * ADD END OF CODE
+         */
+        couples.add(new Couple("%%_GEOQUEST_END_OF_HTML_FILE_%%", pagecontent.length() + 1));
 
-						}
+        for (String lookingfor : searchfor) {
 
-					}
+            if (pagecontent.contains(lookingfor) == true) {
 
-					if (use_first_page != true) {
-						// Now submit the form by clicking the button and get back the second page.
-						page = button.click();
+                correct_template = true;
 
-						System.out.println("#### Template Formular abgeschickt");
+                int lastIndex = 0;
 
-						pagecontent = page.getWebResponse().getContentAsString();
-					}
+                int checkforloop = 10;
 
-				} catch (ElementNotFoundException e) {
+                while (lastIndex >= 0 && checkforloop > 0) {
 
-					pagecontent = page.getWebResponse().getContentAsString();
+                    lastIndex = pagecontent.indexOf(lookingfor, lastIndex + 1);
 
-				}
+                    if (lastIndex != -1) {
+                        // System.out.println("Gefunden: "+lookingfor+1);
 
-			}
+                        couples.add(new Couple(lookingfor, lastIndex));
 
-			/// AUF AFTERLOGIN WECHSELN
+                        counter++;
+                    }
 
-			if (!TemplateAfterLoginURL.equals("")) {
-				WebRequest webRequest2 = new WebRequest(new URL(TemplateAfterLoginURL));
-				webRequest2.setCharset("utf-8");
+                    if (checkforloop < 2) {
 
-				page = webClient.getPage(webRequest2);
-			}
+                        // System.out.println("Loop gefunden: "+lookingfor);
 
-			pagecontent = page.getWebResponse().getContentAsString();
+                    }
 
-		} catch (IOException ioe) {
-			System.out.println("IO Problem accessing page " + ioe.getMessage());
+                    checkforloop--;
 
-			pagecontent = "Problem accessing page...";
-		}
+                }
 
-		///// MAPPING
+            }
 
-		if (!Mapping.isEmpty()) {
+        }
 
-			for (TemplateParameter atp : Mapping) {
-				System.out.println("Mapping...");
+        // System.out.println("########### Starte Hinzufügen zu Html-Liste");
 
-				pagecontent = pagecontent.replaceAll(atp.getValue(), atp.getName());
+        int sort = 0;
+        String rest = pagecontent;
 
-			}
-		}
+        while (!couples.isEmpty()) {
 
-		List<String> searchfor = new ArrayList<String>() {
-			{
+            int min = -1;
 
-				/*
-				 * Menü List Item
-				 */
-				add("%%_GEOQUEST_NAV_LI_%%");
-				/*
-				 * Start of Pagecontent
-				 */
-				add("%%_GEOQUEST_CONTENT_CODE_START_%%");
-				/*
-				 * get Portal Titel
-				 */
-				add("%%_GEOQUEST_PORTAL_NAME_%%");
-				/*
-				 * get Version Number
-				 */
-				add("%%_GEOQUEST_SERVER_VERSION_%%");
-				/*
-				 * get Portal Id
-				 */
-				add("%%_GEOQUEST_PORTAL_ID_%%");
-				/*
-				 * get User Login Info
-				 */
-				add("%%_GEOQUEST_USER_INFO_%%");
-				/*
-				 * get Page Title
-				 */
+            Couple currentcouple = new Couple("", 0);
+            for (Couple acouple : couples) {
 
-				add("%%_GEOQUEST_CONTENT_TITLE_%%");
-				/*
-				 * End of Pagecontent
-				 */
-				add("%%_GEOQUEST_CONTENT_CODE_END_%%");
+                if (acouple.getZahl() < min | min < 0) {
+                    currentcouple = acouple;
+                    min = acouple.getZahl();
 
-				/*
-				 * Default Color
-				 */
-				add("%%_GEOQUEST_DEFAULT_COLOR_%%");
-				/*
-				 * Header
-				 */
-				add("<meta name='%%_GEOQUEST_HEADER_FUNCTIONS_%%'>");
-				add("<meta name=\"%%_GEOQUEST_HEADER_FUNCTIONS_%%\"/>");
-				/*
-				 * Server URL
-				 */
-				add("%%_GEOQUEST_SERVER_URL_%%");
-				/*
-				 * Script Divs for loading from original source
-				 */
-				add("%%_GEOQUEST_SCRIPT_DIV_%%");
-				/*
-				 * URL to LOGO defined in Portal Settings
-				 */
-				add("%%_GEOQUEST_YOUR_LOGO_%%");
+                    // System.out.println("Neues Minimum: "+acouple.getWort());
 
-			}
-		};
+                }
 
-		List<Couple> couples = new ArrayList<Couple>();
+            }
 
-		/*
-		 * ADD END OF CODE
-		 */
-		couples.add(new Couple("%%_GEOQUEST_END_OF_HTML_FILE_%%", pagecontent.length() + 1));
+            // System.out.println("################ Starte Suche nach:
+            // "+currentcouple.getWort());
 
-		for (String lookingfor : searchfor) {
+            // System.out.println(rest);
 
-			if (pagecontent.contains(lookingfor) == true) {
+            if (rest.contains(currentcouple.getWort())) {
 
-				correct_template = true;
+                String[] split = rest.split(currentcouple.getWort());
 
-				int lastIndex = 0;
+                SortedHtml ns;
+                String parameterlist = "";
 
-				int checkforloop = 10;
+                StringBuilder sb = new StringBuilder();
 
-				while (lastIndex >= 0 && checkforloop > 0) {
+                String[] splits = split;
 
-					lastIndex = pagecontent.indexOf(lookingfor, lastIndex + 1);
+                if (split[1].charAt(0) == '{') {
 
-					if (lastIndex != -1) {
-						// System.out.println("Gefunden: "+lookingfor+1);
+                    // split at } = splits
 
-						couples.add(new Couple(lookingfor, lastIndex));
+                    splits = split[1].split("}");
 
-						counter++;
-					}
+                    // remove { from splits[0]
 
-					if (checkforloop < 2) {
+                    // rest = all splits from splits[1] on
 
-						// System.out.println("Loop gefunden: "+lookingfor);
+                    for (int i = 1; i < splits.length; i++) {
 
-					}
+                        if (i == splits.length - 1) {
+                            sb.append(splits[i]);
 
-					checkforloop--;
+                        } else {
 
-				}
+                            sb.append(splits[i] + "}");
 
-			}
+                        }
 
-		}
+                        if (i + 1 < split.length) {
+                            sb.append(currentcouple.getWort());
+                        }
 
-		// System.out.println("########### Starte Hinzufügen zu Html-Liste");
+                    }
 
-		int sort = 0;
-		String rest = pagecontent;
+                    // rest + all following from split if split longer than 2
 
-		while (!couples.isEmpty()) {
+                    if (split.length > 2) {
 
-			int min = -1;
+                        // System.out.println("SPLITS LONGER THAN 2");
 
-			Couple currentcouple = new Couple("", 0);
-			for (Couple acouple : couples) {
+                        for (int i = 2; i < split.length; i++) {
+                            sb.append(split[i]);
 
-				if (acouple.getZahl() < min | min < 0) {
-					currentcouple = acouple;
-					min = acouple.getZahl();
+                            if (i + 1 < split.length) {
+                                sb.append(currentcouple.getWort());
+                            }
 
-					// System.out.println("Neues Minimum: "+acouple.getWort());
+                        }
+                    }
 
-				}
+                    // add splits[0] as propertylist to Html
 
-			}
+                    parameterlist = splits[0];
 
-			// System.out.println("################ Starte Suche nach:
-			// "+currentcouple.getWort());
+                    parameterlist = parameterlist.replace("{", "");
 
-			// System.out.println(rest);
+                    // System.out.println("PARAMETERLIST FOUND: "+parameterlist);
 
-			if (rest.contains(currentcouple.getWort())) {
+                } else {
 
-				String[] split = rest.split(currentcouple.getWort());
+                    for (int i = 1; i < split.length; i++) {
+                        sb.append(split[i]);
 
-				SortedHtml ns;
-				String parameterlist = "";
+                        if (i + 1 < split.length) {
+                            sb.append(currentcouple.getWort());
+                        }
 
-				StringBuilder sb = new StringBuilder();
+                    }
 
-				String[] splits = split;
+                }
 
-				if (split[1].charAt(0) == '{') {
+                rest = sb.toString();
 
-					// split at } = splits
+                sort++;
 
-					splits = split[1].split("}");
+                ns = new SortedHtml(split[0], sort, "");
+                ns.save();
+                Html2.add(ns);
 
-					// remove { from splits[0]
+                sort++;
 
-					// rest = all splits from splits[1] on
+                ns = new SortedHtml(currentcouple.getWort(), sort, parameterlist);
+                ns.save();
+                Html2.add(ns);
 
-					for (int i = 1; i < splits.length; i++) {
+                // System.out.println("Adding Html: "+currentcouple.getWort());
 
-						if (i == splits.length - 1) {
-							sb.append(splits[i]);
+            }
 
-						} else {
+            if (currentcouple.getWort() == "%%_GEOQUEST_END_OF_HTML_FILE_%%") {
 
-							sb.append(splits[i] + "}");
+                sort++;
 
-						}
+                // System.out.println("######### END OF HTML");
 
-						if (i + 1 < split.length) {
-							sb.append(currentcouple.getWort());
-						}
+                SortedHtml ns = new SortedHtml(rest, sort, "");
+                ns.save();
+                Html2.add(ns);
 
-					}
+            }
 
-					// rest + all following from split if split longer than 2
+            couples.remove(currentcouple);
 
-					if (split.length > 2) {
+        }
 
-						// System.out.println("SPLITS LONGER THAN 2");
+        if (counter < 1) {
+            done = false;
+        }
 
-						for (int i = 2; i < split.length; i++) {
-							sb.append(split[i]);
+        /*
+         * Html Leeren
+         */
 
-							if (i + 1 < split.length) {
-								sb.append(currentcouple.getWort());
-							}
+        if (correct_template == true) {
 
-						}
-					}
+            if (!Html.isEmpty()) {
 
-					// add splits[0] as propertylist to Html
+                Set<SortedHtml> sh = new HashSet<SortedHtml>();
+                sh.addAll(Html);
+                for (SortedHtml onesh : sh) {
 
-					parameterlist = splits[0];
+                    Html.remove(onesh);
+                    this.update();
 
-					parameterlist = parameterlist.replace("{", "");
+                    onesh.removeMe();
+                    onesh.delete();
 
-					// System.out.println("PARAMETERLIST FOUND: "+parameterlist);
+                }
+            }
 
-				} else {
+            Html = Html2;
 
-					for (int i = 1; i < split.length; i++) {
-						sb.append(split[i]);
+        } else if (Html.isEmpty()) {
 
-						if (i + 1 < split.length) {
-							sb.append(currentcouple.getWort());
-						}
+            if (TemplateURL.equals(Global.TEMPLATE_BASE_URL + "/defaulttemplate")) {
 
-					}
+                SortedHtml ns = new SortedHtml("Template-Seite wurde nicht erkannt.", 1, "%errortemplate:=true%");
+                ns.save();
+                Html.add(ns);
 
-				}
+            } else {
 
-				rest = sb.toString();
+                if (ProviderPortal.find.findRowCount() == 0) {
+                    SortedHtml ns = new SortedHtml("Initializing...", 1, "%errortemplate:=true%");
+                    ns.save();
+                    done = true;
+                    Html.add(ns);
+                } else {
+                    TemplateURL = Global.TEMPLATE_BASE_URL + "/defaulttemplate";
+                    updateHtmlByTemplateNoPassword();
+                }
+            }
+        } else {
+            System.out.println("Template-Update ignored..");
+            // evtl. neue Template-Update Übersicht erstellen
+        }
 
-				sort++;
+        this.save();
+        return done;
 
-				ns = new SortedHtml(split[0], sort, "");
-				ns.save();
-				Html2.add(ns);
+    }
 
-				sort++;
+    public Set<User> searchForUserByName(String x) {
 
-				ns = new SortedHtml(currentcouple.getWort(), sort, parameterlist);
-				ns.save();
-				Html2.add(ns);
+        Set<User> retuser = new HashSet<User>();
 
-				// System.out.println("Adding Html: "+currentcouple.getWort());
+        for (ProviderUsers pu : userList) {
 
-			}
+            String have = pu.getUser().getName().toLowerCase();
+            String find = x.toLowerCase();
 
-			if (currentcouple.getWort() == "%%_GEOQUEST_END_OF_HTML_FILE_%%") {
+            if (have.contains(find) | have == find) {
 
-				sort++;
+                retuser.add(pu.getUser());
 
-				// System.out.println("######### END OF HTML");
+            }
 
-				SortedHtml ns = new SortedHtml(rest, sort, "");
-				ns.save();
-				Html2.add(ns);
+        }
 
-			}
+        return retuser;
 
-			couples.remove(currentcouple);
+    }
 
-		}
+    public Set<User> searchForUserByEmail(String x) {
 
-		if (counter < 1) {
-			done = false;
-		}
+        Set<User> retuser = new HashSet<User>();
 
-		/*
-		 * Html Leeren
-		 */
+        for (ProviderUsers pu : userList) {
 
-		if (correct_template == true) {
+            String have = pu.getUser().getEmail().toLowerCase();
+            String find = x.toLowerCase();
 
-			if (!Html.isEmpty()) {
+            if (have.contains(find) | have == find) {
 
-				Set<SortedHtml> sh = new HashSet<SortedHtml>();
-				sh.addAll(Html);
-				for (SortedHtml onesh : sh) {
+                retuser.add(pu.getUser());
 
-					Html.remove(onesh);
-					this.update();
+            }
 
-					onesh.removeMe();
-					onesh.delete();
+        }
 
-				}
-			}
+        return retuser;
 
-			Html = Html2;
+    }
 
-		} else if (Html.isEmpty()) {
+    public boolean removeMe() {
 
-			if (TemplateURL.equals(Global.TEMPLATE_BASE_URL + "/defaulttemplate")) {
+        Set<ProviderGames> pg = new HashSet<ProviderGames>();
+        pg.addAll(GameList);
+        Set<ProviderUsers> pu = new HashSet<ProviderUsers>();
+        pu.addAll(userList);
+        Set<NewsstreamItem> ni = new HashSet<NewsstreamItem>();
+        ni.addAll(Newsstream);
 
-				SortedHtml ns = new SortedHtml("Template-Seite wurde nicht erkannt.", 1, "%errortemplate:=true%");
-				ns.save();
-				Html.add(ns);
+        try {
 
-			} else {
+            for (ProviderGames onepg : pg) {
 
-				if (ProviderPortal.find.findRowCount() == 0) {
+                GameList.remove(onepg);
+                update();
 
-					System.out.println("Initializing message...");
-					SortedHtml ns = new SortedHtml("Initializing...", 1, "%errortemplate:=true%");
-					ns.save();
-					done = true;
-					Html.add(ns);
-				} else {
-					TemplateURL = Global.TEMPLATE_BASE_URL + "/defaulttemplate";
-					updateHtmlByTemplateNoPassword();
-				}
+                onepg.getGame().removeMe();
+                try {
+                    onepg.getGame().delete();
+                } catch (RuntimeException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (ConcurrentModificationException e) {
+            e.printStackTrace();
+        }
 
-			}
+        try {
+            for (ProviderUsers onepu : pu) {
 
-		} else {
+                onepu.getUser().deletePortal(onepu);
 
-			System.out.println("Template-Update ignored..");
+                onepu.getUser().update();
 
-			// evtl. neue Template-Update Übersicht erstellen
+                userList.remove(onepu);
+                update();
+                try {
+                    onepu.delete();
+                } catch (RuntimeException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (ConcurrentModificationException e) {
+            e.printStackTrace();
+        }
 
-		}
+        try {
+            for (NewsstreamItem oneni : ni) {
 
-		this.save();
-		return done;
+                Newsstream.remove(oneni);
+                update();
 
-	}
+                if (oneni.getPosterClass() == "user") {
 
-	public Set<User> searchForUserByName(String x) {
+                    if (User.find.where().eq("id", oneni.getPosterid()).findRowCount() == 1) {
 
-		Set<User> retuser = new HashSet<User>();
+                        User.find.byId(oneni.getPosterid()).deleteNewsstreamItem(oneni);
+                        ;
+                    }
 
-		for (ProviderUsers pu : userList) {
+                }
 
-			String have = pu.getUser().getName().toLowerCase();
-			String find = x.toLowerCase();
+                if (oneni.getPosterClass() == "game") {
 
-			if (have.contains(find) | have == find) {
+                    if (Game.find.where().eq("id", oneni.getPosterid()).findRowCount() == 1) {
 
-				retuser.add(pu.getUser());
+                        Game.find.byId(oneni.getPosterid()).deleteNewsstreamItem(oneni);
+                        ;
+                    }
 
-			}
+                }
 
-		}
+                try {
+                    oneni.delete();
+                } catch (RuntimeException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (ConcurrentModificationException e) {
+            e.printStackTrace();
+        }
 
-		return retuser;
+        if (!Html.isEmpty()) {
 
-	}
+            Set<SortedHtml> sh = new HashSet<SortedHtml>();
+            sh.addAll(Html);
+            try {
+                for (SortedHtml onesh : sh) {
 
-	public Set<User> searchForUserByEmail(String x) {
+                    Html.remove(onesh);
+                    update();
+                    try {
+                        onesh.removeMe();
 
-		Set<User> retuser = new HashSet<User>();
+                        onesh.delete();
+                    } catch (RuntimeException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (ConcurrentModificationException e) {
+                e.printStackTrace();
+            }
+        }
 
-		for (ProviderUsers pu : userList) {
+        if (!Mapping.isEmpty()) {
+            Set<TemplateParameter> x = new HashSet<TemplateParameter>();
+            x.addAll(Mapping);
 
-			String have = pu.getUser().getEmail().toLowerCase();
-			String find = x.toLowerCase();
+            try {
+                for (TemplateParameter atp : x) {
 
-			if (have.contains(find) | have == find) {
+                    if (Mapping.contains(atp)) {
 
-				retuser.add(pu.getUser());
+                        Mapping.remove(atp);
+                        update();
+                        try {
+                            atp.delete();
+                        } catch (RuntimeException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            } catch (ConcurrentModificationException e) {
+                e.printStackTrace();
+            }
+        }
 
-			}
+        return true;
+    }
 
-		}
+    public void computeMapping() {
 
-		return retuser;
+        if (!Mapping.isEmpty()) {
+            Set<TemplateParameter> x = new HashSet<TemplateParameter>();
+            x.addAll(Mapping);
 
-	}
+            for (TemplateParameter atp : x) {
 
-	public boolean removeMe() {
+                if (Mapping.contains(atp)) {
 
-		Set<ProviderGames> pg = new HashSet<ProviderGames>();
-		pg.addAll(GameList);
-		Set<ProviderUsers> pu = new HashSet<ProviderUsers>();
-		pu.addAll(userList);
-		Set<NewsstreamItem> ni = new HashSet<NewsstreamItem>();
-		ni.addAll(Newsstream);
+                    Mapping.remove(atp);
+                    this.update();
+                    atp.delete();
 
-		try {
+                }
 
-			for (ProviderGames onepg : pg) {
+            }
+        }
 
-				GameList.remove(onepg);
-				update();
+        WebClient webClient = new WebClient();
+        try {
 
-				onepg.getGame().removeMe();
-				try {
-					onepg.getGame().delete();
+            WebRequest webRequest = new WebRequest(new URL(TemplateMappingURL));
+            webRequest.setCharset("utf-8");
 
-				} catch (RuntimeException e) {
+            webClient.setThrowExceptionOnFailingStatusCode(false);
+            webClient.setThrowExceptionOnScriptError(false);
+            HtmlPage page = webClient.getPage(webRequest);
+            String search = page.getWebResponse().getContentAsString();
 
-					System.out.println("Can't delete Game.");
-					e.printStackTrace();
+            String[] split = search.split("%%%%MAPPING%%%%");
 
-				}
+            for (String astring : split) {
 
-			}
-		} catch (ConcurrentModificationException e) {
+                if (astring.contains("::=")) {
 
-			System.out.println("Iterator Exception:");
-			e.printStackTrace();
+                    String[] newstrings = astring.split("::=");
 
-		}
+                    String nametoadd = newstrings[0];
 
-		try {
-			for (ProviderUsers onepu : pu) {
+                    if (nametoadd.contains("!!!\"")) {
 
-				onepu.getUser().deletePortal(onepu);
+                        nametoadd = nametoadd.split("!!!\"")[1];
 
-				onepu.getUser().update();
+                        nametoadd = nametoadd.split("\"!!!")[0];
 
-				userList.remove(onepu);
-				update();
-				try {
-					onepu.delete();
-				} catch (RuntimeException e) {
+                    } else {
 
-					System.out.println("Can't delete UserRight.");
-					e.printStackTrace();
+                        nametoadd = nametoadd.replaceAll(" ", "");
+                        nametoadd = nametoadd.replaceAll("\n", "");
 
-				}
+                    }
 
-			}
-		} catch (ConcurrentModificationException e) {
+                    String valueadd = newstrings[1].split("%%%%MAPPING%%%%")[0];
 
-			System.out.println("Iterator Exception:");
-			e.printStackTrace();
+                    if (valueadd.contains("!!!\"")) {
 
-		}
+                        valueadd = valueadd.split("!!!\"")[1];
 
-		try {
-			for (NewsstreamItem oneni : ni) {
+                        valueadd = valueadd.split("\"!!!")[0];
 
-				Newsstream.remove(oneni);
-				update();
+                    } else {
 
-				if (oneni.getPosterClass() == "user") {
+                        valueadd = valueadd.replaceAll(" ", "");
+                        valueadd = valueadd.replaceAll("\n", "");
 
-					if (User.find.where().eq("id", oneni.getPosterid()).findRowCount() == 1) {
+                    }
 
-						User.find.byId(oneni.getPosterid()).deleteNewsstreamItem(oneni);
-						;
-					}
+                    TemplateParameter padd = new TemplateParameter(nametoadd, valueadd);
 
-				}
+                    padd.save();
 
-				if (oneni.getPosterClass() == "game") {
+                    Mapping.add(padd);
+                }
 
-					if (Game.find.where().eq("id", oneni.getPosterid()).findRowCount() == 1) {
+            }
 
-						Game.find.byId(oneni.getPosterid()).deleteNewsstreamItem(oneni);
-						;
-					}
+        } catch (IOException ioe) {
+            System.out.println("Problem accessing page " + ioe.getMessage());
+        }
+    }
 
-				}
+    /**
+     * Getter & Setter
+     */
 
-				try {
-					oneni.delete();
+    public Set<TemplateParameter> getContentHtmlParameters(String code) {
 
-				} catch (RuntimeException e) {
+        SortedHtml contenthtml = new SortedHtml("", 0, "");
+        Set<TemplateParameter> specific = new HashSet<TemplateParameter>();
 
-					System.out.println("Can't delete NewsstreamItem.");
-					e.printStackTrace();
+        for (SortedHtml ahtml : Html) {
 
-				}
+            if (ahtml.getWort().equals("%%_GEOQUEST_CONTENT_CODE_START_%%")) {
 
-			}
-		} catch (ConcurrentModificationException e) {
+                contenthtml = ahtml;
 
-			System.out.println("Iterator Exception:");
-			e.printStackTrace();
+            }
 
-		}
+        }
 
-		if (!Html.isEmpty()) {
+        for (TemplateParameter aparamter : contenthtml.getParameters()) {
 
-			Set<SortedHtml> sh = new HashSet<SortedHtml>();
-			sh.addAll(Html);
-			try {
-				for (SortedHtml onesh : sh) {
+            if (aparamter.getName().startsWith(code + ".")) {
 
-					Html.remove(onesh);
-					update();
-					try {
-						onesh.removeMe();
+                String help = aparamter.getName().replaceFirst(code + ".", "");
 
-						onesh.delete();
-					} catch (RuntimeException e) {
+                specific.add(new TemplateParameter(help, aparamter.getValue()));
 
-						System.out.println("Can't delete SortedHtml.");
-						e.printStackTrace();
+            }
 
-					}
+        }
 
-				}
-			} catch (ConcurrentModificationException e) {
+        return specific;
 
-				System.out.println("Iterator Exception:");
-				e.printStackTrace();
+    }
 
-			}
-		}
+    public String getContentHtmlParameter(String code) {
 
-		if (!Mapping.isEmpty()) {
-			Set<TemplateParameter> x = new HashSet<TemplateParameter>();
-			x.addAll(Mapping);
+        SortedHtml contenthtml = new SortedHtml("", 0, "");
 
-			try {
-				for (TemplateParameter atp : x) {
+        for (SortedHtml ahtml : Html) {
 
-					if (Mapping.contains(atp)) {
+            if (ahtml.getWort().equals("%%_GEOQUEST_CONTENT_CODE_START_%%")) {
 
-						Mapping.remove(atp);
-						update();
-						try {
-							atp.delete();
-						} catch (RuntimeException e) {
+                contenthtml = ahtml;
 
-							System.out.println("Can't delete MappingItems.");
-							e.printStackTrace();
+            }
 
-						}
+        }
 
-					}
+        for (TemplateParameter aparamter : contenthtml.getParameters()) {
 
-				}
-			} catch (ConcurrentModificationException e) {
+            if (code.equals(aparamter.getName())) {
 
-				System.out.println("Iterator Exception:");
-				e.printStackTrace();
+                String sentence = aparamter.getValue();
 
-			}
-		}
+                return sentence;
 
-		return true;
+            }
 
-	}
+        }
 
-	public void computeMapping() {
+        return null;
+    }
 
-		if (!Mapping.isEmpty()) {
-			Set<TemplateParameter> x = new HashSet<TemplateParameter>();
-			x.addAll(Mapping);
+    public String getLanguageParameter(String code) {
 
-			for (TemplateParameter atp : x) {
+        String x = getContentHtmlParameter("general.language." + code);
 
-				if (Mapping.contains(atp)) {
+        if (x != null) {
 
-					Mapping.remove(atp);
-					this.update();
-					atp.delete();
+            return x;
 
-				}
+        } else {
 
-			}
-		}
+            if (code.equals("Öffentliche Spiele")) {
 
-		WebClient webClient = new WebClient();
-		try {
+                code = "Oeffentliche_Spiele";
 
-			WebRequest webRequest = new WebRequest(new URL(TemplateMappingURL));
-			webRequest.setCharset("utf-8");
+            } else if (code.equals("Meine Spiele")) {
+                code = "Meine_Spiele";
 
-			webClient.setThrowExceptionOnFailingStatusCode(false);
-			webClient.setThrowExceptionOnScriptError(false);
-			HtmlPage page = webClient.getPage(webRequest);
-			String search = page.getWebResponse().getContentAsString();
+            } else if (code.equals("Neues Spiel erstellen")) {
 
-			String[] split = search.split("%%%%MAPPING%%%%");
+                code = "Neues_Spiel_erstellen";
 
-			for (String astring : split) {
+            } else if (code.equals("Du hast bisher keine Spiele auf diesem Portal.")) {
+                code = "Du_hast_keine_Spiele";
 
-				if (astring.contains("::=")) {
+            } else if (code.equals("hat ein neues Spiel erstellt")) {
+                code = "hat_ein_neues_Spiel_erstellt";
 
-					String[] newstrings = astring.split("::=");
+            }
 
-					String nametoadd = newstrings[0];
+            x = getContentHtmlParameter("general.language." + code);
 
-					if (nametoadd.contains("!!!\"")) {
+            if (x != null) {
 
-						nametoadd = nametoadd.split("!!!\"")[1];
+                return x;
 
-						nametoadd = nametoadd.split("\"!!!")[0];
+            }
 
-					} else {
+        }
 
-						nametoadd = nametoadd.replaceAll(" ", "");
-						nametoadd = nametoadd.replaceAll("\n", "");
+        return null;
 
-					}
+    }
 
-					String valueadd = newstrings[1].split("%%%%MAPPING%%%%")[0];
+    public Set<TemplateParameter> getHtmlParameters(String code) {
 
-					if (valueadd.contains("!!!\"")) {
+        SortedHtml contenthtml = new SortedHtml("", 0, "");
 
-						valueadd = valueadd.split("!!!\"")[1];
+        for (SortedHtml ahtml : Html) {
 
-						valueadd = valueadd.split("\"!!!")[0];
+            if (ahtml.getWort().equals(code)) {
 
-					} else {
+                contenthtml = ahtml;
 
-						valueadd = valueadd.replaceAll(" ", "");
-						valueadd = valueadd.replaceAll("\n", "");
+            }
 
-					}
+        }
+        return contenthtml.getParameters();
+    }
 
-					System.out.println(nametoadd + " : " + valueadd);
-					TemplateParameter padd = new TemplateParameter(nametoadd, valueadd);
+    public String getParameter(Long htmlid, String who) {
 
-					padd.save();
+        String value = "%NOT_INCLUDED%";
 
-					Mapping.add(padd);
+        if (SortedHtml.find.where().eq("id", htmlid).findRowCount() == 1) {
 
-				}
+            SortedHtml thehtml = SortedHtml.find.byId(htmlid);
 
-			}
+            Set<TemplateParameter> tosearchin = thehtml.getParameters();
 
-		} catch (IOException ioe) {
-			System.out.println("Problem accessing page " + ioe.getMessage());
-		}
+            if (!tosearchin.isEmpty()) {
+                for (TemplateParameter aparameter : tosearchin) {
 
-	}
+                    if (aparameter.getName().startsWith(who)) {
 
-	/**
-	 *
-	 * Getter & Setter
-	 *
-	 */
+                        value = aparameter.getValue();
 
-	public Set<TemplateParameter> getContentHtmlParameters(String code) {
+                    }
 
-		SortedHtml contenthtml = new SortedHtml("", 0, "");
-		Set<TemplateParameter> specific = new HashSet<TemplateParameter>();
+                }
+            }
+        }
+        return value;
 
-		for (SortedHtml ahtml : Html) {
+    }
 
-			if (ahtml.getWort().equals("%%_GEOQUEST_CONTENT_CODE_START_%%")) {
+    public Long getContentHtmlId() {
 
-				contenthtml = ahtml;
+        Long contentid = 0L;
 
-			}
+        for (SortedHtml ahtml : Html) {
 
-		}
+            if (ahtml.getWort().equals("%%_GEOQUEST_CONTENT_CODE_START_%%")) {
 
-		for (TemplateParameter aparamter : contenthtml.getParameters()) {
+                contentid = ahtml.getId();
 
-			if (aparamter.getName().startsWith(code + ".")) {
+            }
 
-				String help = aparamter.getName().replaceFirst(code + ".", "");
+        }
 
-				specific.add(new TemplateParameter(help, aparamter.getValue()));
+        return contentid;
 
-			}
+    }
 
-		}
+    public List<SortedHtml> getHtml() {
 
-		return specific;
+        return Html;
+    }
 
-	}
+    public String getName() {
 
-	public String getContentHtmlParameter(String code) {
+        return name;
+    }
 
-		SortedHtml contenthtml = new SortedHtml("", 0, "");
+    public List<ProviderUsers> getUsers() {
 
-		for (SortedHtml ahtml : Html) {
+        return userList;
 
-			if (ahtml.getWort().equals("%%_GEOQUEST_CONTENT_CODE_START_%%")) {
+    }
 
-				contenthtml = ahtml;
+    public void addNewGame(Game g, boolean visibility) {
 
-			}
+        ProviderGames pgames = new ProviderGames();
+        pgames.setPortal(this);
+        pgames.setGame(g);
 
-		}
+        pgames.setVisibility(visibility);
 
-		for (TemplateParameter aparamter : contenthtml.getParameters()) {
+        pgames.save();
 
-			if (code.equals(aparamter.getName())) {
+        this.GameList.add(pgames);
+        // Also add the association object to the employee.
+        g.getPortals().add(pgames);
 
-				String sentence = aparamter.getValue();
+        this.save();
+        g.save();
 
-				return sentence;
+    }
 
-			}
+    public void addNewsstream(NewsstreamItem nsi) {
 
-		}
+        Newsstream.add(nsi);
 
-		return null;
-	}
+        this.update();
 
-	public String getLanguageParameter(String code) {
+        // POST ON WORDPRESS
 
-		String x = getContentHtmlParameter("general.language." + code);
+        if (nsi.getVisibility().equals("true")) {
 
-		if (x != null) {
+            if (!TemplatePostURL.equals("")) {
 
-			return x;
+                try {
 
-		} else {
+                    WebClient webClient = new WebClient();
+                    WebRequest webRequest = new WebRequest(new URL(TemplatePostURL));
+                    webRequest.setCharset("utf-8");
 
-			if (code.equals("Öffentliche Spiele")) {
+                    webClient.setThrowExceptionOnFailingStatusCode(false);
+                    webClient.setThrowExceptionOnScriptError(false);
 
-				code = "Oeffentliche_Spiele";
+                    HtmlPage page = webClient.getPage(webRequest);
 
-			} else if (code.equals("Meine Spiele")) {
-				code = "Meine_Spiele";
+                    // Get the form that we are dealing with and within that form,
+                    // find the submit button and the field that we want to change.
+                    final HtmlForm form = page.getFormByName("geoquest_post_form");
 
-			} else if (code.equals("Neues Spiel erstellen")) {
+                    final HtmlSubmitInput button = form.getInputByName("Submit");
 
-				code = "Neues_Spiel_erstellen";
+                    final HtmlTextArea text1 = form.getTextAreaByName("title");
 
-			} else if (code.equals("Du hast bisher keine Spiele auf diesem Portal.")) {
-				code = "Du_hast_keine_Spiele";
+                    text1.setText(nsi.getTitle());
 
-			} else if (code.equals("hat ein neues Spiel erstellt")) {
-				code = "hat_ein_neues_Spiel_erstellt";
+                    final HtmlTextArea text2 = form.getTextAreaByName("content");
 
-			}
+                    String poststart = "";
 
-			x = getContentHtmlParameter("general.language." + code);
+                    // What if nobody exists? -> Not handled right now.
 
-			if (x != null) {
+                    if (nsi.getPosterClass().equals("user")) {
 
-				return x;
+                        if (User.find.where().eq("id", nsi.getPosterid()).findRowCount() == 1) {
 
-			}
+                            poststart = User.find.byId(nsi.getPosterid()).getName();
+                        }
 
-		}
+                    } else if (nsi.getPosterClass().equals("game")) {
 
-		return null;
+                        if (Game.find.where().eq("id", nsi.getPosterid()).findRowCount() == 1) {
 
-	}
+                            poststart = Game.find.byId(nsi.getPosterid()).getName();
+                        }
 
-	public Set<TemplateParameter> getHtmlParameters(String code) {
+                    } else if (nsi.getPosterClass().equals("providerportal")) {
 
-		SortedHtml contenthtml = new SortedHtml("", 0, "");
+                        if (ProviderPortal.find.where().eq("id", nsi.getPosterid()).findRowCount() == 1) {
 
-		for (SortedHtml ahtml : Html) {
+                            poststart = ProviderPortal.find.byId(nsi.getPosterid()).getName();
+                        }
 
-			if (ahtml.getWort().equals(code)) {
+                    }
 
-				contenthtml = ahtml;
+                    text2.setText(poststart + " " + nsi.getText());
 
-			}
+                    final HtmlPasswordInput pwin = form.getInputByName("geopw");
 
-		}
-		return contenthtml.getParameters();
-	}
+                    pwin.setValueAttribute(TemplatePw);
 
-	public String getParameter(Long htmlid, String who) {
+                    button.click();
 
-		String value = "%NOT_INCLUDED%";
+                } catch (IOException ioe) {
+                    // System.out.println("Problem accessing page "+ ioe.getMessage());
+                }
 
-		if (SortedHtml.find.where().eq("id", htmlid).findRowCount() == 1) {
+            }
 
-			SortedHtml thehtml = SortedHtml.find.byId(htmlid);
+        }
 
-			Set<TemplateParameter> tosearchin = thehtml.getParameters();
+    }
 
-			if (!tosearchin.isEmpty()) {
-				for (TemplateParameter aparameter : tosearchin) {
+    public void deleteNewsstream(Long id) {
 
-					if (aparameter.getName().startsWith(who)) {
+        List<NewsstreamItem> help = new ArrayList<NewsstreamItem>();
+        help.addAll(Newsstream);
 
-						value = aparameter.getValue();
+        for (NewsstreamItem ansi : help) {
 
-					}
+            if (ansi.getId().equals(id)) {
 
-				}
-			}
-		}
-		return value;
+                Newsstream.remove(ansi);
+                this.update();
+                ansi.delete();
 
-	}
+            }
 
-	public Long getContentHtmlId() {
+        }
 
-		Long contentid = 0L;
+    }
 
-		for (SortedHtml ahtml : Html) {
+    public NewsstreamItem createNewsstreamItem(String title, String content, String vis) {
 
-			if (ahtml.getWort().equals("%%_GEOQUEST_CONTENT_CODE_START_%%")) {
+        NewsstreamItem nsi = new NewsstreamItem(title, content, vis, "providerportal", getId());
+        return nsi;
 
-				contentid = ahtml.getId();
+    }
 
-			}
+    public void deleteGame(ProviderGames g) {
+        if (GameList.contains(g) == true) {
+            GameList.remove(g);
+            exportPublicGamesJson();
+        }
+    }
 
-		}
+    public void editUser(User u, String newright) {
 
-		return contentid;
+        ProviderUsers agr = getUser(u);
 
-	}
+        if (newright.equals("admin") | newright.equals("user") | newright.equals("unverified")) {
+            agr.setRights(newright);
+            // System.out.println("SETTING NEW USER RIGHTS");
+        }
 
-	public List<SortedHtml> getHtml() {
+        agr.update();
 
-		return Html;
-	}
+    }
 
-	public String getName() {
+    public void deleteUser(User u) {
 
-		return name;
-	}
+        // THINK ABOUT DELETING ALL PRIVATE GAMES THAT ONLY HAVE USER U AS GAMERIGHT
 
-	public List<ProviderUsers> getUsers() {
+        if (userList.contains(getUser(u))) {
+            ProviderUsers todelete = getUser(u);
+            userList.remove(todelete);
+            todelete.delete();
+        }
 
-		return userList;
+    }
 
-	}
+    public void deleteNewsstreamItem(NewsstreamItem ni) {
 
-	public void addNewGame(Game g, boolean visibility) {
+        if (Newsstream.contains(ni) == true) {
 
-		ProviderGames pgames = new ProviderGames();
-		pgames.setPortal(this);
-		pgames.setGame(g);
+            Newsstream.remove(ni);
 
-		pgames.setVisibility(visibility);
+        }
 
-		pgames.save();
+    }
 
-		this.GameList.add(pgames);
-		// Also add the association object to the employee.
-		g.getPortals().add(pgames);
+    public ProviderGames searchGame(Game g) {
 
-		this.save();
-		g.save();
+        ProviderGames p = new ProviderGames();
 
-	}
+        for (ProviderGames aprovidergame : GameList) {
 
-	public void addNewsstream(NewsstreamItem nsi) {
+            if (aprovidergame.getGame() == g) {
 
-		Newsstream.add(nsi);
+                p = aprovidergame;
 
-		this.update();
+            }
 
-		// POST ON WORDPRESS
+        }
 
-		if (nsi.getVisibility().equals("true")) {
+        return p;
 
-			if (!TemplatePostURL.equals("")) {
+    }
 
-				try {
+    public ProviderGames getGame(Game g) {
 
-					WebClient webClient = new WebClient();
-					WebRequest webRequest = new WebRequest(new URL(TemplatePostURL));
-					webRequest.setCharset("utf-8");
+        ProviderGames pg = null;
 
-					webClient.setThrowExceptionOnFailingStatusCode(false);
-					webClient.setThrowExceptionOnScriptError(false);
+        for (ProviderGames aprovidergame : GameList) {
 
-					HtmlPage page = webClient.getPage(webRequest);
+            if (aprovidergame.getGame().getId().equals(g.getId())) {
 
-					// Get the form that we are dealing with and within that form,
-					// find the submit button and the field that we want to change.
-					final HtmlForm form = page.getFormByName("geoquest_post_form");
+                pg = aprovidergame;
 
-					final HtmlSubmitInput button = form.getInputByName("Submit");
+            }
 
-					final HtmlTextArea text1 = form.getTextAreaByName("title");
+        }
 
-					text1.setText(nsi.getTitle());
+        return pg;
 
-					final HtmlTextArea text2 = form.getTextAreaByName("content");
+    }
 
-					String poststart = "";
+    public List<ProviderGames> getGameList() {
 
-					// What if nobody exists? -> Not handled right now.
+        return GameList;
 
-					if (nsi.getPosterClass().equals("user")) {
+    }
 
-						if (User.find.where().eq("id", nsi.getPosterid()).findRowCount() == 1) {
+    public boolean existsGame(Game g) {
 
-							poststart = User.find.byId(nsi.getPosterid()).getName();
-						}
+        boolean exists = false;
 
-					} else if (nsi.getPosterClass().equals("game")) {
+        for (ProviderGames aprovidergame : GameList) {
 
-						if (Game.find.where().eq("id", nsi.getPosterid()).findRowCount() == 1) {
+            if (aprovidergame.getGame().getId().equals(g.getId())) {
 
-							poststart = Game.find.byId(nsi.getPosterid()).getName();
-						}
+                exists = true;
 
-					} else if (nsi.getPosterClass().equals("providerportal")) {
+            }
 
-						if (ProviderPortal.find.where().eq("id", nsi.getPosterid()).findRowCount() == 1) {
+        }
 
-							poststart = ProviderPortal.find.byId(nsi.getPosterid()).getName();
-						}
+        return exists;
 
-					}
+    }
 
-					text2.setText(poststart + " " + nsi.getText());
+    public void exportPublicGamesJson() {
+        JSONSerializer postDetailsSerializer = new JSONSerializer()
+                .include("id", "typeID", "name", "hotspots", "hotspots.longitude", "hotspots.latitude", "metadata",
+                        "metadata.key", "metadata.value", "lastUpdate", "version", "featuredImagePath", "iconPath")
+                .exclude("*").prettyPrint(true);
 
-					final HtmlPasswordInput pwin = form.getInputByName("geopw");
+        List<GameInfo> gameInfos = new ArrayList<GameInfo>();
+        List<ProviderGames> objects = getPublicGamesList();
 
-					pwin.setValueAttribute(TemplatePw);
+        for (ProviderGames pg : objects) {
+            gameInfos.add(new GameInfo(pg.getGame()));
+        }
 
-					button.click();
+        String content = postDetailsSerializer.serialize(gameInfos);
 
-				} catch (IOException ioe) {
-					// System.out.println("Problem accessing page "+ ioe.getMessage());
-				}
+        File theDir = new File("public/portalfiles/" + id);
+        if (!theDir.exists())
+            theDir.mkdirs();
 
-			}
+        File f = new File(theDir, "publicgames.json");
+        String absoluteFilePath = f.getAbsolutePath();
+        Path thePath = Paths.get(absoluteFilePath);
+        try {
+            Files.write(thePath, content.getBytes());
+            System.out.println("ProviderPortal.exportPublicGamesJson done.");
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
 
-		}
 
-	}
+    public String getUserEcho(User u) {
 
-	public void deleteNewsstream(Long id) {
+        String re = "Users: ";
+        for (ProviderUsers aprovideruser : userList) {
 
-		List<NewsstreamItem> help = new ArrayList<NewsstreamItem>();
-		help.addAll(Newsstream);
+            if (aprovideruser.getUser().getId() == u.getId()) {
 
-		for (NewsstreamItem ansi : help) {
+                re = re + "" + aprovideruser.getUser().getId() + "(" + aprovideruser.getRights() + ")";
+            }
 
-			if (ansi.getId().equals(id)) {
+        }
 
-				Newsstream.remove(ansi);
-				this.update();
-				ansi.delete();
+        return re;
+    }
 
-			}
+    public ProviderUsers getUser(User u) {
 
-		}
+        ProviderUsers pu = new ProviderUsers();
 
-	}
+        for (ProviderUsers aprovideruser : userList) {
 
-	public NewsstreamItem createNewsstreamItem(String title, String content, String vis) {
+            if (aprovideruser.getUser().getId().equals(u.getId())) {
 
-		NewsstreamItem nsi = new NewsstreamItem(title, content, vis, "providerportal", getId());
-		return nsi;
+                pu = aprovideruser;
 
-	}
+            }
 
-	public void deleteGame(ProviderGames g) {
+        }
 
-		if (GameList.contains(g) == true) {
+        return pu;
 
-			GameList.remove(g);
+    }
 
-		}
+    public boolean existsUser(User u) {
 
-	}
+        boolean exists = false;
 
-	public void editUser(User u, String newright) {
+        for (ProviderUsers aprovideruser : userList) {
 
-		ProviderUsers agr = getUser(u);
+            if (aprovideruser.getUser().getId().equals(u.getId())) {
 
-		if (newright.equals("admin") | newright.equals("user") | newright.equals("unverified")) {
-			agr.setRights(newright);
-			// System.out.println("SETTING NEW USER RIGHTS");
-		}
+                exists = true;
 
-		agr.update();
+            }
 
-	}
+        }
 
-	public void deleteUser(User u) {
+        return exists;
 
-		// THINK ABOUT DELETING ALL PRIVATE GAMES THAT ONLY HAVE USER U AS GAMERIGHT
+    }
 
-		if (userList.contains(getUser(u))) {
-			ProviderUsers todelete = getUser(u);
-			userList.remove(todelete);
-			todelete.delete();
-		}
+    public void addNewUser(User u) {
 
-	}
+        if (autoVerifyUsers == false) {
 
-	public void deleteNewsstreamItem(NewsstreamItem ni) {
+            addUser(u, UNVERIFIED_ROLE);
+        } else {
+            addUser(u, USER_ROLE);
+        }
+    }
 
-		if (Newsstream.contains(ni) == true) {
+    public void addUser(User u, String right) {
 
-			Newsstream.remove(ni);
+        boolean doit = true;
 
-		}
+        for (ProviderUsers test : userList) {
 
-	}
+            if (test.getUser().getId().equals(u.getId())) {
 
-	public ProviderGames searchGame(Game g) {
+                doit = false;
 
-		ProviderGames p = new ProviderGames();
+            }
 
-		for (ProviderGames aprovidergame : GameList) {
+        }
 
-			if (aprovidergame.getGame() == g) {
+        if (doit) {
 
-				p = aprovidergame;
+            ProviderUsers pusers = new ProviderUsers();
+            pusers.setPortal(this);
+            pusers.setUser(u);
 
-			}
+            pusers.setRights(right);
 
-		}
+            pusers.save();
 
-		return p;
+            userList.add(pusers);
+            u.addPortal(pusers);
 
-	}
+            this.update();
+            u.update();
+            pusers.update();
 
-	public ProviderGames getGame(Game g) {
+        }
 
-		ProviderGames pg = null;
+    }
 
-		for (ProviderGames aprovidergame : GameList) {
+    public void addNewAdmin(User u) {
 
-			if (aprovidergame.getGame().getId().equals(g.getId())) {
+        addUser(u, ADMIN_ROLE);
 
-				pg = aprovidergame;
+    }
 
-			}
+    public void setName(String n) {
 
-		}
+        name = n;
+    }
 
-		return pg;
+    public List<ProviderGames> getPublicGamesList() {
 
-	}
+        List<ProviderGames> publGames = new ArrayList();
 
-	public List<ProviderGames> getGameList() {
+        Set<Long> containing = new HashSet<Long>();
 
-		return GameList;
+        for (int j = GameList.size() - 1; j >= 0; j--) {
 
-	}
+            ProviderGames onepg = getGame(GameList.get(j).getGame());
 
-	public boolean existsGame(Game g) {
+            if (onepg.getGame() != null) {
+                if (onepg.getGame().hasFile()) {
 
-		boolean exists = false;
+                    if (!containing.contains(onepg.getGame().getId())) {
 
-		for (ProviderGames aprovidergame : GameList) {
+                        if (onepg.getPortal().getIdentifier().equals(getIdentifier())) {
 
-			if (aprovidergame.getGame().getId().equals(g.getId())) {
+                            if (onepg.getVisibility() == true) {
 
-				exists = true;
+                                containing.add(onepg.getGame().getId());
+                                publGames.add(onepg);
 
-			}
+                            }
+                        }
 
-		}
+                    }
+                }
+            }
 
-		return exists;
+        }
+        return publGames;
+    }
 
-	}
+    public String setTemplateURL(String url) {
 
-	public String getUserEcho(User u) {
+        return TemplateURL = url;
 
-		String re = "Users: ";
-		for (ProviderUsers aprovideruser : userList) {
+    }
 
-			if (aprovideruser.getUser().getId() == u.getId()) {
+    public String getTemplateURL() {
 
-				re = re + "" + aprovideruser.getUser().getId() + "(" + aprovideruser.getRights() + ")";
-			}
+        return TemplateURL;
 
-		}
+    }
 
-		return re;
-	}
+    public String getEndHtml() {
 
-	public ProviderUsers getUser(User u) {
+        SortedHtml winner = new SortedHtml("", 0, "");
+        int max = 0;
+        for (SortedHtml anhtml : Html) {
 
-		ProviderUsers pu = new ProviderUsers();
+            if (anhtml.getZahl() > max) {
 
-		for (ProviderUsers aprovideruser : userList) {
+                max = anhtml.getZahl();
+                winner = anhtml;
+            }
 
-			if (aprovideruser.getUser().getId().equals(u.getId())) {
+        }
 
-				pu = aprovideruser;
+        return winner.getWort();
 
-			}
+    }
 
-		}
+    public String getStartHtml() {
 
-		return pu;
+        SortedHtml winner = new SortedHtml("", 0, "");
+        int min = -1;
+        for (SortedHtml anhtml : Html) {
 
-	}
+            if (anhtml.getZahl() < min | min < 0) {
 
-	public boolean existsUser(User u) {
+                min = anhtml.getZahl();
+                winner = anhtml;
+            }
 
-		boolean exists = false;
+        }
 
-		for (ProviderUsers aprovideruser : userList) {
+        return winner.getWort();
 
-			if (aprovideruser.getUser().getId().equals(u.getId())) {
+    }
 
-				exists = true;
+    public String getIdentifier() {
+        return Long.toString(id);
+    }
 
-			}
+    public Long getId() {
 
-		}
+        return id;
+    }
 
-		return exists;
+    public String getTemplatePw() {
+        return TemplatePw;
+    }
 
-	}
+    public void setTemplatePw(String pw) {
+        TemplatePw = pw;
+    }
 
-	public void addNewUser(User u) {
+    public String getTemplateForm() {
+        return TemplateForm;
+    }
 
-		if (autoVerifyUsers == false) {
+    public void setTemplateForm(String tf) {
+        TemplateForm = tf;
+    }
 
-			addUser(u, UNVERIFIED_ROLE);
-		} else {
-			addUser(u, USER_ROLE);
-		}
-	}
+    public String getTemplateFormField() {
+        return TemplateFormField;
+    }
 
-	public void addUser(User u, String right) {
+    public void setTemplateFormField(String tff) {
 
-		boolean doit = true;
+        TemplateFormField = tff;
+    }
 
-		for (ProviderUsers test : userList) {
+    public String getTemplateUserField() {
+        return TemplateUserField;
+    }
 
-			if (test.getUser().getId().equals(u.getId())) {
+    public void setTemplateUserField(String x) {
+        TemplateUserField = x;
+    }
 
-				doit = false;
+    public String getTemplateUser() {
+        return TemplateUser;
+    }
 
-			}
+    public void setTemplateUser(String x) {
+        TemplateUser = x;
+    }
 
-		}
+    public String getTemplateAfterLoginURL() {
+        return TemplateAfterLoginURL;
+    }
 
-		if (doit) {
+    public void setTemplateAfterLoginURL(String x) {
+        TemplateAfterLoginURL = x;
+    }
 
-			ProviderUsers pusers = new ProviderUsers();
-			pusers.setPortal(this);
-			pusers.setUser(u);
+    public boolean getAutoVerifyUsers() {
+        return autoVerifyUsers;
+    }
 
-			pusers.setRights(right);
+    public void setAutoVerifyUsers(boolean x) {
+        autoVerifyUsers = x;
+    }
 
-			pusers.save();
+    public String getTemplateSubmitButton() {
+        return TemplateSubmitButton;
+    }
 
-			userList.add(pusers);
-			u.addPortal(pusers);
+    public void setTemplateSubmitButton(String x) {
+        TemplateSubmitButton = x;
+    }
 
-			this.update();
-			u.update();
-			pusers.update();
+    public String getTemplateMappingURL() {
 
-		}
+        return TemplateMappingURL;
+    }
 
-	}
+    public void setTemplateMappingURL(String x) {
+        TemplateMappingURL = x;
+    }
 
-	public void addNewAdmin(User u) {
+    public void setTemplateServerURL(String x) {
 
-		addUser(u, ADMIN_ROLE);
+        TemplateServerURL = x;
 
-	}
+    }
 
-	public void setName(String n) {
+    public String getTemplateServerURL() {
 
-		name = n;
-	}
+        if (!(TemplateServerURL.equals(""))) {
 
-	public List<ProviderGames> getPublicGamesList() {
+            return TemplateServerURL;
 
-		List<ProviderGames> publGames = new ArrayList();
+        } else {
 
-		Set<Long> containing = new HashSet<Long>();
+            return Global.SERVER_URL;
+        }
 
-		for (int j = GameList.size() - 1; j >= 0; j--) {
+    }
 
-			ProviderGames onepg = getGame(GameList.get(j).getGame());
+    public String getPortalURL() {
 
-			if (onepg.getGame() != null) {
-				if (onepg.getGame().hasFile()) {
+        if (!(TemplateServerURL.equals(""))) {
 
-					if (!containing.contains(onepg.getGame().getId())) {
+            return TemplateServerURL;
 
-						if (onepg.getPortal().getIdentifier().equals(getIdentifier())) {
+        } else {
 
-							if (onepg.getVisibility() == true) {
+            return Global.SERVER_URL + String.valueOf(id);
+        }
 
-								containing.add(onepg.getGame().getId());
-								publGames.add(onepg);
+    }
 
-							}
-						}
+    public String getPathTo(play.api.mvc.Call x) {
 
-					}
-				}
-			}
+        String z = x.url();
 
-		}
-		return publGames;
-	}
-
-	public String setTemplateURL(String url) {
-
-		return TemplateURL = url;
-
-	}
-
-	public String getTemplateURL() {
-
-		return TemplateURL;
-
-	}
-
-	public String getEndHtml() {
-
-		SortedHtml winner = new SortedHtml("", 0, "");
-		int max = 0;
-		for (SortedHtml anhtml : Html) {
-
-			if (anhtml.getZahl() > max) {
-
-				max = anhtml.getZahl();
-				winner = anhtml;
-			}
-
-		}
-
-		return winner.getWort();
-
-	}
-
-	public String getStartHtml() {
-
-		SortedHtml winner = new SortedHtml("", 0, "");
-		int min = -1;
-		for (SortedHtml anhtml : Html) {
-
-			if (anhtml.getZahl() < min | min < 0) {
-
-				min = anhtml.getZahl();
-				winner = anhtml;
-			}
-
-		}
-
-		return winner.getWort();
-
-	}
-
-	public String getIdentifier() {
-		return Long.toString(id);
-	}
-
-	public Long getId() {
-
-		return id;
-	}
-
-	public String getTemplatePw() {
-		return TemplatePw;
-	}
-
-	public void setTemplatePw(String pw) {
-		TemplatePw = pw;
-	}
-
-	public String getTemplateForm() {
-		return TemplateForm;
-	}
-
-	public void setTemplateForm(String tf) {
-		TemplateForm = tf;
-	}
-
-	public String getTemplateFormField() {
-		return TemplateFormField;
-	}
-
-	public void setTemplateFormField(String tff) {
-
-		TemplateFormField = tff;
-	}
-
-	public String getTemplateUserField() {
-		return TemplateUserField;
-	}
-
-	public void setTemplateUserField(String x) {
-		TemplateUserField = x;
-	}
-
-	public String getTemplateUser() {
-		return TemplateUser;
-	}
-
-	public void setTemplateUser(String x) {
-		TemplateUser = x;
-	}
-
-	public String getTemplateAfterLoginURL() {
-		return TemplateAfterLoginURL;
-	}
-
-	public void setTemplateAfterLoginURL(String x) {
-		TemplateAfterLoginURL = x;
-	}
-
-	public boolean getAutoVerifyUsers() {
-		return autoVerifyUsers;
-	}
-
-	public void setAutoVerifyUsers(boolean x) {
-		autoVerifyUsers = x;
-	}
-
-	public String getTemplateSubmitButton() {
-		return TemplateSubmitButton;
-	}
-
-	public void setTemplateSubmitButton(String x) {
-		TemplateSubmitButton = x;
-	}
-
-	public String getTemplateMappingURL() {
-
-		return TemplateMappingURL;
-	}
-
-	public void setTemplateMappingURL(String x) {
-		TemplateMappingURL = x;
-	}
-
-	public void setTemplateServerURL(String x) {
-
-		TemplateServerURL = x;
-
-	}
-
-	public String getTemplateServerURL() {
-
-		if (!(TemplateServerURL.equals(""))) {
-
-			return TemplateServerURL;
-
-		} else {
-
-			return Global.SERVER_URL;
-		}
-
-	}
-
-	public String getPortalURL() {
-
-		if (!(TemplateServerURL.equals(""))) {
-
-			return TemplateServerURL;
-
-		} else {
-
-			return Global.SERVER_URL + String.valueOf(id);
-		}
-
-	}
-
-	public String getPathTo(play.api.mvc.Call x) {
-
-		String z = x.url();
-		
 //		if (!(TemplateServerURL.equals(""))) {
 //			if ((!TemplateServerURL.contains(Global.SERVER_URL))) {
 //
@@ -1881,196 +1813,191 @@ public class ProviderPortal extends Model {
 //		}
 //
 //		System.out.println("ProviserPortal.getPathTo(): z = " + z);
-		return z;
+        return z;
 
-	}
+    }
 
-	public String getTemplateServerURLDropSlash() {
+    public String getTemplateServerURLDropSlash() {
 
-		String url = getTemplateServerURL();
+        String url = getTemplateServerURL();
 
-		if (url.charAt(url.length() - 1) == '/') {
+        if (url.charAt(url.length() - 1) == '/') {
 
-			url = url.substring(0, url.length() - 1);
+            url = url.substring(0, url.length() - 1);
 
-		}
+        }
 
-		return url;
-	}
+        return url;
+    }
 
-	public List<NewsstreamItem> getNewsstream() {
+    public List<NewsstreamItem> getNewsstream() {
 
-		return Newsstream;
+        return Newsstream;
 
-	}
+    }
 
-	public void setTemplatePostURL(String u) {
-		TemplatePostURL = u;
-	}
+    public void setTemplatePostURL(String u) {
+        TemplatePostURL = u;
+    }
 
-	public String getTemplatePostURL() {
-		return TemplatePostURL;
-	}
+    public String getTemplatePostURL() {
+        return TemplatePostURL;
+    }
 
-	public void setAdditionalCSS(String css) {
-		AdditionalCSS = css;
-	}
+    public void setAdditionalCSS(String css) {
+        AdditionalCSS = css;
+    }
 
-	public String getAdditionalCSS() {
-		return AdditionalCSS;
-	}
+    public String getAdditionalCSS() {
+        return AdditionalCSS;
+    }
 
-	public void setDefaultcolor(String c) {
+    public void setDefaultcolor(String c) {
 
-		defaultcolor = c;
-	}
+        defaultcolor = c;
+    }
 
-	public String getDefaultcolor() {
-		return defaultcolor;
-	}
+    public String getDefaultcolor() {
+        return defaultcolor;
+    }
 
-	public String getComplementColor() {
-		return color2;
-	}
+    public String getComplementColor() {
+        return color2;
+    }
 
-	public String getGradientColor() {
-		return color3;
-	}
+    public String getGradientColor() {
+        return color3;
+    }
 
-	public String getNavbarColor() {
-		return color4;
-	}
+    public String getNavbarColor() {
+        return color4;
+    }
 
-	public String getLinkColor() {
-		return color5;
-	}
+    public String getLinkColor() {
+        return color5;
+    }
 
-	public void setComplementColor(String c) {
-		color2 = c;
-	}
+    public void setComplementColor(String c) {
+        color2 = c;
+    }
 
-	public void setGradientColor(String c) {
-		color3 = c;
-	}
+    public void setGradientColor(String c) {
+        color3 = c;
+    }
 
-	public void setNavbarColor(String c) {
-		color4 = c;
-	}
+    public void setNavbarColor(String c) {
+        color4 = c;
+    }
 
-	public void setLinkColor(String c) {
-		color5 = c;
-	}
+    public void setLinkColor(String c) {
+        color5 = c;
+    }
 
-	public void setLogoimg(String img) {
+    public void setLogoimg(String img) {
 
-		logoimg = img;
-	}
+        logoimg = img;
+    }
 
-	public String getLogoURL() {
+    public String getLogoURL() {
 
-		String path = logoimg;
-		String base = Play.current().path().getAbsolutePath() + "/public/";
-		String relative = new File(base).toURI().relativize(new File(path).toURI()).getPath();
+        String path = logoimg;
+        String base = Play.current().path().getAbsolutePath() + "/public/";
+        String relative = new File(base).toURI().relativize(new File(path).toURI()).getPath();
 
-		return relative;
+        return relative;
 
-	}
+    }
 
-	public boolean logoExists() {
+    public boolean logoExists() {
 
-		File f = new File(logoimg);
-		if (f.exists()) {
-			return true;
-		} else {
-			System.out.println(logoimg);
-			return false;
+        File f = new File(logoimg);
+        if (f.exists()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-		}
+    public List<GameType> getGameTypes() {
+        return gameTypes;
+    }
 
-	}
+    public boolean gameTypesIsEmpty() {
+        return gameTypes.isEmpty();
+    }
 
-	public List<GameType> getGameTypes() {
-		return gameTypes;
-	}
+    public void addGameType(GameType x) {
+        gameTypes.add(x);
+    }
 
-	public boolean gameTypesIsEmpty() {
-		return gameTypes.isEmpty();
-	}
+    public void removeGameType(GameType x) {
 
-	public void addGameType(GameType x) {
-		gameTypes.add(x);
-	}
+        if (gameTypes.contains(x)) {
 
-	public void removeGameType(GameType x) {
+            gameTypes.remove(x);
 
-		if (gameTypes.contains(x)) {
+        }
 
-			gameTypes.remove(x);
+    }
 
-		}
+    public boolean hasGameType(String x) {
+        boolean help = false;
+        for (GameType gt : gameTypes) {
 
-	}
+            if (gt.getName().equals(x)) {
+                help = true;
+            }
 
-	public boolean hasGameType(String x) {
-		boolean help = false;
-		for (GameType gt : gameTypes) {
+        }
+        return help;
+    }
 
-			if (gt.getName().equals(x)) {
-				help = true;
-			}
+    public boolean hasGameType(GameType ts) {
+        boolean help = false;
+        for (GameType gt : gameTypes) {
 
-		}
-		return help;
-	}
+            if (gt.getId().equals(ts.getId())) {
+                help = true;
+            }
 
-	public boolean hasGameType(GameType ts) {
-		boolean help = false;
-		for (GameType gt : gameTypes) {
+        }
+        return help;
+    }
 
-			if (gt.getId().equals(ts.getId())) {
-				help = true;
-			}
+    public Integer getLogoHeight(Integer i) {
 
-		}
-		return help;
-	}
+        try {
 
-	public Integer getLogoHeight(Integer i) {
+            // Get the image
+            Image image = ImageIO.read(new File(logoimg));
 
-		try {
+            return i + image.getHeight(null);
 
-			// Get the image
-			Image image = ImageIO.read(new File(logoimg));
+        } catch (IOException e) {
+            return 0 + i;
+        }
 
-			return i + image.getHeight(null);
+    }
 
-		} catch (IOException e) {
-			return 0 + i;
-		}
+    /**
+     * Finder is a Play Framework Class that lets other classes find a specific
+     * object of this class, in this case, searching for objects with a Long value
+     * is enabled.
+     */
 
-	}
+    public static final Finder<Long, ProviderPortal> find = new Finder<Long, ProviderPortal>(Long.class,
+            ProviderPortal.class);
 
-	/**
-	 *
-	 * Finder is a Play Framework Class that lets other classes find a specific
-	 * object of this class, in this case, searching for objects with a Long value
-	 * is enabled.
-	 *
-	 */
+    public GameType getGameType(String x) {
 
-	public static final Finder<Long, ProviderPortal> find = new Finder<Long, ProviderPortal>(Long.class,
-			ProviderPortal.class);
+        for (GameType gt : gameTypes) {
 
-	public GameType getGameType(String x) {
+            if (gt.getName().equals(x)) {
+                return gt;
+            }
 
-		for (GameType gt : gameTypes) {
-
-			if (gt.getName().equals(x)) {
-				return gt;
-			}
-
-		}
-		return null;
-	}
+        }
+        return null;
+    }
 
 }
