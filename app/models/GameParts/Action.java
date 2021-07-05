@@ -86,19 +86,12 @@ public class Action extends Model {
             for (Attribute aatr : copyOfAttributes) {
                 if (aatr.getXMLType().equals(t.getXMLType())) {
                     attributes.remove(aatr);
-                    System.out.println("Replacing attribute.");
-
                 }
             }
             attributes.add(t);
-
         } catch (RuntimeException e) {
-
-            System.out.println("Problem setting Attribute.");
             e.printStackTrace();
-
         }
-
     }
 
     public void addSubAction(Action r) {
@@ -290,8 +283,6 @@ public class Action extends Model {
     }
 
     public Element createXMLForWeb(Document doc, Mission m, Game g) {
-        System.out.println("createXMLForWeb: Action: " + id + " name: " + name);
-
         Element action = null;
 
         boolean saveme = true;
@@ -424,24 +415,13 @@ public class Action extends Model {
 
                 }
             } else if (aa.getFileType().equals("actions")) {
-
-                System.out.println("##### ACTION ATTRIBUTE #####");
-
                 Element subactions = doc.createElement(aa.getXMLType());
 
                 action.appendChild(subactions);
 
                 if (getAttribute(aa) != null) {
-                    System.out.println("##### ATTRIBUTE EXISTS #####");
-
                     if (getAttribute(aa).getActions() != null) {
-
-                        System.out.println("##### SUBACTIONS EXISTS #####");
-
                         if (!getAttribute(aa).getActions().isEmpty()) {
-
-                            System.out.println("##### SUBACTIONS OF ATTRIBUTE NOT EMPTY #####");
-
                             for (Action a : getAttribute(aa).getActions()) {
 
                                 Element act = a.createXMLForWeb(doc, m, g);
@@ -533,10 +513,7 @@ public class Action extends Model {
                             } else {
                                 attr4.setValue("0");
                             }
-
                         } else if (aa.getFileType().equals("file") && (!getAttributeValue(aa).contains("@_"))) {
-
-                            System.out.println("is File: " + getAttributeValue(aa));
                             URL url;
                             try {
                                 url = new URL(getAttributeValue(aa));
@@ -652,55 +629,32 @@ public class Action extends Model {
                     Condition help = new Condition(true, getAttributeValue(aa));
 
                     action.appendChild(help.getXML(doc, g, true));
-
                 }
             } else if (aa.getFileType().equals("actions")) {
-
-                System.out.println("##### ACTION ATTRIBUTE #####");
-
                 Element subactions = doc.createElement(aa.getXMLType());
 
                 action.appendChild(subactions);
 
                 if (getAttribute(aa) != null) {
-                    System.out.println("##### ATTRIBUTE EXISTS #####");
-
                     if (getAttribute(aa).getActions() != null) {
-
-                        System.out.println("##### SUBACTIONS EXISTS #####");
-
                         if (!getAttribute(aa).getActions().isEmpty()) {
-
-                            System.out.println("##### SUBACTIONS OF ATTRIBUTE NOT EMPTY #####");
-
                             for (Action a : getAttribute(aa).getActions()) {
-
                                 Element act = a.createXML(doc, m, g, zout);
                                 if (act != null) {
                                     subactions.appendChild(act);
                                 }
-
                             }
-
                         }
-
                     }
-
                 }
-
             }
-
         }
 
         if (saveme) {
-
             return action;
         } else {
-
             return null;
-
         }
-
     }
 
     @JSON(include = false)
@@ -715,8 +669,6 @@ public class Action extends Model {
     }
 
     public Action migrateTo(ActionType nat, RuleType rt, GameCopyContext copyContext) {
-        System.out.println("Action.migrateTo: " + id + " name: " +
-                name + " --> " + nat.getName() + " rule Type: " + rt.getName());
         Action a = new Action(name, nat);
         a.save();
 
@@ -739,44 +691,22 @@ public class Action extends Model {
 
                 }
             }
-
-            if (!done) {
-
-                System.out.println("Didn't find AttributeType (Action) " + at.getName());
-            }
-
         }
 
         if (subactions != null) {
             for (Action aa : subactions.getRules()) {
-
-                boolean done1 = false;
-
                 ActionType at1 = aa.getType();
 
                 for (ActionType nat1 : rt.getPossibleActionTypes()) {
-
                     if (nat1.getXMLType().equals(at1.getXMLType())) {
-
                         a.addSubAction(aa.migrateTo(nat1, rt, copyContext));
                         a.update();
-                        done1 = true;
-
                     }
-
                 }
-
-                if (done1 == false) {
-
-                    System.out.println("Didn't find ActionType " + at1.getXMLType());
-                }
-
             }
-
         }
 
         a.update();
-
         a.setParent(parent);
 
         return a;

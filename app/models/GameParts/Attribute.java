@@ -77,18 +77,10 @@ public class Attribute extends Model {
 
     public void setValue(String v) {
         value = v;
-        if (hasLink() && linkto.getObjectType().equals("Attribute")) {
-            System.out.println("Attribute:setValue() id: " + id + " to val: " + v +
-                    " --> linkto.val: " + linkto.getAttribute().getValue());
-        } else {
-            System.out.println("Attribute:setValue() id: " + id + "    -- no attribute");
-        }
     }
 
     public void setAbstractValue(ObjectReference x) {
-
         abstractValue = x;
-
     }
 
     // GETTER
@@ -109,23 +101,11 @@ public class Attribute extends Model {
 
     @JSON(include = false)
     public boolean hasAbstractValue() {
-
-        System.out.println("Checking Abstract Value");
-
-        if (abstractValue == null) {
-
-            return false;
-
-        } else {
-
-            return true;
-        }
-
+        return abstractValue != null;
     }
 
     @JSON(include = false)
     public ObjectReference getAbstractValue() {
-
         return abstractValue;
     }
 
@@ -312,7 +292,6 @@ public class Attribute extends Model {
         a.setAbstractValue(abstractValue);
         a.setParent(parent);
         a.setValue(value);
-        System.out.println("---- migrating attribute id: " + getId() + ", value: " + value + ", linkto: --> id: " + linkto.getId());
         if (linkto != null) {
             ObjectReference objRefCopy = linkto.copyMe(copyContext);
             if (objRefCopy != null)
@@ -325,39 +304,20 @@ public class Attribute extends Model {
     }
 
     public Attribute migrateTo(AttributeType atrt, RuleType rt, GameCopyContext copyContext) {
-        System.out.println("Attribute.migrateTo: " + id + " --> " +
-                atrt.getName() + " rule Type: " + rt.getName());
-
         Attribute a = new Attribute(type);
         a.save();
 
         if (subactions != null) {
-
             for (Action aa : subactions.getRules()) {
-
-                boolean done = false;
-
                 ActionType at = aa.getType();
 
                 for (ActionType nat : rt.getPossibleActionTypes()) {
-
                     if (nat.getXMLType().equals(at.getXMLType())) {
-
                         a.addAction(aa.migrateTo(nat, rt, copyContext));
                         a.update();
-                        done = true;
-
                     }
-
                 }
-
-                if (done == false) {
-
-                    System.out.println("Didn't find ActionType " + at.getXMLType());
-                }
-
             }
-
         }
 
         a.setAbstractValue(abstractValue);
@@ -386,8 +346,6 @@ public class Attribute extends Model {
 
     @JSON(include = false)
     public Node getXML(Document doc) {
-        System.out.println("getXML: Attribute: " + id + "(val: " + value + ")");
-
         Element valueel = doc.createElement("value");
 
         if (value.matches("(\\s*)")) {

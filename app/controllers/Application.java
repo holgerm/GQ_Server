@@ -130,22 +130,17 @@ public class Application extends Controller {
 				return ok("Code not found");
 
 			} else {
-
 				Device d = Device.find.where().eq("code", code).findUnique();
 
 				if (!u2.paireddevices.contains(d)) {
 					u2.paireddevices.add(d);
-					System.out.println(u2.paireddevices.size());
 					u2.update();
 
 					return ok(d.name);
 				} else {
-
 					return ok("Device is already in list");
-
 				}
 			}
-
 		} else {
 			return ok("User not found");
 

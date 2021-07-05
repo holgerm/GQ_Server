@@ -97,12 +97,8 @@ public class Content extends Model {
             attributes.add(t);
 
         } catch (RuntimeException e) {
-
-            System.out.println("Problem setting Attribute.");
             e.printStackTrace();
-
         }
-
     }
 
     public void addSubContent(Content c) {
@@ -275,14 +271,9 @@ public class Content extends Model {
                 this.update();
                 aa.delete();
             }
-
         } catch (RuntimeException e) {
-
-            System.out.println("Can't delete Mission.");
             e.printStackTrace();
-
         }
-
     }
 
     public Element createXMLForWeb(Document doc, Mission m, Game g) {
@@ -331,14 +322,12 @@ public class Content extends Model {
             // old kinds of content have the string content directly as xml text content of the tag and
             // do not support any rules:
             content.setTextContent(contentString);
-            System.out.println("Content id: " + id + " is '" + contentString + "'");
         } else {
             // for new kinds of contents we put the string content in a special attribute named "content" and
             // support rules within the content xml tag:
             Element innerContent = doc.createElement("content");
             innerContent.setTextContent(contentString);
             content.appendChild(innerContent);
-            System.out.println("Content (new inner) id: " + id + " is '" + contentString + "'");
 
             for (Rule r : rules) {
                 if (!r.getFirstAction().equals("Keine") && !r.getFirstAction().equals("Deep")) {
@@ -397,8 +386,6 @@ public class Content extends Model {
                         }
 
                     } else if (aa.getFileType().equals("file")) {
-
-                        System.out.println("is File!");
                         URL url;
                         try {
                             url = new URL(getAttributeValue(aa));
@@ -514,10 +501,6 @@ public class Content extends Model {
                 }
             }
 
-            if (done == false) {
-                System.out.println("Didn't find AttributeType (Content) " + at.getName());
-            }
-
             c.update();
         }
 
@@ -546,10 +529,6 @@ public class Content extends Model {
                     done = true;
                     break;
                 }
-            }
-
-            if (done == false) {
-                System.out.println("Error during Migration: Didn't find RuleType " + oldtrigger);
             }
         }
 

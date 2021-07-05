@@ -268,8 +268,6 @@ public class SceneType extends Model {
 			attributeTypes.add(t);
 
 		} catch (RuntimeException e) {
-
-			System.out.println("Problem setting AttributeType.");
 			e.printStackTrace();
 
 		}
@@ -282,7 +280,6 @@ public class SceneType extends Model {
 
 	public void addPossiblePartTypes(PartType x) {
 		possiblePartTypes.add(x);
-		System.out.println("Trying to add possible Part Type.");
 	}
 
 	public void addPossibleHotspotTypes(HotspotType x) {
@@ -473,11 +470,11 @@ public class SceneType extends Model {
 			}
 		}
 
-		// LINK REBINDING
-		for (Map.Entry<Mission, Mission> entry : copyContext.missionMap.entrySet()) {
-			System.out.println("Ersetze alle $_" + entry.getKey().getId() + " durch $_" + entry.getValue().getId());
-		}
-
+//		// LINK REBINDING
+//		for (Map.Entry<Mission, Mission> entry : copyContext.missionMap.entrySet()) {
+//			System.out.println("Ersetze alle $_" + entry.getKey().getId() + " durch $_" + entry.getValue().getId());
+//		}
+//
 		for (Attribute a : s.getAllSubAttributes()) {
 			if (a.getValue() != null) {
 				if (a.getValue().contains("$_")) {
@@ -491,10 +488,6 @@ public class SceneType extends Model {
 							newvalue = newvalue.replace("$_" + entry.getKey().getId(), "$_" + entry.getValue().getId());
 							newvalue = newvalue.replace("$_mission_" + entry.getKey().getId(),
 									"$_mission_" + entry.getValue().getId());
-							System.out.println(
-									"excecuting in " + a.getType().getName() + " of type " + a.getTypeDescription()
-											+ ":$_" + entry.getKey().getId() + " -> $_" + entry.getValue().getId());
-
 							a.setValue(newvalue);
 							a.update();
 						}
@@ -507,9 +500,6 @@ public class SceneType extends Model {
 					for (Map.Entry<Mission, Mission> entry : copyContext.missionMap.entrySet()) {
 						if (a.getValue().equals(String.valueOf(entry.getKey().getId()))) {
 							newvalue = newvalue.replace("" + entry.getKey().getId(), "" + entry.getValue().getId());
-							System.out.println("excecuting mission attribute:" + entry.getKey().getId() + " -> "
-									+ entry.getValue().getId());
-
 						}
 						a.setValue(newvalue);
 						a.update();
@@ -520,16 +510,11 @@ public class SceneType extends Model {
 
 		for (AttributeType atrt : attributeTypes) {
 			if (atrt.hasLink()) {
-
-				System.out.println("An attribute wants to link to another object");
-
 				if (atrt.getLink().getObjectId() != null) {
 					Attribute atr = new Attribute(atrt);
 					atr.save();
 					ObjectReference o = g.getAbstractRelinkObject(atrt.getLink(), s);
 					if (o != null) {
-						System.out.println("and is setting it to " + o.getObjectType() + " (" + o.getObjectId() + ")");
-
 						o.save();
 						atr.setLink(o);
 						atr.update();

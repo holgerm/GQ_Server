@@ -116,14 +116,9 @@ public class Mission extends Model {
 				}
 			}
 			attributes.add(t);
-
 		} catch (RuntimeException e) {
-
-			System.out.println("Problem setting Attribute.");
 			e.printStackTrace();
-
 		}
-
 	}
 
 	public void addRule(Rule r) {
@@ -375,12 +370,8 @@ public class Mission extends Model {
 				ac.delete();
 			}
 		} catch (RuntimeException e) {
-
-			System.out.println("Can't delete Mission.");
 			e.printStackTrace();
-
 		}
-
 	}
 
 	public List<Element> createXML(Document doc, Game g, ZipOutputStream zout) {
@@ -409,8 +400,6 @@ public class Mission extends Model {
 
 					if (aa.getFileType().equals("file") && (!getAttributeValue(aa).contains("@_"))
 							&& (!getAttributeValue(aa).contains("$_"))) {
-
-						System.out.println("is File: " + getAttributeValue(aa));
 						URL url;
 						try {
 							url = new URL(getAttributeValue(aa));
@@ -420,44 +409,27 @@ public class Mission extends Model {
 
 							path = splitResult[splitResult.length - 1];
 
-							System.out.println("Path specified");
-
 							String portal = String.valueOf(Application.getLocalPortal().getId());
 							String gameid = String.valueOf(g.getId());
 							if (splitResult.length > 4) {
 								portal = splitResult[splitResult.length - 4];
-								System.out.println(portal);
 								gameid = splitResult[splitResult.length - 2];
 
 							}
 
 							File file = new File("public/uploads/" + portal + "/editor/" + gameid, path);
-							System.out.println("public/uploads/" + portal + "/editor/" + gameid);
-
 							if (!file.exists()) {
-
-								System.out.println("File 1 does not exist");
-
 								file = new File("public/uploads/" + portal + "/editor/" + gameid + "/files", path);
-
 								if (!file.exists()) {
-									System.out.println("File 2 does not exist");
-
 									try {
 										FileUtils.copyURLToFile(url, file);
 									} catch (IOException x) {
-										System.out.println("Copying file failed");
 										x.printStackTrace();
-
 									}
-
 								}
-
 							}
 
 							attr4.setValue("files/" + path);
-
-							System.out.println("File Path set.");
 
 							final int BUFFER = 2048;
 
@@ -530,8 +502,6 @@ public class Mission extends Model {
 	}
 
 	public List<Element> createXMLForWeb(Document doc, Game g) {
-		System.out.println("createXMLForWeb: Mission: " + id);
-
 		List<Element> e = new ArrayList<Element>();
 
 		Element mission = null;

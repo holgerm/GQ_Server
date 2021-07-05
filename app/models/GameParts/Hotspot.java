@@ -94,12 +94,8 @@ public class Hotspot extends Model {
 			attributes.add(t);
 
 		} catch (RuntimeException e) {
-
-			System.out.println("Problem setting Attribute.");
 			e.printStackTrace();
-
 		}
-
 	}
 
 	@JSON(include = true)
@@ -159,9 +155,7 @@ public class Hotspot extends Model {
 		int maxSize = (image.getHeight(null) >= image.getWidth(null))
 				? image.getHeight(null)
 				: image.getWidth(null);
-		System.out.println("maxSize: " + maxSize);
 		float scale = ((float) RESULTING_MAX_MARKER_SIZE) / maxSize;
-		System.out.println("scale: " + scale);
 		return scale;
 	}
 
@@ -175,8 +169,6 @@ public class Hotspot extends Model {
 		}
 
 		float scaledHeight = image.getHeight(null) * getMarkerScale(g);
-		System.out.println("scaledHeight: " + scaledHeight);
-
 		return (int) scaledHeight;
 	}
 
@@ -189,8 +181,6 @@ public class Hotspot extends Model {
 		}
 
 		float scaledWidth = image.getWidth(null) * getMarkerScale(g);
-		System.out.println("scaledWidth: " + scaledWidth);
-
 		return (int) scaledWidth;
 	}
 
@@ -460,12 +450,8 @@ public class Hotspot extends Model {
 			}
 
 		} catch (RuntimeException e) {
-
-			System.out.println("Can't delete Mission.");
 			e.printStackTrace();
-
 		}
-
 	}
 
 	public Element createXMLForWeb(Document doc, Game g) {
@@ -539,9 +525,6 @@ public class Hotspot extends Model {
 					Attr attr4 = doc.createAttribute(aa.getXMLType());
 
 					if (aa.getFileType().equals("file")) {
-
-						System.out.println("is File: " + getAttributeValue(aa));
-
 						URL url;
 						try {
 							url = new URL(getAttributeValue(aa));
@@ -555,13 +538,9 @@ public class Hotspot extends Model {
 							String gameid = String.valueOf(g.getId());
 							if (splitResult.length > 4) {
 								portal = splitResult[splitResult.length - 4];
-								System.out.println(portal);
 								gameid = splitResult[splitResult.length - 2];
 
 							}
-
-							System.out.println("public/uploads/" + portal + "/editor/" + gameid + "/files/" + path);
-
 							File file = new File("public/uploads/" + portal + "/editor/" + gameid, path);
 
 							if (!file.exists()) {
@@ -574,41 +553,29 @@ public class Hotspot extends Model {
 								try {
 									FileUtils.copyURLToFile(url, file);
 								} catch (IOException e) {
-									System.out.println("Copying file failed");
 									e.printStackTrace();
-
 								}
-
 							}
 
 							attr4.setValue("files/" + path);
 
-							System.out.println("filename:files/" + path);
-
 							final int BUFFER = 2048;
 
 							byte data[] = new byte[BUFFER];
-							System.out.println("opening file");
 
 							FileInputStream fis = new FileInputStream(file);
 
 							BufferedInputStream bis = new BufferedInputStream(fis, BUFFER);
-
-							System.out.println("reading buffer");
 
 							ZipEntry ze = new ZipEntry("files/" + path);
 							zout.putNextEntry(ze);
 
 							int size = -1;
 							while ((size = bis.read(data, 0, BUFFER)) != -1) {
-								System.out.println(size);
 								zout.write(data, 0, size);
 							}
 
 							zout.closeEntry();
-
-							System.out.println("file complete.");
-
 						} catch (Exception x) {
 							x.printStackTrace();
 
@@ -675,12 +642,6 @@ public class Hotspot extends Model {
 				}
 
 			}
-
-			if (done == false) {
-
-				System.out.println("Didn't find RuleType " + oldtrigger);
-			}
-
 		}
 
 		// ATTRIBUTES
@@ -702,14 +663,7 @@ public class Hotspot extends Model {
 				}
 
 			}
-
-			if (done == false) {
-
-				System.out.println("Didn't find AttributeType (Hotspot) " + at.getName());
-			}
-
 			h.update();
-
 		}
 
 		h.setParent(parent);

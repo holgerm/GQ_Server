@@ -70,12 +70,8 @@ public class Scene extends Model {
 			attributes.add(t);
 
 		} catch (RuntimeException e) {
-
-			System.out.println("Problem setting Attribute.");
 			e.printStackTrace();
-
 		}
-
 	}
 
 	public void addRule(Rule r) {
@@ -127,9 +123,6 @@ public class Scene extends Model {
 	}
 
 	public void debug(String s) {
-
-		System.out.println(s);
-
 	}
 
 	public boolean hasPossibleHotspots() {
@@ -321,18 +314,12 @@ public class Scene extends Model {
 
 			if (atrt != null) {
 				if (atrt.hasLink()) {
-
-					System.out.println("An attribute wants to link to another object");
-
 					if (atrt.getLink().getObjectId() != null) {
 
 						Attribute atr = new Attribute(atrttype);
 						atr.save();
 						ObjectReference o = g.getAbstractRelinkObject(atrt.getLink(), this);
 						if (o != null) {
-							System.out.println(
-									"and is setting it to " + o.getObjectType() + " (" + o.getObjectId() + ")");
-
 							o.save();
 							atr.setLink(o);
 							atr.update();
@@ -340,11 +327,7 @@ public class Scene extends Model {
 							this.setAttribute(atr);
 							this.update();
 
-						} else {
-							System.out.println("but didn't find a fitting equivalent.");
 						}
-					} else {
-						System.out.println("but has no object reference specified correctly.");
 					}
 				}
 			}
@@ -353,8 +336,6 @@ public class Scene extends Model {
 	}
 
 	public boolean listAttributeContainsKey(String list, String key, boolean quotes) {
-		System.out.println("'" + list + "' contains" + key + "?");
-
 		if (quotes) {
 			list = list.substring(1, list.length() - 1);
 		}
@@ -376,20 +357,13 @@ public class Scene extends Model {
 				}
 
 			} else {
-
-				System.out.println("single");
-
 				if (list.contains(key)) {
-					System.out.println("true");
 					return true;
-
 				}
-
 			}
 		}
 
 		return false;
-
 	}
 
 	public static final Finder<Long, Scene> find = new Finder<Long, Scene>(Long.class, Scene.class);
@@ -472,12 +446,8 @@ public class Scene extends Model {
 				ah.delete();
 			}
 		} catch (RuntimeException e) {
-
-			System.out.println("Can't delete Mission.");
 			e.printStackTrace();
-
 		}
-
 	}
 
 	public void removePart(Part x) {
@@ -525,7 +495,6 @@ public class Scene extends Model {
 	}
 
 	public List<Element> createXMLForWeb(Document doc, Game g) {
-		System.out.println("createXMLForWeb: Scene: " + id);
 		List<Element> e = new ArrayList<Element>();
 
 		for (Part ap : parts) {
@@ -674,10 +643,7 @@ public class Scene extends Model {
 		for (Part ap : parts) {
 
 			if (!ap.isScene()) {
-
 				Mission am = ap.getMission();
-
-				System.out.println("searching in page " + am.getName() + " (" + am.getType().getXMLType() + ")");
 				for (AttributeType att : am.getAllAttributes()) {
 
 					if (am.getAttribute(att) != null) {
@@ -691,18 +657,11 @@ public class Scene extends Model {
 				// Contents
 
 				for (Content ac : am.getContents()) {
-					System.out.println("searching in content " + ac.getName() + " (" + ac.getType().getXMLType() + ")");
-
 					for (AttributeType att1 : ac.getAllAttributes()) {
 
 						if (ac.getAttribute(att1) != null) {
-							System.out.println(
-									"Attr:" + ac.getAttribute(att1).getName() + "=" + ac.getAttributeValue(att1));
-
 							allsubs.add(ac.getAttribute(att1));
-
 						}
-
 					}
 
 					for (Content asc : ac.getSubContents()) {
@@ -856,7 +815,6 @@ public class Scene extends Model {
 
 			if (p.isScene()) {
 				SceneType old = p.getScene().getType();
-				System.out.println("SceneType search: " + old.getName());
 
 				for (PartType tnpt : type.getPossiblePartTypes()) {
 
@@ -875,11 +833,6 @@ public class Scene extends Model {
 						}
 					}
 				}
-
-				if (done == false) {
-					System.out.println("Didn't find SceneType " + old.getName());
-				}
-
 			} else {
 				// Part p is a MISSION:
 //				MissionType old = p.getMission().getType();
@@ -892,42 +845,8 @@ public class Scene extends Model {
 					s.addPart(p.migrateTo(targetMT, copyContext));
 					s.update();
 					done = true;
-				} else {
-					System.out.println("Didn't find MissionType " + originalM.getType().getName());
 				}
-//				for (PartType npt : gameType.getPossiblePartTypes()) {
-//
-//					Global.Log("Possible part type: id: " + npt.getId());
-//
-//					if (!npt.isSceneType()) {
-//						Global.Log("  is mission type: " + npt.getMissionType());
-//
-//						if (npt.getMissionType().getXMLType().equals(old.getXMLType())) {
-//
-//							done = true;
-//
-//							Global.Log("  going to add migrated mission type to mapping: "
-//									+ npt.getMissionType().getXMLType());
-//
-//							s.addPart(p.migrateTo(npt.getMissionType(), missionbinder));
-//							s.update();
-//
-//						} else {
-//							Global.Log("  xml types are different - old: " + old.getXMLType() + " new: "
-//									+ npt.getMissionType().getXMLType());
-//
-//						}
-//
-//					} else {
-//						Global.Log("  is scene type");
-//					}
-//
-//				}
-//
-//				if (done == false) {
-//
-//					System.out.println("Didn't find MissionType " + old.getXMLType());
-//				}
+
 			}
 
 			s.update();
@@ -954,10 +873,6 @@ public class Scene extends Model {
 				}
 			}
 
-			if (done == false) {
-				System.out.println("Didn't find AttributeType (Scene) " + at.getName());
-			}
-
 			s.update();
 		}
 
@@ -967,8 +882,6 @@ public class Scene extends Model {
 			if (targetHT != null) {
 				s.addHotspot(hs.migrateTo(targetHT, copyContext));
 				s.update();
-			} else {
-				System.out.println("Didn't find HotspotType " + hs.getType().getName());
 			}
 		}
 

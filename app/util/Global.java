@@ -42,7 +42,8 @@ public class Global extends GlobalSettings {
 		}
 	}
 
-	private static String SERVER_URL_2_FALLBACK = "https://quest-mill.intertech.de"; 
+	private static String SERVER_URL_2_FALLBACK = "https://quest-mill.intertech.de";
+	// private static String SERVER_URL_2_FALLBACK = "http://localhost:9000";
 	public static String SERVER_URL_2;
 	public static String SERVER_URL;
 	
@@ -109,8 +110,6 @@ public class Global extends GlobalSettings {
 
 				defaultportal.addGameType(factory.addGameToDatabase());
 				defaultportal.update();
-				System.out.println("GameType erstellt: beliebiges Spiel");
-
 			}
 			
 			
@@ -145,16 +144,8 @@ public class Global extends GlobalSettings {
 												.all();
 
 										for (ProviderPortal aportal : allportals) {
-
-											System.out.println("Updating "
-													+ aportal.getName());
-
 											aportal.updateHtmlByTemplateNoPassword();
-
 										}
-
-										System.out.println("...done");
-
 									} else {
 										unhandled(message);
 									}

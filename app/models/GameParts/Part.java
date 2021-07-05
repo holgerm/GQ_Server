@@ -88,24 +88,19 @@ public class Part extends Model {
 	/// CREATION
 
 	public Part copyMe(String n, GameCopyContext copyContext) {
-
 		Part p;
-		System.out.println("starting copy");
 
 		if (is_scene == true) {
 			p = new Part(scene.copyMe(n, copyContext));
 		} else {
 
 			p = new Part(mission.copyMe(n, copyContext));
-
 		}
 
 		p.setParent(this);
 		// System.out.println("parent set");
 
 		p.save();
-		System.out.println("copy saved");
-
 		return p;
 	}
 
@@ -122,10 +117,7 @@ public class Part extends Model {
 				scene.delete();
 				scene = null;
 			} catch (RuntimeException e) {
-
-				System.out.println("Can't delete Part->Scene.");
 				e.printStackTrace();
-
 			}
 		} else {
 
@@ -138,14 +130,9 @@ public class Part extends Model {
 
 				this.update();
 			} catch (RuntimeException e) {
-
-				System.out.println("Can't delete Part->Mission.");
 				e.printStackTrace();
-
 			}
-
 		}
-
 	}
 
 	public List<Element> createXML(Document doc, Game g, ZipOutputStream zout) {
@@ -164,7 +151,6 @@ public class Part extends Model {
 	}
 
 	public List<Element> createXMLForWeb(Document doc, Game g) {
-		System.out.println("createXMLForWeb: Part: " + id);
 		List<Element> e;
 
 		if (is_scene == true) {

@@ -124,12 +124,8 @@ public class GameType extends Model {
 			attributeTypes.add(t);
 
 		} catch (RuntimeException e) {
-
-			System.out.println("Problem setting AttributeType.");
 			e.printStackTrace();
-
 		}
-
 	}
 
 	// GETTER
@@ -195,7 +191,6 @@ public class GameType extends Model {
 		Game g = new Game(n, this);
 		g.save();
 
-		System.out.println("Game Parts Start");
 		String add = "";
 
 		Set<String> in = new HashSet<String>();
@@ -243,9 +238,6 @@ public class GameType extends Model {
 			}
 		}
 
-		System.out.println("Game Parts End");
-		System.out.println("Hotspots Start");
-
 		// DEFAULT HOTSPOTS
 		counter = 1;
 		for (Hotspot ah : defaultHotspots) {
@@ -255,8 +247,6 @@ public class GameType extends Model {
 
 			counter++;
 		}
-
-		System.out.println("Hotspots End");
 
 		// Abstract Value Rebinding
 

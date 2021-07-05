@@ -114,13 +114,10 @@ category = s;
              }
              attributeTypes.add(t);
         } catch (RuntimeException e) {
-            System.out.println("Problem setting AttributeType.");
             e.printStackTrace();
         }
     }
 
-
-    
     // GETTER
     
     public String getSymbol(){ return symbol; }

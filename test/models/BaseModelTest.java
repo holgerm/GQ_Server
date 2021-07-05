@@ -66,18 +66,8 @@ public class BaseModelTest {
 
         dropDdl = "SET FOREIGN_KEY_CHECKS = 0; "+dropDdl+" DROP TABLE if exists play_evolutions;";
 
-
-
-                    System.out.println("Testtest");
-
-
-
-
         CallableSql sql = Ebean.createCallableSql(dropDdl+createDdl);
         Ebean.execute(sql);
-
-
-
     }
 
 

@@ -72,10 +72,7 @@ public class Rule extends Model {
         if (a != null) {
             actions = new ArrayList<Action>();
             actions.add(a);
-        } else {
-            System.out.println("Action is null?");
         }
-
     }
 
     public Rule() {
@@ -338,16 +335,10 @@ public class Rule extends Model {
                 this.update();
 
                 x.delete();
-
             }
-
         } catch (RuntimeException e) {
-
-            System.out.println("Can't delete Rule.");
             e.printStackTrace();
-
         }
-
     }
 
     public Element createXMLForWeb(Document doc, int i, Mission m, Game g) {
@@ -389,7 +380,6 @@ public class Rule extends Model {
 
             // SUBRULES
             if (subrules != null) {
-                System.out.println("...not empty");
                 for (Rule ar : subrules.getRules()) {
 
                     Element rule2 = ar.createXMLForWeb(doc, i + 1, m, g);
@@ -410,9 +400,6 @@ public class Rule extends Model {
         if (i != 0) {
 
             if (!actions.isEmpty()) {
-
-                System.out.println("Conditions");
-
                 // CONDITIONS
 
                 // SUBRULES
@@ -428,8 +415,6 @@ public class Rule extends Model {
                 }
 
                 // ACTIONS
-
-                System.out.println("Actions");
 
                 for (Action a : actions) {
 
@@ -451,11 +436,9 @@ public class Rule extends Model {
             }
 
             rule = doc.createElement(triggername);
-            System.out.println("Trigger Rule");
 
             // SUBRULES
             if (subrules != null) {
-                System.out.println("...not empty");
                 for (Rule ar : subrules.getRules()) {
 
                     Element rule2 = ar.createXML(doc, i + 1, m, g, zout);
@@ -479,9 +462,6 @@ public class Rule extends Model {
         if (i != 0) {
 
             if (!actions.isEmpty()) {
-
-                System.out.println("Conditions");
-
                 // CONDITIONS
 
                 // SUBRULES
@@ -528,8 +508,6 @@ public class Rule extends Model {
 
                 // ACTIONS
 
-                System.out.println("Actions");
-
                 for (Action a : actions) {
 
                     Element act = a.createXML(doc, g.getLastMission(), g, zout);
@@ -540,25 +518,19 @@ public class Rule extends Model {
                 }
 
             }
-
         } else {
-
             rule = doc.createElement(getTrigger());
-            System.out.println("Trigger Rule");
 
             // SUBRULES
             if (subrules != null) {
-                System.out.println("...not empty");
                 for (Rule ar : subrules.getRules()) {
 
                     Element rule2 = ar.createXML(doc, i + 1, g.getLastMission(), g, zout);
                     if (rule2 != null) {
                         rule.appendChild(rule2);
                     }
-
                 }
             }
-
         }
 
         return rule;
@@ -615,28 +587,20 @@ public class Rule extends Model {
                 }
 
                 // ACTIONS
-
-                System.out.println("Actions");
-
                 for (Action a : actions) {
 
                     Element act = a.createXMLForWeb(doc, g.getLastMission(), g);
                     if (act != null) {
                         rule.appendChild(act);
                     }
-
                 }
-
             }
 
         } else {
-
             rule = doc.createElement(getTrigger());
-            System.out.println("Trigger Rule");
 
             // SUBRULES
             if (subrules != null) {
-                System.out.println("...not empty");
                 for (Rule ar : subrules.getRules()) {
 
                     Element rule2 = ar.createXMLForWeb(doc, i + 1, g.getLastMission(), g);
@@ -675,7 +639,6 @@ public class Rule extends Model {
     }
 
     public Rule migrateTo(RuleType nrt, GameCopyContext copyContext) {
-        System.out.println("Rule.migrateTo: " + nrt.getName());
         Rule r = new Rule();
         r.save();
 
@@ -695,11 +658,6 @@ public class Rule extends Model {
 
                 }
 
-            }
-
-            if (done == false) {
-
-                System.out.println("Didn't find ActionType " + at.getXMLType());
             }
 
         }
@@ -743,9 +701,6 @@ public class Rule extends Model {
         Element rule1 = null;
 
         if (!actions.isEmpty()) {
-
-            System.out.println("Conditions");
-
             // CONDITIONS
 
             // SUBRULES
@@ -794,8 +749,6 @@ public class Rule extends Model {
             }
 
             // ACTIONS
-
-            System.out.println("Actions");
 
             for (Action a : actions) {
 
