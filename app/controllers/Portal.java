@@ -2352,13 +2352,13 @@ public class Portal extends Controller {
 
         String jsonResult = "[]"; // empty list as default
         if (!listJsonFile.exists()) {
-            return ok("[]");
+            ProviderPortal p = ProviderPortal.find.byId(pid);
+            p.exportPublicGamesJson();
         }
 
         Path thePath = Paths.get(absoluteFilePath);
         try {
-            String textRead = new String(Files.readAllBytes(thePath));
-            jsonResult = textRead;
+            jsonResult = new String(Files.readAllBytes(thePath));
         } catch (IOException ioe) {
             ioe.printStackTrace();
             return ok("[]");

@@ -1472,7 +1472,8 @@ public class ProviderPortal extends Model {
             gameInfos.add(new GameInfo(pg.getGame()));
         }
 
-        String content = postDetailsSerializer.serialize(gameInfos);
+        // default is "[]" if no games public currently:
+        String content = gameInfos.size() > 0 ? postDetailsSerializer.serialize(gameInfos) : "[]";
 
         File theDir = new File("public/portalfiles/" + id);
         if (!theDir.exists())

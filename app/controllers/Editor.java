@@ -3912,7 +3912,6 @@ public class Editor extends Controller {
         }
         if (help1.equals("true")) {
             if (Global.securityGuard.hasAdminRightsOnPortal(Application.getLocalUser(session())) == false) {
-
                 doit = false;
             }
         }
