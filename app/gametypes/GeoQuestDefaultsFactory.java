@@ -25,7 +25,7 @@ public class GeoQuestDefaultsFactory {
     public MissionType audiorecord;
     public MissionType textquestion;
     public MissionType tagreading;
-
+    public MissionType interactiveSphericalImage;
     public MissionType qrtagreading;
     public MissionType videoplay;
     public MissionType webpage;
@@ -1955,7 +1955,7 @@ public class GeoQuestDefaultsFactory {
 
 
         // INTERACTIVE SPHERICAL IMAGE:
-        MissionType interactiveSphericalImage = declareMT_InteractiveSphericalImage(gt);
+        interactiveSphericalImage = declareMT_InteractiveSphericalImage(gt);
         interactiveSphericalImage.addPossibleRuleTypes(rtOnStart);
         interactiveSphericalImage.addPossibleRuleTypes(rtOnEnd);
         interactiveSphericalImage.update();
@@ -2634,7 +2634,7 @@ public class GeoQuestDefaultsFactory {
 
         RuleType ruleType = new RuleType("Im Fokus", "onFocus");
         ruleType.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/onFocus.png");
-        for(ActionType at : allActionTypes) {
+        for (ActionType at : allActionTypes) {
             ruleType.addPossibleActionType(at);
         }
         ruleType.save();
@@ -2642,7 +2642,7 @@ public class GeoQuestDefaultsFactory {
 
         ruleType = new RuleType("Bei Touch", "onTap");
         ruleType.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/ontap.png");
-        for(ActionType at : allActionTypes) {
+        for (ActionType at : allActionTypes) {
             ruleType.addPossibleActionType(at);
         }
         ruleType.save();
