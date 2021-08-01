@@ -2616,12 +2616,12 @@ public class GeoQuestDefaultsFactory {
         ContentType contentType = new ContentType("Interaktion", "interaction");
         contentType.save();
 
-        AttributeType attributeType = new AttributeType("Horizontalwinkel (Promille)", "azimuth", "int");
+        AttributeType attributeType = new AttributeType("Horizontalwinkel (im Uhrzeigersinn)", "azimuth", "int");
         attributeType.setOptional(false);
         attributeType.save();
         contentType.setAttributeType(attributeType);
 
-        attributeType = new AttributeType("Vertikalwinkel (Promille)", "altitude", "int");
+        attributeType = new AttributeType("Vertikalwinkel (nach oben)", "altitude", "int");
         attributeType.setOptional(false);
         attributeType.save();
         contentType.setAttributeType(attributeType);
@@ -2632,8 +2632,16 @@ public class GeoQuestDefaultsFactory {
         attributeType.save();
         contentType.setAttributeType(attributeType);
 
-        RuleType ruleType = new RuleType("Im Fokus", "onFocus");
+        RuleType ruleType = new RuleType("In den Fokus", "onFocus");
         ruleType.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/onFocus.png");
+        for (ActionType at : allActionTypes) {
+            ruleType.addPossibleActionType(at);
+        }
+        ruleType.save();
+        contentType.addPossibleRuleTypes(ruleType);
+
+        ruleType = new RuleType("Aus dem Fokus", "onDeFocus");
+        ruleType.setSymbol(Global.SERVER_URL_2 + "/assets/icons/trigger/onDeFocus.png");
         for (ActionType at : allActionTypes) {
             ruleType.addPossibleActionType(at);
         }
