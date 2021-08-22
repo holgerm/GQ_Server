@@ -172,7 +172,7 @@ public class Portal extends Controller {
 
         }
 
-        sayTime("Mygames #1");
+        // Global.sayTime("Mygames #1");
 
         User u = getLocalUser(session());
 
@@ -182,10 +182,10 @@ public class Portal extends Controller {
                     .render("Du benötigst mindestens User-Rechte, um diese Seite aufrufen zu können."));
 
         } else {
-            sayTime("Mygames #2");
+            // Global.sayTime("Mygames #2");
 
             Set<GameRights> s = u.getGamesOnPortal(p);
-            sayTime("Mygames #3");
+            // Global.sayTime("Mygames #3");
             // TODO FILTER by game id to skip multiple mentions of right for the same game
 
             return ok(views.html.portal.my_games.render(s));
@@ -195,9 +195,6 @@ public class Portal extends Controller {
 
     // @Restrict(@Group(Application.USER_ROLE))
     public static Result userGamesList(Long uid, Long pid) {
-
-        lastdate = System.currentTimeMillis();
-
         session("currentportal", pid.toString());
         if (getLocalUser(session()) == null) {
             return redirect(routes.Application.login(pid));
@@ -211,7 +208,7 @@ public class Portal extends Controller {
 
         }
 
-        sayTime("Mygames #1");
+        // Global.sayTime("Mygames #1");
 
         User u = getLocalUser(session());
 
@@ -222,7 +219,7 @@ public class Portal extends Controller {
                 User u2 = User.find.byId(uid);
 
                 Set<GameRights> s = u2.getPublicGamesOnPortal(p);
-                sayTime("Mygames #3");
+                // Global.sayTime("Mygames #3");
 
                 return ok(views.html.portal.user_games.render(u2, s));
             } else {
@@ -232,14 +229,14 @@ public class Portal extends Controller {
             }
 
         } else {
-            sayTime("Mygames #2");
+            // Global.sayTime("Mygames #2");
 
             if (User.find.where().eq("id", uid).findRowCount() == 1) {
 
                 User u2 = User.find.byId(uid);
 
                 Set<GameRights> s = u2.getGamesOnPortal(p);
-                sayTime("Mygames #3");
+                // Global.sayTime("Mygames #3");
 
                 return ok(views.html.portal.user_games.render(u2, s));
 
@@ -250,13 +247,6 @@ public class Portal extends Controller {
             }
 
         }
-    }
-
-    public static void sayTime(String prefix) {
-
-        // System.out.println(prefix + ": " + (System.currentTimeMillis() - lastdate));
-
-        lastdate = System.currentTimeMillis();
     }
 
     public static Result myGamesListOnCurrentPortal() {
@@ -1187,7 +1177,7 @@ public class Portal extends Controller {
             } else {
                 User currentuser = getLocalUser(session());
 
-                Game g = mygame.copyMe(" " + Application.getLanguage(("Kopie")));
+                Game g = mygame.copyMe(" Kopie");
                 g.save();
                 g.addOwner(currentuser);
                 // NEWSSTREAM-ITEMS

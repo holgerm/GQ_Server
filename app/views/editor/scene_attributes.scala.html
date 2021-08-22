@@ -6,7 +6,7 @@
 	@defining(s.getAttributeValue(a)) { attributeValue =>
 		<div class="scene-attribute" style="margin-bottom:10px">
 		@if(a.isEditable){
-		<div style="font-weight:bold; font-size:14px;">@Application.getLanguage(a.getName())
+		<div style="font-weight:bold; font-size:14px;">@a.getName()
 			<img style="width:20px;height:20px;" id="status_sceneat@s.getId@a.getId" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
 		</div>
 		<span>
@@ -21,7 +21,7 @@
 							<option
 								value="@pm"
 								@if(attributeValue.equals(pm)){ selected="selected" }
-							>@Application.getLanguage(pm)</option>
+							>@pm</option>
 						}
 					</select>
 				} else {
@@ -95,19 +95,19 @@
  	        	@if(attributeValue != "") {
  	        		@defining("Hochgeladenes Bild nicht gefunden") { imageNotFoundText => 
 			        <a href="@attributeValue" target="_blank">
-			       		<img src="@attributeValue" alt="@Application.getLanguage(imageNotFoundText)" width="20%"/>
+			       		<img src="@attributeValue" alt="@imageNotFoundText" width="20%"/>
 					</a>
 	         		}
 		     	}
 	       			<input type="file" id="scenefileat@s.getId@a.getId" style="width:50%;" onchange="javascript:uploadFile('scene',@s.getId,@a.getId)" >
-	       			<a  onClick="javascript:document.getElementById('scenefile_file_at@s.getId@a.getId').style.display='none';document.getElementById('scenefile_text_at@s.getId@a.getId').style='display:inline-block; width:82%';">@Application.getLanguage("Variabel")</a>
+	       			<a  onClick="javascript:document.getElementById('scenefile_file_at@s.getId@a.getId').style.display='none';document.getElementById('scenefile_text_at@s.getId@a.getId').style='display:inline-block; width:82%';">Variabel</a>
        			</div>
                	<div id="scenefile_text_at@s.getId@a.getId" style="display:none; width:82%">
   	        	@if(attributeValue != "") {
          			<a href="@attributeValue" target="_blank">@editor_athumbnail(attributeValue)</a>
          		}
 					<input type="text" value="@attributeValue" style="width:50%;" id="sceneat@s.getId@a.getId" onchange="javascript:syncAttr('scene',@s.getId,@a.getId)" onkeydown="document.getElementById('status_sceneat@s.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png");"/>
-					<a onClick="javascript:document.getElementById('scenefile_text_at@s.getId@a.getId').style.display='none';document.getElementById('scenefile_file_at@s.getId@a.getId').style= 'display:inline-block; width:82%';">@Application.getLanguage("Datei")</a>
+					<a onClick="javascript:document.getElementById('scenefile_text_at@s.getId@a.getId').style.display='none';document.getElementById('scenefile_file_at@s.getId@a.getId').style= 'display:inline-block; width:82%';">Datei</a>
               	</div>
 			}
 		</span>    

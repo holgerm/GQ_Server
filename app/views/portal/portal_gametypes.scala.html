@@ -4,7 +4,7 @@
     @import helpers._
 @import util.Global;
 
-@main( Application.getLanguage("Spieltypen")) {
+@main("Spieltypen") {
 
 
     @defining(Application.getLocalUser(session())) { user =>
@@ -12,7 +12,7 @@
 
 
             @if(provider.getGameTypes().isEmpty() == true){
-                 @Application.getLanguage("Keine Spieltypen")
+                 Keine Spieltypen
             } else {
 
                 <div class="gq_container" style="margin-top: 10px">
@@ -20,8 +20,8 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th> @Application.getLanguage("Name")</th>
-                                <th class="no-sort"> @Application.getLanguage("Optionen")</th>
+                                <th>Name</th>
+                                <th class="no-sort">Optionen</th>
                             </tr>
                         </thead>
 
@@ -34,12 +34,10 @@
                                 <td>@a_gametype.getId()</td>
 
 
-                                            <td> @Application.getLanguage(a_gametype.getName())</td>
+                                            <td> @a_gametype.getName()</td>
                                             <td>
                                             
-                                            	<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doDeleteGameTypeFromPortal(Application.getLocalPortal().getId(),provider.getId(),a_gametype.getId())">
-                                            
- @Application.getLanguage("Von diesem Portal entfernen")              </a>                          
+                                            	<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doDeleteGameTypeFromPortal(Application.getLocalPortal().getId(),provider.getId(),a_gametype.getId())">Von diesem Portal entfernen</a>
  </td>
 
                                       
@@ -63,17 +61,18 @@
 	@if(!provider.getId().equals(Global.defaultportal.getId())){
 
 
-<h2> @Application.getLanguage("Aktuelle Spieltypen")</h2>
+<h2>Aktuelle Spieltypen</h2>
 
 
 
 @for(a_gametype <- Global.defaultportal.getGameTypes()){
 	
 	
-	 @Application.getLanguage(a_gametype.getName()) [ @a_gametype.getId() ] -> 
+	 @a_gametype.getName() [ @a_gametype.getId() ] ->
 	
-	<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doAddGameTypeToPortal(Application.getLocalPortal().getId(),provider.getId(),a_gametype.getId())">
-	 @Application.getLanguage("Hinzufügen")</a><br/><br/>
+	<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doAddGameTypeToPortal(Application.getLocalPortal().getId(),provider.getId(),a_gametype.getId())">Hinzufügen</a>
+    <br/>
+    <br/>
 	
 	
 	

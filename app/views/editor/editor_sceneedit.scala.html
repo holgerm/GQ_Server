@@ -13,7 +13,7 @@
             <img id="status_scenename@s.getId" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
             <br />
             <p class="missionviewtext">
-            	<em>@Application.getLanguage(s.getType.getName)
+            	<em>@s.getType.getName
             		@if(s.getHotspots.size <2){ 
               			@for(hs <- s.getHotspots){
               				<i class="icon-map-marker" style="display:inline-block;" onClick="javascript:hideAddEditMissions();panTo('marker[@hs.getId]');popups[@hs.getId()].openOn(map);"></i>
@@ -21,10 +21,10 @@
               		}
               	</em>
       		</p>
-            <p>
-      			@Application.getLanguage("Optionen"):<a href="@Global.SERVER_URL_2/editor/@g.getId()/duplicate/scene/@s.getId()"> <icon class="icon-share" style="display:inline-block;"></icon> @Application.getLanguage("Duplizieren")</a>
+            <p>Optionen:<a href="@Global.SERVER_URL_2/editor/@g.getId()/duplicate/scene/@s.getId()">
+				<icon class="icon-share" style="display:inline-block;"></icon> Duplizieren</a>
               	@if(s.getFirstMission() != null){
-              		<span  style="cursor:pointer;" onClick="javascript:startUnityPreview('@Global.SERVER_URL_2/editor/@g.getId/webxml/@s.getFirstMission().getId()');"><icon class="icon-play" style="display:inline-block;"></icon> @Application.getLanguage("Vorschau")</span>
+              		<span  style="cursor:pointer;" onClick="javascript:startUnityPreview('@Global.SERVER_URL_2/editor/@g.getId/webxml/@s.getFirstMission().getId()');"><icon class="icon-play" style="display:inline-block;"></icon> Vorschau</span>
               	}
       		</p>
     		<br/>
@@ -36,14 +36,12 @@
 							@if(s.showMultipleAchordions()){  
 								<div class="accordion-group">
     								<div class="accordion-heading">
-      									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne@s.getId">
-       										@Application.getLanguage("Seiten")
-      									</a>
+      									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne@s.getId">Seiten</a>
     								</div>
     								<div id="collapseOne@s.getId" class="accordion-body collapse in">
       									<div class="accordion-inner">
 							} else {
-								<h3>@Application.getLanguage("Seiten")</h3>
+								<h3>Seiten</h3>
 							}
 							@for(s_part <- s.getParts()){
 				              	@if(!s_part.isScene()){
@@ -78,14 +76,12 @@
 						@if(s.showMultipleAchordions()){  
  							<div class="accordion-group">
 								<div class="accordion-heading">
-									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo@s.getId">
-										@Application.getLanguage("Hotspots")
-									</a>
+									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo@s.getId">Hotspots</a>
     							</div>
    								<div id="collapseTwo@s.getId" class="accordion-body collapse">
       								<div class="accordion-inner">
 						} else {
-     						<h2>@Application.getLanguage("Hotspots")</h2>
+     						<h2>Hotspots</h2>
 						}
   
 						@for(hs <- s.getHotspots){
@@ -110,9 +106,7 @@
 				@if(s.showMultipleAchordions()){  
 					<div class="accordion-group">
 						<div class="accordion-heading">
-							<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree@s.getId">
-        						@Application.getLanguage("Einstellungen für Unterseiten")
-      						</a>
+							<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree@s.getId">Einstellungen für Unterseiten</a>
     					</div>
     					<div id="collapseThree@s.getId" class="accordion-body collapse">
       						<div class="accordion-inner">

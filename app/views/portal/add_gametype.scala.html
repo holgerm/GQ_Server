@@ -4,7 +4,7 @@
 @import helpers._
 @import helper.twitterBootstrap._
 
-@main(Application.getLanguage("Spiel in Spieltyp umwandeln"),"upload_game") {
+@main("Spiel in Spieltyp umwandeln","upload_game") {
 
 
 
@@ -18,7 +18,7 @@
     	
     		@if(errormessage != ""){
     			<p class="error">
-		            <span class="label label-important">@Application.getLanguage(errormessage)</span>
+		            <span class="label label-important">@errormessage</span>
 		        </p>
             }
     			
@@ -26,15 +26,15 @@
     		
             @if(gametypeForm.hasGlobalErrors) {
                 <p class="error">
-		            <span class="label label-important">@Application.getLanguage(gametypeForm.globalError.message)</span>
+		            <span class="label label-important">@gametypeForm.globalError.message</span>
 		        </p>
             } 
             
             
-            <h3>@Application.getLanguage("Spieltyp Name")</h3>
+            <h3>Spieltyp Name</h3>
              @inputText(
                 gametypeForm("name"),
-                '_label -> Application.getLanguage("Spieltyp Name")
+                '_label -> "Spieltyp Name"
              )
 
                  <br/>
@@ -42,28 +42,27 @@
                  
             @checkbox(
                 gametypeForm("makescene"),
-                '_label -> Application.getLanguage("Szene statt Standard-Inhalt")
-
+                '_label -> "Szene statt Standard-Inhalt"
             )
 
 
             @checkbox(
                 gametypeForm("onlyhotspots"),
-                '_label -> Application.getLanguage("Nur Hotspots in Editor")
+                '_label -> "Nur Hotspots in Editor"
 
             )
             
             @checkbox(
                 gametypeForm("onlyonehotspot"),
-                '_label -> Application.getLanguage("Ein Hotspot pro Spiel?")
+                '_label -> "Ein Hotspot pro Spiel?"
 
             )
             <br/>
-                        <h3>@Application.getLanguage("Hotspottyp Name")</h3>
+                        <h3>Hotspottyp Name</h3>
             
               @inputText(
                 gametypeForm("scenename"),
-                '_label -> Application.getLanguage("Hotspottyp Name")
+                '_label -> "Hotspottyp Name"
              )
             
             
@@ -71,7 +70,7 @@
 
 
                                <br/>
-            <input type="submit" value="@Application.getLanguage("Erstellen")" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes") !=""))>
+            <input type="submit" value="Erstellen" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes") !=""))>
   	
 }
 

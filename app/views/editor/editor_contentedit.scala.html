@@ -26,7 +26,7 @@
 				<br/>
 
 				<p><!-- TODO: Ereignisse Link einbauen -->
-				@Application.getLanguage("Optionen"):<span style="cursor:pointer;" onClick="javascript:hideAddEditMissions();openContentRule(@c.getId());"> <icon style="height:20px; width:20px; background-image:url('@Global.SERVER_URL_2/assets/icons/actions/default.png'); background-size:20px 20px; background-position:0px 24px; display:inline-block;"></icon> @Application.getLanguage("Ereignisse")</span>
+				Optionen:<span style="cursor:pointer;" onClick="javascript:hideAddEditMissions();openContentRule(@c.getId());"> <icon style="height:20px; width:20px; background-image:url('@Global.SERVER_URL_2/assets/icons/actions/default.png'); background-size:20px 20px; background-position:0px 24px; display:inline-block;"></icon> Ereignisse</span>
 				</p>
 									        				
 				<textarea id="contentvaluename@c.getId"
@@ -38,14 +38,14 @@
         
 				<br/>
 									        				
-									        				<h4>@Application.getLanguage("Einstellungen")</h4>
+									        				<h4>Einstellungen</h4>
 									        				
 									        				@for(a <- c.getAllAttributes){
 									        				
 									        				@if(a.isEditable){
 									        				
 									        				 <div style="width:80%">
-       @Application.getLanguage(a.getName)
+       @a.getName
         <div class="floatright">
         
         
@@ -59,7 +59,7 @@
 								             
 								             <option ></option>
 								              		@for(pm <- a.getPossibleValues()){
-								              			   <option  value = "@pm" @if(c.getAttributeValue(a).equals(pm)){ selected="selected" } >@Application.getLanguage(pm)</option>
+								              			   <option  value = "@pm" @if(c.getAttributeValue(a).equals(pm)){ selected="selected" } >@pm</option>
 								              			
 								              			
 								              		}   </select>
@@ -114,11 +114,11 @@
          	<div id="contentfile_file_at@c.getId@a.getId">
 				<input type="file"/ id="contentfileat@c.getId@a.getId" onchange="javascript:uploadFile('content',@c.getId,@a.getId)" >
         
-        <a  onClick="javascript:document.getElementById('contentfile_file_at@c.getId@a.getId').style.display='none';document.getElementById('contentfile_text_at@c.getId@a.getId').style.display='block';">@Application.getLanguage("Variabel")</a>
+        <a  onClick="javascript:document.getElementById('contentfile_file_at@c.getId@a.getId').style.display='none';document.getElementById('contentfile_text_at@c.getId@a.getId').style.display='block';">Variabel</a>
         </div>
                 <div id="contentfile_text_at@c.getId@a.getId" style="display:none;">
 									        <input type="text"/ value="@c.getAttributeValue(a)" id="contentat@c.getId@a.getId" onchange="javascript:syncAttr('content',@c.getId,@a.getId)" onkeydown="document.getElementById('status_contentat@c.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
-                      <a onClick="javascript:document.getElementById('contentfile_text_at@c.getId@a.getId').style.display='none';document.getElementById('contentfile_file_at@c.getId@a.getId').style.display='block';">@Application.getLanguage("Datei")</a>
+                      <a onClick="javascript:document.getElementById('contentfile_text_at@c.getId@a.getId').style.display='none';document.getElementById('contentfile_file_at@c.getId@a.getId').style.display='block';">Datei</a>
               
                </div>
         

@@ -10,9 +10,9 @@ $.extend( true, $.fn.dataTable.defaults, {
 	"sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
 	"sPaginationType": "bootstrap",
 	"oLanguage": {
-		"sLengthMenu": "@Application.getLanguage("Zeige _MENU_ Einträge pro Seite")",
-		"sSearch":  "@Application.getLanguage("Suche: ")",
-		"sInfo": "@Application.getLanguage("Zeige _START_ bis _END_ von _TOTAL_ Quests")"
+		"sLengthMenu": "Zeige _MENU_ Einträge pro Seite",
+		"sSearch":  "Suche: ",
+		"sInfo": "Zeige _START_ bis _END_ von _TOTAL_ Quests"
 	}
 } );
 
@@ -103,8 +103,8 @@ $.extend( $.fn.dataTableExt.oPagination, {
 
 			$(nPaging).addClass('pagination').append(
 				'<ul class="paginationdt">'+
-					'<li class="prev disabled"><a href="#">&larr; @Application.getLanguage("Vorherige")</a></li>'+
-					'<li class="next disabled"><a href="#">@Application.getLanguage("Nächste") &rarr; </a></li>'+
+					'<li class="prev disabled"><a href="#">&larr; Vorherige</a></li>'+
+					'<li class="next disabled"><a href="#">Nächste &rarr; </a></li>'+
 				'</ul>'
 			);
 			var els = $('a', nPaging);
@@ -211,7 +211,7 @@ $(document).ready(function() {
 		"sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
 		"sPaginationType": "bootstrap",
 		"oLanguage": {
-			"sLengthMenu": "@Application.getLanguage("Zeige _MENU_ Einträge pro Seite")"
+			"sLengthMenu": "Zeige _MENU_ Einträge pro Seite"
 		},
 		 
 		 "aaSorting": [[ 1, "desc" ]],

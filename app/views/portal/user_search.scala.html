@@ -6,7 +6,7 @@
 	@import util.Global
 	
 
-@main(Application.getLanguage("User-Suche")) {
+@main("User-Suche") {
 
 
 
@@ -17,7 +17,7 @@
 
         @if(userForm.hasGlobalErrors) {
             <p class="error">
-                <span class="label label-important">@Application.getLanguage(userForm.globalError.message)</span>
+                <span class="label label-important">@userForm.globalError.message</span>
             </p>
         }
 
@@ -27,19 +27,19 @@
 
         @inputText(
             userForm("email"),
-            '_label -> Application.getLanguage("Suche nach E-Mail-Adresse")
+            '_label -> "Suche nach E-Mail-Adresse"
         )
                </div>
             <div class="col-md-6">
 
         @inputText(
             userForm("name"),
-            '_label -> Application.getLanguage("Suche nach Name")
+            '_label -> "Suche nach Name"
         )
             </div>
             </div>
 
-        <input type="submit" value="@Application.getLanguage("Suche starten")" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes") !=""))><br/>
+        <input type="submit" value="Suche starten" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes") !=""))><br/>
 
 
     }
@@ -48,12 +48,11 @@
 
 
         @if(userFound == null){
-           @Application.getLanguage("Keine User gefunden.")
+           Keine User gefunden.
         } else {
         
        @if(userFound.isEmpty() == true){
-                   @Application.getLanguage("Keine User gefunden.")
-        
+          Keine User gefunden.
         } else {
         
         
@@ -61,7 +60,7 @@
            <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
                     <thead>
                         <tr>
-                            <th>@Application.getLanguage("Name")</th>
+                            <th>Name</th>
                            </tr>
                     </thead>
 

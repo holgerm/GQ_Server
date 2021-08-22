@@ -19,12 +19,12 @@
       @if(Global.securityGuard.hasAnyRightsOnPortal(Portal.getLocalUser()) == false) {
       	<br/><br/>
       
-        <p>@Application.getLanguage("Anscheinend bist du nicht für dieses Portal freigeschaltet.")</p>
+        <p>Anscheinend bist du nicht für dieses Portal freigeschaltet.</p>
          
 
          
-          <p><a  href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doAddMeToPortal(Application.getLocalPortal().getId())">@Application.getLanguage("Mit diesem Account anmelden")</a></p>
-          <p><a  href="@Application.getLocalPortal.getTemplateServerURLDropSlash@com.feth.play.module.pa.controllers.routes.Authenticate.logout()">@Application.getLanguage("Anderen Account benutzen")</a></p>
+          <p><a  href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doAddMeToPortal(Application.getLocalPortal().getId())">Mit diesem Account anmelden</a></p>
+          <p><a  href="@Application.getLocalPortal.getTemplateServerURLDropSlash@com.feth.play.module.pa.controllers.routes.Authenticate.logout()">Anderen Account benutzen</a></p>
 
 
 
@@ -39,7 +39,12 @@
 
     } else {
     
-        <p>@Application.getLanguage("<b>Bitte habe noch ein wenig Gedud.</b><br/>Deine Anfrage befindet sich noch in der Bearbeitung.<br/>Solltest du nach einer Woche noch keine Antwort erhalten, melde dich bitte per E-Mail unter<br/><a href='mailto:contact@@quest-mill.com'>contact@@quest-mill.com</a>")</p>
+        <p>
+            <b>Bitte habe noch ein wenig Gedud.</b>
+            <br/>Deine Anfrage befindet sich noch in der Bearbeitung.
+            <br/>Solltest du nach einer Woche noch keine Antwort erhalten, melde dich bitte per E-Mail unter<br/>
+            <a href='mailto:contact@@quest-mill.com'>contact@@quest-mill.com</a>
+        </p>
     
     }
     
@@ -145,11 +150,10 @@ a:active {
   @if(Global.securityGuard.hasAnyRightsOnPortal(Portal.getLocalUser()) == false) {
       	
       <br/><br/>
-        <p>@Application.getLanguage("Hallo") @Portal.getLocalUser().getName(),<br/>
-        @Application.getLanguage("Anscheinend bist du noch nicht für dieses Portal freigeschaltet.")</p>
+        <p>Hallo @Portal.getLocalUser().getName(),<br/>Anscheinend bist du noch nicht für dieses Portal freigeschaltet.</p>
         <br/><br/>
-          <p><a class="btn btn-primary" role="button" href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doAddMeToPortal(Application.getLocalPortal().getId())">@Application.getLanguage("Mit diesem Account anmelden")</a></p>
-          <p><a class="btn btn-primary" role="button" href="@Application.getLocalPortal.getTemplateServerURLDropSlash@com.feth.play.module.pa.controllers.routes.Authenticate.logout()">@Application.getLanguage("Anderen Account benutzen")</a></p>
+          <p><a class="btn btn-primary" role="button" href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Portal.doAddMeToPortal(Application.getLocalPortal().getId())">Mit diesem Account anmelden</a></p>
+          <p><a class="btn btn-primary" role="button" href="@Application.getLocalPortal.getTemplateServerURLDropSlash@com.feth.play.module.pa.controllers.routes.Authenticate.logout()">Anderen Account benutzen</a></p>
 
 
 
@@ -164,9 +168,9 @@ a:active {
 
     } else {
     <br/><br/><br/>
-        <p>@Application.getLanguage("<b>Bitte habe noch ein wenig Gedud.</b><br/>Deine Anfrage befindet sich noch in der Bearbeitung.<br/>Solltest du nach einer Woche noch keine Antwort erhalten, melde dich bitte per E-Mail unter<br/><a href='mailto:contact@@quest-mill.com'>contact@@quest-mill.com</a>")</p>
+        <p><b>Bitte habe noch ein wenig Geduld.</b><br/>Deine Anfrage befindet sich noch in der Bearbeitung.<br/>Solltest du nach einer Woche noch keine Antwort erhalten, melde dich bitte per E-Mail unter<br/><a href='mailto:contact@@quest-mill.com'>contact@@quest-mill.com</a></p>
     <br/>
-              <p><a class="btn btn-primary" role="button" href="@Application.getLocalPortal.getTemplateServerURLDropSlash@com.feth.play.module.pa.controllers.routes.Authenticate.logout()">@Application.getLanguage("Abmelden")</a></p>
+              <p><a class="btn btn-primary" role="button" href="@Application.getLocalPortal.getTemplateServerURLDropSlash@com.feth.play.module.pa.controllers.routes.Authenticate.logout()">Abmelden</a></p>
     
     }        
 

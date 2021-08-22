@@ -5,19 +5,19 @@
  		<i class="icon-resize-full" onClick="javascript:toggleFullscreen('missionnew_scene@a_scene.getId','90%','75%','120px','5%','35px')"></i>
  		<i class="icon-remove" onClick="javascript:document.getElementById('missionnew_scene@a_scene.getId').style.display = 'none';hideInnerMissions('missionnew_scene@a_scene.getId');deactiveFullscreen('missionnew_scene@a_scene.getId','90%','75%','120px','5%','35px');"></i>
  	</div>
-  	<input type="text" id="missiontype_name@a_scene.getId" class="h2textfield" value="@Application.getLanguage("Neue Seite")">
+  	<input type="text" id="missiontype_name@a_scene.getId" class="h2textfield" value="Neue Seite">
 	<br/>
-	<em>@Application.getLanguage("in") @a_scene.getType.getName @a_scene.getName</em>
+	<em>in @a_scene.getType.getName @a_scene.getName</em>
     <fieldset>
 	    <p>
-	        <label>@Application.getLanguage("Seitentyp")</label>
+	        <label>Seitentyp</label>
 	        <select id = "missiontype_scene@a_scene.getId">
 	        	@for(a_mtype <- a_scene.getType().getPossibleMissionTypes){
-	               <option value = "@a_mtype.getId()">@Application.getLanguage(a_mtype.getName())</option>
+	               <option value = "@a_mtype.getId()">@a_mtype.getName()</option>
 	      		}
 	       	</select>
 		</p>
 	</fieldset>
    	<br/>
-	<div class="btn btn-success" id="newmissionbutton_scene@a_scene.getId" onClick="newMissionInScene(@a_scene.getId)">@Application.getLanguage("Hinzufügen")</div>
+	<div class="btn btn-success" id="newmissionbutton_scene@a_scene.getId" onClick="newMissionInScene(@a_scene.getId)">Hinzufügen</div>
 </div>

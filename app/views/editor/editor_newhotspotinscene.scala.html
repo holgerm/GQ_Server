@@ -12,7 +12,7 @@
       
              @if(s.getType.getPossibleHotspotTypes.size() > 1){
           <p>
-             <label>@Application.getLanguage("Hotspottyp")</label>
+             <label>Hotspottyp</label>
              
              
              
@@ -20,7 +20,7 @@
              @for(a_htype <- s.getType.getPossibleHotspotTypes){
              
                
-               <option value = "@a_htype.getId()">@Application.getLanguage(a_htype.getName())</option>
+               <option value = "@a_htype.getId()">@a_htype.getName()</option>
              
                }
              </select>
@@ -34,14 +34,14 @@
           }
           
             <p>
-             <label>@Application.getLanguage("Longitude")</label>
+             <label>Longitude</label>
             <input type="text" id="hotspotnew_long" />
             
           </p>
           
           
             <p>
-             <label>@Application.getLanguage("Latitude")</label>
+             <label>Latitude</label>
             <input type="text" id="hotspotnew_lat" />
             
           </p>
@@ -51,6 +51,6 @@
           
        </fieldset>
        <br/>
-       <div class="btn btn-success" id="newhotspotbutton_scene@s.getId" onClick="newHotspotInScene(@s.getId)">@Application.getLanguage("Hinzufügen")</div>
+       <div class="btn btn-success" id="newhotspotbutton_scene@s.getId" onClick="newHotspotInScene(@s.getId)">Hinzufügen</div>
               	</div>
               	

@@ -22,16 +22,13 @@
 
 @if(!(Application.getLocalPortal.getParameter(a_html.getId(),"newsstreamlink") == "hide")){
 
-<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.portalNewsstream(Application.getLocalPortal().getId()))">
-@Application.getLanguage("Neuigkeiten")
-</a></li>
+<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.portalNewsstream(Application.getLocalPortal().getId()))">Neuigkeiten</a>
+    </li>
 }
 
 @if(!(Application.getLocalPortal.getParameter(a_html.getId(),"publicgameslink") == "hide")){
 
-<li @Html(liattributes.when(liattributes !=""))> <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.publicGamesList(Application.getLocalPortal().getId()))">
-@Application.getLanguage("Öffentliche Spiele")
-</a></li>
+<li @Html(liattributes.when(liattributes !=""))> <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.publicGamesList(Application.getLocalPortal().getId()))">Öffentliche Spiele</a></li>
 }
 
 } 
@@ -44,8 +41,8 @@
 @if(!(Application.getLocalPortal.getParameter(a_html.getId(),"authlinks") == "hide")){
 	
 
-<li @Html(liattributes.when(liattributes !=""))><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.signup(Application.getLocalPortal().getId()))">@Application.getLanguage("Registrieren")</a></li>
-<li @Html(liattributes.when(liattributes !=""))><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.login(Application.getLocalPortal().getId()))">@Application.getLanguage("Einloggen")</a>
+<li @Html(liattributes.when(liattributes !=""))><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.signup(Application.getLocalPortal().getId()))">Registrieren</a></li>
+<li @Html(liattributes.when(liattributes !=""))><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.login(Application.getLocalPortal().getId()))">Einloggen</a>
 }
 }
 
@@ -58,22 +55,18 @@
 
 @if(Global.securityGuard.hasMinVerifiedRightsOnPortal(user)==true){
 </li>
-<li @Html(liattributes.when(liattributes !=""))"><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.myGamesList(Application.getLocalPortal().getId()))">
-@Application.getLanguage("Meine Spiele")
-</a></li>
-<li @Html(liattributes.when(liattributes !=""))"><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.userSearch(Application.getLocalPortal().getId()))">
-@Application.getLanguage("User-Suche")
-</a></li>
+<li @Html(liattributes.when(liattributes !=""))"><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.myGamesList(Application.getLocalPortal().getId()))">Meine Spiele</a></li>
+<li @Html(liattributes.when(liattributes !=""))"><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.userSearch(Application.getLocalPortal().getId()))">User-Suche</a></li>
 
 
 @if(Global.securityGuard.hasAdminRightsOnPortal(user)==true){
 
-</li><li @Html(liattributes.when(liattributes !=""))><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.userRightsonPortal(Application.getLocalPortal().getId(),Application.getLocalPortal().getId()))">@Application.getLanguage("User-Rechte")</a></li>
+</li><li @Html(liattributes.when(liattributes !=""))><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.userRightsonPortal(Application.getLocalPortal().getId(),Application.getLocalPortal().getId()))">User-Rechte</a></li>
 
 }
 @if(Global.securityGuard.isDefaultPortal == true ){
 
-</li><li @Html(liattributes.when(liattributes !=""))><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.myPortalsList(Application.getLocalPortal().getId()))">@Application.getLanguage("Meine Portale")</a></li>
+</li><li @Html(liattributes.when(liattributes !=""))><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.myPortalsList(Application.getLocalPortal().getId()))">Meine Portale</a></li>
 
 
 
@@ -87,19 +80,19 @@
 @if(Global.securityGuard.hasAnyRightsOnPortal(user)==false){
 
 
-</li><li @Html(liattributes.when(liattributes !=""))><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.doAddMeToPortal(Application.getLocalPortal().getId()))">@Application.getLanguage("Registrierung mit GQ-Account")</a></li>
+</li><li @Html(liattributes.when(liattributes !=""))><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.doAddMeToPortal(Application.getLocalPortal().getId()))">Registrierung mit GQ-Account</a></li>
 
 }
 }
 
 <li @Html(liattributes.when(liattributes !=""))>   
-<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.profile(Application.getLocalPortal.getId()))">@Application.getLanguage("Profil")</a>
+<a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.profile(Application.getLocalPortal.getId()))">Profil</a>
 </li>
 
 @if(Application.getLocalPortal.getId() == 61L || (Application.getLocalPortal.getParameter(a_html.getId(),"showlogout") == "true")){
 <br/>
 <li @Html(liattributes.when(liattributes !=""))>   
-          <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.dologout(Application.getLocalPortal.getId()))" >@Application.getLanguage("Abmelden")</a>
+          <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Application.dologout(Application.getLocalPortal.getId()))" >Abmelden</a>
 </li>
 }
 

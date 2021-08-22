@@ -65,9 +65,9 @@ public class Global extends GlobalSettings {
 	
 	public static final String REGEXP_NUM = "(\\s*)[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)(\\s*)";
 	
-	public static Map<String,String> en_Translation;
-	public static Map<String,String> fr_Translation;
-	public static Map<String,String> es_Translation;
+//	public static Map<String,String> en_Translation;
+//	public static Map<String,String> fr_Translation;
+//	public static Map<String,String> es_Translation;
 
 
 	public static ProviderPortal defaultportal;
@@ -115,13 +115,13 @@ public class Global extends GlobalSettings {
 			
 			// LANGUAGE MAP INIT
 			
-			en_Translation =  new HashMap();
-			fr_Translation =  new HashMap();
-			es_Translation =  new HashMap();
-			
-			TranslationFactory trfactory = new TranslationFactory();
-			
-			trfactory.buildTranslationMaps();
+//			en_Translation =  new HashMap();
+//			fr_Translation =  new HashMap();
+//			es_Translation =  new HashMap();
+//
+//			TranslationFactory trfactory = new TranslationFactory();
+//
+//			trfactory.buildTranslationMaps();
 			
 
 		
@@ -236,4 +236,19 @@ public class Global extends GlobalSettings {
 		}
 
 	}
+
+	// TIME for debugging:
+	public static long lastdate;
+
+	public static void TIME_SAY(String prefix) {
+
+		System.out.println(prefix + ": " + (System.currentTimeMillis() - lastdate));
+
+		lastdate = System.currentTimeMillis();
+	}
+
+	public static void TIME_CLEAR() {
+		lastdate = System.currentTimeMillis();
+	}
+
 }

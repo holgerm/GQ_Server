@@ -2,14 +2,14 @@
 
 @import util.Global
 
-@main(u.name +"'s "+ Application.getLanguage("Spiele")) {
+@main(u.name +"'s "+ "Spiele") {
 
 
 
 
 <br/>
 <div class="alert alert-danger" style="display:none;">
-  <strong>@Application.getLanguage("Achtung!")</strong>@Application.getLanguage("Aktuell kann es auf Grund von Entwicklungsarbeiten zu kurzzeitigen Serverausfällen oder unerwartetem Verhalten kommen.")
+  <strong>Achtung!</strong> Aktuell kann es auf Grund von Entwicklungsarbeiten zu kurzzeitigen Serverausfällen oder unerwartetem Verhalten kommen.
 </div>
 
 <br/>
@@ -55,19 +55,15 @@ function resetVisibility(x){
                 <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
                     <thead>
                         <tr>
-                            <th>@Application.getLanguage("Name")</th>
-                            <th class="date-sort">@Application.getLanguage("Letztes Update")</th>
-                            <th>@Application.getLanguage("Spieltyp")</th>
+                            <th>Name</th>
+                            <th class="date-sort">Letztes Update</th>
+                            <th>Spieltyp</th>
                                                                                     @if(Application.getLocalPortal().getUser(Application.getLocalUser()).getRights() == "admin"){
                             
-                            <th class="no-sort">@Application.getLanguage("Veröffentlicht")</th>
+                            <th class="no-sort">Veröffentlicht</th>
                             
-                            <th class="no-sort">@Application.getLanguage("Optionen")</th>
-                            
-                            
-                            
-                            
-                                                        <th>@Application.getLanguage("Info")</th>
+                            <th class="no-sort">Optionen</th>
+                            <th>Info</th>
                                                         } else {
                                                         
                                   <th class="no-sort"></th>
@@ -79,20 +75,17 @@ function resetVisibility(x){
 
                     <tbody>
 
-@Portal.sayTime("Mygames #5")
 
-
-
-@defining((Application.getLanguage("dd.MM.yyyy HH:mm"),
-	Application.getLanguage("Download"),
-	Application.getLanguage("Noch keine XML-Daten"),
-	Application.getLanguage("Editor aufrufen"),
-	Application.getLanguage("Administration"),
-	Application.getLanguage("Duplizieren"),
-	Application.getLanguage("Wirklich löschen?"),
-	Application.getLanguage("Löschen"),
-	Application.getLanguage("Keine Rechte"),
-	Application.getLanguage("In Spieltyp umwandeln"))
+@defining(("dd.MM.yyyy HH:mm",
+	"Download",
+	"Noch keine XML-Daten",
+	"Editor aufrufen",
+	"Administration",
+	"Duplizieren",
+	"Wirklich löschen?",
+	"Löschen",
+	"Keine Rechte",
+	"In Spieltyp umwandeln")
 	
 	) { case (pre_date, pre_download, pre_nochkeinedaten, pre_editoraufrufen, pre_admin, pre_duplizieren,pre_reallydelete, pre_delete , pre_keinerechte ,pre_inspieltyp) =>
 
@@ -123,7 +116,7 @@ function resetVisibility(x){
                             )</td>
                              <td>          
                                                
-                         @Application.getLanguage(a_game.getGame().getType().getName()) </td>
+                         @a_game.getGame().getType().getName() </td>
                      
                          
                         @if(Application.getLocalPortal().getUser(Application.getLocalUser()).getRights() == "admin"){
@@ -203,12 +196,8 @@ function resetVisibility(x){
 
 }
 
-@Portal.sayTime("Mygames #6")
-
                     </tbody>
                 </table>
                     </div>
             }
-
-
 }

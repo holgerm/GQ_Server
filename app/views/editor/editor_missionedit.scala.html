@@ -23,13 +23,12 @@
                         <br/>
 
                         <p class="missionviewtext">
-              				<em>@Application.getLanguage(m.getType().getName())</em>
+              				<em>@m.getType().getName()</em>
                         </p>
-                        <p>
-              				 @Application.getLanguage("Optionen"):<span style="cursor:pointer;" onClick="javascript:hideAddEditMissions();openMissionRule(@m.getId());"> <icon style="height:20px; width:20px; background-image:url('@Global.SERVER_URL_2/assets/icons/actions/default.png'); background-size:20px 20px; background-position:0px 24px; display:inline-block;"></icon> @Application.getLanguage("Ereignisse")</span>
-              				 <span style="cursor:pointer;" onClick="javascript:duplicateMissionInGame(@m.getId());"> <icon class="icon-share" style="display:inline-block;"></icon> @Application.getLanguage("Duplizieren")</span>
-              				 <span  style="cursor:pointer;" onClick="javascript:hideMapView(); hideAddEditMissions(); startUnityPreview('@Global.SERVER_URL_2/editor/@g.getId/webxml/@m.getId');"><icon class="icon-play" style="display:inline-block;"></icon> @Application.getLanguage("Vorschau")</span></p>
-              				 <span  style="cursor:pointer;"><a href="https:/quest-mill.intertech.de/assets/index.php?content=@m.getType().getNameEncoded()@if(Application.getLocalPortal().getId() != 61L){&portal=@Application.getLocalPortal().getId()}" target="_blank"><icon class="icon-question-sign" style="display:inline-block;"></icon> @Application.getLanguage("Anleitung")</a></span></p>
+                        <p>Optionen:<span style="cursor:pointer;" onClick="javascript:hideAddEditMissions();openMissionRule(@m.getId());"> <icon style="height:20px; width:20px; background-image:url('@Global.SERVER_URL_2/assets/icons/actions/default.png'); background-size:20px 20px; background-position:0px 24px; display:inline-block;"></icon> Ereignisse</span>
+              				 <span style="cursor:pointer;" onClick="javascript:duplicateMissionInGame(@m.getId());"> <icon class="icon-share" style="display:inline-block;"></icon> Duplizieren</span>
+              				 <span  style="cursor:pointer;" onClick="javascript:hideMapView(); hideAddEditMissions(); startUnityPreview('@Global.SERVER_URL_2/editor/@g.getId/webxml/@m.getId');"><icon class="icon-play" style="display:inline-block;"></icon> Vorschau</span></p>
+              				 <span  style="cursor:pointer;"><a href="https:/quest-mill.intertech.de/assets/index.php?content=@m.getType().getNameEncoded()@if(Application.getLocalPortal().getId() != 61L){&portal=@Application.getLocalPortal().getId()}" target="_blank"><icon class="icon-question-sign" style="display:inline-block;"></icon> Anleitung</a></span></p>
               				
                             <br/>
               				
@@ -51,9 +50,7 @@
  
   <div class="accordion-group">
     <div class="accordion-heading">
-      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-mission@m.getId()" href="#collapseOne@m.getId">
-        @Application.getLanguage("Inhalt")
-      </a>
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-mission@m.getId()" href="#collapseOne@m.getId">Inhalt</a>
     </div>
     <div id="collapseOne@m.getId" class="accordion-body collapse in">
       <div class="accordion-inner">
@@ -66,7 +63,7 @@
         </div>
         
        
-       <br/><div ><img style="cursor:pointer;" src="@Global.SERVER_URL_2/assets/icons/@Application.getLanguage("neuer_inhalt.png")" width="120" onClick="javascript:document.getElementById('contentnew_@m.getId()').style.display='block';"></i>    </div>
+       <br/><div ><img style="cursor:pointer;" src="@Global.SERVER_URL_2/assets/icons/neuer_inhalt.png" width="120" onClick="javascript:document.getElementById('contentnew_@m.getId()').style.display='block';"></i>    </div>
      
       
        @if(m.showMultipleAchordions()){  
@@ -102,9 +99,7 @@
    
   <div class="accordion-group">
     <div class="accordion-heading">
-      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-mission@m.getId()" href="#collapseThree@m.getId">
-        @Application.getLanguage("Einstellungen")
-      </a>
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-mission@m.getId()" href="#collapseThree@m.getId">Einstellungen</a>
     </div>
     <div id="collapseThree@m.getId" class="accordion-body collapse">
       <div class="accordion-inner">
@@ -118,7 +113,7 @@
 									        				
 									        				@if(a.isEditable){
 									        				
-       @Application.getLanguage(a.getName()) 
+       @a.getName()
              
            <br/>
        
@@ -135,7 +130,7 @@
              
              <option ></option>
               		@for(pm <- a.getPossibleValues()){
-              			   <option  value = "@pm" @if(m.getAttributeValue(a).equals(pm)){ selected="selected" } >@Application.getLanguage(pm)</option>
+              			   <option  value = "@pm" @if(m.getAttributeValue(a).equals(pm)){ selected="selected" } >@pm</option>
               			
               			
               		}   </select>
@@ -190,11 +185,11 @@
          	<div id="missionfile_file_at@m.getId@a.getId">
 				<input type="file"/ id="missionfileat@m.getId@a.getId" onchange="javascript:uploadFile('mission',@m.getId,@a.getId)" >
         
-        <a  onClick="javascript:document.getElementById('missionfile_file_at@m.getId@a.getId').style.display='none';document.getElementById('missionfile_text_at@m.getId@a.getId').style.display='block';">@Application.getLanguage("Variabel")</a>
+        <a  onClick="javascript:document.getElementById('missionfile_file_at@m.getId@a.getId').style.display='none';document.getElementById('missionfile_text_at@m.getId@a.getId').style.display='block';">Variabel</a>
         </div>
                 <div id="missionfile_text_at@m.getId@a.getId" style="display:none;">
 									        <input type="text"/ value="@m.getAttributeValue(a)" id="missionat@m.getId@a.getId" onchange="javascript:syncAttr('mission',@m.getId,@a.getId)" onkeydown="document.getElementById('status_missionat@m.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
-                      <a onClick="javascript:document.getElementById('missionfile_text_at@m.getId@a.getId').style.display='none';document.getElementById('missionfile_file_at@m.getId@a.getId').style.display='block';">@Application.getLanguage("Datei")</a>
+                      <a onClick="javascript:document.getElementById('missionfile_text_at@m.getId@a.getId').style.display='none';document.getElementById('missionfile_file_at@m.getId@a.getId').style.display='block';">Datei</a>
               
                </div>
         

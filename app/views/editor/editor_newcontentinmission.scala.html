@@ -14,23 +14,23 @@
 									        				</div>   	
               	        		
               				              		
-              			              	<input type="text" id="contentnew_name@m.getId()" class="h2textfield" value="@Application.getLanguage("Neuer Inhalt")">
+              			              	<input type="text" id="contentnew_name@m.getId()" class="h2textfield" value="Neuer Inhalt">
               				              		<br/>
-              				              		<em>@Application.getLanguage("in Seite") @m.getName()</em>
+              				              		<em>in Seite @m.getName()</em>
            
               	
               	
-              				              		 <label>@Application.getLanguage("Inhaltstyp")</label>
+              				              		 <label>Inhaltstyp</label>
              <select id = "contenttype_@m.getId()">
               @for(ctype <- m.getType.getPossibleContentTypes){
-               <option value = "@ctype.getId()">@Application.getLanguage(ctype.getName())</option>
+               <option value = "@ctype.getId()">@ctype.getName()</option>
                }
              </select>
               				
               				
               				
               				
-              				 <div class="btn btn-success" onClick="newContentInMission(@m.getId())">@Application.getLanguage("Hinzufügen")</div>
+              				 <div class="btn btn-success" onClick="newContentInMission(@m.getId())">Hinzufügen</div>
               
          
               				

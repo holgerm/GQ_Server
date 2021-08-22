@@ -38,12 +38,12 @@
              
              
               		@for(at <- rt.getPossibleActionTypes()){
-              			   <option value = "@at.getId()">@Application.getLanguage(at.getName())</option>
+              			   <option value = "@at.getId()">@at.getName()</option>
               			
               			
               		}   </select><br/>
               		
-              		<div id="rule_add_action_button_@r.getId()" class="btn btn-success" style="position:relative; bottom:50%;" onClick="newActionInRule(@r.getId,@rt.getId);  document.getElementById('addaction_@rt.getId()_r@r.getId()btn').style.display='inline-block'; document.getElementById('addaction_@rt.getId()_r@r.getId()div').style.display='none';">@Application.getLanguage("Hinzufügen")</div>
+              		<div id="rule_add_action_button_@r.getId()" class="btn btn-success" style="position:relative; bottom:50%;" onClick="newActionInRule(@r.getId,@rt.getId);  document.getElementById('addaction_@rt.getId()_r@r.getId()btn').style.display='inline-block'; document.getElementById('addaction_@rt.getId()_r@r.getId()div').style.display='none';">Hinzufügen</div>
               <p style="height:20px; overflow:hidden;">&nbsp;</p>
               
               
@@ -79,12 +79,12 @@
    
    
     <li class="dropdown-submenu">
-                  <a tabindex="-1" >@Application.getLanguage("Questverlauf")</a>
+                  <a tabindex="-1" >Questverlauf</a>
                   <ul class="dropdown-menu">
                    @for(at <- rt.getPossibleActionTypes()){
                    	
                    	@if(at.getCategory().equals("page")){
-              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newActionInRule(@r.getId,@rt.getId,@at.getId(),@m.getId());">@Application.getLanguage(at.getName)</a></li>
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newActionInRule(@r.getId,@rt.getId,@at.getId(),@m.getId());">@at.getName</a></li>
               			}
               			
               		}
@@ -93,12 +93,12 @@
   
    
     <li class="dropdown-submenu">
-                  <a tabindex="-1" >@Application.getLanguage("Karte")</a>
+                  <a tabindex="-1" >Karte</a>
                   <ul class="dropdown-menu">
                    @for(at <- rt.getPossibleActionTypes()){
                    	
                    	@if(at.getCategory().equals("map")){
-              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newActionInRule(@r.getId,@rt.getId,@at.getId(),@m.getId());">@Application.getLanguage(at.getName)</a></li>
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newActionInRule(@r.getId,@rt.getId,@at.getId(),@m.getId());">@at.getName</a></li>
               			}
               			
               		}
@@ -106,12 +106,12 @@
   </li>
    
     <li class="dropdown-submenu">
-                  <a tabindex="-1" >@Application.getLanguage("Variablen")</a>
+                  <a tabindex="-1" >Variablen</a>
                   <ul class="dropdown-menu">
                    @for(at <- rt.getPossibleActionTypes()){
                    	
                    	@if(at.getCategory().equals("var")){
-              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newActionInRule(@r.getId,@rt.getId,@at.getId(),@m.getId());">@Application.getLanguage(at.getName)</a></li>
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newActionInRule(@r.getId,@rt.getId,@at.getId(),@m.getId());">@at.getName</a></li>
               			}
               			
               		}
@@ -120,12 +120,12 @@
   
    
     <li class="dropdown-submenu">
-                  <a tabindex="-1" >@Application.getLanguage("Bedingt")</a>
+                  <a tabindex="-1" >Bedingt</a>
                   <ul class="dropdown-menu">
                    @for(at <- rt.getPossibleActionTypes()){
                    	
                    	@if(at.getCategory().equals("condition")){
-              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newActionInRule(@r.getId,@rt.getId,@at.getId(),@m.getId());">@Application.getLanguage(at.getName)</a></li>
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newActionInRule(@r.getId,@rt.getId,@at.getId(),@m.getId());">@at.getName</a></li>
               			}
               			
               		}
@@ -134,12 +134,12 @@
   
    
     <li class="dropdown-submenu">
-                  <a tabindex="-1" >@Application.getLanguage("Sonstiges")</a>
+                  <a tabindex="-1" >Sonstiges</a>
                   <ul class="dropdown-menu">
                    @for(at <- rt.getPossibleActionTypes()){
                    	
                    	@if(at.getCategory().equals("other")){
-              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newActionInRule(@r.getId,@rt.getId,@at.getId(),@m.getId());">@Application.getLanguage(at.getName)</a></li>
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newActionInRule(@r.getId,@rt.getId,@at.getId(),@m.getId());">@at.getName</a></li>
               			}
               			
               		}
@@ -152,7 +152,7 @@
    @for(at <- rt.getPossibleActionTypes()){
    	                   	@if(at.getCategory().equals("")){
    	
-              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newActionInRule(@r.getId,@rt.getId,@at.getId(),@m.getId());">@Application.getLanguage(at.getName)</a></li>
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newActionInRule(@r.getId,@rt.getId,@at.getId(),@m.getId());">@at.getName</a></li>
               			}
               			
               		}

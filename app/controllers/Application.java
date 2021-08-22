@@ -35,630 +35,580 @@ import com.feth.play.module.pa.user.AuthUser;
 
 public class Application extends Controller {
 
-	public static final String FLASH_MESSAGE_KEY = "message";
-	public static final String FLASH_ERROR_KEY = "error";
-	public static final String USER_ROLE = "user";
-	public static final String ADMIN_ROLE = "admin";
-	public static final String UNVERIFIED_ROLE = "unverified";
+    public static final String FLASH_MESSAGE_KEY = "message";
+    public static final String FLASH_ERROR_KEY = "error";
+    public static final String USER_ROLE = "user";
+    public static final String ADMIN_ROLE = "admin";
+    public static final String UNVERIFIED_ROLE = "unverified";
 
-	public static Result index() {
+    public static Result index() {
 
-		Long portalId = Global.defaultportal.getId();
-		String portalIdAsString = portalId.toString();
-		session("currentportal", portalIdAsString);
+        Long portalId = Global.defaultportal.getId();
+        String portalIdAsString = portalId.toString();
+        session("currentportal", portalIdAsString);
 
-		return redirect(routes.Portal.myGamesList(61L));
-	}
+        return redirect(routes.Portal.myGamesList(61L));
+    }
 
-	public static Result portalindex(Long pid) {
+    public static Result portalindex(Long pid) {
 
-		return redirect(routes.Portal.myGamesList(pid));
-	}
+        return redirect(routes.Portal.myGamesList(pid));
+    }
 
-	public static Result getDefaultTemplate() {
+    public static Result getDefaultTemplate() {
 
-		return ok(views.html.defaulttemplate.render());
-	}
+        return ok(views.html.defaulttemplate.render());
+    }
 
-	public static Result getTestingTemplate() {
+    public static Result getTestingTemplate() {
 
-		return ok(views.html.testingtemplate.render());
-	}
+        return ok(views.html.testingtemplate.render());
+    }
 
-	public static Result getTestMapping() {
+    public static Result getTestMapping() {
 
-		return ok(views.html.testingmapping.render());
-	}
+        return ok(views.html.testingmapping.render());
+    }
 
-	public static Result getUserRoleByPortal(Long pid) {
+    public static Result getUserRoleByPortal(Long pid) {
 
-		return ok(views.html.string_getuserrole.render());
+        return ok(views.html.string_getuserrole.render());
 
-	}
+    }
 
-	public static Result getDatatables() {
+    public static Result getDatatables() {
 
-		return ok(views.html.dt_geoquest.render());
+        return ok(views.html.dt_geoquest.render());
 
-	}
+    }
 
-	public static Result getDatatablesJquery() {
+    public static Result getDatatablesJquery() {
 
-		return ok(views.html.dt_Jquery.render());
+        return ok(views.html.dt_Jquery.render());
 
-	}
+    }
 
-	public static String getUserRoleOfCurrentPortal() {
+    public static String getUserRoleOfCurrentPortal() {
 
-		String i = "";
-		if (getLocalPortal().existsUser(getLocalUser(session()))) {
-			i = getLocalPortal().getUser(getLocalUser(session())).getRights();
-		}
+        String i = "";
+        if (getLocalPortal().existsUser(getLocalUser(session()))) {
+            i = getLocalPortal().getUser(getLocalUser(session())).getRights();
+        }
 
-		return i;
+        return i;
 
-	}
+    }
 
-	public static Result createDevice(String name, String deviceid) {
+    public static Result createDevice(String name, String deviceid) {
 
-		if (Device.find.where().eq("deviceid", deviceid).findRowCount() != 1) {
+        if (Device.find.where().eq("deviceid", deviceid).findRowCount() != 1) {
 
-			Device d = new Device(name, deviceid);
-			d.save();
-			String s = d.generateCode();
-			d.update();
-			return ok(s);
+            Device d = new Device(name, deviceid);
+            d.save();
+            String s = d.generateCode();
+            d.update();
+            return ok(s);
 
-		} else {
+        } else {
 
-			Device d = Device.find.where().eq("deviceid", deviceid)
-					.findUnique();
+            Device d = Device.find.where().eq("deviceid", deviceid)
+                    .findUnique();
 
-			return ok(d.code);
-		}
+            return ok(d.code);
+        }
 
-	}
+    }
 
-	public static Result addDeviceByCode(Long uid, String code) {
+    public static Result addDeviceByCode(Long uid, String code) {
 
-		if (User.find.where().eq("id", uid).findRowCount() == 1) {
+        if (User.find.where().eq("id", uid).findRowCount() == 1) {
 
-			User u2 = User.find.byId(uid);
+            User u2 = User.find.byId(uid);
 
-			if (Device.find.where().eq("code", code).findRowCount() != 1) {
+            if (Device.find.where().eq("code", code).findRowCount() != 1) {
 
-				return ok("Code not found");
+                return ok("Code not found");
 
-			} else {
-				Device d = Device.find.where().eq("code", code).findUnique();
+            } else {
+                Device d = Device.find.where().eq("code", code).findUnique();
 
-				if (!u2.paireddevices.contains(d)) {
-					u2.paireddevices.add(d);
-					u2.update();
+                if (!u2.paireddevices.contains(d)) {
+                    u2.paireddevices.add(d);
+                    u2.update();
 
-					return ok(d.name);
-				} else {
-					return ok("Device is already in list");
-				}
-			}
-		} else {
-			return ok("User not found");
+                    return ok(d.name);
+                } else {
+                    return ok("Device is already in list");
+                }
+            }
+        } else {
+            return ok("User not found");
 
-		}
+        }
 
-	}
+    }
 
-	public static Result pushQuestToDevice(Long did, Long gid) {
+    public static Result pushQuestToDevice(Long did, Long gid) {
 
-		if (Device.find.where().eq("id", did).findRowCount() != 1) {
+        if (Device.find.where().eq("id", did).findRowCount() != 1) {
 
-			return ok("DEVICE NOT FOUND");
+            return ok("DEVICE NOT FOUND");
 
-		} else {
+        } else {
 
-			Device d = Device.find.where().eq("id", did).findUnique();
+            Device d = Device.find.where().eq("id", did).findUnique();
 
-			if (Game.find.where().eq("id", gid).findRowCount() != 1) {
+            if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-				return badRequest(views.html.norights
-						.render("Das Spiel existiert nicht"));
+                return badRequest(views.html.norights
+                        .render("Das Spiel existiert nicht"));
 
-			} else {
+            } else {
 
-				if (Global.securityGuard.hasWriteRightsOnGame(
-						Application.getLocalUser(session()),
-						Game.find.byId(gid)) == false) {
+                if (Global.securityGuard.hasWriteRightsOnGame(
+                        Application.getLocalUser(session()),
+                        Game.find.byId(gid)) == false) {
 
-					return badRequest(views.html.norights
-							.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                    return badRequest(views.html.norights
+                            .render("Du benötigst Schreib-Rechte an diesem Spiel."));
 
-				} else {
+                } else {
 
-					Game g = Game.find.byId(gid);
-					String s = g.createTestXML();
-					d.quest = s;
-					d.questpush = gid;
-					d.update();
-					return ok("ok");
+                    Game g = Game.find.byId(gid);
+                    String s = g.createTestXML();
+                    d.quest = s;
+                    d.questpush = gid;
+                    d.update();
+                    return ok("ok");
 
-				}
-			}
+                }
+            }
 
-		}
+        }
 
-	}
+    }
 
-	public static Result getQuestPushes(String deviceid) {
+    public static Result getQuestPushes(String deviceid) {
 
-		if (Device.find.where().eq("deviceid", deviceid).findRowCount() != 1) {
+        if (Device.find.where().eq("deviceid", deviceid).findRowCount() != 1) {
 
-			return ok("BAD REQUEST");
+            return ok("BAD REQUEST");
 
-		} else {
+        } else {
 
-			Device d = Device.find.where().eq("deviceid", deviceid)
-					.findUnique();
+            Device d = Device.find.where().eq("deviceid", deviceid)
+                    .findUnique();
 
-			if (d.questpush == null) {
-				return ok("");
+            if (d.questpush == null) {
+                return ok("");
 
-			} else if (d.questpush == 0L) {
+            } else if (d.questpush == 0L) {
 
-				return ok("");
-			} else {
+                return ok("");
+            } else {
 
-				Long l = d.questpush;
+                Long l = d.questpush;
 
-				return ok("" + l);
+                return ok("" + l);
 
-			}
-		}
+            }
+        }
 
-	}
+    }
 
-	public boolean listAttributeContainsKey(String list, String key) {
+    public boolean listAttributeContainsKey(String list, String key) {
 
-		String[] split = list.split(", ");
+        String[] split = list.split(", ");
 
-		for (String s : split) {
+        for (String s : split) {
 
-			if (s.equals(key)) {
+            if (s.equals(key)) {
 
-				return true;
+                return true;
 
-			}
+            }
 
-		}
+        }
 
-		return false;
+        return false;
 
-	}
+    }
 
-	public String removeKeyInList(String list, String key) {
+    public String removeKeyInList(String list, String key) {
 
-		String newList = "";
-		String[] split = list.split(", ");
+        String newList = "";
+        String[] split = list.split(", ");
 
-		int i = 0;
-		for (String s : split) {
-			i++;
-			if (!s.equals(key)) {
-				newList += s;
-			}
+        int i = 0;
+        for (String s : split) {
+            i++;
+            if (!s.equals(key)) {
+                newList += s;
+            }
 
-			if (i < split.length) {
-				newList += ", ";
-			}
+            if (i < split.length) {
+                newList += ", ";
+            }
 
-		}
-		return newList;
+        }
+        return newList;
 
-	}
+    }
 
-	public String addKeyInList(String list, String key) {
+    public String addKeyInList(String list, String key) {
 
-		if (!listAttributeContainsKey(list, key)) {
+        if (!listAttributeContainsKey(list, key)) {
 
-			if (list.length() > 0) {
-				list += ", ";
-			}
-			list += key;
-		}
-		return list;
+            if (list.length() > 0) {
+                list += ", ";
+            }
+            list += key;
+        }
+        return list;
 
-	}
+    }
 
-	public static Result portalfourofour(Long pid, String path) {
+    public static Result portalfourofour(Long pid, String path) {
 
-		return ok(views.html.notfound.render("/" + path));
+        return ok(views.html.notfound.render("/" + path));
 
-	}
+    }
 
-	public static Result getQeeveeHtml() {
+    public static Result getQeeveeHtml() {
 
-		return ok(views.html.template.render());
+        return ok(views.html.template.render());
 
-	}
+    }
 
-	public static Result getGeoQuestHtml() {
+    public static Result getGeoQuestHtml() {
 
-		return ok(views.html.template_p.render());
+        return ok(views.html.template_p.render());
 
-	}
+    }
 
-	public static Result getDataTableCSS() {
+    public static Result getDataTableCSS() {
 
-		return ok(views.html.datatables.render()).as("text/css");
+        return ok(views.html.datatables.render()).as("text/css");
 
-	}
+    }
 
-	/*
-	 * HELPER FUNCTIONS
-	 * 
-	 * These are for example used to help routing to the page with the wished
-	 * content and the global variables set to the right value.
-	 */
+    /*
+     * HELPER FUNCTIONS
+     *
+     * These are for example used to help routing to the page with the wished
+     * content and the global variables set to the right value.
+     */
 
-	/*
-	 * getLocalPortal() looks for the global variable currentportal. If it is
-	 * not set, it looks at the defaultportal variable, but in most cases
-	 * currentportal should be set, because it gets set to defaultportal onStart
-	 * of Global.
-	 */
+    /*
+     * getLocalPortal() looks for the global variable currentportal. If it is
+     * not set, it looks at the defaultportal variable, but in most cases
+     * currentportal should be set, because it gets set to defaultportal onStart
+     * of Global.
+     */
 
-	public static ProviderPortal getLocalPortal() {
+    public static ProviderPortal getLocalPortal() {
 
-		return getCurrentPortal(session());
+        return getCurrentPortal(session());
 
-	}
+    }
 
-	public static boolean onDefaultProviderPortal() {
+    public static boolean onDefaultProviderPortal() {
 
-		return Global.securityGuard.isDefaultPortal();
+        return Global.securityGuard.isDefaultPortal();
 
-	}
+    }
 
-	public static ProviderPortal getPortalById(Long pid) {
+    public static ProviderPortal getPortalById(Long pid) {
 
-		if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
-			return Global.defaultportal;
+        if (ProviderPortal.find.where().eq("id", pid).findRowCount() != 1) {
+            return Global.defaultportal;
 
-		} else {
+        } else {
 
-			ProviderPortal p = ProviderPortal.find.byId(pid);
+            ProviderPortal p = ProviderPortal.find.byId(pid);
 
-			return p;
+            return p;
 
-		}
+        }
 
-	}
+    }
 
-	/*
-	 * TOOLS
-	 */
+    /*
+     * TOOLS
+     */
 
-	public static String getInverseColor(String in) {
+    public static String getInverseColor(String in) {
 
-		String inColor = in;
+        String inColor = in;
 
-		String rawInColor = inColor.substring(1, inColor.length());
-		int rgb = Integer.parseInt(rawInColor, 16);
+        String rawInColor = inColor.substring(1, inColor.length());
+        int rgb = Integer.parseInt(rawInColor, 16);
 
-		Color inn = new Color(rgb);
+        Color inn = new Color(rgb);
 
-		Color inverse = new Color(255 - inn.getRed(), 255 - inn.getGreen(),
-				255 - inn.getBlue());
+        Color inverse = new Color(255 - inn.getRed(), 255 - inn.getGreen(),
+                255 - inn.getBlue());
 
-		String hex = "#" + Integer.toHexString(inverse.getRGB()).substring(2);
-		return hex;
-	}
+        String hex = "#" + Integer.toHexString(inverse.getRGB()).substring(2);
+        return hex;
+    }
 
-	public static String getBrighterColor(String in) {
+    public static String getBrighterColor(String in) {
 
-		String inColor = in;
+        String inColor = in;
 
-		String rawInColor = inColor.substring(1, inColor.length());
-		int rgb = Integer.parseInt(rawInColor, 16);
+        String rawInColor = inColor.substring(1, inColor.length());
+        int rgb = Integer.parseInt(rawInColor, 16);
 
-		Color inn = new Color(rgb);
+        Color inn = new Color(rgb);
 
-		Color brighter = inn.brighter();
-		Color brighter2 = brighter.brighter();
+        Color brighter = inn.brighter();
+        Color brighter2 = brighter.brighter();
 
-		String hex = "#" + Integer.toHexString(brighter2.getRGB()).substring(2);
-		return hex;
+        String hex = "#" + Integer.toHexString(brighter2.getRGB()).substring(2);
+        return hex;
 
-	}
+    }
 
-	public static String getDarkerColor(String in) {
+    public static String getDarkerColor(String in) {
 
-		String inColor = in;
+        String inColor = in;
 
-		String rawInColor = inColor.substring(1, inColor.length());
-		int rgb = Integer.parseInt(rawInColor, 16);
+        String rawInColor = inColor.substring(1, inColor.length());
+        int rgb = Integer.parseInt(rawInColor, 16);
 
-		Color inn = new Color(rgb);
+        Color inn = new Color(rgb);
 
-		Color darker = inn.darker();
+        Color darker = inn.darker();
 
-		String hex = "#" + Integer.toHexString(darker.getRGB()).substring(2);
-		return hex;
+        String hex = "#" + Integer.toHexString(darker.getRGB()).substring(2);
+        return hex;
 
-	}
+    }
 
-	public static String getFontColor(String fontColor) {
+    public static String getFontColor(String fontColor) {
 
-		String rawFontColor = fontColor.substring(1, fontColor.length());
-		int rgb = Integer.parseInt(rawFontColor, 16);
+        String rawFontColor = fontColor.substring(1, fontColor.length());
+        int rgb = Integer.parseInt(rawFontColor, 16);
 
-		Color c = new Color(rgb);
+        Color c = new Color(rgb);
 
-		float[] hsb = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(),
-				null);
+        float[] hsb = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(),
+                null);
 
-		float brightness = hsb[2];
+        float brightness = hsb[2];
 
-		if (brightness < 0.5) {
-			return "#FFFFFF";
-		} else {
+        if (brightness < 0.5) {
+            return "#FFFFFF";
+        } else {
 
-			return "#000000";
-		}
+            return "#000000";
+        }
 
-	}
+    }
 
-	/*
-	 * setPidRedirect and setPidRdirectWithAppendix are used to set the global
-	 * variable currentportal. If any page in routes is opened with a /:id/ in
-	 * front of the page adress, this function gets called. It will then set the
-	 * currentportal to the ProviderPortal with the id = pid and redirect the
-	 * user to the page that is set in linkto. If the page needs another
-	 * variable the function withAppendix can be called and the needed String
-	 * from linkadd will be appended.
-	 */
+    /*
+     * setPidRedirect and setPidRdirectWithAppendix are used to set the global
+     * variable currentportal. If any page in routes is opened with a /:id/ in
+     * front of the page adress, this function gets called. It will then set the
+     * currentportal to the ProviderPortal with the id = pid and redirect the
+     * user to the page that is set in linkto. If the page needs another
+     * variable the function withAppendix can be called and the needed String
+     * from linkadd will be appended.
+     */
 
-	/*
-	 * Play Authenticate Code
-	 */
+    /*
+     * Play Authenticate Code
+     */
 
-	public static User getLocalUser(final Session session) {
-		final AuthUser currentAuthUser = PlayAuthenticate.getUser(session);
-		final User localUser = User.findByAuthUserIdentity(currentAuthUser);
-		return localUser;
-	}
+    public static User getLocalUser(final Session session) {
+        final AuthUser currentAuthUser = PlayAuthenticate.getUser(session);
+        final User localUser = User.findByAuthUserIdentity(currentAuthUser);
+        return localUser;
+    }
 
-	public static User getLocalUser() {
+    public static User getLocalUser() {
 
-		return getLocalUser(session());
-	}
+        return getLocalUser(session());
+    }
 
-	public static ProviderPortal getCurrentPortal(final Session session) {
+    public static ProviderPortal getCurrentPortal(final Session session) {
 
-		String pid = session("currentportal");
+        String pid = session("currentportal");
 
-		if (pid != null) {
+        if (pid != null) {
 
-			Long pidlong = Long.parseLong(pid, 10);
+            Long pidlong = Long.parseLong(pid, 10);
 
-			if (ProviderPortal.find.where().eq("id", pidlong).findRowCount() == 1) {
+            if (ProviderPortal.find.where().eq("id", pidlong).findRowCount() == 1) {
 
-				return ProviderPortal.find.byId(pidlong);
+                return ProviderPortal.find.byId(pidlong);
 
-			} else {
+            } else {
 
-				return Global.defaultportal;
+                return Global.defaultportal;
 
-			}
-		} else {
+            }
+        } else {
 
-			return ProviderPortal.find.byId(61L);
+            return ProviderPortal.find.byId(61L);
 
-		}
+        }
 
-	}
+    }
 
-	// @Restrict(@Group(Application.USER_ROLE))
-	public static Result profile(Long pid) {
-		session("currentportal", pid.toString());
-		if (getLocalUser(session()) == null) {
-			return redirect(routes.Application.login(pid));
-		}
+    // @Restrict(@Group(Application.USER_ROLE))
+    public static Result profile(Long pid) {
+        session("currentportal", pid.toString());
+        if (getLocalUser(session()) == null) {
+            return redirect(routes.Application.login(pid));
+        }
 
-		final User localUser = getLocalUser(session());
-		return ok(profile.render(localUser));
-	}
+        final User localUser = getLocalUser(session());
+        return ok(profile.render(localUser));
+    }
 
-	public static Result login(Long pid) {
-		session("currentportal", pid.toString());
+    public static Result login(Long pid) {
+        session("currentportal", pid.toString());
 
-		if (pid == 1L && Global.SECURED_MODE) {
+        if (pid == 1L && Global.SECURED_MODE) {
 
-			return redirect("https://quest-mill-web.intertech.de/gqdocs/private.php");
-		} else if (pid == 61L) {
+            return redirect("https://quest-mill-web.intertech.de/gqdocs/private.php");
+        } else if (pid == 61L) {
 
-			return ok(views.html.portal.publicportal_login.render());
+            return ok(views.html.portal.publicportal_login.render());
 
-		} else {
+        } else {
 
-			return ok(login.render(MyUsernamePasswordAuthProvider.LOGIN_FORM));
+            return ok(login.render(MyUsernamePasswordAuthProvider.LOGIN_FORM));
 
-		}
-	}
+        }
+    }
 
-	public static Result setLanguage(String language) {
+    public static Result setLanguage(String language) {
 
-		session("geoquest_language", language);
-		Controller.changeLang(language);
-		return ok(language);
-	}
+        session("geoquest_language", language);
+        Controller.changeLang(language);
+        return ok(language);
+    }
 
-	public static String getLanguageCode() {
+    public static String getLanguageCode() {
 
-		String language = session("geoquest_language");
+        String language = session("geoquest_language");
 
-		if (language == null) {
+        if (language == null) {
 
-			if (getLocalPortal().getContentHtmlParameter(
-					"general.defaultlanguage") != null) {
+            if (getLocalPortal().getContentHtmlParameter(
+                    "general.defaultlanguage") != null) {
 
-				language = getLocalPortal().getContentHtmlParameter(
-						"general.defaultlanguage");
+                language = getLocalPortal().getContentHtmlParameter(
+                        "general.defaultlanguage");
 
-			} else {
+            } else {
 
-				// Lang lang = Lang.preferred();
-				language = "de";
-				Lang lang = Lang.preferred(request().acceptLanguages());
-				language = lang.code();
+                // Lang lang = Lang.preferred();
+                language = "de";
+                Lang lang = Lang.preferred(request().acceptLanguages());
+                language = lang.code();
 
-			}
-		}
+            }
+        }
 
-		return language;
+        return language;
 
-	}
+    }
 
-	public static String getLanguage(String code) {
+    public static Result loginToPortalFromCache() {
+        return ok(login.render(MyUsernamePasswordAuthProvider.LOGIN_FORM));
+    }
 
-		String translation = code;
+    public static Result login2(Long pid, Long pid2) {
+        session("currentportal", pid.toString());
+        return ok(login.render(MyUsernamePasswordAuthProvider.LOGIN_FORM));
+    }
 
-		String language = session("geoquest_language");
+    public static Result doLogin(Long pid) {
+        session("currentportal", pid.toString());
+        com.feth.play.module.pa.controllers.Authenticate.noCache(response());
+        final Form<MyLogin> filledForm = MyUsernamePasswordAuthProvider.LOGIN_FORM
+                .bindFromRequest();
+        if (filledForm.hasErrors()) {
+            // User did not fill everything properly
+            return badRequest(login.render(filledForm));
+        } else {
+            // Everything was filled
+            return UsernamePasswordAuthProvider.handleLogin(ctx());
+        }
+    }
 
-		if (language == null) {
+    public static Result signup(Long pid) {
+        session("currentportal", pid.toString());
 
-			if (getLocalPortal().getContentHtmlParameter(
-					"general.defaultlanguage") != null) {
+        if (pid == 1L) {
 
-				language = getLocalPortal().getContentHtmlParameter(
-						"general.defaultlanguage");
+            return redirect("https://quest-mill-web.intertech.de/gqdocs/private.php");
+        } else if (pid == 61L) {
 
-			} else {
+            return ok(views.html.portal.publicportal_signup.render());
 
-				// Lang lang = Lang.preferred();
-				language = "de";
-				Lang lang = Lang.preferred(request().acceptLanguages());
-				language = lang.code();
+        } else {
+            return ok(signup.render(MyUsernamePasswordAuthProvider.SIGNUP_FORM));
 
-			}
-		}
+        }
+    }
 
-		if (!language.equals("de")) {
+    public static Result jsRoutes() {
+        return ok(
+                Routes.javascriptRouter("jsRoutes",
+                        controllers.routes.javascript.Signup.forgotPassword()))
+                .as("text/javascript");
+    }
 
-			if (language.equals("en")) {
+    public static Result doSignup(Long pid) {
+        session("currentportal", pid.toString());
 
-				if (Global.en_Translation.containsKey(code)) {
+        com.feth.play.module.pa.controllers.Authenticate.noCache(response());
 
-					translation = Global.en_Translation.get(code);
+        final Form<MySignup> filledForm = MyUsernamePasswordAuthProvider.SIGNUP_FORM
+                .bindFromRequest();
 
-				}
+        if (filledForm.hasErrors()) {
+            // User did not fill everything properly
+            return badRequest(signup.render(filledForm));
+        } else {
+            // Everything was filled
+            // do something with your part of the form before handling the user
+            // signup
 
-			}
+            return UsernamePasswordAuthProvider.handleSignup(ctx());
 
-			code = language + "_" + code;
+        }
 
-		}
+    }
 
-		if (getLocalPortal().getLanguageParameter(code) != null) {
+    public void comment(String s) {
 
-			translation = getLocalPortal().getLanguageParameter(code);
+    }
 
-		}
+    public static String formatTimestamp(final long t) {
+        return new SimpleDateFormat("yyyy-dd-MM HH:mm:ss").format(new Date(t));
+    }
 
-		return translation;
+    public static Result dologout(Long pid) {
 
-	}
+        session("currentportal", pid.toString());
 
-	public static Result loginToPortalFromCache() {
-		return ok(login.render(MyUsernamePasswordAuthProvider.LOGIN_FORM));
-	}
+        return redirect(Global.SERVER_URL_2 + "/dologout");
 
-	public static Result login2(Long pid, Long pid2) {
-		session("currentportal", pid.toString());
-		return ok(login.render(MyUsernamePasswordAuthProvider.LOGIN_FORM));
-	}
+    }
 
-	public static Result doLogin(Long pid) {
-		session("currentportal", pid.toString());
-		com.feth.play.module.pa.controllers.Authenticate.noCache(response());
-		final Form<MyLogin> filledForm = MyUsernamePasswordAuthProvider.LOGIN_FORM
-				.bindFromRequest();
-		if (filledForm.hasErrors()) {
-			// User did not fill everything properly
-			return badRequest(login.render(filledForm));
-		} else {
-			// Everything was filled
-			return UsernamePasswordAuthProvider.handleLogin(ctx());
-		}
-	}
+    public static Result doauthenticate(Long pid, String provider) {
 
-	public static Result signup(Long pid) {
-		session("currentportal", pid.toString());
+        session("currentportal", Global.defaultportal.getId().toString());
 
-		if (pid == 1L) {
+        return redirect(Application.getLocalPortal()
+                .getTemplateServerURLDropSlash() + "/authenticate/" + provider);
 
-			return redirect("https://quest-mill-web.intertech.de/gqdocs/private.php");
-		} else if (pid == 61L) {
-
-			return ok(views.html.portal.publicportal_signup.render());
-
-		} else {
-			return ok(signup.render(MyUsernamePasswordAuthProvider.SIGNUP_FORM));
-
-		}
-	}
-
-	public static Result jsRoutes() {
-		return ok(
-				Routes.javascriptRouter("jsRoutes",
-						controllers.routes.javascript.Signup.forgotPassword()))
-				.as("text/javascript");
-	}
-
-	public static Result doSignup(Long pid) {
-		session("currentportal", pid.toString());
-
-		com.feth.play.module.pa.controllers.Authenticate.noCache(response());
-
-		final Form<MySignup> filledForm = MyUsernamePasswordAuthProvider.SIGNUP_FORM
-				.bindFromRequest();
-
-		if (filledForm.hasErrors()) {
-			// User did not fill everything properly
-			return badRequest(signup.render(filledForm));
-		} else {
-			// Everything was filled
-			// do something with your part of the form before handling the user
-			// signup
-
-			return UsernamePasswordAuthProvider.handleSignup(ctx());
-
-		}
-
-	}
-
-	public void comment(String s) {
-
-	}
-
-	public static String formatTimestamp(final long t) {
-		return new SimpleDateFormat("yyyy-dd-MM HH:mm:ss").format(new Date(t));
-	}
-
-	public static Result dologout(Long pid) {
-
-		session("currentportal", pid.toString());
-
-		return redirect(Global.SERVER_URL_2 + "/dologout");
-
-	}
-
-	public static Result doauthenticate(Long pid, String provider) {
-
-		session("currentportal", Global.defaultportal.getId().toString());
-
-		return redirect(Application.getLocalPortal()
-				.getTemplateServerURLDropSlash() + "/authenticate/" + provider);
-
-	}
+    }
 
 }

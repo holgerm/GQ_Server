@@ -11,7 +11,7 @@
 
 
             @if(newsList.isEmpty() == true){
-                @Application.getLanguage("Keine Neuigkeiten.")
+                Keine Neuigkeiten.
             } else {
 
                     <ul>
@@ -23,11 +23,11 @@
 
                         @if(a_news.getPosterClass=="user"){
 
-                          <b>@User.find.byId(a_news.getPosterid).getName</b> @Application.getLanguage(a_news.getText) <br/>( @a_news.getDatum().format(Application.getLanguage("dd.MM.yyyy HH:mm"))
+                          <b>@User.find.byId(a_news.getPosterid).getName</b> @a_news.getText <br/>( @a_news.getDatum().format("dd.MM.yyyy HH:mm")
 
                                 @subjectPresent(){
                                         @if(Application.getLocalUser(session()).getId() == a_news.getPosterid()){
-                                             - <a href="@routes.Portal.doDeleteNewsItem(Application.getLocalPortal.getId(),a_news.getId)">@Application.getLanguage("Löschen")</a>
+                                             - <a href="@routes.Portal.doDeleteNewsItem(Application.getLocalPortal.getId(),a_news.getId)">Löschen</a>
                                         }
                                 }
                                 )
@@ -37,9 +37,9 @@
 
                             @if(a_news.getPosterClass=="portal"){
 
-                               <b>@User.find.byId(a_news.getPosterid).getName</b> @Application.getLanguage(a_news.getText) <br/>( @a_news.getDatum().format(Application.getLanguage("dd.MM.yyyy HH:mm"))
+                               <b>@User.find.byId(a_news.getPosterid).getName</b> @a_news.getText <br/>( @a_news.getDatum().format("dd.MM.yyyy HH:mm")
                                     @if(Global.securityGuard.hasAdminRightsOnPortalX(Application.getLocalUser(session()),ProviderPortal.find.byId(a_news.getPosterid))){
-                                        - <a href="@routes.Portal.doDeleteNewsItem(Application.getLocalPortal.getId(),a_news.getId)">@Application.getLanguage("Löschen")</a>
+                                        - <a href="@routes.Portal.doDeleteNewsItem(Application.getLocalPortal.getId(),a_news.getId)">Löschen</a>
                                 }
                                     )
 
@@ -61,7 +61,7 @@
 
 
 
-                                    <a href="@routes.Portal.doDeleteNewsItem(Application.getLocalPortal.getId(),a_news.getId)">@Application.getLanguage("Löschen")</a>
+                                    <a href="@routes.Portal.doDeleteNewsItem(Application.getLocalPortal.getId(),a_news.getId)">Löschen</a>
                                 }
 
                             }

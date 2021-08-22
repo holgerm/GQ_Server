@@ -92,7 +92,7 @@ function hideMapView(){
 
 function deleteActionFromRule(r,a){
 
-if (confirm('@Application.getLanguage("Wirklich löschen?")')) {
+if (confirm('Wirklich löschen?')) {
 
 
 
@@ -725,7 +725,7 @@ function connectionTester() {
 
 function deleteActionFromAttribute(atr,a){
 
-if (confirm('@Application.getLanguage("Wirklich löschen?")')) {
+if (confirm('Wirklich löschen?')) {
 
 
 
@@ -792,8 +792,7 @@ xmlhttp.send();
 
 function deleteActionFromMenuItem(mi,a){
 
-if (confirm('@Application.getLanguage("Wirklich löschen?")')) {
-
+	if (confirm('Wirklich löschen?')) {
 
 
 
@@ -864,8 +863,7 @@ var el = document.getElementById('action_'+a);
 function deleteSubRuleFromRule(r,sr){
 
 
-if (confirm('@Application.getLanguage("Wirklich löschen?")')) {
-
+	if (confirm('Wirklich löschen?')) {
 
 
 var xmlhttp;
@@ -1618,8 +1616,7 @@ function deleteItem(type,id,type2,id2){
 
 
 
-if (confirm('@Application.getLanguage("Wirklich löschen?")')) {
-
+	if (confirm('Wirklich löschen?')) {
 
 var xmlhttp;
 if (window.XMLHttpRequest)
@@ -3759,7 +3756,7 @@ console.log(data3);
   	 
   		 
   		 
-  		   document.getElementById('missiontype_namenew').value = '@Application.getLanguage("Neue Seite")';
+  		   document.getElementById('missiontype_namenew').value = 'Neue Seite';
   		 
   		
   		
@@ -3891,8 +3888,7 @@ function deleteContentFromMission(mid,cid){
 
 
 
-if (confirm('@Application.getLanguage("Wirklich löschen?")')) {
-
+	if (confirm('Wirklich löschen?')) {
 
 
 		
@@ -3979,8 +3975,7 @@ function deleteContentFromContent(ccid,cid){
 
 
 
-if (confirm('@Application.getLanguage("Wirklich löschen?")')) {
-
+	if (confirm('Wirklich löschen?')) {
 
 		
 var xmlhttp;
@@ -4262,7 +4257,7 @@ $.ajax({
 			 */
   		 
   
-  document.getElementById('contentnew_namec'+cid).value = "@Application.getLanguage("Neuer Inhalt")";
+  document.getElementById('contentnew_namec'+cid).value = "Neuer Inhalt";
   
   
   

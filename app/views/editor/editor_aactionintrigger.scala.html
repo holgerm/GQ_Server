@@ -7,7 +7,7 @@
 	<div onClick="javascript:document.getElementById('actionedit_@ac.getId()').style.display='block';">
 		
 		<img src="@if(ac.getType.getSymbol != null){ @ac.getType.getSymbol} else { @Global.SERVER_URL_2/assets/icons/actions/default.png }" style="height:70px; width:70px; position:relative; left:15px; " />
-		<p style="width:100px; height:36px; font-size:10px; text-align:center; overflow:hidden; white-space:normal;">@Application.getLanguage(ac.getName())</p>
+		<p style="width:100px; height:36px; font-size:10px; text-align:center; overflow:hidden; white-space:normal;">@ac.getName()</p>
 	</div>
 	
 

@@ -12,11 +12,7 @@
 						@if(r.getActions() != null){
 							@if(!r.getActions().isEmpty()){
               					@for(ac <- r.getActions){
-              						@Portal.sayTime("rulesinhotspot #1 before actionedit")
-              					
 									@editor_actionedit(g,ac,String.valueOf(rt.getId()),10000000)
-              						
-              						@Portal.sayTime("rulesinhotspot #2 after actionedit")
 								}
 							}
 						}
@@ -27,8 +23,6 @@
 	}
 }
 
-@Portal.sayTime("rulesinhotspot #3 after div actioninfocontainer")
-	
 <div class="inneredit" id="ruleedit_h@m.getId()" name="ruleedit_h@m.getId()">
 			 				              				<div class="scrollable-content" id="rulescroll_h@m.getId()" style="overflow-y:scroll; overflow-x:scroll; height:100%; width:100%;">
 	
@@ -40,7 +34,7 @@
 									        				</div>   	
               	        		
               				
-              			              	<h2>@Application.getLanguage("Ereignisse") @Application.getLanguage("in") @Application.getLanguage("Hotspot") @m.getName()</h2>
+              			              	<h2>Ereignisse in Hotspot @m.getName()</h2>
            
               	
               		
@@ -57,7 +51,7 @@
 								<div style="min-width:101% white-space: nowrap;">
               			
               			
-              				<div id="trigger_@rt.getId" style=" padding:10px; overflow:wrap; display:inline-block; width:100px; cursor:pointer;"><div><img src="@if(rt.getSymbol != null){ @rt.getSymbol} else { @Global.SERVER_URL_2/assets/icons/trigger/onstart.png }" style="height:70px; width:70px; position:relative; left:15px; " /><p style="width:100px; height:35px; font-size:10px; text-align:center;">@Application.getLanguage(rt.getName())</p></div><p style="height:20px; overflow:hidden;">&nbsp;</p></div>
+              				<div id="trigger_@rt.getId" style=" padding:10px; overflow:wrap; display:inline-block; width:100px; cursor:pointer;"><div><img src="@if(rt.getSymbol != null){ @rt.getSymbol} else { @Global.SERVER_URL_2/assets/icons/trigger/onstart.png }" style="height:70px; width:70px; position:relative; left:15px; " /><p style="width:100px; height:35px; font-size:10px; text-align:center;">@rt.getName()</p></div><p style="height:20px; overflow:hidden;">&nbsp;</p></div>
 							<div id="triggerarrow_@rt.getId" style="overflow:wrap; display:inline-block; width:30px;"><img style="position:relative; top:-70px;" src="@Global.SERVER_URL_2/assets/icons/next.png"></div>
 									              				
               			
@@ -117,12 +111,12 @@
               		   <select id = "actiontypert_@rt.getId()_h@m.getId" style="position:relative;">
              
               		@for(at <- rt.getPossibleActionTypes()){
-              			   <option value = "@at.getId()">@Application.getLanguage(at.getName())</option>
+              			   <option value = "@at.getId()">@at.getName()</option>
               			
               			
               		}   </select><br/>
               		
-              		<div id="rulet_add_action_button_@rt.getId()_h@m.getId"  class="btn btn-success" onClick="newRuleInHotspot(@m.getId,@rt.getId);  document.getElementById('addaction_@rt.getId()_h@m.getId()div').style.display='none'; document.getElementById('addaction_@rt.getId()_h@m.getId()btn').style.display='inline-block'; document.getElementById('addaction_@rt.getId()_h@m.getId()div').style.display='none';">@Application.getLanguage("Neue Aktion")</span>
+              		<div id="rulet_add_action_button_@rt.getId()_h@m.getId"  class="btn btn-success" onClick="newRuleInHotspot(@m.getId,@rt.getId);  document.getElementById('addaction_@rt.getId()_h@m.getId()div').style.display='none'; document.getElementById('addaction_@rt.getId()_h@m.getId()btn').style.display='inline-block'; document.getElementById('addaction_@rt.getId()_h@m.getId()div').style.display='none';">Neue Aktion</span>
               
               </div>
               
@@ -164,12 +158,12 @@
    
    
     <li class="dropdown-submenu">
-                  <a tabindex="-1" >@Application.getLanguage("Questverlauf")</a>
+                  <a tabindex="-1" >Questverlauf</a>
                   <ul class="dropdown-menu">
                    @for(at <- rt.getPossibleActionTypes()){
                    	
                    	@if(at.getCategory().equals("page")){
-              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newRuleInHotspot(@m.getId,@rt.getId,@at.getId());">@Application.getLanguage(at.getName)</a></li>
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newRuleInHotspot(@m.getId,@rt.getId,@at.getId());">@at.getName</a></li>
               			}
               			
               		}
@@ -178,12 +172,12 @@
   
    
     <li class="dropdown-submenu">
-                  <a tabindex="-1" >@Application.getLanguage("Karte")</a>
+                  <a tabindex="-1" >Karte</a>
                   <ul class="dropdown-menu">
                    @for(at <- rt.getPossibleActionTypes()){
                    	
                    	@if(at.getCategory().equals("map")){
-              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newRuleInHotspot(@m.getId,@rt.getId,@at.getId());">@Application.getLanguage(at.getName)</a></li>
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newRuleInHotspot(@m.getId,@rt.getId,@at.getId());">@at.getName</a></li>
               			}
               			
               		}
@@ -191,12 +185,12 @@
   </li>
    
     <li class="dropdown-submenu">
-                  <a tabindex="-1" >@Application.getLanguage("Variablen")</a>
+                  <a tabindex="-1" >Variablen</a>
                   <ul class="dropdown-menu">
                    @for(at <- rt.getPossibleActionTypes()){
                    	
                    	@if(at.getCategory().equals("var")){
-              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newRuleInHotspot(@m.getId,@rt.getId,@at.getId());">@Application.getLanguage(at.getName)</a></li>
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newRuleInHotspot(@m.getId,@rt.getId,@at.getId());">@at.getName</a></li>
               			}
               			
               		}
@@ -205,12 +199,12 @@
   
    
     <li class="dropdown-submenu">
-                  <a tabindex="-1" >@Application.getLanguage("Bedingt")</a>
+                  <a tabindex="-1" >Bedingt</a>
                   <ul class="dropdown-menu">
                    @for(at <- rt.getPossibleActionTypes()){
                    	
                    	@if(at.getCategory().equals("condition")){
-              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newRuleInHotspot(@m.getId,@rt.getId,@at.getId());">@Application.getLanguage(at.getName)</a></li>
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newRuleInHotspot(@m.getId,@rt.getId,@at.getId());">@at.getName</a></li>
               			}
               			
               		}
@@ -219,12 +213,12 @@
   
    
     <li class="dropdown-submenu">
-                  <a tabindex="-1" >@Application.getLanguage("Sonstiges")</a>
+                  <a tabindex="-1" >Sonstiges</a>
                   <ul class="dropdown-menu">
                    @for(at <- rt.getPossibleActionTypes()){
                    	
                    	@if(at.getCategory().equals("other")){
-              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newRuleInHotspot(@m.getId,@rt.getId,@at.getId());">@Application.getLanguage(at.getName)</a></li>
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newRuleInHotspot(@m.getId,@rt.getId,@at.getId());">@at.getName</a></li>
               			}
               			
               		}
@@ -237,7 +231,7 @@
    @for(at <- rt.getPossibleActionTypes()){
    	                   	@if(at.getCategory().equals("")){
    	
-              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newRuleInHotspot(@m.getId,@rt.getId,@at.getId());">@Application.getLanguage(at.getName)</a></li>
+              			   	<li><a tabindex="-1" style="cursor:pointer;" onClick="newRuleInHotspot(@m.getId,@rt.getId,@at.getId());">@at.getName</a></li>
               			}
               			
               		}
@@ -275,7 +269,7 @@
               		<div style=" position:relative; top:-70px;">
              
               		
-              		<div id="rulet_add_action_button_@rt.getId()_h@m.getId"  class="btn btn-success" onClick="newSubRuleInRule(@m.getRule(rt).getId);">@Application.getLanguage("Neue Regel")</span>
+              		<div id="rulet_add_action_button_@rt.getId()_h@m.getId"  class="btn btn-success" onClick="newSubRuleInRule(@m.getRule(rt).getId);">Neue Regel</span>
               
               </div>
               		</div>
@@ -304,11 +298,3 @@
               				
               					</div>
 									              			</div>
-              		
- @Portal.sayTime("rulesinhotspot #4 END")
-              		
-	 		
-	 		
-	 		
-	 		
-	 			

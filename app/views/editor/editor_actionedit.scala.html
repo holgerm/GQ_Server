@@ -3,8 +3,6 @@
 @import util.Global;
 @import models.GameParts._;
 
-@Portal.sayTime("actionedit #0  z: " + z)
-
 @for(a <- ac.getAllAttributes){
 	@if(a.getFileType == "actions"){
 		<div id="actioninfocontainer_atr@a.getId()_action@ac.getId()">
@@ -21,9 +19,7 @@
 	}
 }
 
-@Portal.sayTime("actionedit #1 after div actioninfocontainer , z: " + z)
 
-             
 <div class="inneredit" id="actionedit_@ac.getId()" style="z-index:@z; height:auto;" name="actionedit_@ac.getId()">
 	<div class="scrollable-content" style="overflow-y:auto; overflow-x:hidden; height:100%; width:100%;">
 		<div class="options">
@@ -32,7 +28,7 @@
 		</div>   	
               	        		
        	<div id="action_@ac.getId">
-       		<h1>@Application.getLanguage(ac.getName())</h1>
+       		<h1>@ac.getName()</h1>
        	</div>
 									              				
 		@if(ac.getType.getPremiumRequirement() != null){	
@@ -40,7 +36,7 @@
 			@Application.getLocalUser().canAccess(ac.getType.getPremiumRequirement())
 		}
 									              			
-		<span  style="cursor:pointer;"><a href="https://quest-mill-web.intertech.de/gqdocs/index.php?content=@ac.getType().getNameEncoded()@if(Application.getLocalPortal().getId() != 61L){&portal=@Application.getLocalPortal().getId()}" target="_blank"><icon class="icon-question-sign" style="display:inline-block;"></icon> @Application.getLanguage("Anleitung")</a></span>
+		<span  style="cursor:pointer;"><a href="https://quest-mill-web.intertech.de/gqdocs/index.php?content=@ac.getType().getNameEncoded()@if(Application.getLocalPortal().getId() != 61L){&portal=@Application.getLocalPortal().getId()}" target="_blank"><icon class="icon-question-sign" style="display:inline-block;"></icon> Anleitung</a></span>
 		<br/>
 		<br/>
 		
@@ -49,10 +45,8 @@
 				@if(a.isEditable){
 					<div style="width:99%">
 					
-						@Portal.sayTime("actionedit fileType: " + a.getFileType())
-					
 						@if(a.getFileType != "actions"){
-							@Application.getLanguage(a.getName)
+							@a.getName
 						}
 						<br/>
 						<div>
@@ -67,7 +61,6 @@
 								} else {
         								<input type="text"/ value="@ac.getAttributeValue(a)" id="actionat@ac.getId@a.getId" onchange="javascript:syncAttr('action',@ac.getId,@a.getId)" onkeydown="document.getElementById('status_actionat@ac.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
 								}
-								@Portal.sayTime("actionedit fileType 'String' done")
 							}
 									        
 							@if(a.getFileType == "condition"){
@@ -81,23 +74,21 @@
   									
   									<ul class="dropdown-menu"></ul>
 					
-									<a class="btn dropdown-toggle" style=" cursor:pointer;" data-toggle="dropdown" >
-    										@Application.getLanguage("Erweitert")
-  									</a>
+									<a class="btn dropdown-toggle" style=" cursor:pointer;" data-toggle="dropdown">Erweitert</a>
   
   									<ul class="dropdown-menu">
    										<li class="dropdown-submenu">
-                  							<a tabindex="-1" >@Application.getLanguage("Seiten")</a>
+                  							<a tabindex="-1">Seiten</a>
                   					
                   							<ul class="dropdown-menu">
                    								@for(pm <- g.getAllMissions()){              			
 			              							<li class="dropdown-submenu">
 			                  							<a tabindex="-1" >@pm.getName</a>
 				                  						<ul class="dropdown-menu">
-					                  						<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_mission_@pm.getId()@Html(".result")');">@Application.getLanguage("Resultat")</a></li>
-					              							<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_mission@Html("_")@pm.getId()@Html(".state")');">@Application.getLanguage("Status")</a></li>
+					                  						<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_mission_@pm.getId()@Html(".result")');">Resultat</a></li>
+					              							<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_mission@Html("_")@pm.getId()@Html(".state")');">Status</a></li>
 						              						@for(atr <- pm.getType.getAttributeTypes){
-						              							<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_mission_@pm.getId()@Html(".")@atr.getXMLType');">@Application.getLanguage(atr.getName)</a></li>
+						              							<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_mission_@pm.getId()@Html(".")@atr.getXMLType');">@atr.getName</a></li>
 						              						}
 					                  					</ul>
 			            								</li>
@@ -105,22 +96,20 @@
       										</ul>
   										</li>
   										
-  										@Portal.sayTime("actionedit condition seiten done")
-   
    										<li class="dropdown-submenu">
-                  							<a tabindex="-1" >@Application.getLanguage("Hotspots")</a>
+                  							<a tabindex="-1" >Hotspots</a>
                   							<ul class="dropdown-menu">
                    								@for(pm <- g.getHotspots()){              			
 			        									<li class="dropdown-submenu">
 			                  							<a tabindex="-1" >@pm.getName</a>
 			                  							<ul class="dropdown-menu">
-										                  	<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".visible")');">@Application.getLanguage("Sichtbarkeit")</a></li>
-										              		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".active")');">@Application.getLanguage("Aktivität")</a></li>			                  
-										                  	<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".long")');">@Application.getLanguage("Longitude")</a></li>
-										              		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".lat")');">@Application.getLanguage("Latitude")</a></li>
+										                  	<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".visible")');">Sichtbarkeit</a></li>
+										              		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".active")');">Aktivität</a></li>
+										                  	<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".long")');">Longitude</a></li>
+										              		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".lat")');">Latitude</a></li>
 
 										              		@for(atr <- pm.getType.getAttributeTypes){
-										              			<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".")@atr.getXMLType');">@Application.getLanguage(atr.getName)</a></li>
+										              			<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".")@atr.getXMLType');">@atr.getName</a></li>
 										              		}
 			                  							</ul>
 			            								</li>
@@ -128,54 +117,42 @@
       										</ul>
   										</li>
     										
-  										@Portal.sayTime("actionedit condition hotspots done")
-   
-    										<li class="dropdown-submenu">
-						               		<a tabindex="-1" >@Application.getLanguage("Operatoren")</a>
+										<li class="dropdown-submenu">
+						               		<a tabindex="-1" >Operatoren</a>
 						                  	<ul class="dropdown-menu">
-						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','=');">= (@Application.getLanguage("Gleich"))</a></li>
-						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','!=');">!= (@Application.getLanguage("Ungleich"))</a></li>
-						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','<');">&lt; (@Application.getLanguage("Kleiner als"))</a></li>
-						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','>');">&gt; (@Application.getLanguage("Größer als"))</a></li>
-						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','<=');">&lt;= (@Application.getLanguage("Kleiner oder Gleich"))</a></li>
-						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','>=');">&gt; (@Application.getLanguage("Größer oder Gleich")</a></li>
+						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','=');">= (Gleich)</a></li>
+						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','!=');">!= (Ungleich)</a></li>
+						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','<');">&lt; (Kleiner als)</a></li>
+						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','>');">&gt; (Größer als)</a></li>
+						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','<=');">&lt;= (Kleiner oder Gleich)</a></li>
+						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','>=');">&gt; (Größer oder Gleich</a></li>
 						                  	</ul>
 						   				</li>
   										
-  										@Portal.sayTime("actionedit condition operatoren done")
-	   
-    										<li class="dropdown-submenu">
-						                  	<a tabindex="-1" >@Application.getLanguage("logische Verknüpfungen")</a>
+										<li class="dropdown-submenu">
+						                  	<a tabindex="-1" >logische Verknüpfungen</a>
 						                  	<ul class="dropdown-menu">
-						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId',' AND ');">AND (@Application.getLanguage("Alle Bedingungen müssen eintreten"))</a></li>
-						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId',' OR ');">OR (@Application.getLanguage("Eine Bedingung muss eintreten"))</a></li>
-						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId',' !( )');">NOT (@Application.getLanguage("Alle Bedingungen in der Klammer negieren"))</a></li>
+						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId',' AND ');">AND (Alle Bedingungen müssen eintreten)</a></li>
+						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId',' OR ');">OR (Eine Bedingung muss eintreten)</a></li>
+						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId',' !( )');">NOT (Alle Bedingungen in der Klammer negieren)</a></li>
 											</ul>
 					   					</li>
     										
-  										@Portal.sayTime("actionedit condition logic done")
-   
    	 									<li class="dropdown-submenu">
 						                  	<a tabindex="-1" >Systemvariablen</a>
 						                  	<ul class="dropdown-menu">
-						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$location.lat');">@Application.getLanguage("Aktuelle Position"): Latitude</a></li>
-						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$location.long');">@Application.getLanguage("Aktuelle Position"): Longitude</a></li>
-						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$score');">@Application.getLanguage("Score")-@Application.getLanguage("Variable")</a></li>
+						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$location.lat');">Aktuelle Position: Latitude</a></li>
+						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$location.long');">Aktuelle Position: Longitude</a></li>
+						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$score');">Score-Variable</a></li>
 						              		</ul>
 						   				</li>
-						   				  										
-  										@Portal.sayTime("actionedit condition sys-vars done")
-						   				
+
    									</ul>
 								</div>
-								
-								@Portal.sayTime("actionedit fileType 'Condition' done")
               				}
 									        
 							@if(a.getFileType == "var"){
 								<input type="text"/ value="@ac.getAttributeValue(a)" id="actionat@ac.getId@a.getId" onchange="javascript:syncAttr('action',@ac.getId,@a.getId)" onkeydown="document.getElementById('status_actionat@ac.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
-								
-								@Portal.sayTime("actionedit fileType 'Var' done")
 							}
 									        
 							@if(a.getFileType == "expression"){
@@ -186,16 +163,16 @@
   									</a>
   									<ul class="dropdown-menu">
    										<li class="dropdown-submenu">
-                  							<a tabindex="-1" >@Application.getLanguage("Seiten")</a>
+                  							<a tabindex="-1" >Seiten</a>
                   							<ul class="dropdown-menu">
                    								@for(pm <- g.getAllMissions()){              			
 			             							<li class="dropdown-submenu">
 			                  							<a tabindex="-1" >@pm.getName</a>
 			                  							<ul class="dropdown-menu">
-										                  	<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_mission_@pm.getId()@Html(".result")');">@Application.getLanguage("Resultat")</a></li>
-										              		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_mission@Html("_")@pm.getId()@Html(".state")');">@Application.getLanguage("State")</a></li>
+										                  	<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_mission_@pm.getId()@Html(".result")');">Resultat</a></li>
+										              		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_mission@Html("_")@pm.getId()@Html(".state")');">State</a></li>
 										              		@for(atr <- pm.getType.getAttributeTypes){
-										              			<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_mission_@pm.getId()@Html(".")@atr.getXMLType');">@Application.getLanguage(atr.getName)</a></li>
+										              			<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_mission_@pm.getId()@Html(".")@atr.getXMLType');">@atr.getName</a></li>
 										              		}
 										              	</ul>
 			           		 						</li>
@@ -204,20 +181,20 @@
   										</li>
    
    										<li class="dropdown-submenu">
-						                  	<a tabindex="-1" >@Application.getLanguage("Hotspots")</a>
+						                  	<a tabindex="-1" >Hotspots</a>
 						                  	<ul class="dropdown-menu">
 							                   	@for(pm <- g.getHotspots()){              			
 				        								<li class="dropdown-submenu">
 								                  		<a tabindex="-1" >@pm.getName</a>
 								                  		<ul class="dropdown-menu">
-								                  			<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".visible")');">@Application.getLanguage("Sichtbarkeit")</a></li>
-								              				<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".active")');">@Application.getLanguage("Aktivität")</a></li>			                  
-								                  			<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".long")');">@Application.getLanguage("Longitude")</a></li>
-								              				<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".lat")');">@Application.getLanguage("Latitude")</a></li>
+								                  			<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".visible")');">Sichtbarkeit</a></li>
+								              				<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".active")');">Aktivität</a></li>
+								                  			<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".long")');">Longitude</a></li>
+								              				<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".lat")');">Latitude</a></li>
 												
 															@for(atr <- pm.getType.getAttributeTypes){
 								              					<li>
-								              						<a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".")@atr.getXMLType');">@Application.getLanguage(atr.getName)</a>
+								              						<a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$_hotspot_@pm.getId()@Html(".")@atr.getXMLType');">@atr.getName</a>
 							              						</li>
 								              				}
 								                  		</ul>
@@ -227,17 +204,15 @@
   										</li>
    
 										<li class="dropdown-submenu">
-						                  	<a tabindex="-1" >@Application.getLanguage("Systemvariablen")</a>
+						                  	<a tabindex="-1" >Systemvariablen</a>
 						                  	<ul class="dropdown-menu">
-						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$location.lat');">@Application.getLanguage("Aktuelle Position"): @Application.getLanguage("Latitude")</a></li>
-						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$location.long');">@Application.getLanguage("Aktuelle Position"): @Application.getLanguage("Longitude")</a></li>
-						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$score');">@Application.getLanguage("Score")-@Application.getLanguage("Variable")</a></li>
+						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$location.lat');">Aktuelle Position: Latitude</a></li>
+						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$location.long');">Aktuelle Position: Longitude</a></li>
+						                  		<li><a tabindex="-1" style="cursor:pointer;" onClick="addToTextarea('actionat@ac.getId@a.getId','$score');">Score-Variable</a></li>
 						                  	</ul>
 						   				</li>
  									</ul>
 								</div>	
-								
-								@Portal.sayTime("actionedit fileType 'expression' done")
 							}
 									         
 							@if(a.getFileType == "int"){
@@ -255,14 +230,12 @@
 	              			   			<option  value = "@pm.getId()" @if(ac.getAttributeValue(a).equals(String.valueOf(pm.getId()))){ selected="selected" } >@pm.getName()</option>
 	              					}   
               					</select>
-								
-								@Portal.sayTime("actionedit fileType 'mission' done")
 							}
 									        
 							@if(a.getFileType == "hotspot" || a.getFileType == "hotspotstring"){
 								<select id = "actionat@ac.getId@a.getId" class="hotspotselector" onchange="javascript:syncAttr('action',@ac.getId,@a.getId)" >
 									@if(ac.getType().getXMLType().equals("AddRoute")){
-             	  						<option  value = "0" @if(ac.getAttributeValue(a).equals("0")){ selected="selected" } >@Application.getLanguage("GPS-Position")</option>
+             	  						<option  value = "0" @if(ac.getAttributeValue(a).equals("0")){ selected="selected" } >GPS-Position</option>
              						} else {
              							<option ></option>
              						}
@@ -271,8 +244,6 @@
               			   				<option  value = "@pm.getId()" @if(ac.getAttributeValue(a).equals(String.valueOf(pm.getId()))){ selected="selected" } >@pm.getName()</option>
               						}   
               					</select>
-									
-								@Portal.sayTime("actionedit fileType 'hotspot' done")
 							}
 									        
 							@if(a.getFileType == "file"){
@@ -286,15 +257,13 @@
 								
 								<div id="actionfile_file_at@ac.getId@a.getId">
 									<input type="file"/ id="actionfileat@ac.getId@a.getId" onchange="javascript:uploadFile('action',@ac.getId,@a.getId)" >
-        								<a  onClick="javascript:document.getElementById('actionfile_file_at@ac.getId@a.getId').style.display='none';document.getElementById('actionfile_text_at@ac.getId@a.getId').style.display='block';">@Application.getLanguage("Variabel")</a>
+        								<a  onClick="javascript:document.getElementById('actionfile_file_at@ac.getId@a.getId').style.display='none';document.getElementById('actionfile_text_at@ac.getId@a.getId').style.display='block';">Variabel</a>
         							</div>
                 
                 					<div id="actionfile_text_at@ac.getId@a.getId" style="display:none;">
 									<input type="text"/ value="@ac.getAttributeValue(a)" id="actionat@ac.getId@a.getId" onchange="javascript:syncAttr('action',@ac.getId,@a.getId)" onkeydown="document.getElementById('status_actionat@ac.getId@a.getId').src = '@Global.SERVER_URL_2@routes.Assets.at("img/waiting.png")';">
-                      				<a onClick="javascript:document.getElementById('actionfile_text_at@ac.getId@a.getId').style.display='none';document.getElementById('actionfile_file_at@ac.getId@a.getId').style.display='block';">@Application.getLanguage("Datei")</a>
+                      				<a onClick="javascript:document.getElementById('actionfile_text_at@ac.getId@a.getId').style.display='none';document.getElementById('actionfile_file_at@ac.getId@a.getId').style.display='block';">Datei</a>
               					</div>
-									
-								@Portal.sayTime("actionedit fileType 'file' done")
 							}
 									        
 							@if(a.getFileType == "actions"){
@@ -303,7 +272,7 @@
               							<div  style=" padding:10px;  display:inline-block; width:100px; cursor:pointer;">
               								<div>
               									<img src="@Global.SERVER_URL_2/assets/icons/actions/default.png" style="height:70px; width:70px; position:relative; left:15px; " />
-              									<p style="width:100px; height:36px; font-size:10px; text-align:center; overflow:hidden; white-space:normal;">  @Application.getLanguage(a.getName)</p>
+              									<p style="width:100px; height:36px; font-size:10px; text-align:center; overflow:hidden; white-space:normal;">  @a.getName</p>
               								</div>
               								<p style="height:20px; overflow:hidden;">&nbsp;</p>
               							</div>
@@ -334,24 +303,22 @@
              										@if(rt != "menuitem"){
              											@defining(RuleType.find.byId(Long.valueOf(rt))){ rtv => 
               												@for(at <- rtv.getPossibleActionTypes){
-              			   										<option value = "@at.getId()">@Application.getLanguage(at.getName())</option>
+              			   										<option value = "@at.getId()">@at.getName()</option>
               												} 
               											}
               										} else {
               											@for(at <- g.getType.getPossibleMenuItemActionTypes){
-              												<option value = "@at.getId()">@Application.getLanguage(at.getName())</option>
+              												<option value = "@at.getId()">@at.getName()</option>
               											}
               										}  
               									</select>
               									<br/>
               		
-              									<div id="attribute_add_action_button_ac@ac.getId()_atr@a.getId" class="btn btn-success" style="position:relative; bottom:50%;" onClick="newActionInAttribute('action',@ac.getId,@a.getId,@z+1,@if(rt != "menuitem"){@rt} else {'@rt'}); document.getElementById('addaction_@rt.toString()_a@ac.getId()btn').style.display='inline-block'; document.getElementById('addaction_@rt.toString()_a@ac.getId()div').style.display='none';">@Application.getLanguage("Hinzufügen")</div>
+              									<div id="attribute_add_action_button_ac@ac.getId()_atr@a.getId" class="btn btn-success" style="position:relative; bottom:50%;" onClick="newActionInAttribute('action',@ac.getId,@a.getId,@z+1,@if(rt != "menuitem"){@rt} else {'@rt'}); document.getElementById('addaction_@rt.toString()_a@ac.getId()btn').style.display='inline-block'; document.getElementById('addaction_@rt.toString()_a@ac.getId()div').style.display='none';">Hinzufügen</div>
              								</div>
               							</div>
               						</div>
               					</div>
-									
-								@Portal.sayTime("actionedit fileType 'actions' done")
 							} else {
 								<img id="status_actionat@ac.getId@a.getId" src="@Global.SERVER_URL_2@routes.Assets.at("img/synced.png")" />
         						}
@@ -363,12 +330,3 @@
 		</div>
   	</div>
 </div>
-	 		
-@Portal.sayTime("actionedit END")
-	 		
-	 		
-	 		
-	 		
-	 		
-	 		
-	 		
