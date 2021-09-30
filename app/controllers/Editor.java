@@ -3945,7 +3945,7 @@ public class Editor extends Controller {
                         System.out.println("trying to send an email to admin: " + au.getUser().getName());
                         final MyUsernamePasswordAuthProvider provider = MyUsernamePasswordAuthProvider
                                 .getProvider();
-                        String linkToUserRightsTable = Global.SERVER_URL + "/" + p.id + "/portal/rights/"
+                        String linkToUserRightsTable = Global.SERVER_URL + p.id + "/portal/rights/"
                                 + p.id;
                         String text = "Auf dem Geoquest Portal '" + p.name
                                 + "' wurde eine neue Quest mit dem Namen'" + c.getName() + "' und der ID "

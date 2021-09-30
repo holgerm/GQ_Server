@@ -95,7 +95,7 @@ public class Global extends GlobalSettings {
 				} else {
 
 					defaultportal = new ProviderPortal("Geoquest Webservice",
-							SERVER_URL + "/qeeveetemplates/qeeve");
+							SERVER_URL + "qeeveetemplates/qeeve");
 					defaultportal.save();
 					defaultportal.update();
 

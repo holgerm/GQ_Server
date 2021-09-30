@@ -215,7 +215,7 @@ public class ProviderPortal extends Model {
 
         boolean done = updateHtmlByTemplateNoPassword();
         if (done == false) {
-            TemplateURL = Global.SERVER_URL + "/defaulttemplate";
+            TemplateURL = Global.SERVER_URL + "defaulttemplate";
             updateHtmlByTemplateNoPassword();
 
         }
