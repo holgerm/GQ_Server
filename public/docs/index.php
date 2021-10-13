@@ -383,9 +383,9 @@ Meine Spiele
 </p>
 <h5>Administration</h5> 
 <p>Benutzer Rechte<br />
-  Spieltypen<br />
-  Spieltyp Migration<br />
-  Spieltyp erstellen<br />
+  Typen<br />
+  Typ Migration<br />
+  Typ erstellen<br />
   Portal Benutzer<br />
   Portal Design<br />
  

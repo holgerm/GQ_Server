@@ -1,12 +1,15 @@
-@(verificationUrl: String, token: String, name: String, email: String)
-Hey @name,
+@(verificationUrl: String, token: String, name: String, email: String, portalName: String)
+Hallo @name,
 <br />
+	herzlich willkommen bei @{portalName}!
 <br />
 <p>
-	um deine E-Mail-Adresse zu bestätigen, <a href="@verificationUrl">folge einfach diesem Link</a>.
+	Damit du deine Anmeldung abschliessen kannst musst du deine E-Mail-Adresse noch bestätigen. Folge dazu einfach
+		<a href="@verificationUrl">diesem Link</a>.
 </p>
 <br />
+<br />
 <p>
-	Grüße,<br /> 
-	<i>Das geoquest-Team</i>
+	Beste Grüße und bis bald,<br />
+	<i>Das @{portalName}-Team</i>
 </p>

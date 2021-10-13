@@ -3,8 +3,9 @@
 @import helper._
 @import helpers._
 @import helper.twitterBootstrap._
+    @import util.Txt;
 
-@main("Neues Spiel erstellen","upload_game") {
+@main(Txt.NewQuest_Accusative() + " erstellen","upload_game") {
 
 
 
@@ -32,7 +33,7 @@
             
              @inputText(
                 uploadForm("name"),
-                '_label -> "Spielname"
+                '_label -> "Name"
              )
 
                  <br/>
@@ -43,20 +44,19 @@
             @checkbox(
                 uploadForm("publ"),
                 '_label -> "Öffentlich?"
-
             )
             <br/>
             </div>
             @if(!Application.getLocalPortal().gameTypesIsEmpty()){
             	@if(!Application.getLocalPortal().getContentHtmlParameter("general.games.onlyonegametype")){
-       Spieltyp
+       @Txt.Quest()-Typ
        <br/>
        }
            <select name="gametype"    @if(Application.getLocalPortal().getContentHtmlParameter("general.games.onlyonegametype")){ style="display:none" }>
            
            
     @for(gType <- Application.getLocalPortal().getGameTypes()){
-        <option @if(gType.getName().equals("beliebiges Spiel")){ selected="selected" } value="@gType.getId()">@gType.getName()</option>
+        <option @if(gType.getName().equals(Txt.ArbitraryQuest())){ selected="selected" } value="@gType.getId()">@gType.getName()</option>
     }
 </select>
 

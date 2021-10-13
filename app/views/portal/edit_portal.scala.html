@@ -81,33 +81,41 @@
             uploadForm("name"),
             '_label -> "Portalname"
         )
-
         <br/>
-
+        @inputText(
+            uploadForm("questNameGenus"),
+            '_label -> "Geschlecht (die, der, das)"
+        )
+        <br/>
+        @inputText(
+            uploadForm("questNameSg"),
+            '_label -> "Name für Quest (Singular)"
+        )
+        <br/>
+        @inputText(
+            uploadForm("questNamePl"),
+            '_label -> "Name für Quests (Plural)"
+        )
+        <br/>
+        @checkbox(
+            uploadForm("formalCommunication"),
+            '_label -> "Formale Kommunikation (Siezen)?"
+        )
+        <br/>
         @checkbox(
             uploadForm("autoverify"),
-            '_label -> "User automatisch zulassen"
-
+            '_label -> "User automatisch zulassen?"
         )
-
         <br/>
         @textarea(
             uploadForm("htmlurl"),
             '_label -> "Template URL"
         )
         <br/>
-
-
-
-
     </div>
 
 
     <div id="verschluesselung" style="display:none;">
-
-
-
-
         @inputText(
             uploadForm("formname"),
             '_label -> "HTML-Formular-Name mit Login-Feldern"

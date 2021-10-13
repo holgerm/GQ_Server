@@ -55,7 +55,7 @@
 
 @if(Global.securityGuard.hasMinVerifiedRightsOnPortal(user)==true){
 </li>
-<li @Html(liattributes.when(liattributes !=""))"><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.myGamesList(Application.getLocalPortal().getId()))">Meine Spiele</a></li>
+<li @Html(liattributes.when(liattributes !=""))"><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.myGamesList(Application.getLocalPortal().getId()))">Meine @Application.getLocalPortal().getQuestNamePl()</a></li>
 <li @Html(liattributes.when(liattributes !=""))"><a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.userSearch(Application.getLocalPortal().getId()))">User-Suche</a></li>
 
 

@@ -32,7 +32,6 @@ import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import flexjson.JSONSerializer;
 import models.Game;
-import models.GameInfo;
 import models.GameRights;
 import models.NewsstreamItem;
 import models.PremiumAccess;
@@ -58,7 +57,7 @@ import play.mvc.Http.MultipartFormData.FilePart;
 import play.mvc.Http.Session;
 import play.mvc.Result;
 import util.Global;
-import util.Texts;
+import util.Txt;
 
 public class Portal extends Controller {
 
@@ -719,7 +718,7 @@ public class Portal extends Controller {
                     if (form.gametype == 0) {
 
                         return badRequest(views.html.portal.add_game.render(filledForm,
-                                "Du musst entweder einen Spieltyp auswählen oder eine Datei hochladen."));
+                                "Du musst entweder einen " + Txt.Quest() + "-Typ auswählen oder eine Datei hochladen."));
                     } else {
 
                         // NEW GAME FROM GAMETYPE
@@ -727,7 +726,7 @@ public class Portal extends Controller {
                         if (GameType.find.where().eq("id", form.gametype).findRowCount() != 1) {
 
                             return badRequest(
-                                    views.html.portal.add_game.render(filledForm, "Der Spieltyp existiert nicht."));
+                                    views.html.portal.add_game.render(filledForm, "Der " + Txt.Quest() + "-Typ existiert nicht."));
 
                         } else {
                             GameType gt = GameType.find.byId(form.gametype);
@@ -903,7 +902,7 @@ public class Portal extends Controller {
         if (Global.securityGuard.hasAdminRightsOnPortal(getLocalUser(session())) == false) {
 
             return badRequest(
-                    views.html.norightsonportal.render("Du benötigst Admin-Rechte, um einen Spieltyp anzulegen."));
+                    views.html.norightsonportal.render("Du benötigst Admin-Rechte, um einen Typ anzulegen."));
 
         } else {
 
@@ -1501,7 +1500,7 @@ public class Portal extends Controller {
                             routes.Portal.gameTypesonPortal(myportal.getId(), Application.getLocalPortal().getId()));
 
                 } else {
-                    return badRequest(views.html.norights.render("Der Spieltyp existiert nicht."));
+                    return badRequest(views.html.norights.render("Der " + Txt.Quest() + "-Typ existiert nicht."));
 
                 }
 
@@ -1545,7 +1544,7 @@ public class Portal extends Controller {
                             routes.Portal.gameTypesonPortal(myportal.getId(), Application.getLocalPortal().getId()));
 
                 } else {
-                    return badRequest(views.html.norights.render("Der Spieltyp existiert nicht."));
+                    return badRequest(views.html.norights.render("Der " + Txt.Quest() + "-Typ existiert nicht."));
 
                 }
 
@@ -1657,6 +1656,10 @@ public class Portal extends Controller {
 
                 PostedPortal formobject = new PostedPortal();
                 formobject.name = myportal.getName();
+                formobject.questNameSg = myportal.getQuestNameSg();
+                formobject.questNamePl = myportal.getQuestNamePl();
+                formobject.questNameGenus = myportal.getQuestNameGenus();
+                formobject.formalCommunication = myportal.getFormalCommunication();
                 formobject.htmlurl = myportal.getTemplateURL();
                 formobject.formname = myportal.getTemplateForm();
                 formobject.pwfield = myportal.getTemplateFormField();
@@ -1814,6 +1817,10 @@ public class Portal extends Controller {
                     form.customserverurl, form.posturl, form.addcss, c1, "default", c2, c3, c4, c5, tosavename);
             p.save();
             p.addNewAdmin(currentuser);
+            p.setQuestNameSg(form.questNameSg);
+            p.setQuestNamePl(form.questNamePl);
+            p.setQuestNameGenus(form.questNameGenus);
+            p.setFormalCommunication(form.formalCommunication);
             p.save();
             nid = p.getId();
 
@@ -1952,6 +1959,10 @@ public class Portal extends Controller {
                 }
 
                 myportal.setName(form.name);
+                myportal.setQuestNameSg(form.questNameSg);
+                myportal.setQuestNamePl(form.questNamePl);
+                myportal.setQuestNameGenus(form.questNameGenus);
+                myportal.setFormalCommunication(form.formalCommunication);
 
                 myportal.setAutoVerifyUsers(form.autoverify);
 
@@ -2180,7 +2191,7 @@ public class Portal extends Controller {
 
             if (p.hasGameType(g.getType())) {
 
-                return badRequest(views.html.norights.render("Es liegen keine Updates für diesen Spieltyp vor."));
+                return badRequest(views.html.norights.render("Es liegen keine Updates für diesen " + Txt.Quest() + "-Typ vor."));
 
             } else {
 
@@ -2562,7 +2573,7 @@ public class Portal extends Controller {
         }
 
         ProviderPortal p = ProviderPortal.find.byId(pid);
-        String privacyAgreement = asHTML ? Texts.UnityRichText2HTML(p.getAppPrivacyAgreement())
+        String privacyAgreement = asHTML ? Txt.UnityRichText2HTML(p.getAppPrivacyAgreement())
                 : p.getAppPrivacyAgreement();
 
         return ok(views.html.simpletext.render(privacyAgreement));
@@ -2822,6 +2833,11 @@ public class Portal extends Controller {
         @Required
         @MinLength(3)
         public String name;
+
+        public String questNameSg;
+        public String questNamePl;
+        public String questNameGenus;
+        public boolean formalCommunication = false;
 
         public String htmlurl;
 

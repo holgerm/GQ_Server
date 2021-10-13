@@ -25,6 +25,7 @@ import play.i18n.Lang;
 import providers.MyUsernamePasswordAuthProvider;
 import providers.MyUsernamePasswordAuthProvider.MyLogin;
 import providers.MyUsernamePasswordAuthProvider.MySignup;
+import util.Txt;
 import views.html.*;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
@@ -161,7 +162,7 @@ public class Application extends Controller {
             if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
                 return badRequest(views.html.norights
-                        .render("Das Spiel existiert nicht"));
+                        .render(Txt.TheQuest() + " existiert nicht"));
 
             } else {
 
@@ -170,7 +171,7 @@ public class Application extends Controller {
                         Game.find.byId(gid)) == false) {
 
                     return badRequest(views.html.norights
-                            .render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                            .render("Du benötigst Schreib-Rechte an " + Txt.thisQuest_Dative() + "."));
 
                 } else {
 

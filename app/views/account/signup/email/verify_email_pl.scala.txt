@@ -1,4 +1,5 @@
-@(verificationUrl: String, token: String, name: String, email: String)Cześć @name,
+@(verificationUrl: String, token: String, name: String, email: String, portalName: String)
+Cześć @name,
 
 
 Twoje konto w PlayAuthenticate zostało utworzone.

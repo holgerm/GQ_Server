@@ -46,6 +46,7 @@ import providers.MyUsernamePasswordAuthProvider;
 import util.Global;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
+import util.Txt;
 
 public class Editor extends Controller {
 
@@ -54,14 +55,14 @@ public class Editor extends Controller {
 
         if (Game.find.where().eq("id", gid).findRowCount() != 1) {
 
-            return badRequest(views.html.norights.render("Das Spiel existiert nicht"));
+            return badRequest(views.html.norights.render(Txt.TheQuest() + " existiert nicht"));
 
         } else {
 
             if (Global.securityGuard.hasWriteRightsOnGame(Application.getLocalUser(session()),
                     Game.find.byId(gid)) == false) {
 
-                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an diesem Spiel."));
+                return badRequest(views.html.norights.render("Du benötigst Schreib-Rechte an " + Txt.thisQuest_Dative() + "."));
 
             } else {
                 Game game = Game.find.byId(gid);

@@ -47,13 +47,13 @@ public class Signup extends Controller {
 	public static Result unverified(Long pid) {
 		// com.feth.play.module.pa.controllers.Authenticate.noCache(response());
 
-		if (pid == 61L) {
-
-			return redirect("https:/quest-mill.intertech.de/assets/unverified.php");
-
-		} else {
+//		if (pid == 61L) {
+//			System.out.println("Here");
+//			return redirect(Global.SERVER_URL + "assets/docs/unverified.php");
+//
+//		} else {
 			return ok(unverified.render());
-		}
+//		}
 	}
 
 	private static final Form<MyIdentity> FORGOT_PASSWORD_FORM = form(MyIdentity.class);

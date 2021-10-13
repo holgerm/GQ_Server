@@ -1,4 +1,5 @@
-@(verificationUrl: String, token: String, name: String, email: String)Hola @name,
+@(verificationUrl: String, token: String, name: String, email: String, portalName: String)
+Hola @name,
 
 
 Se acaba de apuntar a PlayAuthenticate.

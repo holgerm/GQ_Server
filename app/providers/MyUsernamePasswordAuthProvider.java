@@ -277,16 +277,14 @@ String langCode = "xxxx";
 			langCode = "en";
 			
 		}
-		
-		
-		
+
 		
 		final String html = getEmailTemplate(
 				"views.html.account.signup.email.verify_email", langCode, url,
-				token, user.getName(), user.getEmail());
+				token, user.getName(), user.getEmail(), Portal.getLocalPortal().getName());
 		final String text = getEmailTemplate(
 				"views.txt.account.signup.email.verify_email", langCode, url,
-				token, user.getName(), user.getEmail());
+				token, user.getName(), user.getEmail(), Portal.getLocalPortal().getName());
 
 		return new Body(text, html);
 	}
@@ -355,10 +353,10 @@ String langCode = "xxxx";
 		
 		final String html = getEmailTemplate(
 				"views.html.account.email.password_reset", langCode, url,
-				token, user.name, user.email);
+				token, user.name, user.email, Portal.getLocalPortal().getName());
 		final String text = getEmailTemplate(
 				"views.txt.account.email.password_reset", langCode, url, token,
-				user.name, user.email);
+				user.name, user.email, Portal.getLocalPortal().getName());
 
 		return new Body(text, html);
 	}
@@ -382,7 +380,7 @@ String langCode = "xxxx";
 
 	protected String getEmailTemplate(final String template,
 			final String langCode, final String url, final String token,
-			final String name, final String email) {
+			final String name, final String email, final String portalName) {
 		Class<?> cls = null;
 		String ret = null;
 		try {
@@ -408,8 +406,8 @@ String langCode = "xxxx";
 			Method htmlRender = null;
 			try {
 				htmlRender = cls.getMethod("render", String.class,
-						String.class, String.class, String.class);
-				ret = htmlRender.invoke(null, url, token, name, email)
+						String.class, String.class, String.class, String.class);
+				ret = htmlRender.invoke(null, url, token, name, email, portalName)
 						.toString();
 
 			} catch (NoSuchMethodException e) {
@@ -456,10 +454,10 @@ String langCode = "xxxx";
 
 		final String html = getEmailTemplate(
 				"views.html.account.email.verify_email", langCode, url, token,
-				user.name, user.email);
+				user.name, user.email, Portal.getLocalPortal().getName());
 		final String text = getEmailTemplate(
 				"views.txt.account.email.verify_email", langCode, url, token,
-				user.name, user.email);
+				user.name, user.email, Portal.getLocalPortal().getName());
 
 		return new Body(text, html);
 	}

@@ -3,8 +3,9 @@
 @import helper._
 @import helpers._
 @import helper.twitterBootstrap._
+@import util.Txt
 
-@main("Spiel in Spieltyp umwandeln","upload_game") {
+@main(Txt.Quest() + " in Typ umwandeln","upload_game") {
 
 
 
@@ -31,10 +32,10 @@
             } 
             
             
-            <h3>Spieltyp Name</h3>
+            <h3>@Txt.Quest()-Typ Name</h3>
              @inputText(
                 gametypeForm("name"),
-                '_label -> "Spieltyp Name"
+                '_label -> "Typ Name"
              )
 
                  <br/>

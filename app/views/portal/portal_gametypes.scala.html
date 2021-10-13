@@ -3,8 +3,10 @@
     @import helper._
     @import helpers._
 @import util.Global;
+@import util.Txt
 
-@main("Spieltypen") {
+
+@main(Txt.Quest() + "-Typen") {
 
 
     @defining(Application.getLocalUser(session())) { user =>
@@ -12,7 +14,7 @@
 
 
             @if(provider.getGameTypes().isEmpty() == true){
-                 Keine Spieltypen
+                 Keine Typen
             } else {
 
                 <div class="gq_container" style="margin-top: 10px">
@@ -61,7 +63,7 @@
 	@if(!provider.getId().equals(Global.defaultportal.getId())){
 
 
-<h2>Aktuelle Spieltypen</h2>
+<h2>Aktuelle Typen</h2>
 
 
 

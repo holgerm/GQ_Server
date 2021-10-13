@@ -1,8 +1,8 @@
 @(gamesList: Set[GameRights])
 
-@import util.Global
-
-@main("Meine Spiele") {
+    @import util.Txt
+    @import util.Global
+    @main("Meine " + Application.getLocalPortal.getQuestNamePl) {
 
     <br/>
         <div class="alert alert-danger" style="display:none;">
@@ -11,7 +11,7 @@
     <br/>
 
 
-    <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.uploadGame(Application.getLocalPortal().getId()))" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.speciallinks.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.speciallinks.attributes") !=""))>Neues Spiel erstellen</a>
+    <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@Application.getLocalPortal.getPathTo(routes.Portal.uploadGame(Application.getLocalPortal().getId()))" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.speciallinks.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.speciallinks.attributes") !=""))>@Txt.NewQuest_Accusative erstellen</a>
 
 
     @if(gamesList.isEmpty() == true){
@@ -26,7 +26,7 @@
                         <tr>
                             <th>Name</th>
                             <th class="date-sort">Letztes Update</th>
-                            <th>Spieltyp</th>
+                            <th>Typ</th>
                             <th class="no-sort">Veröffentlicht</th>
                             <th class="no-sort">Optionen</th>
                             <th>Info</th>
@@ -46,7 +46,7 @@
 	"Wirklich löschen?",
 	"Löschen",
 	"Keine Rechte",
-	"In Spieltyp umwandeln")
+	"In Typ umwandeln")
 	
 	) { case (pre_date, pre_download, pre_nochkeinedaten, pre_editoraufrufen, pre_admin, pre_duplizieren,pre_reallydelete, pre_delete , pre_keinerechte ,pre_inspieltyp) =>
 

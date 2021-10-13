@@ -58,6 +58,10 @@ public class ProviderPortal extends Model {
     @Id
     public Long id;
     public String name;
+    public String questNameSg;
+    public String questNamePl;
+    public String questNameGenus;
+    public Boolean formalCommunication = false;
     @Lob
     public String TemplateURL;
     @Lob
@@ -152,7 +156,6 @@ public class ProviderPortal extends Model {
     /**
      * Constructors
      */
-
     public ProviderPortal(String startName) {
         name = startName;
         TemplateURL = Global.TEMPLATE_BASE_URL + "/defaulttemplate";
@@ -1217,19 +1220,69 @@ public class ProviderPortal extends Model {
     }
 
     public List<SortedHtml> getHtml() {
-
         return Html;
     }
 
     public String getName() {
-
         return name;
     }
 
+    private final static String QUEST_NAME_SG_DEFAULT = "Quest";
+
+    public String getQuestNameSg() {
+        if (null == questNameSg || "".equals(questNameSg)) {
+            questNameSg = QUEST_NAME_SG_DEFAULT;
+        }
+
+        return questNameSg;
+    }
+
+    public void setQuestNameSg(String n) {
+        questNameSg = n;
+    }
+
+    private final static String QUEST_NAME_PL_DEFAULT = "Quests";
+
+    public String getQuestNamePl() {
+        if (null == questNamePl || "".equals(questNamePl)) {
+            questNamePl = QUEST_NAME_PL_DEFAULT;
+        }
+
+        return questNamePl;
+    }
+
+    public void setQuestNamePl(String n) {
+        questNamePl = n;
+    }
+
+    private final static String QUEST_NAME_GENUS_DEFAULT = "die";
+
+    public String getQuestNameGenus() {
+
+        if (null == questNameGenus || "".equals(questNameGenus)) {
+            questNameGenus = QUEST_NAME_GENUS_DEFAULT;
+        }
+
+        return questNameGenus;
+    }
+
+    public void setQuestNameGenus(String n) {
+        questNameGenus = n;
+    }
+
+    public boolean getFormalCommunication() {
+        if (null == formalCommunication) return false;
+        // because of possible null value in db and Boolean but not in boolean primitive.
+
+        return formalCommunication;
+    }
+
+    public void setFormalCommunication(boolean n) {
+        formalCommunication = n;
+    }
+
     public List<ProviderUsers> getUsers() {
-
         return userList;
-
     }
 
     public void addNewGame(Game g, boolean visibility) {
@@ -1594,7 +1647,6 @@ public class ProviderPortal extends Model {
     }
 
     public void setName(String n) {
-
         name = n;
     }
 

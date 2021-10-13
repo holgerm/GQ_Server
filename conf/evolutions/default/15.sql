@@ -10,10 +10,9 @@ ALTER TABLE games ADD COLUMN userlastupdated bigint;
 
 # --- !Downs
 
-
-ALTER TABLE action_type DROP COLUMN portalimprint;
-ALTER TABLE action_type DROP COLUMN portalagbs;
-ALTER TABLE action_type DROP COLUMN portalprivacyagreement;
-ALTER TABLE action_type DROP COLUMN portalagbsversion;
-ALTER TABLE action_type DROP COLUMN portalprivacyagreementversion;
+ALTER TABLE providerportal DROP COLUMN portalimprint;
+ALTER TABLE providerportal DROP COLUMN portalagbs;
+ALTER TABLE providerportal DROP COLUMN portalprivacyagreement;
+ALTER TABLE providerportal DROP COLUMN portalagbsversion;
+ALTER TABLE providerportal DROP COLUMN portalprivacyagreementversion;
 ALTER TABLE games DROP COLUMN userlastupdated;
