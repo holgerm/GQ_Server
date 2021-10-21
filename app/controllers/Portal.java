@@ -51,6 +51,7 @@ import models.GameParts.SceneType;
 import play.data.Form;
 import play.data.validation.Constraints.MinLength;
 import play.data.validation.Constraints.Required;
+import play.mvc.Content;
 import play.mvc.Controller;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
@@ -156,7 +157,7 @@ public class Portal extends Controller {
 
     // @Restrict(@Group(Application.USER_ROLE))
     public static Result myGamesList(Long pid) {
-        lastdate = System.currentTimeMillis();
+        Global.TIME_CLEAR();
 
         session("currentportal", pid.toString());
         if (getLocalUser(session()) == null) {
@@ -166,30 +167,39 @@ public class Portal extends Controller {
         ProviderPortal p = Application.getLocalPortal();
 
         if (ProviderPortal.find.where().eq("id", pid).findRowCount() == 1) {
-
             p = ProviderPortal.find.byId(pid);
-
         }
 
-        // Global.sayTime("Mygames #1");
+        Global.TIME_SAY("#Mygames - found local portal: " + p.getId());
 
         User u = getLocalUser(session());
+
+        Global.TIME_SAY("#Mygames - getLocalUser()");
 
         if (Global.securityGuard.hasMinVerifiedRightsOnPortal(u) == false) {
 
             return badRequest(views.html.norightsonportal
                     .render("Du benötigst mindestens User-Rechte, um diese Seite aufrufen zu können."));
 
-        } else {
-            // Global.sayTime("Mygames #2");
-
-            Set<GameRights> s = u.getGamesOnPortal(p);
-            // Global.sayTime("Mygames #3");
-            // TODO FILTER by game id to skip multiple mentions of right for the same game
-
-            return ok(views.html.portal.my_games.render(s));
-
         }
+
+        Global.TIME_SAY("#Mygames - checked rights");
+
+        Set<GameRights> s = u.getGamesOnPortal(p);
+
+        Global.TIME_SAY("#Mygames - after getGamesOnPortal() #games: " + s.size());
+
+        // TODO FILTER by game id to skip multiple mentions of right for the same game
+
+        play.api.templates.Html obj = views.html.portal.my_games.render(s);
+
+        Global.TIME_SAY("#Mygames - after getGamesOnPortal() rendered");
+
+        Result result = ok(obj);
+
+        Global.TIME_SAY("#Mygames - after getGamesOnPortal() ok() done - result length: " + result.toString().length());
+
+        return result;
     }
 
     // @Restrict(@Group(Application.USER_ROLE))
@@ -2118,7 +2128,8 @@ public class Portal extends Controller {
 
                         pg.setVisibility(false);
                         pg.update();
-                        pg.getPortal().exportPublicGamesJson();                    }
+                        pg.getPortal().exportPublicGamesJson();
+                    }
 
                     User usertoedit = User.find.byId(uid);
                     myportal.deleteUser(usertoedit);
