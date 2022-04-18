@@ -433,6 +433,11 @@ public class Application extends Controller {
         return getLocalUser(session());
     }
 
+    public static Long getCurrentPid() {
+        String pid =  session("currentportal");
+        return Long.parseLong(pid, 10);
+    }
+
     public static ProviderPortal getCurrentPortal(final Session session) {
 
         String pid = session("currentportal");

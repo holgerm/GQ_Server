@@ -25,6 +25,9 @@ error.maxLength=Maximum length is {0}
 error.email=Valid email required
 error.pattern=Must satisfy {0}
 
+# --- Login
+password.forgot=Forgot password
+
 ### --- play-authenticate START
 
 # play-authenticate: Initial translations

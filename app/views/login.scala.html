@@ -5,6 +5,7 @@
 
 @import helper.twitterBootstrap._
 
+
 @main("Einloggen","login") {
 
 
@@ -25,9 +26,10 @@
           '_label -> "Passwort"
         )
           
-        <input type="submit" value="Einloggen" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes") !=""))><br/>
-        <br/>
-        <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Signup.forgotPassword(Application.getLocalPortal().getId())">Passwort vergessen?</a>
+        <input type="submit" value="Einloggen" @Html(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes").when(Application.getLocalPortal.getParameter(Application.getLocalPortal.getContentHtmlId(),"general.button.attributes") !=""))>
+            <br/>
+            <br/>
+        <a href="@Application.getLocalPortal.getTemplateServerURLDropSlash@routes.Signup.forgotPassword(Application.getCurrentPid())">Passwort vergessen?</a>
 
     	}
 

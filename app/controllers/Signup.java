@@ -125,7 +125,7 @@ public class Signup extends Controller {
 				}
 			}
 
-			return redirect(routes.Application.index());
+			return ok(password_forgot_email_sent.render()); // redirect(routes.Application.portalindex(Application.getCurrentPid()));
 		}
 	}
 
