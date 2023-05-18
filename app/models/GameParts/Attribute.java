@@ -349,53 +349,45 @@ public class Attribute extends Model {
         Element valueel = doc.createElement("value");
 
         if (value.matches("(\\s*)")) {
-
+            // whitespace contents -> empty string:
             Element y = doc.createElement("string");
-
             y.setTextContent("");
-
             valueel.appendChild(y);
 
-            /// STRING
-        } else if (value.matches("(.*)\"(.*)\"(.*)")) {
-            String[] help = value.split("\"");
-
+        } else if (value.matches("\"(.*)\"")) {
+            // text -> string
             String x = value.substring(1, value.length() - 1);
-
             Element y = doc.createElement("string");
-
             y.setTextContent(x);
-
             valueel.appendChild(y);
 
-            // Number
+        } else if (value.matches("\\[(.*)\\]")) {
+            // text -> string
+            Element y = doc.createElement("list");
+            y.setTextContent(value);
+            valueel.appendChild(y);
+
         } else if (value.matches(Global.REGEXP_NUM)) {
+            // Number
 
             Element y = doc.createElement("num");
-
             y.setTextContent(value.trim());
-
             valueel.appendChild(y);
-
-            // Bool
 
         } else if (value.matches("(\\s*)(true|false|True|False|TRUE|FALSE)(\\s*)")) {
+            // Bool
 
             Element y = doc.createElement("bool");
-
             y.setTextContent(value);
-
             valueel.appendChild(y);
 
-            // Variable
         } else {
+            // Variable
 
             Element y = doc.createElement("var");
-
-            y.setTextContent(value);
-
+            y.setTextContent(value.trim());
+            // TODO
             valueel.appendChild(y);
-
         }
 
         return valueel;

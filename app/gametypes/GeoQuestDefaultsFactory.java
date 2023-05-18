@@ -437,6 +437,36 @@ public class GeoQuestDefaultsFactory {
         allActionTypes.add(at9);
         hotspotActionTypes.add(at9);
 
+        at9 = new ActionType("Listenvariable neues Element hinzufügen",
+                "AddElementToList");
+        at9.setCategory("var");
+        at9.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/addToList.png");
+        at9.save();
+        at9a1 = new AttributeType("Variable", "var", "var");
+        at9a1.save();
+        at9.setAttributeType(at9a1);
+        at9a2 = new AttributeType("Wert", "value", "expression");
+        at9a2.save();
+        at9.setAttributeType(at9a2);
+        at9.update();
+        allActionTypes.add(at9);
+        hotspotActionTypes.add(at9);
+
+        at9 = new ActionType("Element aus Listenvariable löschen",
+                "RemoveElementFromList");
+        at9.setCategory("var");
+        at9.setSymbol(Global.SERVER_URL_2 + "/assets/icons/actions/removeFromList.png");
+        at9.save();
+        at9a1 = new AttributeType("Variable", "var", "var");
+        at9a1.save();
+        at9.setAttributeType(at9a1);
+        at9a2 = new AttributeType("Index", "index", "int");
+        at9a2.save();
+        at9.setAttributeType(at9a2);
+        at9.update();
+        allActionTypes.add(at9);
+        hotspotActionTypes.add(at9);
+
         ActionType at10 = new ActionType("Nachricht anzeigen", "ShowMessage");
         at10.setCategory("other");
         at10.setSymbol(Global.SERVER_URL_2

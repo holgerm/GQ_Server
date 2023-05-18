@@ -183,7 +183,8 @@ public class Condition extends Model {
             }
 
 
-        } else {
+        } else
+        {
 
 
             Element help2 = doc.createElement("helpbrackets");
